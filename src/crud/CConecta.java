@@ -6,7 +6,7 @@ import javax.swing.JOptionPane;
 public class CConecta {
 
     private Connection conector;
-    private final String nameDataBase = "carreras_teschi";
+    private final String nameDataBase = "promocionesyanet";
     private final String user = "root";
     private final String password = "";
     private final String url = "jdbc:mysql://localhost:3306/" + nameDataBase;
@@ -24,7 +24,7 @@ public class CConecta {
               en ese orden
              */
             conector = DriverManager.getConnection(url, user, password);
-
+            JOptionPane.showMessageDialog(null, "Conexion Exitosa");
             /* La excepcion que se manera "error" sera de tipo SQL
              por lo tanto debe cambiarse esa excepcion por una
              SQL
