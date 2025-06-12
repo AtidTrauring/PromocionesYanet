@@ -28,62 +28,323 @@ public class JfEmpleado extends javax.swing.JFrame {
 
         JtbpPaneles = new javax.swing.JTabbedPane();
         JpnlListEmp = new javax.swing.JPanel();
+        JspTC1 = new javax.swing.JScrollPane();
+        JtblClientes1 = new javax.swing.JTable();
+        JlblIDEmpleado1 = new javax.swing.JLabel();
+        JtxtID1 = new javax.swing.JTextField();
+        JspTexto1 = new javax.swing.JSeparator();
+        JlblNombre1 = new javax.swing.JLabel();
+        JtxtNombre1 = new javax.swing.JTextField();
+        JspNombre1 = new javax.swing.JSeparator();
+        JlblApePat1 = new javax.swing.JLabel();
+        JtxtApePat1 = new javax.swing.JTextField();
+        JspApePat1 = new javax.swing.JSeparator();
+        JlblApeMat1 = new javax.swing.JLabel();
+        JtxtApeMat1 = new javax.swing.JTextField();
+        JspApeMat1 = new javax.swing.JSeparator();
         JpnlAddEmp = new javax.swing.JPanel();
         JpnlUpdateEmp = new javax.swing.JPanel();
         JpnlDeleteEmp = new javax.swing.JPanel();
+        JspTC = new javax.swing.JScrollPane();
+        JtblClientes = new javax.swing.JTable();
+        JlblIDEmpleado = new javax.swing.JLabel();
+        JtxtID = new javax.swing.JTextField();
+        JspTexto = new javax.swing.JSeparator();
+        JlblNombre = new javax.swing.JLabel();
+        JtxtNombre = new javax.swing.JTextField();
+        JspNombre = new javax.swing.JSeparator();
+        JlblApePat = new javax.swing.JLabel();
+        JtxtApePat = new javax.swing.JTextField();
+        JspApePat = new javax.swing.JSeparator();
+        JlblApeMat = new javax.swing.JLabel();
+        JtxtApeMat = new javax.swing.JTextField();
+        JspApeMat = new javax.swing.JSeparator();
+        JbtnEliminarEmpleado = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Empleados");
 
-        JtbpPaneles.setBackground(new java.awt.Color(255, 102, 102));
+        JtbpPaneles.setBackground(new java.awt.Color(242, 220, 153));
+
+        JpnlListEmp.setBackground(new java.awt.Color(242, 220, 153));
+
+        JtblClientes1.setBackground(new java.awt.Color(167, 235, 242));
+        JtblClientes1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Id Empleado", "Nombre(s)", "Apellido Paterno", "Apellido Materno"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        JtblClientes1.setGridColor(new java.awt.Color(255, 255, 204));
+        JspTC1.setViewportView(JtblClientes1);
+        if (JtblClientes1.getColumnModel().getColumnCount() > 0) {
+            JtblClientes1.getColumnModel().getColumn(0).setResizable(false);
+            JtblClientes1.getColumnModel().getColumn(1).setResizable(false);
+            JtblClientes1.getColumnModel().getColumn(2).setResizable(false);
+            JtblClientes1.getColumnModel().getColumn(3).setResizable(false);
+        }
+
+        JlblIDEmpleado1.setText("Ingrese el ID de Busqueda");
+
+        JtxtID1.setBackground(new java.awt.Color(242, 220, 153));
+        JtxtID1.setBorder(null);
+
+        JspTexto1.setForeground(new java.awt.Color(0, 0, 0));
+
+        JlblNombre1.setText("Ingrese el Nombre de Busqueda");
+
+        JtxtNombre1.setBackground(new java.awt.Color(242, 220, 153));
+        JtxtNombre1.setBorder(null);
+
+        JspNombre1.setForeground(new java.awt.Color(0, 0, 0));
+
+        JlblApePat1.setText("Ingrese el Apellido Paterno de Busqueda");
+
+        JtxtApePat1.setBackground(new java.awt.Color(242, 220, 153));
+        JtxtApePat1.setBorder(null);
+
+        JspApePat1.setForeground(new java.awt.Color(0, 0, 0));
+
+        JlblApeMat1.setText("Ingrese el Apellido Materno de Busqueda");
+
+        JtxtApeMat1.setBackground(new java.awt.Color(242, 220, 153));
+        JtxtApeMat1.setBorder(null);
+
+        JspApeMat1.setForeground(new java.awt.Color(0, 0, 0));
 
         javax.swing.GroupLayout JpnlListEmpLayout = new javax.swing.GroupLayout(JpnlListEmp);
         JpnlListEmp.setLayout(JpnlListEmpLayout);
         JpnlListEmpLayout.setHorizontalGroup(
             JpnlListEmpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 683, Short.MAX_VALUE)
+            .addGroup(JpnlListEmpLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(JspTC1, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(JpnlListEmpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(JlblIDEmpleado1)
+                    .addComponent(JlblNombre1)
+                    .addComponent(JlblApePat1)
+                    .addComponent(JtxtApeMat1, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
+                    .addComponent(JlblApeMat1)
+                    .addComponent(JspTexto1)
+                    .addComponent(JtxtID1)
+                    .addComponent(JspNombre1)
+                    .addComponent(JtxtNombre1, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
+                    .addComponent(JspApePat1)
+                    .addComponent(JtxtApePat1, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
+                    .addComponent(JspApeMat1))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
         JpnlListEmpLayout.setVerticalGroup(
             JpnlListEmpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 230, Short.MAX_VALUE)
+            .addGroup(JpnlListEmpLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(JpnlListEmpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(JpnlListEmpLayout.createSequentialGroup()
+                        .addComponent(JspTC1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addGap(17, 17, 17))
+                    .addGroup(JpnlListEmpLayout.createSequentialGroup()
+                        .addComponent(JlblIDEmpleado1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(JtxtID1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(JspTexto1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(JlblNombre1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(JtxtNombre1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(JspNombre1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(JlblApePat1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(JtxtApePat1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(JspApePat1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(JlblApeMat1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(JtxtApeMat1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(JspApeMat1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 41, Short.MAX_VALUE))))
         );
 
-        JtbpPaneles.addTab("Lista de empleados", JpnlListEmp);
+        JtbpPaneles.addTab("Lista de Empleados", JpnlListEmp);
+
+        JpnlAddEmp.setBackground(new java.awt.Color(242, 220, 153));
 
         javax.swing.GroupLayout JpnlAddEmpLayout = new javax.swing.GroupLayout(JpnlAddEmp);
         JpnlAddEmp.setLayout(JpnlAddEmpLayout);
         JpnlAddEmpLayout.setHorizontalGroup(
             JpnlAddEmpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 683, Short.MAX_VALUE)
+            .addGap(0, 720, Short.MAX_VALUE)
         );
         JpnlAddEmpLayout.setVerticalGroup(
             JpnlAddEmpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 230, Short.MAX_VALUE)
+            .addGap(0, 299, Short.MAX_VALUE)
         );
 
         JtbpPaneles.addTab("Agregar un empleado", JpnlAddEmp);
+
+        JpnlUpdateEmp.setBackground(new java.awt.Color(242, 220, 153));
 
         javax.swing.GroupLayout JpnlUpdateEmpLayout = new javax.swing.GroupLayout(JpnlUpdateEmp);
         JpnlUpdateEmp.setLayout(JpnlUpdateEmpLayout);
         JpnlUpdateEmpLayout.setHorizontalGroup(
             JpnlUpdateEmpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 683, Short.MAX_VALUE)
+            .addGap(0, 720, Short.MAX_VALUE)
         );
         JpnlUpdateEmpLayout.setVerticalGroup(
             JpnlUpdateEmpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 230, Short.MAX_VALUE)
+            .addGap(0, 299, Short.MAX_VALUE)
         );
 
         JtbpPaneles.addTab("Actualizar datos del empleado", JpnlUpdateEmp);
+
+        JpnlDeleteEmp.setBackground(new java.awt.Color(242, 220, 153));
+
+        JtblClientes.setBackground(new java.awt.Color(167, 235, 242));
+        JtblClientes.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Id Empleado", "Nombre(s)", "Apellido Paterno", "Apellido Materno"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        JtblClientes.setGridColor(new java.awt.Color(255, 255, 204));
+        JspTC.setViewportView(JtblClientes);
+        if (JtblClientes.getColumnModel().getColumnCount() > 0) {
+            JtblClientes.getColumnModel().getColumn(0).setResizable(false);
+            JtblClientes.getColumnModel().getColumn(1).setResizable(false);
+            JtblClientes.getColumnModel().getColumn(2).setResizable(false);
+            JtblClientes.getColumnModel().getColumn(3).setResizable(false);
+        }
+
+        JlblIDEmpleado.setText("Ingrese el ID de Busqueda");
+
+        JtxtID.setBackground(new java.awt.Color(242, 220, 153));
+        JtxtID.setBorder(null);
+
+        JspTexto.setForeground(new java.awt.Color(0, 0, 0));
+
+        JlblNombre.setText("Ingrese el Nombre de Busqueda");
+
+        JtxtNombre.setBackground(new java.awt.Color(242, 220, 153));
+        JtxtNombre.setBorder(null);
+
+        JspNombre.setForeground(new java.awt.Color(0, 0, 0));
+
+        JlblApePat.setText("Ingrese el Apellido Paterno de Busqueda");
+
+        JtxtApePat.setBackground(new java.awt.Color(242, 220, 153));
+        JtxtApePat.setBorder(null);
+
+        JspApePat.setForeground(new java.awt.Color(0, 0, 0));
+
+        JlblApeMat.setText("Ingrese el Apellido Materno de Busqueda");
+
+        JtxtApeMat.setBackground(new java.awt.Color(242, 220, 153));
+        JtxtApeMat.setBorder(null);
+
+        JspApeMat.setForeground(new java.awt.Color(0, 0, 0));
+
+        JbtnEliminarEmpleado.setBackground(new java.awt.Color(56, 171, 242));
+        JbtnEliminarEmpleado.setText("Eliminar");
 
         javax.swing.GroupLayout JpnlDeleteEmpLayout = new javax.swing.GroupLayout(JpnlDeleteEmp);
         JpnlDeleteEmp.setLayout(JpnlDeleteEmpLayout);
         JpnlDeleteEmpLayout.setHorizontalGroup(
             JpnlDeleteEmpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 683, Short.MAX_VALUE)
+            .addGroup(JpnlDeleteEmpLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(JspTC, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(JpnlDeleteEmpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(JpnlDeleteEmpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(JlblIDEmpleado)
+                        .addComponent(JlblNombre)
+                        .addComponent(JlblApePat)
+                        .addComponent(JtxtApeMat, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
+                        .addComponent(JlblApeMat)
+                        .addComponent(JspTexto)
+                        .addComponent(JtxtID)
+                        .addComponent(JspNombre)
+                        .addComponent(JtxtNombre, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
+                        .addComponent(JspApePat)
+                        .addComponent(JtxtApePat, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
+                        .addComponent(JspApeMat))
+                    .addComponent(JbtnEliminarEmpleado))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
         JpnlDeleteEmpLayout.setVerticalGroup(
             JpnlDeleteEmpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 230, Short.MAX_VALUE)
+            .addGroup(JpnlDeleteEmpLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(JpnlDeleteEmpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(JpnlDeleteEmpLayout.createSequentialGroup()
+                        .addComponent(JspTC, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addGap(17, 17, 17))
+                    .addGroup(JpnlDeleteEmpLayout.createSequentialGroup()
+                        .addComponent(JlblIDEmpleado)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(JtxtID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(JspTexto, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(JlblNombre)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(JtxtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(JspNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(JlblApePat)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(JtxtApePat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(JspApePat, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(JlblApeMat)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(JtxtApeMat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(JspApeMat, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(JbtnEliminarEmpleado)
+                        .addGap(0, 9, Short.MAX_VALUE))))
         );
 
         JtbpPaneles.addTab("Eliminar a un empleado", JpnlDeleteEmp);
@@ -138,10 +399,39 @@ public class JfEmpleado extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton JbtnEliminarEmpleado;
+    private javax.swing.JLabel JlblApeMat;
+    private javax.swing.JLabel JlblApeMat1;
+    private javax.swing.JLabel JlblApePat;
+    private javax.swing.JLabel JlblApePat1;
+    private javax.swing.JLabel JlblIDEmpleado;
+    private javax.swing.JLabel JlblIDEmpleado1;
+    private javax.swing.JLabel JlblNombre;
+    private javax.swing.JLabel JlblNombre1;
     private javax.swing.JPanel JpnlAddEmp;
     private javax.swing.JPanel JpnlDeleteEmp;
     private javax.swing.JPanel JpnlListEmp;
     private javax.swing.JPanel JpnlUpdateEmp;
+    private javax.swing.JSeparator JspApeMat;
+    private javax.swing.JSeparator JspApeMat1;
+    private javax.swing.JSeparator JspApePat;
+    private javax.swing.JSeparator JspApePat1;
+    private javax.swing.JSeparator JspNombre;
+    private javax.swing.JSeparator JspNombre1;
+    private javax.swing.JScrollPane JspTC;
+    private javax.swing.JScrollPane JspTC1;
+    private javax.swing.JSeparator JspTexto;
+    private javax.swing.JSeparator JspTexto1;
+    private javax.swing.JTable JtblClientes;
+    private javax.swing.JTable JtblClientes1;
     private javax.swing.JTabbedPane JtbpPaneles;
+    private javax.swing.JTextField JtxtApeMat;
+    private javax.swing.JTextField JtxtApeMat1;
+    private javax.swing.JTextField JtxtApePat;
+    private javax.swing.JTextField JtxtApePat1;
+    private javax.swing.JTextField JtxtID;
+    private javax.swing.JTextField JtxtID1;
+    private javax.swing.JTextField JtxtNombre;
+    private javax.swing.JTextField JtxtNombre1;
     // End of variables declaration//GEN-END:variables
 }
