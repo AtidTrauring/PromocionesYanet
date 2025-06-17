@@ -60,6 +60,23 @@ public class jfmenuproductos extends javax.swing.JPanel {
         jBtnIngGuardarProd = new javax.swing.JButton();
         jBtnIngLimpiarProd = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
+        jPnlActualizarProducto = new javax.swing.JPanel();
+        jLblActualizarPrud = new javax.swing.JLabel();
+        jSeparator8 = new javax.swing.JSeparator();
+        jTxtActIDProducto = new javax.swing.JTextField();
+        jLblActIDProducto = new javax.swing.JLabel();
+        jLblActNombreProducto = new javax.swing.JLabel();
+        jTxtActNombreProducto = new javax.swing.JTextField();
+        jSeparator9 = new javax.swing.JSeparator();
+        jLblActPrecioProducto = new javax.swing.JLabel();
+        jTxtActPrecioProducto = new javax.swing.JTextField();
+        jSeparator10 = new javax.swing.JSeparator();
+        jLblActStockProducto = new javax.swing.JLabel();
+        jTxtActStockProducto = new javax.swing.JTextField();
+        jSeparator11 = new javax.swing.JSeparator();
+        jLabel1 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         JpnlLogoProducto1 = new javax.swing.JPanel();
         jLblAlmacen = new javax.swing.JLabel();
@@ -342,7 +359,7 @@ public class jfmenuproductos extends javax.swing.JPanel {
                         .addComponent(jBtnIngGuardarProd)
                         .addGap(40, 40, 40)
                         .addComponent(jBtnIngLimpiarProd)))
-                .addContainerGap(62, Short.MAX_VALUE))
+                .addContainerGap(81, Short.MAX_VALUE))
         );
 
         jPanel2Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jBtnIngGuardarProd, jBtnIngLimpiarProd});
@@ -368,15 +385,154 @@ public class jfmenuproductos extends javax.swing.JPanel {
 
         jPanel3.setBackground(new java.awt.Color(242, 220, 153));
 
+        jPnlActualizarProducto.setBackground(new java.awt.Color(167, 235, 242));
+
+        jLblActualizarPrud.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        jLblActualizarPrud.setText("Actualizacion de producto");
+
+        jSeparator8.setForeground(new java.awt.Color(0, 0, 0));
+
+        jTxtActIDProducto.setBackground(new java.awt.Color(167, 235, 242));
+        jTxtActIDProducto.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
+        jTxtActIDProducto.setBorder(null);
+
+        jLblActIDProducto.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
+        jLblActIDProducto.setText("ID del producto: ");
+
+        jLblActNombreProducto.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
+        jLblActNombreProducto.setText("Nombre del producto: ");
+
+        jTxtActNombreProducto.setBackground(new java.awt.Color(167, 235, 242));
+        jTxtActNombreProducto.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
+        jTxtActNombreProducto.setBorder(null);
+
+        jSeparator9.setForeground(new java.awt.Color(0, 0, 0));
+
+        jLblActPrecioProducto.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
+        jLblActPrecioProducto.setText("Precio del producto: ");
+
+        jTxtActPrecioProducto.setBackground(new java.awt.Color(167, 235, 242));
+        jTxtActPrecioProducto.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
+        jTxtActPrecioProducto.setBorder(null);
+
+        jSeparator10.setForeground(new java.awt.Color(0, 0, 0));
+
+        jLblActStockProducto.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
+        jLblActStockProducto.setText("Stock del producto: ");
+
+        jTxtActStockProducto.setBackground(new java.awt.Color(167, 235, 242));
+        jTxtActStockProducto.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
+        jTxtActStockProducto.setBorder(null);
+
+        jSeparator11.setForeground(new java.awt.Color(0, 0, 0));
+
+        javax.swing.GroupLayout jPnlActualizarProductoLayout = new javax.swing.GroupLayout(jPnlActualizarProducto);
+        jPnlActualizarProducto.setLayout(jPnlActualizarProductoLayout);
+        jPnlActualizarProductoLayout.setHorizontalGroup(
+            jPnlActualizarProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPnlActualizarProductoLayout.createSequentialGroup()
+                .addGap(111, 111, 111)
+                .addComponent(jLblActualizarPrud, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPnlActualizarProductoLayout.createSequentialGroup()
+                .addContainerGap(89, Short.MAX_VALUE)
+                .addGroup(jPnlActualizarProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPnlActualizarProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jTxtActStockProducto)
+                        .addComponent(jSeparator11)
+                        .addComponent(jLblActStockProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPnlActualizarProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jTxtActPrecioProducto)
+                        .addComponent(jSeparator10)
+                        .addComponent(jLblActPrecioProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPnlActualizarProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(jPnlActualizarProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jTxtActNombreProducto)
+                            .addComponent(jSeparator9)
+                            .addComponent(jLblActNombreProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPnlActualizarProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jTxtActIDProducto)
+                            .addComponent(jSeparator8)
+                            .addComponent(jLblActIDProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(83, 83, 83))
+        );
+        jPnlActualizarProductoLayout.setVerticalGroup(
+            jPnlActualizarProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPnlActualizarProductoLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLblActualizarPrud)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLblActIDProducto)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTxtActIDProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator8, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLblActNombreProducto)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTxtActNombreProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator9, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLblActPrecioProducto)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTxtActPrecioProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator10, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLblActStockProducto)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTxtActStockProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator11, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/logo_vectori_pequeño.png"))); // NOI18N
+
+        jButton1.setBackground(new java.awt.Color(53, 189, 242));
+        jButton1.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        jButton1.setText("Actualizar producto");
+
+        jButton2.setBackground(new java.awt.Color(53, 189, 242));
+        jButton2.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        jButton2.setText("Limpiar campos");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 627, Short.MAX_VALUE)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(51, 51, 51)
+                .addComponent(jPnlActualizarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(41, 41, 41)
+                        .addComponent(jLabel1))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(26, 26, 26)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton2)
+                            .addComponent(jButton1))))
+                .addContainerGap(42, Short.MAX_VALUE))
         );
+
+        jPanel3Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jButton1, jButton2});
+
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 333, Short.MAX_VALUE)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPnlActualizarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addContainerGap())
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(38, 38, 38)
+                .addComponent(jLabel1)
+                .addGap(31, 31, 31)
+                .addComponent(jButton1)
+                .addGap(27, 27, 27)
+                .addComponent(jButton2)
+                .addContainerGap(63, Short.MAX_VALUE))
         );
 
         jTPproductos.addTab("Actualizar producto", jPanel3);
@@ -387,7 +543,7 @@ public class jfmenuproductos extends javax.swing.JPanel {
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 627, Short.MAX_VALUE)
+            .addGap(0, 646, Short.MAX_VALUE)
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -441,6 +597,14 @@ public class jfmenuproductos extends javax.swing.JPanel {
     private javax.swing.JPanel JpnlLogoProducto1;
     private javax.swing.JButton jBtnIngGuardarProd;
     private javax.swing.JButton jBtnIngLimpiarProd;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLblActIDProducto;
+    private javax.swing.JLabel jLblActNombreProducto;
+    private javax.swing.JLabel jLblActPrecioProducto;
+    private javax.swing.JLabel jLblActStockProducto;
+    private javax.swing.JLabel jLblActualizarPrud;
     private javax.swing.JLabel jLblAlmacen;
     private javax.swing.JLabel jLblBIDProducto;
     private javax.swing.JLabel jLblBNombreproducto;
@@ -455,17 +619,26 @@ public class jfmenuproductos extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPnlActualizarProducto;
     private javax.swing.JPanel jPnlAgregarProducto;
     private javax.swing.JPanel jPnlBusquedaProducto;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator10;
+    private javax.swing.JSeparator jSeparator11;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JSeparator jSeparator5;
     private javax.swing.JSeparator jSeparator6;
     private javax.swing.JSeparator jSeparator7;
+    private javax.swing.JSeparator jSeparator8;
+    private javax.swing.JSeparator jSeparator9;
     private javax.swing.JTabbedPane jTPproductos;
+    private javax.swing.JTextField jTxtActIDProducto;
+    private javax.swing.JTextField jTxtActNombreProducto;
+    private javax.swing.JTextField jTxtActPrecioProducto;
+    private javax.swing.JTextField jTxtActStockProducto;
     private javax.swing.JTextField jTxtBIDProducto;
     private javax.swing.JTextField jTxtBNombreProducto;
     private javax.swing.JTextField jTxtBPrecioProducto;
