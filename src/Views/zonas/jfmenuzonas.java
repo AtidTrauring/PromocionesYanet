@@ -41,6 +41,17 @@ public class jfmenuzonas extends javax.swing.JPanel {
         jSeparator1 = new javax.swing.JSeparator();
         jSeparator2 = new javax.swing.JSeparator();
         jPnlAgrZona = new javax.swing.JPanel();
+        jPnlAgregarZona = new javax.swing.JPanel();
+        jLblIngresoZona = new javax.swing.JLabel();
+        jLblIngIDZona = new javax.swing.JLabel();
+        jTxtIngIDZona = new javax.swing.JTextField();
+        jSeparator5 = new javax.swing.JSeparator();
+        jTxtIngNumZona = new javax.swing.JTextField();
+        jLblIngNumZona = new javax.swing.JLabel();
+        jSeparator6 = new javax.swing.JSeparator();
+        jLabel2 = new javax.swing.JLabel();
+        jBtnIngGuardarZona = new javax.swing.JButton();
+        jBtnIngLimpiarZona = new javax.swing.JButton();
         jPnlActZona = new javax.swing.JPanel();
         jPnlEliZona = new javax.swing.JPanel();
 
@@ -187,15 +198,114 @@ public class jfmenuzonas extends javax.swing.JPanel {
 
         jPnlAgrZona.setBackground(new java.awt.Color(242, 220, 153));
 
+        jPnlAgregarZona.setBackground(new java.awt.Color(167, 235, 242));
+
+        jLblIngresoZona.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        jLblIngresoZona.setText("Registro de zonas");
+
+        jLblIngIDZona.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
+        jLblIngIDZona.setText("ID de la zona:");
+
+        jTxtIngIDZona.setBackground(new java.awt.Color(167, 235, 242));
+        jTxtIngIDZona.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
+        jTxtIngIDZona.setBorder(null);
+
+        jSeparator5.setForeground(new java.awt.Color(0, 0, 0));
+
+        jTxtIngNumZona.setBackground(new java.awt.Color(167, 235, 242));
+        jTxtIngNumZona.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
+        jTxtIngNumZona.setBorder(null);
+
+        jLblIngNumZona.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
+        jLblIngNumZona.setText("Numero de la zona:");
+
+        jSeparator6.setForeground(new java.awt.Color(0, 0, 0));
+
+        javax.swing.GroupLayout jPnlAgregarZonaLayout = new javax.swing.GroupLayout(jPnlAgregarZona);
+        jPnlAgregarZona.setLayout(jPnlAgregarZonaLayout);
+        jPnlAgregarZonaLayout.setHorizontalGroup(
+            jPnlAgregarZonaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPnlAgregarZonaLayout.createSequentialGroup()
+                .addContainerGap(54, Short.MAX_VALUE)
+                .addGroup(jPnlAgregarZonaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPnlAgregarZonaLayout.createSequentialGroup()
+                        .addComponent(jLblIngresoZona)
+                        .addGap(96, 96, 96))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPnlAgregarZonaLayout.createSequentialGroup()
+                        .addGroup(jPnlAgregarZonaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPnlAgregarZonaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(jLblIngNumZona, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jTxtIngNumZona)
+                                .addComponent(jSeparator6, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPnlAgregarZonaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(jLblIngIDZona, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jTxtIngIDZona)
+                                .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(44, 44, 44))))
+        );
+        jPnlAgregarZonaLayout.setVerticalGroup(
+            jPnlAgregarZonaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPnlAgregarZonaLayout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addComponent(jLblIngresoZona)
+                .addGap(18, 18, 18)
+                .addComponent(jLblIngIDZona)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTxtIngIDZona, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLblIngNumZona)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTxtIngNumZona, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator6, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(36, Short.MAX_VALUE))
+        );
+
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/logo_vectori.png"))); // NOI18N
+
+        jBtnIngGuardarZona.setBackground(new java.awt.Color(53, 189, 242));
+        jBtnIngGuardarZona.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        jBtnIngGuardarZona.setText("Guardar zona");
+        jBtnIngGuardarZona.setToolTipText("");
+
+        jBtnIngLimpiarZona.setBackground(new java.awt.Color(53, 189, 242));
+        jBtnIngLimpiarZona.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        jBtnIngLimpiarZona.setText("Limpiar campos");
+
         javax.swing.GroupLayout jPnlAgrZonaLayout = new javax.swing.GroupLayout(jPnlAgrZona);
         jPnlAgrZona.setLayout(jPnlAgrZonaLayout);
         jPnlAgrZonaLayout.setHorizontalGroup(
             jPnlAgrZonaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 685, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPnlAgrZonaLayout.createSequentialGroup()
+                .addGap(29, 29, 29)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
+                .addGroup(jPnlAgrZonaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPnlAgregarZona, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPnlAgrZonaLayout.createSequentialGroup()
+                        .addComponent(jBtnIngGuardarZona)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jBtnIngLimpiarZona)))
+                .addGap(27, 27, 27))
         );
+
+        jPnlAgrZonaLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jBtnIngGuardarZona, jBtnIngLimpiarZona});
+
         jPnlAgrZonaLayout.setVerticalGroup(
             jPnlAgrZonaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 332, Short.MAX_VALUE)
+            .addGroup(jPnlAgrZonaLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPnlAgrZonaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPnlAgrZonaLayout.createSequentialGroup()
+                        .addComponent(jPnlAgregarZona, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(26, 26, 26)
+                        .addGroup(jPnlAgrZonaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jBtnIngGuardarZona)
+                            .addComponent(jBtnIngLimpiarZona)))
+                    .addComponent(jLabel2))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Agregar zona", jPnlAgrZona);
@@ -248,21 +358,32 @@ public class jfmenuzonas extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel JpnlLogoZona;
+    private javax.swing.JButton jBtnIngGuardarZona;
+    private javax.swing.JButton jBtnIngLimpiarZona;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLblBIDZona;
     private javax.swing.JLabel jLblBNumZona;
     private javax.swing.JLabel jLblBusquedaZona;
+    private javax.swing.JLabel jLblIngIDZona;
+    private javax.swing.JLabel jLblIngNumZona;
+    private javax.swing.JLabel jLblIngresoZona;
     private javax.swing.JPanel jPnlActZona;
     private javax.swing.JPanel jPnlAgrZona;
+    private javax.swing.JPanel jPnlAgregarZona;
     private javax.swing.JPanel jPnlBusquedaZona;
     private javax.swing.JPanel jPnlEliZona;
     private javax.swing.JPanel jPnlListaZonas;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSeparator jSeparator5;
+    private javax.swing.JSeparator jSeparator6;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextField jTxtBIDZona;
     private javax.swing.JTextField jTxtBNumZona;
+    private javax.swing.JTextField jTxtIngIDZona;
+    private javax.swing.JTextField jTxtIngNumZona;
     private javax.swing.JTable jtblBuscarZonas;
     // End of variables declaration//GEN-END:variables
 }
