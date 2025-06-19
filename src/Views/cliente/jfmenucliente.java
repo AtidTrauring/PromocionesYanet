@@ -21,11 +21,9 @@ public final class jfmenucliente extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         cargaComboBox(jcbestatus, 1);
-        //cargaComboBox(jcbtipousuario, 1);
         cargaComboBox(jcbestatusn, 1);
         cargaComboBox(jcbestatusact, 1);
         cargaComboBox(jcbestatuseli, 1);
-        //cargaComboBox(jcbtipousuarioeli, 1);
         cargaComboBox(jcbestatusavaln, 2);
         cargaComboBox(jcbestatusavalact, 2);
         cargaComboBox(jcbnzona, 3);
@@ -33,8 +31,18 @@ public final class jfmenucliente extends javax.swing.JFrame {
         /* Placeholder JTField */
         cu.aplicarPlaceholder(jtfid, "Ingresa el ID de búsqueda");
         cu.aplicarPlaceholder(jtfnombres, "Ingresar nombre(s) de búsqueda");
-        cu.aplicarPlaceholder(jtfappaterno, "Ingresr apellido paterno de búsqueda");
-        cu.aplicarPlaceholder(jtfapmaterno, "Ingresr apellido materno de búsqueda");
+        cu.aplicarPlaceholder(jtfappaterno, "Ingresar apellido paterno de búsqueda");
+        cu.aplicarPlaceholder(jtfapmaterno, "Ingresar apellido materno de búsqueda");
+        cu.aplicarPlaceholder(jtfnnombres, "Nombre (s)");
+        cu.aplicarPlaceholder(jtfnapppaterno, "Apellido Paterno");
+        cu.aplicarPlaceholder(jtfnapmaterno, "Apellido Materno");
+        cu.aplicarPlaceholder(jtfanombres, "Nombre (s)");
+        cu.aplicarPlaceholder(jtfaapppaterno, "Apellido Paterno");
+        cu.aplicarPlaceholder(jtfaapmaterno, "Apellido Materno");
+        cu.aplicarPlaceholder(jtfideli, "Ingresa el ID de búsqueda");
+        cu.aplicarPlaceholder(jtfnombreseli, "Ingresar nombre(s) de búsqueda");
+        cu.aplicarPlaceholder(jtfappaternoeli, "Ingresar apellido paterno de búsqueda");
+        cu.aplicarPlaceholder(jtfapmaternoeli, "Ingresar apellido materno de búsqueda");
     }
 
     private DefaultComboBoxModel listas;
@@ -81,6 +89,8 @@ public final class jfmenucliente extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel3 = new javax.swing.JPanel();
+        bgins = new javax.swing.ButtonGroup();
+        bgact = new javax.swing.ButtonGroup();
         jpprincipal = new javax.swing.JPanel();
         jtpprincipal = new javax.swing.JTabbedPane();
         jplistacliente = new javax.swing.JPanel();
@@ -211,7 +221,7 @@ public final class jfmenucliente extends javax.swing.JFrame {
         jtfappaterno.setBackground(new java.awt.Color(242, 220, 153));
         jtfappaterno.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jtfappaterno.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jtfappaterno.setText("Ingresr apellido paterno de búsqueda");
+        jtfappaterno.setText("Ingresar apellido paterno de búsqueda");
         jtfappaterno.setToolTipText("");
         jtfappaterno.setBorder(null);
         jtfappaterno.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
@@ -276,8 +286,8 @@ public final class jfmenucliente extends javax.swing.JFrame {
                     .addGroup(jplistaclienteLayout.createSequentialGroup()
                         .addComponent(jtfid, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(42, 42, 42)
+                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(43, 43, 43)
                         .addComponent(jtfnombres, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 9, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -348,12 +358,15 @@ public final class jfmenucliente extends javax.swing.JFrame {
 
         JlblImagen1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/logo_vectori.png"))); // NOI18N
 
+        bgins.add(jrbcliente);
         jrbcliente.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jrbcliente.setText("Cliente");
 
+        bgins.add(jrbaval);
         jrbaval.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jrbaval.setText("Aval");
 
+        bgins.add(jrbambos);
         jrbambos.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jrbambos.setText("Ambos");
 
@@ -501,12 +514,15 @@ public final class jfmenucliente extends javax.swing.JFrame {
         jbactualizar.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jbactualizar.setText("Actualizar");
 
+        bgact.add(jrbclienteact);
         jrbclienteact.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jrbclienteact.setText("Cliente");
 
+        bgact.add(jrbavalact);
         jrbavalact.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jrbavalact.setText("Aval");
 
+        bgact.add(jrbambosact);
         jrbambosact.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jrbambosact.setText("Ambos");
 
@@ -800,6 +816,8 @@ public final class jfmenucliente extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel JlblImagen;
     private javax.swing.JLabel JlblImagen1;
+    private javax.swing.ButtonGroup bgact;
+    private javax.swing.ButtonGroup bgins;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;

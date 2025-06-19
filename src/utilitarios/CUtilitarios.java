@@ -199,8 +199,9 @@ public class CUtilitarios {
     }
 
     /**/
-    Color fondovacio = new Color(153,153,153);
-    Color fondoescrito = new Color(0,0,0);
+    Color fondovacio = new Color(12, 12, 12);
+    Color fondoescrito = new Color(0, 0, 0);
+
     public void aplicarPlaceholder(JTextField jtf, String dato) {
         jtf.setText(dato);
         jtf.setForeground(fondovacio);

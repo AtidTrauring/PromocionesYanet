@@ -1,9 +1,9 @@
 package crud;
 
 import utilitarios.CUtilitarios;
-import java.sql.ResultSet;
 import java.sql.*;
-import java.util.ArrayList;
+import java.util.*;
+import javax.swing.*;
 
 public class CConsultas {
 
@@ -11,6 +11,7 @@ public class CConsultas {
     private Connection conn = null;
     private Statement stmt = null; //Capacidad para traducir las query
     private ResultSet rs = null;
+    private PreparedStatement ps = null;
     private final CConecta conector = new CConecta();
     private ArrayList<String[]> resultados;
     private String[] resultadosListas;
@@ -289,6 +290,27 @@ public class CConsultas {
             conector.desconecta(conn);
         }
         return false;
+    }
+    
+    public int generadorClave(String sql, JLabel jl) throws SQLException {
+        int clave = 0;
+        conn = conector.conecta();
+        ps = conn.prepareStatement(sql);
+        rs = ps.executeQuery();
+        try {
+            if (rs.next()) {
+                int maxId = rs.getInt(1);
+                if (!rs.wasNull()) {
+                    clave = maxId + 1;
+                    jl.setText(Integer.toString(clave));
+                    jl.getText();
+                }
+            }
+        } catch (SQLException ex) {
+            String cadena = "Comuniquese con el distribuidor\nSQLException: " + ex.getMessage() + "\nSQLState: " + ex.getSQLState() + "\nVendorError: " + ex.getErrorCode();
+            CUtilitarios.msg_error(cadena, "ERROR NO CONTROLADO");
+        }
+        return clave;
     }
 
 }
