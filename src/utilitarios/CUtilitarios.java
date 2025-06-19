@@ -1,12 +1,8 @@
 package utilitarios;
 
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
+import java.awt.*;
+import java.util.*;
+import javax.swing.*;
 
 public class CUtilitarios {
 
@@ -201,4 +197,31 @@ public class CUtilitarios {
 
         return partes;
     }
+
+    /**/
+    Color fondovacio = new Color(153,153,153);
+    Color fondoescrito = new Color(0,0,0);
+    public void aplicarPlaceholder(JTextField jtf, String dato) {
+        jtf.setText(dato);
+        jtf.setForeground(fondovacio);
+
+        jtf.addFocusListener(new java.awt.event.FocusListener() {
+            @Override
+            public void focusGained(java.awt.event.FocusEvent e) {
+                if (jtf.getText().equals(dato)) {
+                    jtf.setText("");
+                    jtf.setForeground(fondoescrito);
+                }
+            }
+
+            @Override
+            public void focusLost(java.awt.event.FocusEvent e) {
+                if (jtf.getText().isEmpty()) {
+                    jtf.setText(dato);
+                    jtf.setForeground(fondovacio);
+                }
+            }
+        });
+    }
+    /**/
 }

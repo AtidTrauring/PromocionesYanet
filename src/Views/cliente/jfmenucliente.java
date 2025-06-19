@@ -1,17 +1,74 @@
 package Views.cliente;
 
+import crud.*;
+import utilitarios.CUtilitarios;
+import java.sql.SQLException;
+import java.util.*;
+import javax.swing.*;
+
 /**
  *
  * @author micky
  */
-public class jfmenucliente extends javax.swing.JFrame {
+public final class jfmenucliente extends javax.swing.JFrame {
 
     /**
      * Creates new form jfmenucliente
-     */
+     */CUtilitarios cu = new CUtilitarios();
+    
+    
     public jfmenucliente() {
         initComponents();
         this.setLocationRelativeTo(null);
+        cargaComboBox(jcbestatus, 1);
+        //cargaComboBox(jcbtipousuario, 1);
+        cargaComboBox(jcbestatusn, 1);
+        cargaComboBox(jcbestatusact, 1);
+        cargaComboBox(jcbestatuseli, 1);
+        //cargaComboBox(jcbtipousuarioeli, 1);
+        cargaComboBox(jcbestatusavaln, 2);
+        cargaComboBox(jcbestatusavalact, 2);
+        cargaComboBox(jcbnzona, 3);
+        cargaComboBox(jcbazona, 3);
+        /* Placeholder JTField */
+        cu.aplicarPlaceholder(jtfid, "Ingresa el ID de búsqueda");
+        cu.aplicarPlaceholder(jtfnombres, "Ingresar nombre(s) de búsqueda");
+        cu.aplicarPlaceholder(jtfappaterno, "Ingresr apellido paterno de búsqueda");
+        cu.aplicarPlaceholder(jtfapmaterno, "Ingresr apellido materno de búsqueda");
+    }
+
+    private DefaultComboBoxModel listas;
+    private ArrayList<String> datosListas = new ArrayList<>();
+    private final CCargaCombos queryCarga = new CCargaCombos();
+
+    public void cargaComboBox(JComboBox combo, int metodoCarga) {
+        listas = (DefaultComboBoxModel) combo.getModel();
+        try {
+            switch (metodoCarga) {
+                case 1:
+                    datosListas = queryCarga.cargaComboEstatus();
+                    for (int i = 0; i < datosListas.size(); i++) {
+                        listas.addElement(datosListas.get(i));
+                    }
+                    datosListas.clear();
+                    break;
+                case 2:
+                    datosListas = queryCarga.cargaComboEstatusAval();
+                    for (int i = 0; i < datosListas.size(); i++) {
+                        listas.addElement(datosListas.get(i));
+                    }
+                    datosListas.clear();
+                    break;
+                case 3:
+                    datosListas = queryCarga.cargaComboZona();
+                    for (int i = 0; i < datosListas.size(); i++) {
+                        listas.addElement(datosListas.get(i));
+                    }
+                    datosListas.clear();
+                    break;
+            }
+        } catch (SQLException e) {
+        }
     }
 
     /**
@@ -53,7 +110,7 @@ public class jfmenucliente extends javax.swing.JFrame {
         jrbaval = new javax.swing.JRadioButton();
         jrbambos = new javax.swing.JRadioButton();
         jcbestatusn = new javax.swing.JComboBox<>();
-        jcbestatusaval = new javax.swing.JComboBox<>();
+        jcbestatusavaln = new javax.swing.JComboBox<>();
         jpactualizacliente = new javax.swing.JPanel();
         jpnuevocliente1 = new javax.swing.JPanel();
         JlblImagen = new javax.swing.JLabel();
@@ -70,7 +127,6 @@ public class jfmenucliente extends javax.swing.JFrame {
         jrbambosact = new javax.swing.JRadioButton();
         jcbestatusact = new javax.swing.JComboBox<>();
         jcbestatusavalact = new javax.swing.JComboBox<>();
-        jcbaestatus = new javax.swing.JComboBox<>();
         jpeliminacliente = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jtlistaclienteseli = new javax.swing.JTable();
@@ -136,6 +192,7 @@ public class jfmenucliente extends javax.swing.JFrame {
         jtfid.setBorder(null);
         jtfid.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
 
+        jSeparator1.setBackground(new java.awt.Color(0, 0, 0));
         jSeparator1.setForeground(new java.awt.Color(0, 0, 0));
         jSeparator1.setToolTipText("");
 
@@ -147,6 +204,7 @@ public class jfmenucliente extends javax.swing.JFrame {
         jtfnombres.setBorder(null);
         jtfnombres.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
 
+        jSeparator2.setBackground(new java.awt.Color(0, 0, 0));
         jSeparator2.setForeground(new java.awt.Color(0, 0, 0));
         jSeparator2.setToolTipText("");
 
@@ -158,6 +216,7 @@ public class jfmenucliente extends javax.swing.JFrame {
         jtfappaterno.setBorder(null);
         jtfappaterno.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
 
+        jSeparator3.setBackground(new java.awt.Color(0, 0, 0));
         jSeparator3.setForeground(new java.awt.Color(0, 0, 0));
         jSeparator3.setToolTipText("");
 
@@ -169,6 +228,7 @@ public class jfmenucliente extends javax.swing.JFrame {
         jtfapmaterno.setBorder(null);
         jtfapmaterno.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
 
+        jSeparator4.setBackground(new java.awt.Color(0, 0, 0));
         jSeparator4.setForeground(new java.awt.Color(0, 0, 0));
         jSeparator4.setToolTipText("");
 
@@ -303,11 +363,11 @@ public class jfmenucliente extends javax.swing.JFrame {
         jcbestatusn.setToolTipText("");
         jcbestatusn.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        jcbestatusaval.setBackground(new java.awt.Color(242, 220, 153));
-        jcbestatusaval.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
-        jcbestatusaval.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Estatus Aval" }));
-        jcbestatusaval.setToolTipText("");
-        jcbestatusaval.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jcbestatusavaln.setBackground(new java.awt.Color(242, 220, 153));
+        jcbestatusavaln.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        jcbestatusavaln.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Estatus Aval" }));
+        jcbestatusavaln.setToolTipText("");
+        jcbestatusavaln.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         javax.swing.GroupLayout jpnuevoclienteLayout = new javax.swing.GroupLayout(jpnuevocliente);
         jpnuevocliente.setLayout(jpnuevoclienteLayout);
@@ -326,7 +386,7 @@ public class jfmenucliente extends javax.swing.JFrame {
                     .addComponent(jcbnzona, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(118, 118, 118)
                 .addGroup(jpnuevoclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jcbestatusaval, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jcbestatusavaln, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jrbaval)
                     .addComponent(jrbambos)
                     .addComponent(jrbcliente)
@@ -351,9 +411,9 @@ public class jfmenucliente extends javax.swing.JFrame {
         jpnuevoclienteLayout.setVerticalGroup(
             jpnuevoclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpnuevoclienteLayout.createSequentialGroup()
+                .addGap(67, 67, 67)
                 .addGroup(jpnuevoclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jpnuevoclienteLayout.createSequentialGroup()
-                        .addGap(67, 67, 67)
                         .addComponent(jtfnnombres, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jpnuevoclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -379,10 +439,9 @@ public class jfmenucliente extends javax.swing.JFrame {
                         .addGap(43, 43, 43)
                         .addGroup(jpnuevoclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jcbnzona, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jcbestatusaval, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jcbestatusavaln, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(50, 50, 50))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpnuevoclienteLayout.createSequentialGroup()
-                        .addContainerGap()
                         .addComponent(JlblImagen1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                 .addComponent(jbagregar)
@@ -468,9 +527,9 @@ public class jfmenucliente extends javax.swing.JFrame {
         jpnuevocliente1Layout.setHorizontalGroup(
             jpnuevocliente1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpnuevocliente1Layout.createSequentialGroup()
-                .addGap(22, 22, 22)
+                .addGap(10, 10, 10)
                 .addComponent(JlblImagen)
-                .addGap(64, 64, 64)
+                .addGap(18, 18, 18)
                 .addGroup(jpnuevocliente1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jcbazona, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jSeparator14, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -479,7 +538,7 @@ public class jfmenucliente extends javax.swing.JFrame {
                     .addComponent(jtfaapppaterno, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jSeparator12, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jtfanombres, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 65, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 123, Short.MAX_VALUE)
                 .addGroup(jpnuevocliente1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jcbestatusavalact, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jcbestatusact, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -495,10 +554,11 @@ public class jfmenucliente extends javax.swing.JFrame {
         jpnuevocliente1Layout.setVerticalGroup(
             jpnuevocliente1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpnuevocliente1Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jbactualizar)
+                .addGap(99, 99, 99))
+            .addGroup(jpnuevocliente1Layout.createSequentialGroup()
                 .addGroup(jpnuevocliente1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jpnuevocliente1Layout.createSequentialGroup()
-                        .addGap(73, 73, 73)
-                        .addComponent(JlblImagen))
                     .addGroup(jpnuevocliente1Layout.createSequentialGroup()
                         .addGap(278, 278, 278)
                         .addComponent(jcbazona, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -508,56 +568,40 @@ public class jfmenucliente extends javax.swing.JFrame {
                             .addComponent(jtfanombres, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jcbestatusact, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSeparator12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(41, 41, 41)
-                        .addGroup(jpnuevocliente1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jtfaapppaterno, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jcbestatusavalact, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(8, 8, 8)
-                        .addComponent(jSeparator13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(42, 42, 42)
                         .addGroup(jpnuevocliente1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jpnuevocliente1Layout.createSequentialGroup()
-                                .addComponent(jtfaapmaterno, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jSeparator14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jpnuevocliente1Layout.createSequentialGroup()
-                                .addComponent(jrbclienteact, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jrbavalact, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jrbambosact, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addGap(28, 152, Short.MAX_VALUE))
-            .addGroup(jpnuevocliente1Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jbactualizar)
-                .addGap(99, 99, 99))
+                                .addComponent(jSeparator12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(41, 41, 41)
+                                .addGroup(jpnuevocliente1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jtfaapppaterno, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jcbestatusavalact, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(8, 8, 8)
+                                .addComponent(jSeparator13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(42, 42, 42)
+                                .addGroup(jpnuevocliente1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jpnuevocliente1Layout.createSequentialGroup()
+                                        .addComponent(jtfaapmaterno, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jSeparator14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jpnuevocliente1Layout.createSequentialGroup()
+                                        .addComponent(jrbclienteact, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jrbavalact, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jrbambosact, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(JlblImagen))))
+                .addGap(144, 151, Short.MAX_VALUE))
         );
-
-        jcbaestatus.setBackground(new java.awt.Color(242, 220, 153));
-        jcbaestatus.setFont(new java.awt.Font("Candara", 1, 12)); // NOI18N
-        jcbaestatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Estatus del cliente" }));
-        jcbaestatus.setToolTipText("");
 
         javax.swing.GroupLayout jpactualizaclienteLayout = new javax.swing.GroupLayout(jpactualizacliente);
         jpactualizacliente.setLayout(jpactualizaclienteLayout);
         jpactualizaclienteLayout.setHorizontalGroup(
             jpactualizaclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpactualizaclienteLayout.createSequentialGroup()
-                .addContainerGap(510, Short.MAX_VALUE)
-                .addComponent(jcbaestatus, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(323, 323, 323))
-            .addGroup(jpactualizaclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jpnuevocliente1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jpnuevocliente1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jpactualizaclienteLayout.setVerticalGroup(
             jpactualizaclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jpactualizaclienteLayout.createSequentialGroup()
-                .addGap(123, 123, 123)
-                .addComponent(jcbaestatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(378, Short.MAX_VALUE))
-            .addGroup(jpactualizaclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jpnuevocliente1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jpnuevocliente1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         jtpprincipal.addTab("Actualizar Cliente", jpactualizacliente);
@@ -775,12 +819,11 @@ public class jfmenucliente extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator9;
     private javax.swing.JButton jbactualizar;
     private javax.swing.JButton jbagregar;
-    private javax.swing.JComboBox<String> jcbaestatus;
     private javax.swing.JComboBox<String> jcbazona;
     private javax.swing.JComboBox<String> jcbestatus;
     private javax.swing.JComboBox<String> jcbestatusact;
-    private javax.swing.JComboBox<String> jcbestatusaval;
     private javax.swing.JComboBox<String> jcbestatusavalact;
+    private javax.swing.JComboBox<String> jcbestatusavaln;
     private javax.swing.JComboBox<String> jcbestatuseli;
     private javax.swing.JComboBox<String> jcbestatusn;
     private javax.swing.JComboBox<String> jcbnzona;

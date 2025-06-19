@@ -24,7 +24,7 @@ public class CConecta {
               en ese orden
              */
             conector = DriverManager.getConnection(url, user, password);
-            JOptionPane.showMessageDialog(null, "Conexion Exitosa");
+            //JOptionPane.showMessageDialog(null, "Conexion Exitosa");
             /* La excepcion que se manera "error" sera de tipo SQL
              por lo tanto debe cambiarse esa excepcion por una
              SQL

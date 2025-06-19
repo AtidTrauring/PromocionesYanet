@@ -1,7 +1,7 @@
 package crud;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
+import java.sql.*;
+import java.util.*;
 
 public class CCargaCombos {
 
@@ -80,5 +80,21 @@ public class CCargaCombos {
                 + "WHERE ca.clave_carrera = " + claveCarrera + ";";
         return cnslt.buscarValoresCombos(consulta);
     }
+    
+    /* Inicio Cliente */
+    
+    public ArrayList<String> cargaComboEstatus() throws SQLException {
+        consulta = "SELECT est.estatus FROM estatus est WHERE est.idestatus < 4;";
+        return cnslt.buscarValoresCombos(consulta);
+    }
+    public ArrayList<String> cargaComboEstatusAval() throws SQLException {
+        consulta = "SELECT est.estatus FROM estatus est WHERE est.idestatus > 3;";
+        return cnslt.buscarValoresCombos(consulta);
+    }
+    public ArrayList<String> cargaComboZona() throws SQLException {
+        consulta = "SELECT z.num_zona FROM zona z;";
+        return cnslt.buscarValoresCombos(consulta);
+    }
+    /* Fin Cliente */
 
 }

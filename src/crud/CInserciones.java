@@ -109,4 +109,12 @@ public class CInserciones {
         System.out.println(consulta);
         return cnslt.inserta(consulta);
     }
+    
+    /* Inseciones Cliente */
+//    public boolean insertaCliente(String idEstudiante, String idGrupo) throws SQLException {
+//        String consulta = "CALL sp_agrega_estudiante_grupo (" + idEstudiante + ", '" + idGrupo + ");";
+//        System.out.println(consulta);
+//        return cnslt.inserta(consulta);
+//    }
+    
 }
