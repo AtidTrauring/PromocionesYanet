@@ -516,5 +516,11 @@ public class CBusquedas {
                 + "INNER JOIN persona ON persona.clave_persona = estudiante.clave_persona;" ;
         return cnslt.buscarValor(consulta);
     }
-
+    
+    //--------------- promociones yp -----------------
+        public ArrayList<String[]> buscarProducto() throws SQLException {
+        consulta = "SELECT idproducto, producto, precio, stock"
+                + "FROM producto";
+        return cnslt.buscarValores(consulta, 4);
+    }
 }

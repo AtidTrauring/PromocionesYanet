@@ -4,17 +4,43 @@
  */
 package Views.productos;
 
-/**
- *
- * @author ADMIN
- */
-public class jfmenuproductos extends javax.swing.JPanel {
+import crud.CBusquedas;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import javax.swing.table.DefaultTableModel;
+import utilitarios.CUtilitarios;
 
-    /**
-     * Creates new form jfmenuproductos
-     */
-    public jfmenuproductos() {
+public class jfmenuproductos extends javax.swing.JPanel {
+    
+    private static String[] datosProducto;
+    private DefaultTableModel modelo;
+    private CBusquedas cb = new CBusquedas();
+    private ArrayList<String[]> datosKardex = new ArrayList<>();
+    
+    public jfmenuproductos(String [] datos) {
         initComponents();
+        datosProducto = datos;
+        jtableBuscarProductos.getTableHeader().setReorderingAllowed(false);
+        cargarTabla();
+    }
+    
+    private void limpiarTabla() {
+        modelo = (DefaultTableModel) jtableBuscarProductos.getModel();
+        modelo.setRowCount(0);
+    }
+
+    public void cargarTabla() {
+        modelo = (DefaultTableModel) jtableBuscarProductos.getModel();
+        try {
+            datosKardex = cb.buscarProducto();
+            limpiarTabla();
+
+            for (String[] datoKardex : datosKardex) {
+                modelo.addRow(new Object[]{datoKardex[0], datoKardex[1], datoKardex[2], datoKardex[3]});
+            }
+        } catch (SQLException ex) {
+            CUtilitarios.msg_error("No se pudo cargar la informacion en la tabla", "Cargando Tabla");
+        }
     }
 
     /**
@@ -29,7 +55,7 @@ public class jfmenuproductos extends javax.swing.JPanel {
         jTPproductos = new javax.swing.JTabbedPane();
         JpnlListProducto = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jtblBuscarProductos = new javax.swing.JTable();
+        jtableBuscarProductos = new javax.swing.JTable();
         jPnlBusquedaProducto = new javax.swing.JPanel();
         jLblBusquedaProducto = new javax.swing.JLabel();
         jLblBIDProducto = new javax.swing.JLabel();
@@ -96,7 +122,7 @@ public class jfmenuproductos extends javax.swing.JPanel {
 
         JpnlListProducto.setBackground(new java.awt.Color(242, 220, 153));
 
-        jtblBuscarProductos.setModel(new javax.swing.table.DefaultTableModel(
+        jtableBuscarProductos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -104,7 +130,7 @@ public class jfmenuproductos extends javax.swing.JPanel {
                 "ID Producto", "Producto", "Precio", "Stock"
             }
         ));
-        jScrollPane1.setViewportView(jtblBuscarProductos);
+        jScrollPane1.setViewportView(jtableBuscarProductos);
 
         jPnlBusquedaProducto.setBackground(new java.awt.Color(167, 235, 242));
 
@@ -123,6 +149,11 @@ public class jfmenuproductos extends javax.swing.JPanel {
         jTxtBIDProducto.setBackground(new java.awt.Color(167, 235, 242));
         jTxtBIDProducto.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
         jTxtBIDProducto.setBorder(null);
+        jTxtBIDProducto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTxtBIDProductoActionPerformed(evt);
+            }
+        });
 
         jTxtBNombreProducto.setBackground(new java.awt.Color(167, 235, 242));
         jTxtBNombreProducto.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
@@ -693,6 +724,10 @@ public class jfmenuproductos extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jTxtBIDProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTxtBIDProductoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTxtBIDProductoActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel JpnlListProducto;
@@ -757,7 +792,7 @@ public class jfmenuproductos extends javax.swing.JPanel {
     private javax.swing.JTextField jTxtIngNombreProducto;
     private javax.swing.JTextField jTxtIngPrecioProducto;
     private javax.swing.JTextField jTxtIngStockProducto;
-    private javax.swing.JTable jtblBuscarProductos;
+    private javax.swing.JTable jtableBuscarProductos;
     private javax.swing.JTable jtblEliminarProductos;
     // End of variables declaration//GEN-END:variables
 }
