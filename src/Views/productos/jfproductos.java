@@ -355,7 +355,7 @@ public class jfproductos extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jLblLogoIngProd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/logo_vectori_pequeño.png"))); // NOI18N
+        jLblLogoIngProd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/logo_vectori_peque.png"))); // NOI18N
 
         jBtnIngGuardarProd.setBackground(new java.awt.Color(53, 189, 242));
         jBtnIngGuardarProd.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
@@ -616,7 +616,7 @@ public class jfproductos extends javax.swing.JFrame {
                 .addContainerGap(34, Short.MAX_VALUE))
         );
 
-        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/logo_vectori_pequeño.png"))); // NOI18N
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/logo_vectori_peque.png"))); // NOI18N
 
         jBtnElmEliminarProd.setBackground(new java.awt.Color(53, 189, 242));
         jBtnElmEliminarProd.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
@@ -639,20 +639,18 @@ public class jfproductos extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 308, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(jPnlElimProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPnlElimProductoLayout.createSequentialGroup()
-                        .addGap(103, 103, 103)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPnlElimProductoLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel3)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(103, 103, 103))
                     .addGroup(jPnlElimProductoLayout.createSequentialGroup()
+                        .addGap(18, 18, 18)
                         .addGroup(jPnlElimProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPnlEliminarProducto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(jPnlElimProductoLayout.createSequentialGroup()
-                                .addGap(18, 18, 18)
                                 .addComponent(jBtnElmEliminarProd)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jBtnElimEliminarProducto))
-                            .addGroup(jPnlElimProductoLayout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jPnlEliminarProducto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addComponent(jBtnElimEliminarProducto)))
                         .addContainerGap())))
         );
 
@@ -667,7 +665,7 @@ public class jfproductos extends javax.swing.JFrame {
                         .addComponent(jPnlEliminarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(18, 18, 18)
                         .addGroup(jPnlElimProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jBtnElmEliminarProd)
                             .addComponent(jBtnElimEliminarProducto)))
