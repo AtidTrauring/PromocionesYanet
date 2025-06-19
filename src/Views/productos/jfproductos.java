@@ -29,7 +29,7 @@ public class jfproductos extends javax.swing.JFrame {
         jPnlLogAlmacen = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jTbPnlMenu = new javax.swing.JTabbedPane();
-        jPanel2 = new javax.swing.JPanel();
+        jPnlBuscaProd = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTblBuscarProd = new javax.swing.JTable();
         jPnlBusquedaProd = new javax.swing.JPanel();
@@ -43,7 +43,7 @@ public class jfproductos extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JSeparator();
         jSeparator2 = new javax.swing.JSeparator();
         jSeparator3 = new javax.swing.JSeparator();
-        jPanel3 = new javax.swing.JPanel();
+        jPnlAgrProducto = new javax.swing.JPanel();
         jPnlAgreProd = new javax.swing.JPanel();
         jLblIngresoProd = new javax.swing.JLabel();
         jLblIngIDProd = new javax.swing.JLabel();
@@ -61,7 +61,7 @@ public class jfproductos extends javax.swing.JFrame {
         jLblLogoIngProd = new javax.swing.JLabel();
         jBtnIngGuardarProd = new javax.swing.JButton();
         jBtnIngLimpiarProd = new javax.swing.JButton();
-        jPanel4 = new javax.swing.JPanel();
+        jPnlActProducto = new javax.swing.JPanel();
         jPnlActualizarProducto = new javax.swing.JPanel();
         jLblActProd = new javax.swing.JLabel();
         jSeparator8 = new javax.swing.JSeparator();
@@ -76,10 +76,10 @@ public class jfproductos extends javax.swing.JFrame {
         jLblActStockProd = new javax.swing.JLabel();
         jTxtActStockProd = new javax.swing.JTextField();
         jSeparator11 = new javax.swing.JSeparator();
-        jLabel2 = new javax.swing.JLabel();
         jBtnActActualizarProd = new javax.swing.JButton();
         jBtnActLimpiarCampo = new javax.swing.JButton();
-        jPanel5 = new javax.swing.JPanel();
+        jLabel4 = new javax.swing.JLabel();
+        jPnlElimProducto = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jtblEliminarProductos = new javax.swing.JTable();
         jPnlEliminarProducto = new javax.swing.JPanel();
@@ -118,7 +118,7 @@ public class jfproductos extends javax.swing.JFrame {
 
         jTbPnlMenu.setFont(new java.awt.Font("Candara", 0, 12)); // NOI18N
 
-        jPanel2.setBackground(new java.awt.Color(242, 220, 153));
+        jPnlBuscaProd.setBackground(new java.awt.Color(242, 220, 153));
 
         jTblBuscarProd.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -207,7 +207,7 @@ public class jfproductos extends javax.swing.JFrame {
                 .addComponent(jTxtBusNombreProd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
                 .addComponent(jLblBusPrecioProd)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTxtBusPrecioProd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -216,30 +216,30 @@ public class jfproductos extends javax.swing.JFrame {
                 .addGap(32, 32, 32))
         );
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        javax.swing.GroupLayout jPnlBuscaProdLayout = new javax.swing.GroupLayout(jPnlBuscaProd);
+        jPnlBuscaProd.setLayout(jPnlBuscaProdLayout);
+        jPnlBuscaProdLayout.setHorizontalGroup(
+            jPnlBuscaProdLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPnlBuscaProdLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
                 .addComponent(jPnlBusquedaProd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(32, 32, 32))
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        jPnlBuscaProdLayout.setVerticalGroup(
+            jPnlBuscaProdLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPnlBuscaProdLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPnlBuscaProdLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPnlBusquedaProd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
-        jTbPnlMenu.addTab("Lista de productos", jPanel2);
+        jTbPnlMenu.addTab("Lista de productos", jPnlBuscaProd);
 
-        jPanel3.setBackground(new java.awt.Color(242, 220, 153));
+        jPnlAgrProducto.setBackground(new java.awt.Color(242, 220, 153));
 
         jPnlAgreProd.setBackground(new java.awt.Color(167, 235, 242));
 
@@ -365,15 +365,15 @@ public class jfproductos extends javax.swing.JFrame {
         jBtnIngLimpiarProd.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jBtnIngLimpiarProd.setText("Limpiar campos");
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
+        javax.swing.GroupLayout jPnlAgrProductoLayout = new javax.swing.GroupLayout(jPnlAgrProducto);
+        jPnlAgrProducto.setLayout(jPnlAgrProductoLayout);
+        jPnlAgrProductoLayout.setHorizontalGroup(
+            jPnlAgrProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPnlAgrProductoLayout.createSequentialGroup()
                 .addGap(57, 57, 57)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPnlAgrProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPnlAgreProd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
+                    .addGroup(jPnlAgrProductoLayout.createSequentialGroup()
                         .addGap(29, 29, 29)
                         .addComponent(jLblLogoIngProd)
                         .addGap(33, 33, 33)
@@ -383,28 +383,28 @@ public class jfproductos extends javax.swing.JFrame {
                 .addContainerGap(60, Short.MAX_VALUE))
         );
 
-        jPanel3Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jBtnIngGuardarProd, jBtnIngLimpiarProd});
+        jPnlAgrProductoLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jBtnIngGuardarProd, jBtnIngLimpiarProd});
 
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
+        jPnlAgrProductoLayout.setVerticalGroup(
+            jPnlAgrProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPnlAgrProductoLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPnlAgreProd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGroup(jPnlAgrProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPnlAgrProductoLayout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLblLogoIngProd))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
+                    .addGroup(jPnlAgrProductoLayout.createSequentialGroup()
                         .addGap(55, 55, 55)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(jPnlAgrProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jBtnIngGuardarProd)
                             .addComponent(jBtnIngLimpiarProd))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jTbPnlMenu.addTab("Agregar producto", jPanel3);
+        jTbPnlMenu.addTab("Agregar producto", jPnlAgrProducto);
 
-        jPanel4.setBackground(new java.awt.Color(242, 220, 153));
+        jPnlActProducto.setBackground(new java.awt.Color(242, 220, 153));
 
         jPnlActualizarProducto.setBackground(new java.awt.Color(167, 235, 242));
 
@@ -510,8 +510,6 @@ public class jfproductos extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/logo_vectori_pequeño.png"))); // NOI18N
-
         jBtnActActualizarProd.setBackground(new java.awt.Color(53, 189, 242));
         jBtnActActualizarProd.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jBtnActActualizarProd.setText("Actualizar producto");
@@ -520,45 +518,49 @@ public class jfproductos extends javax.swing.JFrame {
         jBtnActLimpiarCampo.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jBtnActLimpiarCampo.setText("Limpiar campos");
 
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
+        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/logo_vectori_peque.png"))); // NOI18N
+
+        javax.swing.GroupLayout jPnlActProductoLayout = new javax.swing.GroupLayout(jPnlActProducto);
+        jPnlActProducto.setLayout(jPnlActProductoLayout);
+        jPnlActProductoLayout.setHorizontalGroup(
+            jPnlActProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPnlActProductoLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPnlActualizarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 78, Short.MAX_VALUE)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(15, 15, 15)
-                        .addComponent(jLabel2))
-                    .addComponent(jBtnActLimpiarCampo)
-                    .addComponent(jBtnActActualizarProd))
-                .addGap(69, 69, 69))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 81, Short.MAX_VALUE)
+                .addGroup(jPnlActProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPnlActProductoLayout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addGap(93, 93, 93))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPnlActProductoLayout.createSequentialGroup()
+                        .addGroup(jPnlActProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jBtnActLimpiarCampo)
+                            .addComponent(jBtnActActualizarProd))
+                        .addGap(66, 66, 66))))
         );
 
-        jPanel4Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jBtnActActualizarProd, jBtnActLimpiarCampo});
+        jPnlActProductoLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jBtnActActualizarProd, jBtnActLimpiarCampo});
 
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
+        jPnlActProductoLayout.setVerticalGroup(
+            jPnlActProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPnlActProductoLayout.createSequentialGroup()
+                .addGroup(jPnlActProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPnlActProductoLayout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jPnlActualizarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(36, 36, 36)
-                        .addComponent(jLabel2)
-                        .addGap(31, 31, 31)
+                    .addGroup(jPnlActProductoLayout.createSequentialGroup()
+                        .addGap(47, 47, 47)
+                        .addComponent(jLabel4)
+                        .addGap(37, 37, 37)
                         .addComponent(jBtnActActualizarProd)
                         .addGap(27, 27, 27)
                         .addComponent(jBtnActLimpiarCampo)))
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap(38, Short.MAX_VALUE))
         );
 
-        jTbPnlMenu.addTab("Actualizar producto", jPanel4);
+        jTbPnlMenu.addTab("Actualizar producto", jPnlActProducto);
 
-        jPanel5.setBackground(new java.awt.Color(242, 220, 153));
+        jPnlElimProducto.setBackground(new java.awt.Color(242, 220, 153));
 
         jtblEliminarProductos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -629,51 +631,51 @@ public class jfproductos extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
+        javax.swing.GroupLayout jPnlElimProductoLayout = new javax.swing.GroupLayout(jPnlElimProducto);
+        jPnlElimProducto.setLayout(jPnlElimProductoLayout);
+        jPnlElimProductoLayout.setHorizontalGroup(
+            jPnlElimProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPnlElimProductoLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 308, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGroup(jPnlElimProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPnlElimProductoLayout.createSequentialGroup()
                         .addGap(103, 103, 103)
                         .addComponent(jLabel3)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel5Layout.createSequentialGroup()
+                    .addGroup(jPnlElimProductoLayout.createSequentialGroup()
+                        .addGroup(jPnlElimProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPnlElimProductoLayout.createSequentialGroup()
                                 .addGap(18, 18, 18)
                                 .addComponent(jBtnElmEliminarProd)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jBtnElimEliminarProducto))
-                            .addGroup(jPanel5Layout.createSequentialGroup()
+                            .addGroup(jPnlElimProductoLayout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jPnlEliminarProducto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addContainerGap())))
         );
 
-        jPanel5Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jBtnElimEliminarProducto, jBtnElmEliminarProd});
+        jPnlElimProductoLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jBtnElimEliminarProducto, jBtnElmEliminarProd});
 
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                .addContainerGap(12, Short.MAX_VALUE)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel5Layout.createSequentialGroup()
+        jPnlElimProductoLayout.setVerticalGroup(
+            jPnlElimProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPnlElimProductoLayout.createSequentialGroup()
+                .addContainerGap(33, Short.MAX_VALUE)
+                .addGroup(jPnlElimProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPnlElimProductoLayout.createSequentialGroup()
                         .addComponent(jPnlEliminarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(jPnlElimProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jBtnElmEliminarProd)
                             .addComponent(jBtnElimEliminarProducto)))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
-        jTbPnlMenu.addTab("Eliminar producto", jPanel5);
+        jTbPnlMenu.addTab("Eliminar producto", jPnlElimProducto);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -740,8 +742,8 @@ public class jfproductos extends javax.swing.JFrame {
     private javax.swing.JButton jBtnIngGuardarProd;
     private javax.swing.JButton jBtnIngLimpiarProd;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLblActIDProd;
     private javax.swing.JLabel jLblActNombreProd;
     private javax.swing.JLabel jLblActPrecioProd;
@@ -759,13 +761,13 @@ public class jfproductos extends javax.swing.JFrame {
     private javax.swing.JLabel jLblIngStockProd;
     private javax.swing.JLabel jLblIngresoProd;
     private javax.swing.JLabel jLblLogoIngProd;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPnlActProducto;
     private javax.swing.JPanel jPnlActualizarProducto;
+    private javax.swing.JPanel jPnlAgrProducto;
     private javax.swing.JPanel jPnlAgreProd;
+    private javax.swing.JPanel jPnlBuscaProd;
     private javax.swing.JPanel jPnlBusquedaProd;
+    private javax.swing.JPanel jPnlElimProducto;
     private javax.swing.JPanel jPnlEliminarProducto;
     private javax.swing.JPanel jPnlLogAlmacen;
     private javax.swing.JScrollPane jScrollPane1;
