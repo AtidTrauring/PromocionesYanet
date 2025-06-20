@@ -7,7 +7,9 @@ package Views.productos;
 import crud.CBusquedas;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 import utilitarios.CUtilitarios;
 
 /**
@@ -18,22 +20,58 @@ public class jfproductos extends javax.swing.JFrame {
 
     private DefaultTableModel modelo;
     private CBusquedas cb = new CBusquedas();
+    private TableRowSorter tr;
     private ArrayList<String[]> datosKardex = new ArrayList<>();
+    private static String[] datosProdu;
+
     /**
      * Creates new form jfproductos
      */
-    public jfproductos() {
-      initComponents();
+    public jfproductos(String[] datos) {
+        initComponents();
+        datosProdu = datos;
         jTblBuscarProd.getTableHeader().setReorderingAllowed(false);
         cargarTabla();
+        // Activar búsqueda automática
+        addFiltroListener(jTxtBusIDProd);
+        addFiltroListener(jTxtBusNombreProd);
+        addFiltroListener(jTxtBusPrecioProd);
+
     }
 
+    private void limpiarTabla() {
+        modelo = (DefaultTableModel) jTblBuscarProd.getModel();
+        modelo.setRowCount(0);
+    }
+
+    private void addFiltroListener(javax.swing.JTextField campo) {
+        campo.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                aplicaFiltros();
+            }
+
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                aplicaFiltros();
+            }
+
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                aplicaFiltros();
+            }
+        });
+    }
+
+    private void limpiarBuscadores() {
+        // Limpia los cuadro de texto
+        jTxtBusIDProd.setText(null);
+        jTxtBusNombreProd.setText(null);
+        jTxtBusPrecioProd.setText(null);
+    }
 
     public void cargarTabla() {
         modelo = (DefaultTableModel) jTblBuscarProd.getModel();
         try {
             datosKardex = cb.buscarProducto();
-
+            limpiarTabla();
             for (String[] datoKardex : datosKardex) {
                 modelo.addRow(new Object[]{datoKardex[0], datoKardex[1], datoKardex[2], datoKardex[3]});
             }
@@ -41,6 +79,27 @@ public class jfproductos extends javax.swing.JFrame {
             CUtilitarios.msg_error("No se pudo cargar la informacion en la tabla", "Cargando Tabla");
         }
     }
+
+    public void aplicaFiltros() {
+        modelo = (DefaultTableModel) jTblBuscarProd.getModel();
+        tr = new TableRowSorter<>(modelo);
+        jTblBuscarProd.setRowSorter(tr);
+        ArrayList<RowFilter<Object, Object>> filtros = new ArrayList<>();
+
+        if (!jTxtBusIDProd.getText().trim().isEmpty()) {
+            filtros.add(RowFilter.regexFilter("(?i)" + jTxtBusIDProd.getText().trim(), 0));
+        }
+        if (!jTxtBusNombreProd.getText().trim().isEmpty()) {
+            filtros.add(RowFilter.regexFilter("(?i)" + jTxtBusNombreProd.getText().trim(), 1));
+        }
+        if (!jTxtBusPrecioProd.getText().trim().isEmpty()) {
+            filtros.add(RowFilter.regexFilter("(?i)" + jTxtBusPrecioProd.getText().trim(), 2));
+        }
+
+        RowFilter<Object, Object> rf = RowFilter.andFilter(filtros);
+        tr.setRowFilter(rf);
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -171,14 +230,29 @@ public class jfproductos extends javax.swing.JFrame {
         jTxtBusIDProd.setBackground(new java.awt.Color(167, 235, 242));
         jTxtBusIDProd.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
         jTxtBusIDProd.setBorder(null);
+        jTxtBusIDProd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTxtBusIDProdActionPerformed(evt);
+            }
+        });
 
         jTxtBusNombreProd.setBackground(new java.awt.Color(167, 235, 242));
         jTxtBusNombreProd.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
         jTxtBusNombreProd.setBorder(null);
+        jTxtBusNombreProd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTxtBusNombreProdActionPerformed(evt);
+            }
+        });
 
         jTxtBusPrecioProd.setBackground(new java.awt.Color(167, 235, 242));
         jTxtBusPrecioProd.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
         jTxtBusPrecioProd.setBorder(null);
+        jTxtBusPrecioProd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTxtBusPrecioProdActionPerformed(evt);
+            }
+        });
 
         jSeparator1.setForeground(new java.awt.Color(0, 0, 0));
 
@@ -719,6 +793,21 @@ public class jfproductos extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jBtnElimEliminarProductoActionPerformed
 
+    private void jTxtBusIDProdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTxtBusIDProdActionPerformed
+        // TODO add your handling code here:
+        aplicaFiltros();
+    }//GEN-LAST:event_jTxtBusIDProdActionPerformed
+
+    private void jTxtBusNombreProdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTxtBusNombreProdActionPerformed
+        // TODO add your handling code here:
+        aplicaFiltros();
+    }//GEN-LAST:event_jTxtBusNombreProdActionPerformed
+
+    private void jTxtBusPrecioProdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTxtBusPrecioProdActionPerformed
+        // TODO add your handling code here
+        aplicaFiltros();
+    }//GEN-LAST:event_jTxtBusPrecioProdActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -749,7 +838,7 @@ public class jfproductos extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new jfproductos().setVisible(true);
+                new jfproductos(datosProdu).setVisible(true);
             }
         });
     }
