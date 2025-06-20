@@ -6,7 +6,6 @@ public class JfEmpleado extends javax.swing.JFrame {
         initComponents();
     }
 
-
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -82,7 +81,7 @@ public class JfEmpleado extends javax.swing.JFrame {
         JtxtEmpleado = new javax.swing.JTextField();
         JspEmpleado = new javax.swing.JSeparator();
         JpnlEncabezado = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+        JlblImagenEncabezadoEmpleado = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Empleados");
@@ -752,7 +751,8 @@ public class JfEmpleado extends javax.swing.JFrame {
 
         JpnlEncabezado.setBackground(new java.awt.Color(242, 220, 153));
 
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/empleado-del-mes (1).png"))); // NOI18N
+        JlblImagenEncabezadoEmpleado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/iconoEmpleado.png"))); // NOI18N
+        JlblImagenEncabezadoEmpleado.setText("Empleados");
 
         javax.swing.GroupLayout JpnlEncabezadoLayout = new javax.swing.GroupLayout(JpnlEncabezado);
         JpnlEncabezado.setLayout(JpnlEncabezadoLayout);
@@ -760,14 +760,14 @@ public class JfEmpleado extends javax.swing.JFrame {
             JpnlEncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(JpnlEncabezadoLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
+                .addComponent(JlblImagenEncabezadoEmpleado)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         JpnlEncabezadoLayout.setVerticalGroup(
             JpnlEncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JpnlEncabezadoLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1)
+                .addComponent(JlblImagenEncabezadoEmpleado)
                 .addContainerGap())
         );
 
@@ -781,7 +781,7 @@ public class JfEmpleado extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(JpnlEncabezado, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(JpnlEncabezado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(JtbpPaneles))
         );
@@ -826,6 +826,7 @@ public class JfEmpleado extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> JcmbxFechaFin;
     private javax.swing.JComboBox<String> JcmbxFechaInicio;
     private javax.swing.JComboBox<String> JcmbxSueldo;
+    private javax.swing.JLabel JlblImagenEncabezadoEmpleado;
     private javax.swing.JLabel JlblimagenA;
     private javax.swing.JLabel JlblimagenI;
     private javax.swing.JPanel JpnlCamposActualiza;
@@ -888,6 +889,5 @@ public class JfEmpleado extends javax.swing.JFrame {
     private javax.swing.JTextField JtxtID1;
     private javax.swing.JTextField JtxtNombre;
     private javax.swing.JTextField JtxtNombre1;
-    private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 }
