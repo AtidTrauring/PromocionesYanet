@@ -1,7 +1,10 @@
 package Views.empleado;
 
 import crud.CBusquedas;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
@@ -15,8 +18,9 @@ public class JfEmpleado extends javax.swing.JFrame {
 // Objeto para buscar datos (debes implementar esta clase)
     private CBusquedas queryBusca = new CBusquedas();
 
-    public JfEmpleado() {
+    public JfEmpleado() throws SQLException {
         initComponents();
+        cargarTabla();
     }
 
     // ================== MÉTODOS PARA GESTIÓN DE EMPLEADOS =====================
@@ -932,7 +936,11 @@ public class JfEmpleado extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new JfEmpleado().setVisible(true);
+                try {
+                    new JfEmpleado().setVisible(true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(JfEmpleado.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }

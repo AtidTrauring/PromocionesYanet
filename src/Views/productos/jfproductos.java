@@ -153,40 +153,40 @@ public class jfproductos extends javax.swing.JFrame {
         return valida;
     }
 
-    public boolean validaCampos() {
-        return && validaCampoProducto(idproducto, jTxtIngIDProd, regexproducto, "Ingrese el nombre del grupo", "Valores invalidos para el grupo")
-                && validaCampoComb(ciclo, JcmbxCiclo, "Seleccione un ciclo")
-                && validaCampoComb(semestre, JcmbxSemestre, "Seleccione un semestres")
-                && validaCampoComb(carrera, JcmbxCarrera, "Selecciones una carrera");
-    }
+//    public boolean validaCampos() {
+//        return && validaCampoProducto(idproducto, jTxtIngIDProd, regexproducto, "Ingrese el nombre del grupo", "Valores invalidos para el grupo")
+//                && validaCampoComb(ciclo, JcmbxCiclo, "Seleccione un ciclo")
+//                && validaCampoComb(semestre, JcmbxSemestre, "Seleccione un semestres")
+//                && validaCampoComb(carrera, JcmbxCarrera, "Selecciones una carrera");
+//    }
 
-    public void enviarDatos() {
-        int clave_semestre, clave_carrera, clave_final;
-        String grupoFi, clave_ciclo;
-        if (validaCampos()) {
-            asignaValores();
-            try {
-                clave_final = queryBusca.obtenIdFinalGrupo();
-                grupoFi = JtxtGrupo.getText();
-                clave_ciclo = queryBusca.obtenClaveCicloSeleccionado(ciclo);
-                clave_semestre = queryBusca.obtenClaveSemestreSeleccionada(semestre);
-                clave_carrera = queryBusca.obtenClaveCarreraSeleccionado(carrera);
-
-                System.out.println("NombreGrupo:" + grupo + "\nCiclo:" + ciclo + "\nSemestre:" + semestre + "\nCarrera:" + carrera);
-                System.out.println("CGrupo:" + grupoFi + "\nCCiclo:" + clave_ciclo + "\nCSemestre:" + clave_semestre + "\nCCarrera:" + clave_carrera);
-                queryInserta.insertaGrupo((clave_final + 1), grupoFi, clave_ciclo, clave_semestre, clave_carrera);
-
-                CUtilitarios.msg("Grupo registrado exitosamente", "Registro Grupos");
-            } catch (SQLException ex) {
-                CUtilitarios.msg_advertencia("Seleccione las opciones: ", "Error en combobox");
-            } finally {
-                limpiaValores();
-            }
-        } else {
-            // No cerrar la ventana si los campos no son válidos
-            CUtilitarios.msg_advertencia("Por favor, completa todos los campos correctamente.", "Registro Grupos");
-        }
-    }
+//    public void enviarDatos() {
+//        int clave_semestre, clave_carrera, clave_final;
+//        String grupoFi, clave_ciclo;
+//        if (validaCampos()) {
+//            asignaValores();
+//            try {
+//                clave_final = queryBusca.obtenIdFinalGrupo();
+//                grupoFi = JtxtGrupo.getText();
+//                clave_ciclo = queryBusca.obtenClaveCicloSeleccionado(ciclo);
+//                clave_semestre = queryBusca.obtenClaveSemestreSeleccionada(semestre);
+//                clave_carrera = queryBusca.obtenClaveCarreraSeleccionado(carrera);
+//
+//                System.out.println("NombreGrupo:" + grupo + "\nCiclo:" + ciclo + "\nSemestre:" + semestre + "\nCarrera:" + carrera);
+//                System.out.println("CGrupo:" + grupoFi + "\nCCiclo:" + clave_ciclo + "\nCSemestre:" + clave_semestre + "\nCCarrera:" + clave_carrera);
+//                queryInserta.insertaGrupo((clave_final + 1), grupoFi, clave_ciclo, clave_semestre, clave_carrera);
+//
+//                CUtilitarios.msg("Grupo registrado exitosamente", "Registro Grupos");
+//            } catch (SQLException ex) {
+//                CUtilitarios.msg_advertencia("Seleccione las opciones: ", "Error en combobox");
+//            } finally {
+//                limpiaValores();
+//            }
+//        } else {
+//            // No cerrar la ventana si los campos no son válidos
+//            CUtilitarios.msg_advertencia("Por favor, completa todos los campos correctamente.", "Registro Grupos");
+//        }
+//    }
 
     /**
      * This method is called from within the constructor to initialize the form.
