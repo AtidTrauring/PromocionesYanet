@@ -12,21 +12,6 @@ public class JfEmpleado extends javax.swing.JFrame {
     private void initComponents() {
 
         JtbpPaneles = new javax.swing.JTabbedPane();
-        JpnlListEmp = new javax.swing.JPanel();
-        JspTC1 = new javax.swing.JScrollPane();
-        JtblClientes1 = new javax.swing.JTable();
-        JlblIDEmpleado1 = new javax.swing.JLabel();
-        JtxtID1 = new javax.swing.JTextField();
-        JspTexto1 = new javax.swing.JSeparator();
-        JlblNombre1 = new javax.swing.JLabel();
-        JtxtNombre1 = new javax.swing.JTextField();
-        JspNombre1 = new javax.swing.JSeparator();
-        JlblApePat1 = new javax.swing.JLabel();
-        JtxtApePat1 = new javax.swing.JTextField();
-        JspApePat1 = new javax.swing.JSeparator();
-        JlblApeMat1 = new javax.swing.JLabel();
-        JtxtApeMat1 = new javax.swing.JTextField();
-        JspApeMat1 = new javax.swing.JSeparator();
         JpnlAddEmp = new javax.swing.JPanel();
         JlblNmbr = new javax.swing.JLabel();
         JtxtNmbr = new javax.swing.JTextField();
@@ -40,14 +25,11 @@ public class JfEmpleado extends javax.swing.JFrame {
         JlblEdad = new javax.swing.JLabel();
         JtxtEdad = new javax.swing.JTextField();
         JspEdad = new javax.swing.JSeparator();
-        JlblDireccion = new javax.swing.JLabel();
         JtxtTelefono = new javax.swing.JTextField();
         JspTelefono = new javax.swing.JSeparator();
         JlblCorreo = new javax.swing.JLabel();
         JtxtCorreo = new javax.swing.JTextField();
         JspCorreo = new javax.swing.JSeparator();
-        JspDireccion = new javax.swing.JScrollPane();
-        JtxtaDireccion = new javax.swing.JTextArea();
         JcmbxZonas = new javax.swing.JComboBox<>();
         JbtnAgregarEmpleado = new javax.swing.JButton();
         JlblImagen = new javax.swing.JLabel();
@@ -93,135 +75,23 @@ public class JfEmpleado extends javax.swing.JFrame {
         JtxtApeMat = new javax.swing.JTextField();
         JspApeMat = new javax.swing.JSeparator();
         JbtnEliminarEmpleado = new javax.swing.JButton();
+        JbtnEliminarEmpleado1 = new javax.swing.JButton();
+        JpnlSueldos = new javax.swing.JPanel();
+        JspTC1 = new javax.swing.JScrollPane();
+        JtblClientes1 = new javax.swing.JTable();
+        JcmbxFechaInicio = new javax.swing.JComboBox<>();
+        JcmbxFechaFin = new javax.swing.JComboBox<>();
+        JcmbxSueldo = new javax.swing.JComboBox<>();
+        JtxtEmpleado = new javax.swing.JTextField();
+        JspEmpleado = new javax.swing.JSeparator();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Empleados");
         setPreferredSize(new java.awt.Dimension(770, 390));
 
         JtbpPaneles.setBackground(new java.awt.Color(242, 220, 153));
-
-        JpnlListEmp.setBackground(new java.awt.Color(242, 220, 153));
-
-        JtblClientes1.setBackground(new java.awt.Color(167, 235, 242));
-        JtblClientes1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Id Empleado", "Nombre(s)", "Apellido Paterno", "Apellido Materno"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        JtblClientes1.setGridColor(new java.awt.Color(255, 255, 204));
-        JspTC1.setViewportView(JtblClientes1);
-        if (JtblClientes1.getColumnModel().getColumnCount() > 0) {
-            JtblClientes1.getColumnModel().getColumn(0).setResizable(false);
-            JtblClientes1.getColumnModel().getColumn(1).setResizable(false);
-            JtblClientes1.getColumnModel().getColumn(2).setResizable(false);
-            JtblClientes1.getColumnModel().getColumn(3).setResizable(false);
-        }
-
-        JlblIDEmpleado1.setText("Ingrese el ID de Busqueda");
-
-        JtxtID1.setBackground(new java.awt.Color(242, 220, 153));
-        JtxtID1.setBorder(null);
-
-        JspTexto1.setForeground(new java.awt.Color(0, 0, 0));
-
-        JlblNombre1.setText("Ingrese el Nombre de Busqueda");
-
-        JtxtNombre1.setBackground(new java.awt.Color(242, 220, 153));
-        JtxtNombre1.setBorder(null);
-
-        JspNombre1.setForeground(new java.awt.Color(0, 0, 0));
-
-        JlblApePat1.setText("Ingrese el Apellido Paterno de Busqueda");
-
-        JtxtApePat1.setBackground(new java.awt.Color(242, 220, 153));
-        JtxtApePat1.setBorder(null);
-
-        JspApePat1.setForeground(new java.awt.Color(0, 0, 0));
-
-        JlblApeMat1.setText("Ingrese el Apellido Materno de Busqueda");
-
-        JtxtApeMat1.setBackground(new java.awt.Color(242, 220, 153));
-        JtxtApeMat1.setBorder(null);
-
-        JspApeMat1.setForeground(new java.awt.Color(0, 0, 0));
-
-        javax.swing.GroupLayout JpnlListEmpLayout = new javax.swing.GroupLayout(JpnlListEmp);
-        JpnlListEmp.setLayout(JpnlListEmpLayout);
-        JpnlListEmpLayout.setHorizontalGroup(
-            JpnlListEmpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(JpnlListEmpLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(JspTC1, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(JpnlListEmpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(JlblIDEmpleado1)
-                    .addComponent(JlblNombre1)
-                    .addComponent(JlblApePat1)
-                    .addComponent(JtxtApeMat1, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
-                    .addComponent(JlblApeMat1)
-                    .addComponent(JspTexto1)
-                    .addComponent(JtxtID1)
-                    .addComponent(JspNombre1)
-                    .addComponent(JtxtNombre1, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
-                    .addComponent(JspApePat1)
-                    .addComponent(JtxtApePat1, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
-                    .addComponent(JspApeMat1))
-                .addContainerGap(60, Short.MAX_VALUE))
-        );
-        JpnlListEmpLayout.setVerticalGroup(
-            JpnlListEmpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(JpnlListEmpLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(JpnlListEmpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(JpnlListEmpLayout.createSequentialGroup()
-                        .addComponent(JspTC1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                        .addGap(17, 17, 17))
-                    .addGroup(JpnlListEmpLayout.createSequentialGroup()
-                        .addComponent(JlblIDEmpleado1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(JtxtID1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(JspTexto1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(JlblNombre1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(JtxtNombre1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(JspNombre1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(JlblApePat1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(JtxtApePat1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(JspApePat1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(JlblApeMat1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(JtxtApeMat1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(JspApeMat1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 62, Short.MAX_VALUE))))
-        );
-
-        JtbpPaneles.addTab("Lista de Empleados", JpnlListEmp);
 
         JpnlAddEmp.setBackground(new java.awt.Color(242, 220, 153));
 
@@ -253,8 +123,6 @@ public class JfEmpleado extends javax.swing.JFrame {
 
         JspEdad.setForeground(new java.awt.Color(0, 0, 0));
 
-        JlblDireccion.setText("Direccion");
-
         JtxtTelefono.setBackground(new java.awt.Color(242, 220, 153));
         JtxtTelefono.setBorder(null);
 
@@ -266,10 +134,6 @@ public class JfEmpleado extends javax.swing.JFrame {
         JtxtCorreo.setBorder(null);
 
         JspCorreo.setForeground(new java.awt.Color(0, 0, 0));
-
-        JtxtaDireccion.setColumns(20);
-        JtxtaDireccion.setRows(5);
-        JspDireccion.setViewportView(JtxtaDireccion);
 
         JcmbxZonas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Zonas" }));
 
@@ -306,8 +170,6 @@ public class JfEmpleado extends javax.swing.JFrame {
                 .addGap(17, 17, 17)
                 .addGroup(JpnlAddEmpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(JtxtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(JlblDireccion)
-                    .addComponent(JspDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(JpnlAddEmpLayout.createSequentialGroup()
                         .addGap(1, 1, 1)
                         .addGroup(JpnlAddEmpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -362,11 +224,7 @@ public class JfEmpleado extends javax.swing.JFrame {
                 .addComponent(JtxtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(6, 6, 6)
                 .addComponent(JspTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(8, 8, 8)
-                .addComponent(JlblDireccion)
-                .addGap(14, 14, 14)
-                .addComponent(JspDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(27, 27, 27)
+                .addGap(151, 151, 151)
                 .addComponent(JcmbxZonas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(JpnlAddEmpLayout.createSequentialGroup()
                 .addGap(10, 10, 10)
@@ -592,6 +450,11 @@ public class JfEmpleado extends javax.swing.JFrame {
 
         JbtnEliminarEmpleado.setBackground(new java.awt.Color(56, 171, 242));
         JbtnEliminarEmpleado.setText("Eliminar");
+        JbtnEliminarEmpleado.setToolTipText("Seleccione una empleado en la tabla, y luego presione...");
+
+        JbtnEliminarEmpleado1.setBackground(new java.awt.Color(56, 171, 242));
+        JbtnEliminarEmpleado1.setText("Actualizar");
+        JbtnEliminarEmpleado1.setToolTipText("Seleccione una empleado en la tabla, y luego presione...");
 
         javax.swing.GroupLayout JpnlDeleteEmpLayout = new javax.swing.GroupLayout(JpnlDeleteEmp);
         JpnlDeleteEmp.setLayout(JpnlDeleteEmpLayout);
@@ -601,31 +464,30 @@ public class JfEmpleado extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(JspTC, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(JpnlDeleteEmpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(JpnlDeleteEmpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(JlblIDEmpleado)
-                        .addComponent(JlblNombre)
-                        .addComponent(JlblApePat)
-                        .addComponent(JtxtApeMat, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
-                        .addComponent(JlblApeMat)
-                        .addComponent(JspTexto)
-                        .addComponent(JtxtID)
-                        .addComponent(JspNombre)
-                        .addComponent(JtxtNombre, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
-                        .addComponent(JspApePat)
-                        .addComponent(JtxtApePat, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
-                        .addComponent(JspApeMat))
-                    .addComponent(JbtnEliminarEmpleado))
-                .addContainerGap(60, Short.MAX_VALUE))
+                .addGroup(JpnlDeleteEmpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(JlblIDEmpleado)
+                    .addComponent(JlblNombre)
+                    .addComponent(JlblApePat)
+                    .addComponent(JtxtApeMat, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
+                    .addComponent(JlblApeMat)
+                    .addComponent(JspTexto)
+                    .addComponent(JtxtID)
+                    .addComponent(JspNombre)
+                    .addComponent(JtxtNombre, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
+                    .addComponent(JspApePat)
+                    .addComponent(JtxtApePat, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
+                    .addComponent(JspApeMat)
+                    .addGroup(JpnlDeleteEmpLayout.createSequentialGroup()
+                        .addComponent(JbtnEliminarEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(JbtnEliminarEmpleado1, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(62, Short.MAX_VALUE))
         );
         JpnlDeleteEmpLayout.setVerticalGroup(
             JpnlDeleteEmpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(JpnlDeleteEmpLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(JpnlDeleteEmpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(JpnlDeleteEmpLayout.createSequentialGroup()
-                        .addComponent(JspTC, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                        .addGap(17, 17, 17))
                     .addGroup(JpnlDeleteEmpLayout.createSequentialGroup()
                         .addComponent(JlblIDEmpleado)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -651,21 +513,141 @@ public class JfEmpleado extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(JspApeMat, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(JbtnEliminarEmpleado)
-                        .addGap(0, 30, Short.MAX_VALUE))))
+                        .addGroup(JpnlDeleteEmpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(JbtnEliminarEmpleado)
+                            .addComponent(JbtnEliminarEmpleado1))
+                        .addGap(0, 3, Short.MAX_VALUE))
+                    .addComponent(JspTC, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addGap(17, 17, 17))
         );
 
         JtbpPaneles.addTab("Eliminar a un empleado", JpnlDeleteEmp);
+
+        JpnlSueldos.setBackground(new java.awt.Color(242, 220, 153));
+
+        JtblClientes1.setBackground(new java.awt.Color(167, 235, 242));
+        JtblClientes1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Id Empleado", "Nombre(s)", "Apellido Paterno", "Apellido Materno"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        JtblClientes1.setGridColor(new java.awt.Color(255, 255, 204));
+        JspTC1.setViewportView(JtblClientes1);
+        if (JtblClientes1.getColumnModel().getColumnCount() > 0) {
+            JtblClientes1.getColumnModel().getColumn(0).setResizable(false);
+            JtblClientes1.getColumnModel().getColumn(1).setResizable(false);
+            JtblClientes1.getColumnModel().getColumn(2).setResizable(false);
+            JtblClientes1.getColumnModel().getColumn(3).setResizable(false);
+        }
+
+        JcmbxFechaInicio.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Fecha Inicio" }));
+
+        JcmbxFechaFin.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Fecha Final" }));
+
+        JcmbxSueldo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Sueldo" }));
+
+        JtxtEmpleado.setBackground(new java.awt.Color(242, 220, 153));
+        JtxtEmpleado.setText("Empleado");
+        JtxtEmpleado.setBorder(null);
+
+        JspEmpleado.setForeground(new java.awt.Color(0, 0, 0));
+
+        javax.swing.GroupLayout JpnlSueldosLayout = new javax.swing.GroupLayout(JpnlSueldos);
+        JpnlSueldos.setLayout(JpnlSueldosLayout);
+        JpnlSueldosLayout.setHorizontalGroup(
+            JpnlSueldosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(JpnlSueldosLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(JpnlSueldosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(JpnlSueldosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(JspEmpleado)
+                        .addComponent(JtxtEmpleado, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE))
+                    .addComponent(JcmbxFechaInicio, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(JcmbxFechaFin, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(JcmbxSueldo, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(JspTC1, javax.swing.GroupLayout.DEFAULT_SIZE, 502, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        JpnlSueldosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {JcmbxFechaFin, JcmbxFechaInicio, JcmbxSueldo, JtxtEmpleado});
+
+        JpnlSueldosLayout.setVerticalGroup(
+            JpnlSueldosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(JpnlSueldosLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(JpnlSueldosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(JspTC1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addGroup(JpnlSueldosLayout.createSequentialGroup()
+                        .addComponent(JcmbxFechaInicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(JcmbxFechaFin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(JcmbxSueldo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(JtxtEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(JspEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 140, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+
+        JpnlSueldosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {JcmbxFechaFin, JcmbxFechaInicio, JcmbxSueldo, JtxtEmpleado});
+
+        JtbpPaneles.addTab("Sueldos", JpnlSueldos);
+
+        jPanel2.setBackground(new java.awt.Color(242, 220, 153));
+
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/empleado-del-mes (1).png"))); // NOI18N
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addContainerGap())
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(JtbpPaneles)
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(JtbpPaneles)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(JtbpPaneles))
         );
 
         pack();
@@ -702,6 +684,10 @@ public class JfEmpleado extends javax.swing.JFrame {
     private javax.swing.JButton JbtnActualizarEmpleado;
     private javax.swing.JButton JbtnAgregarEmpleado;
     private javax.swing.JButton JbtnEliminarEmpleado;
+    private javax.swing.JButton JbtnEliminarEmpleado1;
+    private javax.swing.JComboBox<String> JcmbxFechaFin;
+    private javax.swing.JComboBox<String> JcmbxFechaInicio;
+    private javax.swing.JComboBox<String> JcmbxSueldo;
     private javax.swing.JComboBox<String> JcmbxZonas;
     private javax.swing.JComboBox<String> JcmbxZonas1;
     private javax.swing.JLabel JlblAM;
@@ -709,53 +695,44 @@ public class JfEmpleado extends javax.swing.JFrame {
     private javax.swing.JLabel JlblAP;
     private javax.swing.JLabel JlblAP1;
     private javax.swing.JLabel JlblApeMat;
-    private javax.swing.JLabel JlblApeMat1;
     private javax.swing.JLabel JlblApePat;
-    private javax.swing.JLabel JlblApePat1;
     private javax.swing.JLabel JlblCorreo;
     private javax.swing.JLabel JlblCorreo1;
-    private javax.swing.JLabel JlblDireccion;
     private javax.swing.JLabel JlblDireccion1;
     private javax.swing.JLabel JlblEdad;
     private javax.swing.JLabel JlblEdad1;
     private javax.swing.JLabel JlblIDEmpleado;
-    private javax.swing.JLabel JlblIDEmpleado1;
     private javax.swing.JLabel JlblImagen;
     private javax.swing.JLabel JlblImagen1;
     private javax.swing.JLabel JlblNmbr;
     private javax.swing.JLabel JlblNmbr1;
     private javax.swing.JLabel JlblNombre;
-    private javax.swing.JLabel JlblNombre1;
     private javax.swing.JLabel JlblTelefono;
     private javax.swing.JLabel JlblTelefono1;
     private javax.swing.JPanel JpnlAddEmp;
     private javax.swing.JPanel JpnlDeleteEmp;
-    private javax.swing.JPanel JpnlListEmp;
+    private javax.swing.JPanel JpnlSueldos;
     private javax.swing.JPanel JpnlUpdateEmp;
     private javax.swing.JSeparator JspAM;
     private javax.swing.JSeparator JspAM1;
     private javax.swing.JSeparator JspAP;
     private javax.swing.JSeparator JspAP1;
     private javax.swing.JSeparator JspApeMat;
-    private javax.swing.JSeparator JspApeMat1;
     private javax.swing.JSeparator JspApePat;
-    private javax.swing.JSeparator JspApePat1;
     private javax.swing.JSeparator JspCorreo;
     private javax.swing.JSeparator JspCorreo1;
-    private javax.swing.JScrollPane JspDireccion;
     private javax.swing.JScrollPane JspDireccion1;
     private javax.swing.JSeparator JspEdad;
     private javax.swing.JSeparator JspEdad1;
+    private javax.swing.JSeparator JspEmpleado;
     private javax.swing.JSeparator JspNmbr;
     private javax.swing.JSeparator JspNmbr1;
     private javax.swing.JSeparator JspNombre;
-    private javax.swing.JSeparator JspNombre1;
     private javax.swing.JScrollPane JspTC;
     private javax.swing.JScrollPane JspTC1;
     private javax.swing.JSeparator JspTelefono;
     private javax.swing.JSeparator JspTelefono1;
     private javax.swing.JSeparator JspTexto;
-    private javax.swing.JSeparator JspTexto1;
     private javax.swing.JTable JtblClientes;
     private javax.swing.JTable JtblClientes1;
     private javax.swing.JTabbedPane JtbpPaneles;
@@ -764,22 +741,20 @@ public class JfEmpleado extends javax.swing.JFrame {
     private javax.swing.JTextField JtxtAP;
     private javax.swing.JTextField JtxtAP1;
     private javax.swing.JTextField JtxtApeMat;
-    private javax.swing.JTextField JtxtApeMat1;
     private javax.swing.JTextField JtxtApePat;
-    private javax.swing.JTextField JtxtApePat1;
     private javax.swing.JTextField JtxtCorreo;
     private javax.swing.JTextField JtxtCorreo1;
     private javax.swing.JTextField JtxtEdad;
     private javax.swing.JTextField JtxtEdad1;
+    private javax.swing.JTextField JtxtEmpleado;
     private javax.swing.JTextField JtxtID;
-    private javax.swing.JTextField JtxtID1;
     private javax.swing.JTextField JtxtNmbr;
     private javax.swing.JTextField JtxtNmbr1;
     private javax.swing.JTextField JtxtNombre;
-    private javax.swing.JTextField JtxtNombre1;
     private javax.swing.JTextField JtxtTelefono;
     private javax.swing.JTextField JtxtTelefono1;
-    private javax.swing.JTextArea JtxtaDireccion;
     private javax.swing.JTextArea JtxtaDireccion1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel2;
     // End of variables declaration//GEN-END:variables
 }

@@ -520,7 +520,7 @@ public class CBusquedas {
     //--------------- promociones yp -----------------
         public ArrayList<String[]> buscarProducto() throws SQLException {
         consulta = "SELECT idproducto, producto, precio, stock"
-                + "FROM producto ";
+                + " FROM producto ";
         return cnslt.buscarValores(consulta, 4);
     }
 }

@@ -27,12 +27,17 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="JtbpPaneles" alignment="0" max="32767" attributes="0"/>
+          <Component id="JtbpPaneles" max="32767" attributes="0"/>
+          <Component id="jPanel2" alignment="0" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="JtbpPaneles" alignment="0" max="32767" attributes="0"/>
+          <Group type="102" attributes="0">
+              <Component id="jPanel2" min="-2" pref="81" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="JtbpPaneles" max="32767" attributes="0"/>
+          </Group>
       </Group>
     </DimensionLayout>
   </Layout>
@@ -46,230 +51,6 @@
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
       <SubComponents>
-        <Container class="javax.swing.JPanel" name="JpnlListEmp">
-          <Properties>
-            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="99" green="dc" red="f2" type="rgb"/>
-            </Property>
-          </Properties>
-          <Constraints>
-            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="Lista de Empleados">
-                <Property name="tabTitle" type="java.lang.String" value="Lista de Empleados"/>
-              </JTabbedPaneConstraints>
-            </Constraint>
-          </Constraints>
-
-          <Layout>
-            <DimensionLayout dim="0">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="JspTC1" min="-2" pref="452" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="JlblIDEmpleado1" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="JlblNombre1" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="JlblApePat1" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="JtxtApeMat1" alignment="0" pref="232" max="32767" attributes="0"/>
-                          <Component id="JlblApeMat1" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="JspTexto1" alignment="0" max="32767" attributes="0"/>
-                          <Component id="JtxtID1" alignment="0" max="32767" attributes="0"/>
-                          <Component id="JspNombre1" alignment="0" max="32767" attributes="0"/>
-                          <Component id="JtxtNombre1" alignment="0" pref="232" max="32767" attributes="0"/>
-                          <Component id="JspApePat1" alignment="0" max="32767" attributes="0"/>
-                          <Component id="JtxtApePat1" alignment="0" pref="232" max="32767" attributes="0"/>
-                          <Component id="JspApeMat1" alignment="0" max="32767" attributes="0"/>
-                      </Group>
-                      <EmptySpace pref="60" max="32767" attributes="0"/>
-                  </Group>
-              </Group>
-            </DimensionLayout>
-            <DimensionLayout dim="1">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="JspTC1" pref="0" max="32767" attributes="0"/>
-                              <EmptySpace min="-2" pref="17" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="JlblIDEmpleado1" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="JtxtID1" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="JspTexto1" min="-2" pref="10" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="JlblNombre1" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="JtxtNombre1" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="JspNombre1" min="-2" pref="10" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="JlblApePat1" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="JtxtApePat1" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="JspApePat1" min="-2" pref="10" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="JlblApeMat1" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="JtxtApeMat1" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="JspApeMat1" min="-2" pref="10" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="62" max="32767" attributes="0"/>
-                          </Group>
-                      </Group>
-                  </Group>
-              </Group>
-            </DimensionLayout>
-          </Layout>
-          <SubComponents>
-            <Container class="javax.swing.JScrollPane" name="JspTC1">
-              <AuxValues>
-                <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
-              </AuxValues>
-
-              <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
-              <SubComponents>
-                <Component class="javax.swing.JTable" name="JtblClientes1">
-                  <Properties>
-                    <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                      <Color blue="f2" green="eb" red="a7" type="rgb"/>
-                    </Property>
-                    <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                      <Table columnCount="4" rowCount="0">
-                        <Column editable="false" title="Id Empleado" type="java.lang.String"/>
-                        <Column editable="false" title="Nombre(s)" type="java.lang.String"/>
-                        <Column editable="false" title="Apellido Paterno" type="java.lang.String"/>
-                        <Column editable="false" title="Apellido Materno" type="java.lang.String"/>
-                      </Table>
-                    </Property>
-                    <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
-                      <TableColumnModel selectionModel="0">
-                        <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="false">
-                          <Title/>
-                          <Editor/>
-                          <Renderer/>
-                        </Column>
-                        <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="false">
-                          <Title/>
-                          <Editor/>
-                          <Renderer/>
-                        </Column>
-                        <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="false">
-                          <Title/>
-                          <Editor/>
-                          <Renderer/>
-                        </Column>
-                        <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="false">
-                          <Title/>
-                          <Editor/>
-                          <Renderer/>
-                        </Column>
-                      </TableColumnModel>
-                    </Property>
-                    <Property name="gridColor" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                      <Color blue="cc" green="ff" red="ff" type="rgb"/>
-                    </Property>
-                    <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
-                      <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
-                    </Property>
-                  </Properties>
-                </Component>
-              </SubComponents>
-            </Container>
-            <Component class="javax.swing.JLabel" name="JlblIDEmpleado1">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Ingrese el ID de Busqueda"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JTextField" name="JtxtID1">
-              <Properties>
-                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="99" green="dc" red="f2" type="rgb"/>
-                </Property>
-                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                  <Border info="null"/>
-                </Property>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JSeparator" name="JspTexto1">
-              <Properties>
-                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="0" green="0" red="0" type="rgb"/>
-                </Property>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="JlblNombre1">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Ingrese el Nombre de Busqueda"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JTextField" name="JtxtNombre1">
-              <Properties>
-                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="99" green="dc" red="f2" type="rgb"/>
-                </Property>
-                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                  <Border info="null"/>
-                </Property>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JSeparator" name="JspNombre1">
-              <Properties>
-                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="0" green="0" red="0" type="rgb"/>
-                </Property>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="JlblApePat1">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Ingrese el Apellido Paterno de Busqueda"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JTextField" name="JtxtApePat1">
-              <Properties>
-                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="99" green="dc" red="f2" type="rgb"/>
-                </Property>
-                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                  <Border info="null"/>
-                </Property>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JSeparator" name="JspApePat1">
-              <Properties>
-                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="0" green="0" red="0" type="rgb"/>
-                </Property>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="JlblApeMat1">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Ingrese el Apellido Materno de Busqueda"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JTextField" name="JtxtApeMat1">
-              <Properties>
-                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="99" green="dc" red="f2" type="rgb"/>
-                </Property>
-                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                  <Border info="null"/>
-                </Property>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JSeparator" name="JspApeMat1">
-              <Properties>
-                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="0" green="0" red="0" type="rgb"/>
-                </Property>
-              </Properties>
-            </Component>
-          </SubComponents>
-        </Container>
         <Container class="javax.swing.JPanel" name="JpnlAddEmp">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
@@ -312,8 +93,6 @@
                       <EmptySpace min="17" pref="17" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="JtxtTelefono" min="-2" pref="240" max="-2" attributes="0"/>
-                          <Component id="JlblDireccion" min="-2" max="-2" attributes="0"/>
-                          <Component id="JspDireccion" min="-2" pref="235" max="-2" attributes="0"/>
                           <Group type="102" attributes="0">
                               <EmptySpace min="1" pref="1" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
@@ -374,11 +153,7 @@
                       <Component id="JtxtTelefono" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
                       <Component id="JspTelefono" min="-2" pref="10" max="-2" attributes="0"/>
-                      <EmptySpace min="8" pref="8" max="-2" attributes="0"/>
-                      <Component id="JlblDireccion" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="14" pref="14" max="-2" attributes="0"/>
-                      <Component id="JspDireccion" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="27" pref="27" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="151" max="-2" attributes="0"/>
                       <Component id="JcmbxZonas" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" attributes="0">
@@ -477,11 +252,6 @@
                 </Property>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="JlblDireccion">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Direccion"/>
-              </Properties>
-            </Component>
             <Component class="javax.swing.JTextField" name="JtxtTelefono">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
@@ -521,21 +291,6 @@
                 </Property>
               </Properties>
             </Component>
-            <Container class="javax.swing.JScrollPane" name="JspDireccion">
-              <AuxValues>
-                <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
-              </AuxValues>
-
-              <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
-              <SubComponents>
-                <Component class="javax.swing.JTextArea" name="JtxtaDireccion">
-                  <Properties>
-                    <Property name="columns" type="int" value="20"/>
-                    <Property name="rows" type="int" value="5"/>
-                  </Properties>
-                </Component>
-              </SubComponents>
-            </Container>
             <Component class="javax.swing.JComboBox" name="JcmbxZonas">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
@@ -891,24 +646,26 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="JspTC" min="-2" pref="452" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="1" attributes="0">
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="JlblIDEmpleado" min="-2" max="-2" attributes="0"/>
-                              <Component id="JlblNombre" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="JlblApePat" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="JtxtApeMat" alignment="0" pref="232" max="32767" attributes="0"/>
-                              <Component id="JlblApeMat" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="JspTexto" alignment="0" max="32767" attributes="0"/>
-                              <Component id="JtxtID" alignment="0" max="32767" attributes="0"/>
-                              <Component id="JspNombre" alignment="0" max="32767" attributes="0"/>
-                              <Component id="JtxtNombre" alignment="0" pref="232" max="32767" attributes="0"/>
-                              <Component id="JspApePat" alignment="0" max="32767" attributes="0"/>
-                              <Component id="JtxtApePat" alignment="0" pref="232" max="32767" attributes="0"/>
-                              <Component id="JspApeMat" alignment="0" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="JlblIDEmpleado" min="-2" max="-2" attributes="0"/>
+                          <Component id="JlblNombre" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="JlblApePat" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="JtxtApeMat" alignment="0" pref="232" max="32767" attributes="0"/>
+                          <Component id="JlblApeMat" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="JspTexto" alignment="0" max="32767" attributes="0"/>
+                          <Component id="JtxtID" alignment="0" max="32767" attributes="0"/>
+                          <Component id="JspNombre" alignment="0" max="32767" attributes="0"/>
+                          <Component id="JtxtNombre" alignment="0" pref="232" max="32767" attributes="0"/>
+                          <Component id="JspApePat" alignment="0" max="32767" attributes="0"/>
+                          <Component id="JtxtApePat" alignment="0" pref="232" max="32767" attributes="0"/>
+                          <Component id="JspApeMat" alignment="0" max="32767" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="JbtnEliminarEmpleado" min="-2" pref="90" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="JbtnEliminarEmpleado1" min="-2" pref="90" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="JbtnEliminarEmpleado" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="60" max="32767" attributes="0"/>
+                      <EmptySpace pref="62" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -917,11 +674,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="JspTC" pref="0" max="32767" attributes="0"/>
-                              <EmptySpace min="-2" pref="17" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
+                          <Group type="102" attributes="0">
                               <Component id="JlblIDEmpleado" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="JtxtID" min="-2" max="-2" attributes="0"/>
@@ -946,10 +699,15 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="JspApeMat" min="-2" pref="10" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="JbtnEliminarEmpleado" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="30" max="32767" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="JbtnEliminarEmpleado" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="JbtnEliminarEmpleado1" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="0" pref="3" max="32767" attributes="0"/>
                           </Group>
+                          <Component id="JspTC" pref="0" max="32767" attributes="0"/>
                       </Group>
+                      <EmptySpace min="-2" pref="17" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -1103,10 +861,226 @@
                   <Color blue="f2" green="ab" red="38" type="rgb"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Eliminar"/>
+                <Property name="toolTipText" type="java.lang.String" value="Seleccione una empleado en la tabla, y luego presione..."/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JButton" name="JbtnEliminarEmpleado1">
+              <Properties>
+                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="f2" green="ab" red="38" type="rgb"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Actualizar"/>
+                <Property name="toolTipText" type="java.lang.String" value="Seleccione una empleado en la tabla, y luego presione..."/>
               </Properties>
             </Component>
           </SubComponents>
         </Container>
+        <Container class="javax.swing.JPanel" name="JpnlSueldos">
+          <Properties>
+            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="99" green="dc" red="f2" type="rgb"/>
+            </Property>
+          </Properties>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
+              <JTabbedPaneConstraints tabName="Sueldos">
+                <Property name="tabTitle" type="java.lang.String" value="Sueldos"/>
+              </JTabbedPaneConstraints>
+            </Constraint>
+          </Constraints>
+
+          <Layout>
+            <DimensionLayout dim="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="103" alignment="0" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="JspEmpleado" alignment="0" max="32767" attributes="0"/>
+                              <Component id="JtxtEmpleado" linkSize="1" alignment="0" pref="232" max="32767" attributes="0"/>
+                          </Group>
+                          <Component id="JcmbxFechaInicio" linkSize="1" min="-2" pref="176" max="-2" attributes="0"/>
+                          <Component id="JcmbxFechaFin" linkSize="1" min="-2" pref="176" max="-2" attributes="0"/>
+                          <Component id="JcmbxSueldo" linkSize="1" min="-2" pref="176" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="JspTC1" pref="502" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+            </DimensionLayout>
+            <DimensionLayout dim="1">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="JspTC1" pref="0" max="32767" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <Component id="JcmbxFechaInicio" linkSize="2" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Component id="JcmbxFechaFin" linkSize="2" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Component id="JcmbxSueldo" linkSize="2" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Component id="JtxtEmpleado" linkSize="2" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="JspEmpleado" min="-2" pref="10" max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="140" max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+            </DimensionLayout>
+          </Layout>
+          <SubComponents>
+            <Container class="javax.swing.JScrollPane" name="JspTC1">
+              <AuxValues>
+                <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+              </AuxValues>
+
+              <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+              <SubComponents>
+                <Component class="javax.swing.JTable" name="JtblClientes1">
+                  <Properties>
+                    <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                      <Color blue="f2" green="eb" red="a7" type="rgb"/>
+                    </Property>
+                    <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
+                      <Table columnCount="4" rowCount="0">
+                        <Column editable="false" title="Id Empleado" type="java.lang.String"/>
+                        <Column editable="false" title="Nombre(s)" type="java.lang.String"/>
+                        <Column editable="false" title="Apellido Paterno" type="java.lang.String"/>
+                        <Column editable="false" title="Apellido Materno" type="java.lang.String"/>
+                      </Table>
+                    </Property>
+                    <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
+                      <TableColumnModel selectionModel="0">
+                        <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="false">
+                          <Title/>
+                          <Editor/>
+                          <Renderer/>
+                        </Column>
+                        <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="false">
+                          <Title/>
+                          <Editor/>
+                          <Renderer/>
+                        </Column>
+                        <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="false">
+                          <Title/>
+                          <Editor/>
+                          <Renderer/>
+                        </Column>
+                        <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="false">
+                          <Title/>
+                          <Editor/>
+                          <Renderer/>
+                        </Column>
+                      </TableColumnModel>
+                    </Property>
+                    <Property name="gridColor" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                      <Color blue="cc" green="ff" red="ff" type="rgb"/>
+                    </Property>
+                    <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
+                      <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
+                    </Property>
+                  </Properties>
+                </Component>
+              </SubComponents>
+            </Container>
+            <Component class="javax.swing.JComboBox" name="JcmbxFechaInicio">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="1">
+                    <StringItem index="0" value="Fecha Inicio"/>
+                  </StringArray>
+                </Property>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+              </AuxValues>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="JcmbxFechaFin">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="1">
+                    <StringItem index="0" value="Fecha Final"/>
+                  </StringArray>
+                </Property>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+              </AuxValues>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="JcmbxSueldo">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="1">
+                    <StringItem index="0" value="Sueldo"/>
+                  </StringArray>
+                </Property>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+              </AuxValues>
+            </Component>
+            <Component class="javax.swing.JTextField" name="JtxtEmpleado">
+              <Properties>
+                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="99" green="dc" red="f2" type="rgb"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Empleado"/>
+                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                  <Border info="null"/>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JSeparator" name="JspEmpleado">
+              <Properties>
+                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="0" green="0" red="0" type="rgb"/>
+                </Property>
+              </Properties>
+            </Component>
+          </SubComponents>
+        </Container>
+      </SubComponents>
+    </Container>
+    <Container class="javax.swing.JPanel" name="jPanel2">
+      <Properties>
+        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="99" green="dc" red="f2" type="rgb"/>
+        </Property>
+      </Properties>
+
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="1" attributes="0">
+                  <EmptySpace max="32767" attributes="0"/>
+                  <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+      </Layout>
+      <SubComponents>
+        <Component class="javax.swing.JLabel" name="jLabel1">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/imagenes/empleado-del-mes (1).png"/>
+            </Property>
+          </Properties>
+        </Component>
       </SubComponents>
     </Container>
   </SubComponents>
