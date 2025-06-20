@@ -7,6 +7,7 @@ package Views.productos;
 import crud.CBusquedas;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import javax.swing.JTextField;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
@@ -23,6 +24,8 @@ public class jfproductos extends javax.swing.JFrame {
     private TableRowSorter tr;
     private ArrayList<String[]> datosKardex = new ArrayList<>();
     private static String[] datosProdu;
+    private String idproducto, producto, precio, stock;
+    private String regexproducto = "^[a-zA-Z ]+$";
 
     /**
      * Creates new form jfproductos
@@ -37,6 +40,20 @@ public class jfproductos extends javax.swing.JFrame {
         addFiltroListener(jTxtBusNombreProd);
         addFiltroListener(jTxtBusPrecioProd);
 
+    }
+    public void asignaValores() {
+        idproducto = jTxtIngIDProd.getText();
+        producto = jTxtIngNombreProd.getText();
+        precio= jTxtIngPrecioProd.getText();
+        stock = jTxtIngStockProd.getText();
+       
+    }
+    
+        public void limpiaValores() {
+        idproducto = null;
+        producto = null;
+        precio = null;
+        stock = null;
     }
 
     private void limpiarTabla() {
@@ -98,6 +115,77 @@ public class jfproductos extends javax.swing.JFrame {
 
         RowFilter<Object, Object> rf = RowFilter.andFilter(filtros);
         tr.setRowFilter(rf);
+    }
+
+    public String devuelveCadena(JTextField campo, String regex) {
+        String cadena = campo.getText();
+        if (cadena.isEmpty()) {
+            return null;
+        } else if (cadena.matches("^[a-zA-Z ]+$")) {
+            return cadena;
+        } else {
+            return "NoValido";
+        }
+    }
+    
+    public String devuelveCadenaNum(JTextField campo, String regex) {
+    String cadena = campo.getText();
+    if (cadena.isEmpty()) {
+        return null;
+    } else if (cadena.matches("^[0-9]+$")) {
+        return cadena;
+    } else {
+        return "NoValido";
+    }
+}
+
+
+    public boolean validaCampoProducto(String campoTexto, JTextField campo, String regex, String mensajeVacio, String mensajeInvalido) {
+        boolean valida = true;
+        campoTexto = devuelveCadena(campo, regex);
+        if (campoTexto == null) {
+            CUtilitarios.msg_advertencia(mensajeVacio, "Registro Producto");
+            valida = false;
+        } else if ("NoValido".equals(campoTexto)) {
+            CUtilitarios.msg_error(mensajeInvalido, "Registro Producto");
+            valida = false;
+        }
+        return valida;
+    }
+
+    public boolean validaCampos() {
+        return && validaCampoProducto(idproducto, jTxtIngIDProd, regexproducto, "Ingrese el nombre del grupo", "Valores invalidos para el grupo")
+                && validaCampoComb(ciclo, JcmbxCiclo, "Seleccione un ciclo")
+                && validaCampoComb(semestre, JcmbxSemestre, "Seleccione un semestres")
+                && validaCampoComb(carrera, JcmbxCarrera, "Selecciones una carrera");
+    }
+
+    public void enviarDatos() {
+        int clave_semestre, clave_carrera, clave_final;
+        String grupoFi, clave_ciclo;
+        if (validaCampos()) {
+            asignaValores();
+            try {
+                clave_final = queryBusca.obtenIdFinalGrupo();
+                grupoFi = JtxtGrupo.getText();
+                clave_ciclo = queryBusca.obtenClaveCicloSeleccionado(ciclo);
+                clave_semestre = queryBusca.obtenClaveSemestreSeleccionada(semestre);
+                clave_carrera = queryBusca.obtenClaveCarreraSeleccionado(carrera);
+
+                System.out.println("NombreGrupo:" + grupo + "\nCiclo:" + ciclo + "\nSemestre:" + semestre + "\nCarrera:" + carrera);
+                System.out.println("CGrupo:" + grupoFi + "\nCCiclo:" + clave_ciclo + "\nCSemestre:" + clave_semestre + "\nCCarrera:" + clave_carrera);
+                queryInserta.insertaGrupo((clave_final + 1), grupoFi, clave_ciclo, clave_semestre, clave_carrera);
+
+                CUtilitarios.msg("Grupo registrado exitosamente", "Registro Grupos");
+            } catch (SQLException ex) {
+                CUtilitarios.msg_advertencia("Seleccione las opciones: ", "Error en combobox");
+            } finally {
+                limpiaValores();
+            }
+        } else {
+            // No cerrar la ventana si los campos no son válidos
+            CUtilitarios.msg_advertencia("Por favor, completa todos los campos correctamente.", "Registro Grupos");
+        }
     }
 
     /**
