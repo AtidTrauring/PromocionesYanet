@@ -337,7 +337,7 @@ public class JfEmpleado extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JpnlListaEmpleadosLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(JpnlListaEmpleadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(JspTC2, javax.swing.GroupLayout.DEFAULT_SIZE, 293, Short.MAX_VALUE)
+                    .addComponent(JspTC2, javax.swing.GroupLayout.DEFAULT_SIZE, 347, Short.MAX_VALUE)
                     .addComponent(JpnlCamposLista, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -615,7 +615,7 @@ public class JfEmpleado extends javax.swing.JFrame {
                 .addGroup(JpnlUpdateEmpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(JlblimagenA)
                     .addComponent(JpnlCamposActualiza, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(32, Short.MAX_VALUE))
+                .addContainerGap(86, Short.MAX_VALUE))
         );
 
         JtbpPaneles.addTab("Actualizar un empleado", JpnlUpdateEmp);
@@ -760,7 +760,7 @@ public class JfEmpleado extends javax.swing.JFrame {
                         .addComponent(JpnlCamposDelete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addContainerGap())
                     .addGroup(JpnlDeleteEmpLayout.createSequentialGroup()
-                        .addComponent(JspTC, javax.swing.GroupLayout.DEFAULT_SIZE, 289, Short.MAX_VALUE)
+                        .addComponent(JspTC, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)
                         .addGap(17, 17, 17))))
         );
 
@@ -868,7 +868,7 @@ public class JfEmpleado extends javax.swing.JFrame {
                     .addComponent(JspTC1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(JpnlSueldosLayout.createSequentialGroup()
                         .addComponent(JpnlCamposSueldos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 126, Short.MAX_VALUE)))
+                        .addGap(0, 180, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 

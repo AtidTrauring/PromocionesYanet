@@ -525,7 +525,12 @@ public class CBusquedas {
     }
 
     public ArrayList<String[]> buscarEmpleado() throws SQLException {
-        consulta = "";
+        consulta = "SELECT"
+                + "    idempleado AS 'Id Empleado',"
+                + "    (SELECT persona.nombres FROM persona WHERE persona.idpersona = empleado.persona_idpersona) AS 'Nombre(s)',\n"
+                + "    (SELECT persona.ap_paterno FROM persona WHERE persona.idpersona = empleado.persona_idpersona) AS 'Apellido Paterno',\n"
+                + "    (SELECT persona.ap_materno FROM persona WHERE persona.idpersona = empleado.persona_idpersona) AS 'Apellido Materno'\n"
+                + "FROM empleado;";
         return cnslt.buscarValores(consulta, 4);
     }
 }
