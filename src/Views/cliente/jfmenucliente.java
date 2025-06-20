@@ -92,6 +92,8 @@ public final class jfmenucliente extends javax.swing.JFrame {
         bgins = new javax.swing.ButtonGroup();
         bgact = new javax.swing.ButtonGroup();
         jpprincipal = new javax.swing.JPanel();
+        jPnlLogZonas = new javax.swing.JPanel();
+        jLblIcono = new javax.swing.JLabel();
         jtpprincipal = new javax.swing.JTabbedPane();
         jplistacliente = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -165,6 +167,29 @@ public final class jfmenucliente extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jpprincipal.setBackground(new java.awt.Color(242, 220, 153));
+
+        jPnlLogZonas.setBackground(new java.awt.Color(242, 220, 153));
+
+        jLblIcono.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        jLblIcono.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/zona.png"))); // NOI18N
+        jLblIcono.setText("Zonas");
+
+        javax.swing.GroupLayout jPnlLogZonasLayout = new javax.swing.GroupLayout(jPnlLogZonas);
+        jPnlLogZonas.setLayout(jPnlLogZonasLayout);
+        jPnlLogZonasLayout.setHorizontalGroup(
+            jPnlLogZonasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPnlLogZonasLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLblIcono)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPnlLogZonasLayout.setVerticalGroup(
+            jPnlLogZonasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPnlLogZonasLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLblIcono)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
         jtpprincipal.setBackground(new java.awt.Color(242, 220, 153));
         jtpprincipal.setFont(new java.awt.Font("Candara", 1, 12)); // NOI18N
@@ -304,7 +329,7 @@ public final class jfmenucliente extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jcbtipousuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 418, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(62, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jplistaclienteLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jcbestatus, jcbtipousuario});
@@ -361,26 +386,43 @@ public final class jfmenucliente extends javax.swing.JFrame {
         bgins.add(jrbcliente);
         jrbcliente.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jrbcliente.setText("Cliente");
+        jrbcliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jrbclienteActionPerformed(evt);
+            }
+        });
 
         bgins.add(jrbaval);
         jrbaval.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jrbaval.setText("Aval");
+        jrbaval.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jrbavalActionPerformed(evt);
+            }
+        });
 
         bgins.add(jrbambos);
         jrbambos.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jrbambos.setText("Ambos");
+        jrbambos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jrbambosActionPerformed(evt);
+            }
+        });
 
         jcbestatusn.setBackground(new java.awt.Color(242, 220, 153));
         jcbestatusn.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jcbestatusn.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Estatus" }));
         jcbestatusn.setToolTipText("");
         jcbestatusn.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jcbestatusn.setEnabled(false);
 
         jcbestatusavaln.setBackground(new java.awt.Color(242, 220, 153));
         jcbestatusavaln.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jcbestatusavaln.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Estatus Aval" }));
         jcbestatusavaln.setToolTipText("");
         jcbestatusavaln.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jcbestatusavaln.setEnabled(false);
 
         javax.swing.GroupLayout jpnuevoclienteLayout = new javax.swing.GroupLayout(jpnuevocliente);
         jpnuevocliente.setLayout(jpnuevoclienteLayout);
@@ -458,7 +500,7 @@ public final class jfmenucliente extends javax.swing.JFrame {
                         .addComponent(JlblImagen1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                 .addComponent(jbagregar)
-                .addContainerGap(97, Short.MAX_VALUE))
+                .addContainerGap(88, Short.MAX_VALUE))
         );
 
         jpnuevoclienteLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jrbambos, jrbaval, jrbcliente});
@@ -606,7 +648,7 @@ public final class jfmenucliente extends javax.swing.JFrame {
                                         .addGap(18, 18, 18)
                                         .addComponent(jrbambosact, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))))
                             .addComponent(JlblImagen))))
-                .addGap(144, 151, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jpactualizaclienteLayout = new javax.swing.GroupLayout(jpactualizacliente);
@@ -747,7 +789,7 @@ public final class jfmenucliente extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jcbtipousuarioeli, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 418, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(62, Short.MAX_VALUE))
+                .addContainerGap(53, Short.MAX_VALUE))
         );
 
         jtpprincipal.addTab("Eliminar Cliente", jpeliminacliente);
@@ -756,11 +798,15 @@ public final class jfmenucliente extends javax.swing.JFrame {
         jpprincipal.setLayout(jpprincipalLayout);
         jpprincipalLayout.setHorizontalGroup(
             jpprincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPnlLogZonas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jtpprincipal)
         );
         jpprincipalLayout.setVerticalGroup(
             jpprincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jtpprincipal)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpprincipalLayout.createSequentialGroup()
+                .addComponent(jPnlLogZonas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jtpprincipal))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -776,6 +822,21 @@ public final class jfmenucliente extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jrbclienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jrbclienteActionPerformed
+        jcbestatusn.setEnabled(true);
+        jcbestatusavaln.setEnabled(false);
+    }//GEN-LAST:event_jrbclienteActionPerformed
+
+    private void jrbavalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jrbavalActionPerformed
+        jcbestatusn.setEnabled(false);
+        jcbestatusavaln.setEnabled(true);
+    }//GEN-LAST:event_jrbavalActionPerformed
+
+    private void jrbambosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jrbambosActionPerformed
+        jcbestatusn.setEnabled(true);
+        jcbestatusavaln.setEnabled(true);
+    }//GEN-LAST:event_jrbambosActionPerformed
 
     /**
      * @param args the command line arguments
@@ -818,7 +879,9 @@ public final class jfmenucliente extends javax.swing.JFrame {
     private javax.swing.JLabel JlblImagen1;
     private javax.swing.ButtonGroup bgact;
     private javax.swing.ButtonGroup bgins;
+    private javax.swing.JLabel jLblIcono;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPnlLogZonas;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
