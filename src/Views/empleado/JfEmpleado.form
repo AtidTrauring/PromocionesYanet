@@ -98,7 +98,7 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
               <SubComponents>
-                <Component class="javax.swing.JTable" name="JtblClientes2">
+                <Component class="javax.swing.JTable" name="JtblEmpleados">
                   <Properties>
                     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="f2" green="eb" red="a7" type="rgb"/>
@@ -160,14 +160,14 @@
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="JtxtID1" min="-2" pref="232" max="-2" attributes="0"/>
-                                  <Component id="JspTexto1" min="-2" pref="232" max="-2" attributes="0"/>
-                                  <Component id="JtxtNombre1" min="-2" pref="232" max="-2" attributes="0"/>
-                                  <Component id="JspNombre1" min="-2" pref="232" max="-2" attributes="0"/>
-                                  <Component id="JtxtApePat1" min="-2" pref="232" max="-2" attributes="0"/>
-                                  <Component id="JspApePat1" min="-2" pref="232" max="-2" attributes="0"/>
-                                  <Component id="JtxtApeMat1" min="-2" pref="232" max="-2" attributes="0"/>
-                                  <Component id="JspApeMat1" min="-2" pref="232" max="-2" attributes="0"/>
+                                  <Component id="JtxtCnsltID" min="-2" pref="232" max="-2" attributes="0"/>
+                                  <Component id="JspCnsltID" min="-2" pref="232" max="-2" attributes="0"/>
+                                  <Component id="JtxtCnsltNombre" min="-2" pref="232" max="-2" attributes="0"/>
+                                  <Component id="JspCnsltNombre" min="-2" pref="232" max="-2" attributes="0"/>
+                                  <Component id="JtxtCnsltApePat" min="-2" pref="232" max="-2" attributes="0"/>
+                                  <Component id="JspCnsltApePat" min="-2" pref="232" max="-2" attributes="0"/>
+                                  <Component id="JtxtCnsltApeMat" min="-2" pref="232" max="-2" attributes="0"/>
+                                  <Component id="JspCnsltApeMat" min="-2" pref="232" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace pref="27" max="32767" attributes="0"/>
                           </Group>
@@ -182,23 +182,23 @@
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" alignment="0" attributes="0">
                                       <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
-                                      <Component id="JtxtID1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="JtxtCnsltID" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace min="7" pref="7" max="-2" attributes="0"/>
-                                      <Component id="JspTexto1" min="-2" pref="10" max="-2" attributes="0"/>
+                                      <Component id="JspCnsltID" min="-2" pref="10" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
-                                      <Component id="JtxtNombre1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="JtxtCnsltNombre" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace min="7" pref="7" max="-2" attributes="0"/>
-                                      <Component id="JspNombre1" min="-2" pref="10" max="-2" attributes="0"/>
+                                      <Component id="JspCnsltNombre" min="-2" pref="10" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
-                                      <Component id="JtxtApePat1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="JtxtCnsltApePat" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace min="7" pref="7" max="-2" attributes="0"/>
-                                      <Component id="JspApePat1" min="-2" pref="10" max="-2" attributes="0"/>
+                                      <Component id="JspCnsltApePat" min="-2" pref="10" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
-                                      <Component id="JtxtApeMat1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="JtxtCnsltApeMat" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
                                       <EmptySpace min="-2" pref="237" max="-2" attributes="0"/>
-                                      <Component id="JspApeMat1" min="-2" pref="10" max="-2" attributes="0"/>
+                                      <Component id="JspCnsltApeMat" min="-2" pref="10" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                               <EmptySpace pref="34" max="32767" attributes="0"/>
@@ -208,7 +208,7 @@
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Component class="javax.swing.JTextField" name="JtxtID1">
+                <Component class="javax.swing.JTextField" name="JtxtCnsltID">
                   <Properties>
                     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="f2" green="eb" red="a7" type="rgb"/>
@@ -219,14 +219,14 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JSeparator" name="JspTexto1">
+                <Component class="javax.swing.JSeparator" name="JspCnsltID">
                   <Properties>
                     <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="0" green="0" red="0" type="rgb"/>
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JTextField" name="JtxtNombre1">
+                <Component class="javax.swing.JTextField" name="JtxtCnsltNombre">
                   <Properties>
                     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="f2" green="eb" red="a7" type="rgb"/>
@@ -237,14 +237,14 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JSeparator" name="JspNombre1">
+                <Component class="javax.swing.JSeparator" name="JspCnsltNombre">
                   <Properties>
                     <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="0" green="0" red="0" type="rgb"/>
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JTextField" name="JtxtApePat1">
+                <Component class="javax.swing.JTextField" name="JtxtCnsltApePat">
                   <Properties>
                     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="f2" green="eb" red="a7" type="rgb"/>
@@ -255,14 +255,14 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JSeparator" name="JspApePat1">
+                <Component class="javax.swing.JSeparator" name="JspCnsltApePat">
                   <Properties>
                     <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="0" green="0" red="0" type="rgb"/>
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JTextField" name="JtxtApeMat1">
+                <Component class="javax.swing.JTextField" name="JtxtCnsltApeMat">
                   <Properties>
                     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="f2" green="eb" red="a7" type="rgb"/>
@@ -273,7 +273,7 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JSeparator" name="JspApeMat1">
+                <Component class="javax.swing.JSeparator" name="JspCnsltApeMat">
                   <Properties>
                     <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="0" green="0" red="0" type="rgb"/>

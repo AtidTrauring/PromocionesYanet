@@ -508,19 +508,24 @@ public class CBusquedas {
 
     //------------------------------------------------------------------------
     public String buscaAlumnoPorNombre(String nombre) throws SQLException {
-        consulta = "SELECT persona.nombre, persona.ap_Paterno, persona.ap_Materno, grupo.grupo, ciclo.ciclo " 
-                + "FROM ciclo " 
+        consulta = "SELECT persona.nombre, persona.ap_Paterno, persona.ap_Materno, grupo.grupo, ciclo.ciclo "
+                + "FROM ciclo "
                 + "INNER JOIN grupo ON ciclo.clave_ciclo = grupo.clave_ciclo "
                 + "INNER JOIN estudiante_grupo ON grupo.clave_grupo = estudiante_grupo.clave_grupo "
                 + "INNER JOIN estudiante ON estudiante_grupo.clave_estudiante = estudiante.clave_estudiante "
-                + "INNER JOIN persona ON persona.clave_persona = estudiante.clave_persona;" ;
+                + "INNER JOIN persona ON persona.clave_persona = estudiante.clave_persona;";
         return cnslt.buscarValor(consulta);
     }
-    
+
     //--------------- promociones yp -----------------
-        public ArrayList<String[]> buscarProducto() throws SQLException {
+    public ArrayList<String[]> buscarProducto() throws SQLException {
         consulta = "SELECT idproducto, producto, precio, stock"
                 + " FROM producto ";
+        return cnslt.buscarValores(consulta, 4);
+    }
+
+    public ArrayList<String[]> buscarEmpleado() throws SQLException {
+        consulta = "";
         return cnslt.buscarValores(consulta, 4);
     }
 }
