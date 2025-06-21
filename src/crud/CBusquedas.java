@@ -533,4 +533,37 @@ public class CBusquedas {
                 + "FROM empleado;";
         return cnslt.buscarValores(consulta, 4);
     }
+
+    /* Clientes */
+    public ArrayList<String[]> buscarCliente() throws SQLException {
+        consulta = "SELECT "
+                + "cl.idcliente, pr.nombres AS 'Nombre (s)', pr.ap_paterno AS 'Apellido Parno', pr.ap_materno AS 'Apellido Materno', es.estatus "
+                + "FROM "
+                + "persona pr "
+                + "INNER JOIN cliente cl ON cl.persona_idpersona = pr.idpersona "
+                + "INNER JOIN estatus es ON es.idestatus = cl.estatus_idestatus "
+                + "ORDER BY cl.idcliente;";
+        return cnslt.buscarValores(consulta, 5);
+    }
+
+    public String buscarIdZonaPorColonia(String col) throws SQLException {
+        consulta = "SELECT z.idzona "
+                + "FROM zona z INNER JOIN colonia cl ON cl.zona_idzona = z.idzona "
+                + "WHERE cl.colonia = '" + col + "';";
+        return cnslt.buscarValor(consulta);
+    }
+
+    public String buscarIdColonia(String col) throws SQLException {
+        consulta = "SELECT cl.idcolonia "
+                + "FROM colonia cl "
+                + "WHERE cl.colonia = '" + col + "';";
+        return cnslt.buscarValor(consulta);
+    }
+    
+    public String buscarIdEstatus(String est) throws SQLException {
+        consulta = "SELECT es.idestatus "
+                + "FROM estatus es "
+                + "WHERE es.estatus = '" + est + "';";
+        return cnslt.buscarValor(consulta);
+    }
 }

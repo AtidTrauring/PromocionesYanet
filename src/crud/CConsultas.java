@@ -3,6 +3,7 @@ package crud;
 import utilitarios.CUtilitarios;
 import java.sql.*;
 import java.util.*;
+import javax.crypto.AEADBadTagException;
 import javax.swing.*;
 
 public class CConsultas {
@@ -291,7 +292,7 @@ public class CConsultas {
         }
         return false;
     }
-    
+
     public int generadorClave(String sql, JLabel jl) throws SQLException {
         int clave = 0;
         conn = conector.conecta();
@@ -312,5 +313,7 @@ public class CConsultas {
         }
         return clave;
     }
+
+    /**/
 
 }

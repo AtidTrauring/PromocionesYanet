@@ -10,28 +10,39 @@ import utilitarios.*;
  *
  * @author micky
  */
-public class jfdireccion extends javax.swing.JFrame {
+public final class jfdireccion extends javax.swing.JFrame {
 
     /**
      * Creates new form jfdireccion
      */
-    
+    private static String[] datosPersona, datosEstatus, datosDirec;
     CUtilitarios cu = new CUtilitarios();
-    
-    public jfdireccion() {
+
+    public jfdireccion(String[] datosP, String[] datosEs, String[] datosDr) {
         initComponents();
         this.setLocationRelativeTo(null);
+        /* Datos extraidos */
+        datosPersona = datosP;
+        datosEstatus = datosEs;
+        datosDirec = datosDr;
+        /* Fin De Datos */
         cu.aplicarPlaceholder(jtfcallen, "Calle");
         cu.aplicarPlaceholder(jtfnumextn, "Número Exterior");
         cu.aplicarPlaceholder(jtfnumintn, "Numero Interior");
         //  Combos
         cargaComboBox(jcbcolonian, 1);
+        
+        /* Muestra de datos transaccionados */
+        System.out.println("\n\nEn dirección");
+        System.out.println("Colonia " + Arrays.toString(datosDr));
+        System.out.println("Persona " + Arrays.toString(datosP));
+        System.out.println("Estatus " + Arrays.toString(datosEs));
     }
-    
+
     private DefaultComboBoxModel listas;
     private ArrayList<String> datosListas = new ArrayList<>();
     private final CCargaCombos queryCarga = new CCargaCombos();
-    
+
     public void cargaComboBox(JComboBox combo, int metodoCarga) {
         listas = (DefaultComboBoxModel) combo.getModel();
         try {
@@ -69,6 +80,7 @@ public class jfdireccion extends javax.swing.JFrame {
         jSeparator10 = new javax.swing.JSeparator();
         jcbcolonian = new javax.swing.JComboBox<>();
         jbagregardirec = new javax.swing.JButton();
+        JlblImagen1 = new javax.swing.JLabel();
         jPnlLogZonas = new javax.swing.JPanel();
         jLblIcono = new javax.swing.JLabel();
 
@@ -121,32 +133,21 @@ public class jfdireccion extends javax.swing.JFrame {
         jcbcolonian.setToolTipText("");
         jcbcolonian.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        jbagregardirec.setBackground(new java.awt.Color(56, 171, 242));
-        jbagregardirec.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
-        jbagregardirec.setText("Agregar");
-        jbagregardirec.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jbagregardirecActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(43, 43, 43)
+                .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jtfnumintn, javax.swing.GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE)
-                    .addComponent(jtfnumextn)
+                    .addComponent(jtfnumintn)
+                    .addComponent(jtfnumextn, javax.swing.GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE)
                     .addComponent(jSeparator8)
                     .addComponent(jSeparator9)
                     .addComponent(jSeparator10)
                     .addComponent(jtfcallen)
                     .addComponent(jcbcolonian, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 93, Short.MAX_VALUE)
-                .addComponent(jbagregardirec)
-                .addGap(53, 53, 53))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -158,10 +159,8 @@ public class jfdireccion extends javax.swing.JFrame {
                 .addGap(42, 42, 42)
                 .addComponent(jtfnumextn, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jSeparator9, javax.swing.GroupLayout.PREFERRED_SIZE, 9, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jbagregardirec))
-                .addGap(20, 20, 20)
+                .addComponent(jSeparator9, javax.swing.GroupLayout.PREFERRED_SIZE, 9, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(36, 36, 36)
                 .addComponent(jtfnumintn, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator10, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -170,21 +169,37 @@ public class jfdireccion extends javax.swing.JFrame {
                 .addGap(24, 24, 24))
         );
 
+        jbagregardirec.setBackground(new java.awt.Color(56, 171, 242));
+        jbagregardirec.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        jbagregardirec.setText("Finalizar");
+
+        JlblImagen1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/logo_vectori.png"))); // NOI18N
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(63, 63, 63)
+                .addContainerGap()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(117, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 204, Short.MAX_VALUE)
+                .addComponent(JlblImagen1)
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jbagregardirec)
+                .addGap(127, 127, 127))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(29, Short.MAX_VALUE))
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(JlblImagen1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jbagregardirec)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("tab1", jPanel1);
@@ -224,7 +239,7 @@ public class jfdireccion extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpprincipaldireccionLayout.createSequentialGroup()
                 .addComponent(jPnlLogZonas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTabbedPane1))
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 381, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -240,10 +255,6 @@ public class jfdireccion extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jbagregardirecActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbagregardirecActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jbagregardirecActionPerformed
 
     /**
      * @param args the command line arguments
@@ -273,14 +284,12 @@ public class jfdireccion extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new jfdireccion().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new jfdireccion(datosPersona, datosEstatus, datosDirec).setVisible(true);
         });
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel JlblImagen1;
     private javax.swing.JLabel jLblIcono;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;

@@ -73,7 +73,7 @@
               <Group type="102" alignment="1" attributes="0">
                   <Component id="jPnlLogZonas" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jtpprincipal" max="32767" attributes="0"/>
+                  <Component id="jtpprincipal" pref="529" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -113,9 +113,9 @@
                   <Font name="Candara" size="14" style="1"/>
                 </Property>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/imagenes/zona.png"/>
+                  <Image iconType="3" name="/imagenes/cliente.png"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Zonas"/>
+                <Property name="text" type="java.lang.String" value="  Clientes"/>
               </Properties>
             </Component>
           </SubComponents>
@@ -461,7 +461,7 @@
                                   <Component id="jSeparator5" linkSize="2" alignment="1" pref="238" max="32767" attributes="0"/>
                                   <Component id="jtfnnombres" linkSize="2" alignment="1" pref="238" max="32767" attributes="0"/>
                               </Group>
-                              <Component id="jcbnzona" alignment="0" min="-2" pref="238" max="-2" attributes="0"/>
+                              <Component id="jcbncolonia" alignment="0" min="-2" pref="238" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="118" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
@@ -517,7 +517,7 @@
                                   </Group>
                                   <EmptySpace min="-2" pref="43" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="jcbnzona" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
+                                      <Component id="jcbncolonia" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
                                       <Component id="jcbestatusavaln" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace min="-2" pref="50" max="-2" attributes="0"/>
@@ -528,7 +528,7 @@
                               </Group>
                           </Group>
                           <Component id="jbagregar" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="88" max="32767" attributes="0"/>
+                          <EmptySpace pref="69" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -615,7 +615,7 @@
                     <Property name="toolTipText" type="java.lang.String" value=""/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JComboBox" name="jcbnzona">
+                <Component class="javax.swing.JComboBox" name="jcbncolonia">
                   <Properties>
                     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="99" green="dc" red="f2" type="rgb"/>
@@ -625,7 +625,7 @@
                     </Property>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                       <StringArray count="1">
-                        <StringItem index="0" value="Zonas"/>
+                        <StringItem index="0" value="Colonias"/>
                       </StringArray>
                     </Property>
                     <Property name="toolTipText" type="java.lang.String" value=""/>
@@ -635,6 +635,9 @@
                       </Border>
                     </Property>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jcbncoloniaActionPerformed"/>
+                  </Events>
                   <AuxValues>
                     <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
                   </AuxValues>
@@ -649,6 +652,9 @@
                     </Property>
                     <Property name="text" type="java.lang.String" value="Agregar"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbagregarActionPerformed"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JLabel" name="JlblImagen1">
                   <Properties>
@@ -720,6 +726,9 @@
                     </Property>
                     <Property name="enabled" type="boolean" value="false"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jcbestatusnActionPerformed"/>
+                  </Events>
                   <AuxValues>
                     <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
                   </AuxValues>
@@ -745,6 +754,9 @@
                     </Property>
                     <Property name="enabled" type="boolean" value="false"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jcbestatusavalnActionPerformed"/>
+                  </Events>
                   <AuxValues>
                     <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
                   </AuxValues>
@@ -793,7 +805,7 @@
                               <Component id="JlblImagen" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jcbazona" alignment="0" min="-2" pref="238" max="-2" attributes="0"/>
+                                  <Component id="jcbcolonia" alignment="0" min="-2" pref="238" max="-2" attributes="0"/>
                                   <Component id="jSeparator14" alignment="0" min="-2" pref="238" max="-2" attributes="0"/>
                                   <Component id="jtfaapmaterno" alignment="0" min="-2" pref="238" max="-2" attributes="0"/>
                                   <Component id="jSeparator13" alignment="0" min="-2" pref="238" max="-2" attributes="0"/>
@@ -829,7 +841,7 @@
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" attributes="0">
                                       <EmptySpace min="-2" pref="278" max="-2" attributes="0"/>
-                                      <Component id="jcbazona" min="-2" pref="30" max="-2" attributes="0"/>
+                                      <Component id="jcbcolonia" min="-2" pref="30" max="-2" attributes="0"/>
                                   </Group>
                                   <Group type="102" attributes="0">
                                       <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
@@ -962,7 +974,7 @@
                         <Property name="toolTipText" type="java.lang.String" value=""/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JComboBox" name="jcbazona">
+                    <Component class="javax.swing.JComboBox" name="jcbcolonia">
                       <Properties>
                         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="99" green="dc" red="f2" type="rgb"/>
@@ -972,7 +984,7 @@
                         </Property>
                         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                           <StringArray count="1">
-                            <StringItem index="0" value="Zonas"/>
+                            <StringItem index="0" value="Colonias"/>
                           </StringArray>
                         </Property>
                         <Property name="toolTipText" type="java.lang.String" value=""/>
@@ -1147,7 +1159,7 @@
                               </Group>
                               <Component id="jScrollPane2" alignment="0" min="-2" pref="418" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="53" max="32767" attributes="0"/>
+                          <EmptySpace pref="34" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>

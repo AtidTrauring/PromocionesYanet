@@ -1,8 +1,11 @@
 package utilitarios;
 
+import crud.*;
 import java.awt.*;
+import java.sql.*;
 import java.util.*;
 import javax.swing.*;
+import javax.swing.table.*;
 
 public class CUtilitarios {
 
@@ -198,7 +201,7 @@ public class CUtilitarios {
         return partes;
     }
 
-    /**/
+    /* Incio De Nuevos Métodos */
     Color fondovacio = new Color(12, 12, 12);
     Color fondoescrito = new Color(0, 0, 0);
 
@@ -224,5 +227,38 @@ public class CUtilitarios {
             }
         });
     }
-    /**/
+    
+    /* Método para limpiar tabla y cargar los campos */
+    
+    private final CBusquedas queryBusca = new CBusquedas();
+    private TableRowSorter<DefaultTableModel> tr;
+
+    private void limpiarTabla(JTable jt) {
+        // Obtenemos el modelo de la tabla (estructura de filas y columnas)
+        DefaultTableModel modelo = (DefaultTableModel) jt.getModel();
+
+        // Establecemos que el número de filas sea 0, es decir, vaciar la tabla
+        modelo.setRowCount(0);
+    }
+    
+    public void cargarTabla(JTable jt) throws SQLException {
+        // Obtenemos el modelo de la tabla
+        DefaultTableModel modelo = (DefaultTableModel) jt.getModel();
+
+        // Llamamos al método para limpiar la tabla antes de llenarla
+        limpiarTabla(jt);
+
+        // Llamamos al método que devuelve los datos de los empleados desde la base de datos
+        ArrayList<String[]> datos = queryBusca.buscarCliente();
+        // Recorremos cada fila de datos obtenidos
+        for (String[] fila : datos) {
+            // Añadimos la fila a la tabla (ID, Nombre, Apellido Paterno, Apellido Materno)
+            modelo.addRow(fila);
+        }
+        // Creamos un objeto que permite ordenar y filtrar las filas de la tabla
+        tr = new TableRowSorter<>(modelo);
+        // Establecemos ese objeto en la tabla para activar ordenamiento y filtros
+        jt.setRowSorter(tr);
+    }
+    /* Fin De nuevos Métodos */   
 }
