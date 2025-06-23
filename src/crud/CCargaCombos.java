@@ -91,8 +91,17 @@ public class CCargaCombos {
         consulta = "SELECT est.estatus FROM estatus est WHERE est.idestatus > 3;";
         return cnslt.buscarValoresCombos(consulta);
     }
-    public ArrayList<String> cargaComboColonias() throws SQLException {
-        consulta = "SELECT cl.colonia FROM colonia cl;";
+    
+    public ArrayList<String> cargaComboColonias(String z) throws SQLException {
+        consulta = "SELECT cl.colonia "
+                + "FROM colonia cl "
+                + "INNER JOIN zona z ON z.idzona = cl.zona_idzona "
+                + "WHERE z.idzona = '"+ z +"';";
+        return cnslt.buscarValoresCombos(consulta);
+    }
+    
+    public ArrayList<String> cargaComboZona() throws SQLException {
+        consulta = "SELECT z.num_zona FROM zona z;";
         return cnslt.buscarValoresCombos(consulta);
     }
     /* Fin Cliente */

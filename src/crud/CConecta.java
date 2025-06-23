@@ -6,7 +6,7 @@ import javax.swing.JOptionPane;
 public class CConecta {
 
     private Connection conector;
-    private final String nameDataBase = "promocionesyanet";
+    private final String nameDataBase = "py";
     private final String user = "root";
     private final String password = "";
     private final String url = "jdbc:mysql://localhost:3306/" + nameDataBase;

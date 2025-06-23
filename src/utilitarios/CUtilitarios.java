@@ -52,40 +52,44 @@ public class CUtilitarios {
         }
     }
 
-    public static boolean validaComboBox(String campoTexto, JComboBox comboBox, String mensajeVacio, String tituloMensaje) {
+//    public static boolean validaComboBox(String campoTexto, JComboBox comboBox, String mensajeVacio, String tituloMensaje) {
+//        boolean valida = true;
+//        campoTexto = comboBox.getSelectedItem().toString(); // Obtener el texto seleccionado del JComboBox
+//        if (campoTexto.equals("Selecciona una opcion")) {
+//            CUtilitarios.msg_advertencia(mensajeVacio, tituloMensaje);
+//            valida = false;
+//        }
+//        return valida;
+//    }
+    public static boolean validaComboBox(String campoTexto, JComboBox comboBox, String textoPredeterminado, String mensajeVacio, String tituloMensaje) {
         boolean valida = true;
-        campoTexto = comboBox.getSelectedItem().toString(); // Obtener el texto seleccionado del JComboBox
-        if (campoTexto.equals("Selecciona una opcion")) {
+        campoTexto = comboBox.getSelectedItem().toString(); // Obtener el texto seleccionado
+        if (campoTexto.equalsIgnoreCase(textoPredeterminado)) {
             CUtilitarios.msg_advertencia(mensajeVacio, tituloMensaje);
             valida = false;
         }
         return valida;
     }
 
-    public static String devuelveCadena(JTextField campo, String regex) {
-        String cadena = null;
-        cadena = campo.getText();
-        if (cadena.isEmpty()) {
-            cadena = null;
-        } else if (cadena.matches(regex)) {
-            return cadena;
-        } else {
-            cadena = "NoValido";
+    public static String devuelveCadena(JTextField campo, String regex, String textoInvalido) {
+        String texto = campo.getText().trim();
+        if (texto.isEmpty() || texto.equalsIgnoreCase(textoInvalido)) {
+            return null;
+        } else if (!texto.matches(regex)) {
+            return "NoValido";
         }
-        return cadena;
+        return texto;
     }
 
-    public static boolean validaCampo(String campoTexto, JTextField campo, String regex, String mensajeVacio, String mensajeInvalido, String tituloMensaje) {
+    public static boolean validaCampo(String campoTexto, JTextField campo, String regex, String textoInvalido, String mensajeVacio, String mensajeInvalido, String tituloMensaje) {
         boolean valida = true;
-        campoTexto = devuelveCadena(campo, regex);
+        campoTexto = devuelveCadena(campo, regex, textoInvalido);
         if (campoTexto == null) {
             CUtilitarios.msg_advertencia(mensajeVacio, tituloMensaje);
             valida = false;
         } else if (campoTexto.equals("NoValido")) {
             CUtilitarios.msg_error(mensajeInvalido, tituloMensaje);
             valida = false;
-        } else {
-            valida = true;
         }
         return valida;
     }
@@ -227,9 +231,8 @@ public class CUtilitarios {
             }
         });
     }
-    
+
     /* Método para limpiar tabla y cargar los campos */
-    
     private final CBusquedas queryBusca = new CBusquedas();
     private TableRowSorter<DefaultTableModel> tr;
 
@@ -240,7 +243,7 @@ public class CUtilitarios {
         // Establecemos que el número de filas sea 0, es decir, vaciar la tabla
         modelo.setRowCount(0);
     }
-    
+
     public void cargarTabla(JTable jt) throws SQLException {
         // Obtenemos el modelo de la tabla
         DefaultTableModel modelo = (DefaultTableModel) jt.getModel();
@@ -260,5 +263,5 @@ public class CUtilitarios {
         // Establecemos ese objeto en la tabla para activar ordenamiento y filtros
         jt.setRowSorter(tr);
     }
-    /* Fin De nuevos Métodos */   
+    /* Fin De nuevos Métodos */
 }

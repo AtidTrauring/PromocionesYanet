@@ -109,12 +109,27 @@ public class CInserciones {
         System.out.println(consulta);
         return cnslt.inserta(consulta);
     }
-    
+
     /* Inseciones Cliente */
-//    public boolean insertaCliente(String idEstudiante, String idGrupo) throws SQLException {
-//        String consulta = "CALL sp_agrega_estudiante_grupo (" + idEstudiante + ", '" + idGrupo + ");";
-//        System.out.println(consulta);
-//        return cnslt.inserta(consulta);
-//    }
-    
+    public boolean insertaDPC(
+            String calle,
+            String numInt,
+            String numExt,
+            int idColonia,
+            String nombres,
+            String apPaterno,
+            String apMaterno,
+            int idEstatusCliente,
+            int insertarAval,
+            int idEstatusAval
+    ) throws SQLException {
+        String consulta = "CALL insertaDPC('" + calle + "', '" + numInt + "', '" + numExt + "', " + idColonia + ", "
+                + "'" + nombres + "', '" + apPaterno + "', '" + apMaterno + "', " + idEstatusCliente + ", "
+                + insertarAval + ", " + idEstatusAval + ", "
+                + "@iddireccion, @idpersona, @idcliente, @idaval);";
+
+        System.out.println(consulta);
+        return cnslt.inserta(consulta);
+    }
+
 }

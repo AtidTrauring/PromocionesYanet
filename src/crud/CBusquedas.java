@@ -546,13 +546,6 @@ public class CBusquedas {
         return cnslt.buscarValores(consulta, 5);
     }
 
-    public String buscarIdZonaPorColonia(String col) throws SQLException {
-        consulta = "SELECT z.idzona "
-                + "FROM zona z INNER JOIN colonia cl ON cl.zona_idzona = z.idzona "
-                + "WHERE cl.colonia = '" + col + "';";
-        return cnslt.buscarValor(consulta);
-    }
-
     public String buscarIdColonia(String col) throws SQLException {
         consulta = "SELECT cl.idcolonia "
                 + "FROM colonia cl "
@@ -564,6 +557,13 @@ public class CBusquedas {
         consulta = "SELECT es.idestatus "
                 + "FROM estatus es "
                 + "WHERE es.estatus = '" + est + "';";
+        return cnslt.buscarValor(consulta);
+    }
+    
+    public String buscarIdZona(String z) throws SQLException {
+        consulta = "SELECT z.idzona "
+                + "FROM zona z "
+                + "WHERE z.num_zona = '" + z + "';";
         return cnslt.buscarValor(consulta);
     }
 }

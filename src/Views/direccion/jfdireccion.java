@@ -1,8 +1,10 @@
 package Views.direccion;
 
+import Views.cliente.jfmenucliente;
 import crud.*;
 import java.sql.*;
 import java.util.*;
+import java.util.logging.*;
 import javax.swing.*;
 import utilitarios.*;
 
@@ -15,26 +17,34 @@ public final class jfdireccion extends javax.swing.JFrame {
     /**
      * Creates new form jfdireccion
      */
-    private static String[] datosPersona, datosEstatus, datosDirec;
+    private static String[] datosPersona, datosEstatus, datosZona;
+    private static int insertarAval;
     CUtilitarios cu = new CUtilitarios();
+    CBusquedas cb = new CBusquedas();
+    CInserciones ci = new CInserciones();
+    String seleccion, col, idCol;
+    private String cll, ne, ni, nom, ap, am, es, esa;
+    private int idc, est, esta;
 
-    public jfdireccion(String[] datosP, String[] datosEs, String[] datosDr) {
+    public jfdireccion(String[] datosZ, String[] datosP, String[] datosEs, int insertarAval) {
         initComponents();
         this.setLocationRelativeTo(null);
         /* Datos extraidos */
+        datosZona = datosZ;
         datosPersona = datosP;
         datosEstatus = datosEs;
-        datosDirec = datosDr;
         /* Fin De Datos */
+
+        //  Combos
+        cargaComboBox(jcbcolonian, 1);
+
         cu.aplicarPlaceholder(jtfcallen, "Calle");
         cu.aplicarPlaceholder(jtfnumextn, "Número Exterior");
         cu.aplicarPlaceholder(jtfnumintn, "Numero Interior");
-        //  Combos
-        cargaComboBox(jcbcolonian, 1);
-        
+
         /* Muestra de datos transaccionados */
         System.out.println("\n\nEn dirección");
-        System.out.println("Colonia " + Arrays.toString(datosDr));
+        System.out.println("Zona " + Arrays.toString(datosZ));
         System.out.println("Persona " + Arrays.toString(datosP));
         System.out.println("Estatus " + Arrays.toString(datosEs));
     }
@@ -48,7 +58,7 @@ public final class jfdireccion extends javax.swing.JFrame {
         try {
             switch (metodoCarga) {
                 case 1:
-                    datosListas = queryCarga.cargaComboColonias();
+                    datosListas = queryCarga.cargaComboColonias(datosZona[0]);
                     for (int i = 0; i < datosListas.size(); i++) {
                         listas.addElement(datosListas.get(i));
                     }
@@ -132,6 +142,11 @@ public final class jfdireccion extends javax.swing.JFrame {
         jcbcolonian.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Colonias" }));
         jcbcolonian.setToolTipText("");
         jcbcolonian.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jcbcolonian.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jcbcolonianActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -172,6 +187,11 @@ public final class jfdireccion extends javax.swing.JFrame {
         jbagregardirec.setBackground(new java.awt.Color(56, 171, 242));
         jbagregardirec.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jbagregardirec.setText("Finalizar");
+        jbagregardirec.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbagregardirecActionPerformed(evt);
+            }
+        });
 
         JlblImagen1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/logo_vectori.png"))); // NOI18N
 
@@ -256,6 +276,52 @@ public final class jfdireccion extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jcbcolonianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbcolonianActionPerformed
+        JComboBox jcb = (JComboBox) evt.getSource(); // Asegura que el evento venga del combo correcto
+        seleccion = (String) jcb.getSelectedItem();
+
+        if (!"Colonias".equals(seleccion)) {
+            col = seleccion; // Guarda la selección en la variable global
+            System.out.println(col);
+            try {
+                idCol = cb.buscarIdColonia(col);
+                System.out.println("ID COLONIA " + idCol);
+            } catch (SQLException ex) {
+                Logger.getLogger(jfmenucliente.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_jcbcolonianActionPerformed
+
+    private void jbagregardirecActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbagregardirecActionPerformed
+        // Dirección
+        cll = jtfcallen.getText();
+        ne = jtfnumextn.getText();
+        ni = jtfnumintn.getText();
+
+        // Persona
+        nom = datosPersona[0];
+        ap = datosPersona[1];
+        am = datosPersona[2];
+        idc = Integer.parseInt(idCol);
+
+        // Estatus
+        es = datosEstatus[0];
+        esa = datosEstatus[1];
+        if (insertarAval == 0) {
+            est = Integer.parseInt(es);
+        } else {
+            est = Integer.parseInt(es);
+            esta = Integer.parseInt(esa);
+        }
+
+        try {
+            ci.insertaDPC(cll, ni, ne, idc, nom, ap, ap, est, insertarAval, esta);
+        } catch (SQLException ex) {
+            Logger.getLogger(jfdireccion.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }//GEN-LAST:event_jbagregardirecActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -285,7 +351,7 @@ public final class jfdireccion extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
-            new jfdireccion(datosPersona, datosEstatus, datosDirec).setVisible(true);
+            new jfdireccion(datosZona, datosPersona, datosEstatus, insertarAval).setVisible(true);
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables

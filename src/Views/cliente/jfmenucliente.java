@@ -22,7 +22,7 @@ public final class jfmenucliente extends javax.swing.JFrame {
     CUtilitarios cu = new CUtilitarios();
     CBusquedas cb = new CBusquedas();
     CConsultas cc = new CConsultas();
-    String seleccion, col, est, idCol, idZona, idEstatus, idEstatusAval;
+    String seleccion, est, z, idZona, idEstatus, idEstatusAval;
 
     public jfmenucliente() throws SQLException {
         initComponents();
@@ -33,8 +33,8 @@ public final class jfmenucliente extends javax.swing.JFrame {
         cargaComboBox(jcbestatuseli, 1);
         cargaComboBox(jcbestatusavaln, 2);
         cargaComboBox(jcbestatusavalact, 2);
-        cargaComboBox(jcbncolonia, 3);
-        cargaComboBox(jcbcolonia, 3);
+        cargaComboBox(jcbnzona, 3);
+        cargaComboBox(jcbazona, 3);
 
         /* Placeholder JTField */
         cu.aplicarPlaceholder(jtfid, "Ingresa el ID de búsqueda");
@@ -80,14 +80,7 @@ public final class jfmenucliente extends javax.swing.JFrame {
                     datosListas.clear();
                     break;
                 case 3:
-                    datosListas = queryCarga.cargaComboColonias();
-                    for (int i = 0; i < datosListas.size(); i++) {
-                        listas.addElement(datosListas.get(i));
-                    }
-                    datosListas.clear();
-                    break;
-                case 4:
-                    datosListas = queryCarga.cargaComboColonias();
+                    datosListas = queryCarga.cargaComboZona();
                     for (int i = 0; i < datosListas.size(); i++) {
                         listas.addElement(datosListas.get(i));
                     }
@@ -134,7 +127,7 @@ public final class jfmenucliente extends javax.swing.JFrame {
         jSeparator6 = new javax.swing.JSeparator();
         jtfnapmaterno = new javax.swing.JTextField();
         jSeparator7 = new javax.swing.JSeparator();
-        jcbncolonia = new javax.swing.JComboBox<>();
+        jcbnzona = new javax.swing.JComboBox<>();
         jbagregar = new javax.swing.JButton();
         JlblImagen1 = new javax.swing.JLabel();
         jrbcliente = new javax.swing.JRadioButton();
@@ -151,7 +144,7 @@ public final class jfmenucliente extends javax.swing.JFrame {
         jSeparator13 = new javax.swing.JSeparator();
         jtfaapmaterno = new javax.swing.JTextField();
         jSeparator14 = new javax.swing.JSeparator();
-        jcbcolonia = new javax.swing.JComboBox<>();
+        jcbazona = new javax.swing.JComboBox<>();
         jbactualizar = new javax.swing.JButton();
         jrbclienteact = new javax.swing.JRadioButton();
         jrbavalact = new javax.swing.JRadioButton();
@@ -390,14 +383,14 @@ public final class jfmenucliente extends javax.swing.JFrame {
         jSeparator7.setForeground(new java.awt.Color(0, 0, 0));
         jSeparator7.setToolTipText("");
 
-        jcbncolonia.setBackground(new java.awt.Color(242, 220, 153));
-        jcbncolonia.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
-        jcbncolonia.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Colonias" }));
-        jcbncolonia.setToolTipText("");
-        jcbncolonia.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jcbncolonia.addActionListener(new java.awt.event.ActionListener() {
+        jcbnzona.setBackground(new java.awt.Color(242, 220, 153));
+        jcbnzona.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        jcbnzona.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Zona" }));
+        jcbnzona.setToolTipText("");
+        jcbnzona.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jcbnzona.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jcbncoloniaActionPerformed(evt);
+                jcbnzonaActionPerformed(evt);
             }
         });
 
@@ -477,7 +470,7 @@ public final class jfmenucliente extends javax.swing.JFrame {
                         .addComponent(jtfnapppaterno, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
                         .addComponent(jSeparator5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
                         .addComponent(jtfnnombres, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE))
-                    .addComponent(jcbncolonia, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jcbnzona, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(118, 118, 118)
                 .addGroup(jpnuevoclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jcbestatusavaln, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -532,7 +525,7 @@ public final class jfmenucliente extends javax.swing.JFrame {
                             .addComponent(jcbestatusn, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(43, 43, 43)
                         .addGroup(jpnuevoclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jcbncolonia, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jcbnzona, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jcbestatusavaln, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(50, 50, 50))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpnuevoclienteLayout.createSequentialGroup()
@@ -585,11 +578,11 @@ public final class jfmenucliente extends javax.swing.JFrame {
         jSeparator14.setForeground(new java.awt.Color(0, 0, 0));
         jSeparator14.setToolTipText("");
 
-        jcbcolonia.setBackground(new java.awt.Color(242, 220, 153));
-        jcbcolonia.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
-        jcbcolonia.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Colonias" }));
-        jcbcolonia.setToolTipText("");
-        jcbcolonia.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jcbazona.setBackground(new java.awt.Color(242, 220, 153));
+        jcbazona.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        jcbazona.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Zona" }));
+        jcbazona.setToolTipText("");
+        jcbazona.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         jbactualizar.setBackground(new java.awt.Color(56, 171, 242));
         jbactualizar.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
@@ -628,7 +621,7 @@ public final class jfmenucliente extends javax.swing.JFrame {
                 .addComponent(JlblImagen)
                 .addGap(18, 18, 18)
                 .addGroup(jpnuevocliente1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jcbcolonia, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jcbazona, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jSeparator14, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jtfaapmaterno, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jSeparator13, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -658,7 +651,7 @@ public final class jfmenucliente extends javax.swing.JFrame {
                 .addGroup(jpnuevocliente1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jpnuevocliente1Layout.createSequentialGroup()
                         .addGap(278, 278, 278)
-                        .addComponent(jcbcolonia, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jcbazona, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jpnuevocliente1Layout.createSequentialGroup()
                         .addGap(38, 38, 38)
                         .addGroup(jpnuevocliente1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -845,7 +838,7 @@ public final class jfmenucliente extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpprincipalLayout.createSequentialGroup()
                 .addComponent(jPnlLogZonas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jtpprincipal, javax.swing.GroupLayout.DEFAULT_SIZE, 529, Short.MAX_VALUE))
+                .addComponent(jtpprincipal))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -877,24 +870,6 @@ public final class jfmenucliente extends javax.swing.JFrame {
         jcbestatusavaln.setEnabled(true);
     }//GEN-LAST:event_jrbambosActionPerformed
 
-    private void jcbncoloniaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbncoloniaActionPerformed
-        JComboBox jcb = (JComboBox) evt.getSource(); // Asegura que el evento venga del combo correcto
-        seleccion = (String) jcb.getSelectedItem();
-
-        if (!"Colonias".equals(seleccion)) {
-            col = seleccion; // Guarda la selección en la variable global
-            System.out.println(col);
-            try {
-                idZona = cb.buscarIdZonaPorColonia(col);
-                idCol = cb.buscarIdColonia(col);
-                System.out.println("ID ZONA " + idZona);
-                System.out.println("ID COLONIA " + idCol);
-            } catch (SQLException ex) {
-                Logger.getLogger(jfmenucliente.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }//GEN-LAST:event_jcbncoloniaActionPerformed
-
     private void jcbestatusnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbestatusnActionPerformed
         JComboBox jcb = (JComboBox) evt.getSource(); // Asegura que el evento venga del combo correcto
         seleccion = (String) jcb.getSelectedItem();
@@ -925,34 +900,87 @@ public final class jfmenucliente extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jcbestatusavalnActionPerformed
 
+    private void jcbnzonaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbnzonaActionPerformed
+        JComboBox jcb = (JComboBox) evt.getSource(); // Asegura que el evento venga del combo correcto
+        seleccion = (String) jcb.getSelectedItem();
+        if (!"Zona".equals(seleccion)) {
+            z = seleccion;
+            System.out.println(z);
+            try {
+                idZona = cb.buscarIdZona(z);
+                System.out.println("ZONA " + idZona);
+            } catch (SQLException ex) {
+                Logger.getLogger(jfmenucliente.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_jcbnzonaActionPerformed
+
     private void jbagregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbagregarActionPerformed
-        String[] datosDirec = new String[1];
+        String[] datosZona = new String[1];
         String[] datosPersona = new String[3];
         String[] datosEstatus = new String[2];
+        int insertarAval = 0;
+
+        String regexTexto = "^[A-Za-zÁÉÍÓÚáéíóúÑñ\\s]+$";
+
         try {
 
-            datosDirec[0] = idCol;
+            boolean nombreValido = CUtilitarios.validaCampo(
+                    "", jtfnnombres,
+                    regexTexto,
+                    "Nombres",
+                    "Debe ingresar un nombre válido.",
+                    "El nombre solo debe contener letras.",
+                    "Validación Nombre");
+
+            boolean paternoValido = CUtilitarios.validaCampo(
+                    "", jtfnapppaterno,
+                    regexTexto,
+                    "Apellido Paterno",
+                    "Debe ingresar el apellido paterno válido.",
+                    "El apellido paterno solo debe contener letras.",
+                    "Validación Apellido Paterno");
+
+            boolean maternoValido = CUtilitarios.validaCampo(
+                    "", jtfnapmaterno,
+                    regexTexto,
+                    "Apellido Materno",
+                    "Debe ingresar el apellido materno válido.",
+                    "El apellido materno solo debe contener letras.",
+                    "Validación Apellido Materno");
             
-            datosPersona[0] = jtfnnombres.getText();
-            datosPersona[1] = jtfnapppaterno.getText();
-            datosPersona[2] = jtfnapmaterno.getText();
+            boolean zonaValida = CUtilitarios.validaComboBox(
+                    "", jcbnzona,
+                    "Zona",
+                    "Selecciona una Zona", 
+                    "Validación Zona");
+
+            if (!nombreValido || !paternoValido || !maternoValido || !zonaValida) {
+                return;
+            }
+
+            datosZona[0] = idZona;
+
+            datosPersona[0] = jtfnnombres.getText().trim();
+            datosPersona[1] = jtfnapppaterno.getText().trim();
+            datosPersona[2] = jtfnapmaterno.getText().trim();
 
             if (jrbcliente.isSelected()) {
                 datosEstatus[0] = idEstatus;
+                insertarAval = 0;
             } else if (jrbaval.isSelected()) {
-                datosEstatus[1] = idEstatusAval;
-            } else if (jrbambos.isSelected()){
                 datosEstatus[0] = idEstatus;
                 datosEstatus[1] = idEstatusAval;
+                insertarAval = 1;
             }
-            
-        } catch (Exception e) {
-        }
 
-        jfdireccion dir = new jfdireccion(datosPersona, datosEstatus, datosDirec);
-        dir.setVisible(true);
-        //System.out.println("Datos de la persona " + datosEstatusCl[0]);
-        this.dispose();
+            jfdireccion dir = new jfdireccion(datosZona, datosPersona, datosEstatus, insertarAval);
+            dir.setVisible(true);
+            this.dispose();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }//GEN-LAST:event_jbagregarActionPerformed
 
     /**
@@ -1031,14 +1059,14 @@ public final class jfmenucliente extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator9;
     private javax.swing.JButton jbactualizar;
     private javax.swing.JButton jbagregar;
-    private javax.swing.JComboBox<String> jcbcolonia;
+    private javax.swing.JComboBox<String> jcbazona;
     private javax.swing.JComboBox<String> jcbestatus;
     private javax.swing.JComboBox<String> jcbestatusact;
     private javax.swing.JComboBox<String> jcbestatusavalact;
     private javax.swing.JComboBox<String> jcbestatusavaln;
     private javax.swing.JComboBox<String> jcbestatuseli;
     private javax.swing.JComboBox<String> jcbestatusn;
-    private javax.swing.JComboBox<String> jcbncolonia;
+    private javax.swing.JComboBox<String> jcbnzona;
     private javax.swing.JComboBox<String> jcbtipousuario;
     private javax.swing.JComboBox<String> jcbtipousuarioeli;
     private javax.swing.JPanel jpactualizacliente;
