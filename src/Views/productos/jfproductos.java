@@ -88,6 +88,7 @@ public class jfproductos extends javax.swing.JFrame {
         });
     }
 
+    
     public void eliminarProducto() {
     int fila = jtblEliminarProductos.getSelectedRow();
     if (fila == -1) {
