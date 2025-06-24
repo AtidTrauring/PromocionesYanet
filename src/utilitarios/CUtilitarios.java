@@ -80,6 +80,28 @@ public class CUtilitarios {
         }
         return texto;
     }
+    
+public String devuelveCadenaNum(JTextField campo, String regex) {
+        String cadena = campo.getText();
+        if (cadena.isEmpty()) {
+            return null;
+        } else if (cadena.matches("^[0-9]+$")) {
+            return cadena;
+        } else {
+            return "NoValido";
+        }
+    }
+
+    public String devuelveCadenatexto(JTextField campo, String regex) {
+        String cadena = campo.getText();
+        if (cadena.isEmpty()) {
+            return null;
+        } else if (cadena.matches("^[a-zA-Z ]+$")) {
+            return cadena;
+        } else {
+            return "NoValido";
+        }
+    }
 
     public static boolean validaCampo(String campoTexto, JTextField campo, String regex, String textoInvalido, String mensajeVacio, String mensajeInvalido, String tituloMensaje) {
         boolean valida = true;

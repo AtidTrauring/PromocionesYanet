@@ -18,6 +18,14 @@ public class CInserciones {
         return cnslt.inserta(consulta);
 
     }
+    
+//------------------------------Insercion producto py ----------------------------------
+public boolean insertaProducto(String producto, String precio, String stock) throws SQLException {
+    consulta = "INSERT INTO producto (producto, precio, stock) " +
+                      "VALUES ('" + producto + "', '" + precio + "', '" + stock + "');";
+    return cnslt.inserta(consulta);
+}
+
 // ---------------------------Inserciones Direccion-----------------------------------------
 
     public boolean insertaMunicipio(String claveMunicipio, String municipio, String claveEstado) throws SQLException {
