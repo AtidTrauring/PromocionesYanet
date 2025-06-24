@@ -1,8 +1,7 @@
 package Views.cliente;
 
-import Views.direccion.jfdireccion;
+import Views.direccion.*;
 import crud.*;
-import java.awt.event.*;
 import utilitarios.*;
 import java.sql.*;
 import java.util.*;
@@ -41,7 +40,7 @@ public final class jfmenucliente extends javax.swing.JFrame {
         cu.aplicarPlaceholder(jtfnombres, "Ingresar nombre(s) de búsqueda");
         cu.aplicarPlaceholder(jtfappaterno, "Ingresar apellido paterno de búsqueda");
         cu.aplicarPlaceholder(jtfapmaterno, "Ingresar apellido materno de búsqueda");
-        cu.aplicarPlaceholder(jtfnnombres, "Nombre (s)");
+        cu.aplicarPlaceholder(jtfnnombres, "Nombres");
         cu.aplicarPlaceholder(jtfnapppaterno, "Apellido Paterno");
         cu.aplicarPlaceholder(jtfnapmaterno, "Apellido Materno");
         cu.aplicarPlaceholder(jtfanombres, "Nombre (s)");
@@ -353,7 +352,7 @@ public final class jfmenucliente extends javax.swing.JFrame {
         jtfnnombres.setBackground(new java.awt.Color(242, 220, 153));
         jtfnnombres.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jtfnnombres.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-        jtfnnombres.setText("Nombre (s)");
+        jtfnnombres.setText("Nombres");
         jtfnnombres.setToolTipText("");
         jtfnnombres.setBorder(null);
         jtfnnombres.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
@@ -548,7 +547,7 @@ public final class jfmenucliente extends javax.swing.JFrame {
         jtfanombres.setBackground(new java.awt.Color(242, 220, 153));
         jtfanombres.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jtfanombres.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-        jtfanombres.setText("Nombre (s)");
+        jtfanombres.setText("Nombres");
         jtfanombres.setToolTipText("");
         jtfanombres.setBorder(null);
         jtfanombres.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
@@ -919,68 +918,76 @@ public final class jfmenucliente extends javax.swing.JFrame {
         String[] datosZona = new String[1];
         String[] datosPersona = new String[3];
         String[] datosEstatus = new String[2];
-        int insertarAval = 0;
 
+        JTextField[] jtf = {jtfnnombres, jtfnapppaterno, jtfnapmaterno};
+        String[] textosPredeterminados = {"Nombres", "Apellido Paterno", "Apellido Materno"};
         String regexTexto = "^[A-Za-zÁÉÍÓÚáéíóúÑñ\\s]+$";
 
         try {
-
-            boolean nombreValido = CUtilitarios.validaCampo(
-                    "", jtfnnombres,
-                    regexTexto,
-                    "Nombres",
-                    "Debe ingresar un nombre válido.",
-                    "El nombre solo debe contener letras.",
-                    "Validación Nombre");
-
-            boolean paternoValido = CUtilitarios.validaCampo(
-                    "", jtfnapppaterno,
-                    regexTexto,
-                    "Apellido Paterno",
-                    "Debe ingresar el apellido paterno válido.",
-                    "El apellido paterno solo debe contener letras.",
-                    "Validación Apellido Paterno");
-
-            boolean maternoValido = CUtilitarios.validaCampo(
-                    "", jtfnapmaterno,
-                    regexTexto,
-                    "Apellido Materno",
-                    "Debe ingresar el apellido materno válido.",
-                    "El apellido materno solo debe contener letras.",
-                    "Validación Apellido Materno");
-            
-            boolean zonaValida = CUtilitarios.validaComboBox(
-                    "", jcbnzona,
-                    "Zona",
-                    "Selecciona una Zona", 
-                    "Validación Zona");
-
-            if (!nombreValido || !paternoValido || !maternoValido || !zonaValida) {
+            // 1. Validar campos de texto
+            boolean camposValidos = CUtilitarios.validaCamposTextoConFormato(
+                    jtf, textosPredeterminados, textosPredeterminados, regexTexto,
+                    "Debes llenar todos los campos correctamente", "Validación de Datos Persona"
+            );
+            if (!camposValidos) {
                 return;
             }
 
-            datosZona[0] = idZona;
+            // 2. Validar zona seleccionada
+            if (jcbnzona.getSelectedIndex() == 0) {
+                CUtilitarios.msg_advertencia("Selecciona una zona válida", "Validación de Zona");
+                return;
+            }
 
+            // 3. Validar selección de tipo (cliente/aval/ambos)
+            if (!jrbcliente.isSelected() && !jrbaval.isSelected() && !jrbambos.isSelected()) {
+                CUtilitarios.msg_advertencia("Debes seleccionar Cliente, Aval o Ambos", "Validación de Opción");
+                return;
+            }
+
+            // 4. Validar estatus según selección
+            if (jrbcliente.isSelected()) {
+                if (jcbestatusn.getSelectedIndex() == 0) {
+                    CUtilitarios.msg_advertencia("Selecciona un estatus válido para cliente", "Validación de Estatus");
+                    return;
+                }
+                //datosEstatus[0] = String.valueOf(jcbestatusn.getSelectedIndex());
+                datosEstatus[0] = idEstatus;
+
+            } else if (jrbaval.isSelected()) {
+                if (jcbestatusavaln.getSelectedIndex() == 0) {
+                    CUtilitarios.msg_advertencia("Selecciona un estatus válido para aval", "Validación de Estatus Aval");
+                    return;
+                }
+                //datosEstatus[1] = String.valueOf(jcbestatusavaln.getSelectedIndex());
+                datosEstatus[1] = idEstatusAval;
+
+            } else if (jrbambos.isSelected()) {
+                if (jcbestatusn.getSelectedIndex() == 0 || jcbestatusavaln.getSelectedIndex() == 0) {
+                    CUtilitarios.msg_advertencia("Selecciona estatus válidos para Cliente y Aval", "Validación de Estatus");
+                    return;
+                }
+                //datosEstatus[0] = String.valueOf(jcbestatusn.getSelectedIndex());
+                //datosEstatus[1] = String.valueOf(jcbestatusavaln.getSelectedIndex());
+                datosEstatus[0] = idEstatus;
+                datosEstatus[1] = idEstatusAval;
+            }
+
+            // Preparar datos persona y zona
             datosPersona[0] = jtfnnombres.getText().trim();
             datosPersona[1] = jtfnapppaterno.getText().trim();
             datosPersona[2] = jtfnapmaterno.getText().trim();
+            datosZona[0] = idZona;
 
-            if (jrbcliente.isSelected()) {
-                datosEstatus[0] = idEstatus;
-                insertarAval = 0;
-            } else if (jrbaval.isSelected()) {
-                datosEstatus[0] = idEstatus;
-                datosEstatus[1] = idEstatusAval;
-                insertarAval = 1;
-            }
-
-            jfdireccion dir = new jfdireccion(datosZona, datosPersona, datosEstatus, insertarAval);
+            // Si todo está validado, abrir la ventana de dirección
+            jfdireccion dir = new jfdireccion(datosZona, datosPersona, datosEstatus);
             dir.setVisible(true);
             this.dispose();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            CUtilitarios.msg_error("Error inesperado", e.getMessage());
         }
+
     }//GEN-LAST:event_jbagregarActionPerformed
 
     /**

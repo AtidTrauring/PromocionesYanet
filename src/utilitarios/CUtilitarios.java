@@ -80,8 +80,8 @@ public class CUtilitarios {
         }
         return texto;
     }
-    
-public String devuelveCadenaNum(JTextField campo, String regex) {
+
+    public String devuelveCadenaNum(JTextField campo, String regex) {
         String cadena = campo.getText();
         if (cadena.isEmpty()) {
             return null;
@@ -284,6 +284,55 @@ public String devuelveCadenaNum(JTextField campo, String regex) {
         tr = new TableRowSorter<>(modelo);
         // Establecemos ese objeto en la tabla para activar ordenamiento y filtros
         jt.setRowSorter(tr);
+    }
+
+    public static boolean validaCamposTextoConFormato(
+            JTextField[] jtf,
+            String[] textosPredeterminados,
+            String[] nombresCampos,
+            String regex,
+            String mensajeGeneralCamposVacios,
+            String tituloMensajeGeneral) {
+
+        boolean hayCamposVacios = false;
+        boolean hayErroresDeFormato = false;
+
+        for (int i = 0; i < jtf.length; i++) {
+            String texto = jtf[i].getText().trim();
+
+            // Validar si está vacío o es predeterminado
+            if (texto.equalsIgnoreCase(textosPredeterminados[i])) {
+                hayCamposVacios = true;
+            } // Si no está vacío, validar el formato con regex
+            else if (!texto.matches(regex)) {
+                CUtilitarios.msg_error(
+                        "El campo " + nombresCampos[i] + " solo debe contener letras.",
+                        "Error en " + nombresCampos[i]);
+                hayErroresDeFormato = true;
+            }
+        }
+
+        if (hayCamposVacios) {
+            CUtilitarios.msg_advertencia(mensajeGeneralCamposVacios, tituloMensajeGeneral);
+        }
+
+        return !hayCamposVacios && !hayErroresDeFormato;
+    }
+
+    public static boolean validaCombosConPredeterminados(
+            JComboBox[] combos,
+            String[] combosPredeterminados,
+            String mensajeGeneral,
+            String tituloMensaje) {
+
+        for (int i = 0; i < combos.length; i++) {
+            String seleccionado = combos[i].getSelectedItem().toString().trim();
+            if (seleccionado.equalsIgnoreCase(combosPredeterminados[i])) {
+                CUtilitarios.msg_advertencia(mensajeGeneral, tituloMensaje);
+                return false;
+            }
+        }
+        return true;
     }
     /* Fin De nuevos Métodos */
 }

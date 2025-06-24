@@ -18,15 +18,14 @@ public final class jfdireccion extends javax.swing.JFrame {
      * Creates new form jfdireccion
      */
     private static String[] datosPersona, datosEstatus, datosZona;
-    private static int insertarAval;
     CUtilitarios cu = new CUtilitarios();
     CBusquedas cb = new CBusquedas();
     CInserciones ci = new CInserciones();
     String seleccion, col, idCol;
-    private String cll, ne, ni, nom, ap, am, es, esa;
-    private int idc, est, esta;
+    private String cll, ne, ni, nom, ap, am;
+    private int idc, ides, idesa, next, nint;
 
-    public jfdireccion(String[] datosZ, String[] datosP, String[] datosEs, int insertarAval) {
+    public jfdireccion(String[] datosZ, String[] datosP, String[] datosEs) {
         initComponents();
         this.setLocationRelativeTo(null);
         /* Datos extraidos */
@@ -280,6 +279,11 @@ public final class jfdireccion extends javax.swing.JFrame {
         JComboBox jcb = (JComboBox) evt.getSource(); // Asegura que el evento venga del combo correcto
         seleccion = (String) jcb.getSelectedItem();
 
+        if (jcb.getSelectedIndex() == 0 || "Colonias".equals(seleccion)) {
+            CUtilitarios.msg_advertencia("Selecciona una colonia válida", "Validación de Colonia");
+            return;
+        }
+
         if (!"Colonias".equals(seleccion)) {
             col = seleccion; // Guarda la selección en la variable global
             System.out.println(col);
@@ -293,31 +297,57 @@ public final class jfdireccion extends javax.swing.JFrame {
     }//GEN-LAST:event_jcbcolonianActionPerformed
 
     private void jbagregardirecActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbagregardirecActionPerformed
-        // Dirección
-        cll = jtfcallen.getText();
-        ne = jtfnumextn.getText();
-        ni = jtfnumintn.getText();
+        JTextField[] jtf = {jtfcallen, jtfnumextn, jtfnumintn};
+        String[] textosPredeterminados = {"Calle", "Número Interior", "Número Exterior"};
+        String regexTextoExtendido = "^[0-9A-Za-zÁÉÍÓÚáéíóúÑñ\\s.,\\-]+$";
 
-        // Persona
+        boolean camposValidos = CUtilitarios.validaCamposTextoConFormato(
+                jtf, textosPredeterminados, textosPredeterminados, regexTextoExtendido,
+                "Debes llenar todos los campos correctamente", "Validación de Datos Dirección"
+        );
+        if (!camposValidos) {
+            return;
+        }
+
+        cll = jtfcallen.getText();
+        ni = jtfnumintn.getText();
+        ne = jtfnumextn.getText();
+        idc = Integer.parseInt(idCol); // id de colonia
+
         nom = datosPersona[0];
         ap = datosPersona[1];
         am = datosPersona[2];
-        idc = Integer.parseInt(idCol);
 
-        // Estatus
-        es = datosEstatus[0];
-        esa = datosEstatus[1];
-        if (insertarAval == 0) {
-            est = Integer.parseInt(es);
+        StringBuilder mensaje = new StringBuilder(); // Acumulador de mensaje final
+
+        if (datosEstatus[0] != null) {
+            System.out.println("Puedes insertar estatus cliente");
+            ides = Integer.parseInt(datosEstatus[0]);
+//            try {
+//                ci.insertaDPC(cll, ni, ne, idc, nom, ap, am, ides);
+//                mensaje.append("Cliente ");
+//            } catch (SQLException ex) {
+//                System.out.println("Error al insertar cliente: " + ex.getMessage());
+//            }
         } else {
-            est = Integer.parseInt(es);
-            esta = Integer.parseInt(esa);
+            System.out.println("El estatus cliente es nulo");
         }
 
-        try {
-            ci.insertaDPC(cll, ni, ne, idc, nom, ap, ap, est, insertarAval, esta);
-        } catch (SQLException ex) {
-            Logger.getLogger(jfdireccion.class.getName()).log(Level.SEVERE, null, ex);
+        if (datosEstatus[1] != null) {
+            System.out.println("Puedes insertar estatus aval");
+            idesa = Integer.parseInt(datosEstatus[1]);
+//            try {
+//                ci.insertaDPA(cll, ni, ne, idc, nom, ap, am, idesa);
+//                mensaje.append("Aval ");
+//            } catch (SQLException ex) {
+//                System.out.println("Error al insertar aval: " + ex.getMessage());
+//            }
+        } else {
+            System.out.println("El estatus aval es nulo");
+        }
+        // Mostrar mensaje final si se insertó al menos uno
+        if (mensaje.length() > 0) {
+            CUtilitarios.msg(mensaje.toString().trim() + "insertado correctamente", "Inserción Exitosa");
         }
 
     }//GEN-LAST:event_jbagregardirecActionPerformed
@@ -351,7 +381,7 @@ public final class jfdireccion extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
-            new jfdireccion(datosZona, datosPersona, datosEstatus, insertarAval).setVisible(true);
+            new jfdireccion(datosZona, datosPersona, datosEstatus).setVisible(true);
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables

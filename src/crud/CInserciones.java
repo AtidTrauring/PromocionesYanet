@@ -18,16 +18,15 @@ public class CInserciones {
         return cnslt.inserta(consulta);
 
     }
-    
+
 //------------------------------Insercion producto py ----------------------------------
-public boolean insertaProducto(String producto, String precio, String stock) throws SQLException {
-    consulta = "INSERT INTO producto (producto, precio, stock) " +
-                      "VALUES ('" + producto + "', '" + precio + "', '" + stock + "');";
-    return cnslt.inserta(consulta);
-}
+    public boolean insertaProducto(String producto, String precio, String stock) throws SQLException {
+        consulta = "INSERT INTO producto (producto, precio, stock) "
+                + "VALUES ('" + producto + "', '" + precio + "', '" + stock + "');";
+        return cnslt.inserta(consulta);
+    }
 
 // ---------------------------Inserciones Direccion-----------------------------------------
-
     public boolean insertaMunicipio(String claveMunicipio, String municipio, String claveEstado) throws SQLException {
         consulta = "CALL sp_agrega_municipio(" + claveMunicipio + ",'" + municipio + "'," + claveEstado + ");";
         return cnslt.inserta(consulta);
@@ -127,14 +126,29 @@ public boolean insertaProducto(String producto, String precio, String stock) thr
             String nombres,
             String apPaterno,
             String apMaterno,
-            int idEstatusCliente,
-            int insertarAval,
+            int idEstatusCliente
+    ) throws SQLException {
+        consulta = "CALL insertaDPC ('" + calle + "', '" + numInt + "', '" + numExt + "', " + idColonia + ", "
+                + "'" + nombres + "', '" + apPaterno + "', '" + apMaterno + "', " + idEstatusCliente + ", "
+                + "@iddireccion, @idpersona, @idcliente);";
+
+        System.out.println(consulta);
+        return cnslt.inserta(consulta);
+    }
+
+    public boolean insertaDPA(
+            String calle,
+            String numInt,
+            String numExt,
+            int idColonia,
+            String nombres,
+            String apPaterno,
+            String apMaterno,
             int idEstatusAval
     ) throws SQLException {
-        String consulta = "CALL insertaDPC('" + calle + "', '" + numInt + "', '" + numExt + "', " + idColonia + ", "
-                + "'" + nombres + "', '" + apPaterno + "', '" + apMaterno + "', " + idEstatusCliente + ", "
-                + insertarAval + ", " + idEstatusAval + ", "
-                + "@iddireccion, @idpersona, @idcliente, @idaval);";
+        consulta = "CALL insertaDPA ('" + calle + "', '" + numInt + "', '" + numExt + "', " + idColonia + ", "
+                + "'" + nombres + "', '" + apPaterno + "', '" + apMaterno + "', " + idEstatusAval + ", "
+                + "@iddireccion, @idpersona, @idaval);";
 
         System.out.println(consulta);
         return cnslt.inserta(consulta);
