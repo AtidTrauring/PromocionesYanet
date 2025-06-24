@@ -1,133 +1,171 @@
 package Views.empleado;
 
 import crud.CBusquedas;
+import crud.CCargaCombos;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
+import javax.swing.JTable;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import utilitarios.CUtilitarios;
 
-public class JfEmpleado extends javax.swing.JFrame {
+public final class JfEmpleado extends javax.swing.JFrame {
 
-    // Declaraciones necesarias en tu clase JfEmpleado
     private TableRowSorter<DefaultTableModel> tr;
-
-// Objeto para buscar datos (debes implementar esta clase)
-    private CBusquedas queryBusca = new CBusquedas();
+    CUtilitarios cu = new CUtilitarios();
+    private final CBusquedas queryBusca = new CBusquedas();
+    private final CCargaCombos queryCarga = new CCargaCombos();
+    private DefaultComboBoxModel listaZonas;
 
     public JfEmpleado() throws SQLException {
         initComponents();
-        cargarTabla();
+        cargarDatosEmpleados(JtblEmpleados);
+        cargarDatosEmpleados(JtblDeleteEmpleados);
+        cargarDatosEmpleados(JtblSueldosEmpleados);
+        cu.aplicarPlaceholder(JtxtCnsltID, "Ingresa el ID de búsqueda");
+        cu.aplicarPlaceholder(JtxtID, "Ingresa el ID de búsqueda");
+        cu.aplicarPlaceholder(JtxtCnsltNombre, "Ingresa el Nombre de búsqueda");
+        cu.aplicarPlaceholder(JtxtNombre, "Ingresa el Nombre de búsqueda");
+        cu.aplicarPlaceholder(JtxtCnsltApeMat, "Ingresa el Apellido Materno de búsqueda");
+        cu.aplicarPlaceholder(JtxtApeMat, "Ingresa el Apellido Materno de búsqueda");
+        cu.aplicarPlaceholder(JtxtCnsltApePat, "Ingresa el Apellido Paterno de búsqueda");
+        cu.aplicarPlaceholder(JtxtApePat, "Ingresa el Apellido Paterno de búsqueda");
+        cu.aplicarPlaceholder(JtxtEmpleado, "Empleado");
+        cu.aplicarPlaceholder(JtxtAgregarNombre, "Nombre");
+        cu.aplicarPlaceholder(JtxtActlzNombre, "Nombre");
+        cu.aplicarPlaceholder(JtxtAgregarApMat, "Apellido Materno");
+        cu.aplicarPlaceholder(JtxtActlzApMat, "Apellido Materno");
+        cu.aplicarPlaceholder(JtxtAgregarApPat, "Apellido Paterno");
+        cu.aplicarPlaceholder(JtxtActlzApPat, "Apellido Paterno");
+        cu.aplicarPlaceholder(JtxtAgregarSueldo, "Sueldo Inicial");
+        cu.aplicarPlaceholder(JtxtActlzSueldo, "Sueldo Inicial");
+        cu.aplicarPlaceholder(JtxtAgregarTel, "Telefono");
+        cu.aplicarPlaceholder(JtxtActlzTel, "Telefono");
+        cargaZonas(JcmbxActlzZonas);
+        cargaZonas(JcmbxAgregarZonas);
     }
+// Limpia el contenido actual de la tabla JtblEmpleados
 
-    // ================== MÉTODOS PARA GESTIÓN DE EMPLEADOS =====================
-    /**
-     * Método para limpiar la tabla de empleados (elimina todas las filas).
-     */
-    private void limpiarTabla() {
-        // Obtenemos el modelo de la tabla (estructura de filas y columnas)
+    private void limpiarTablaEmpleados() {
+        // Obtiene el modelo actual de la tabla (estructura de datos que gestiona las filas)
         DefaultTableModel modelo = (DefaultTableModel) JtblEmpleados.getModel();
 
-        // Establecemos que el número de filas sea 0, es decir, vaciar la tabla
+        // El método setRowCount(0) elimina todas las filas de la tabla
         modelo.setRowCount(0);
     }
 
-    /**
-     * Método para llenar la tabla con información de empleados desde la base de
-     * datos.
-     */
-    public void cargarTabla() throws java.sql.SQLException {
-        // Obtenemos el modelo de la tabla
-        DefaultTableModel modelo = (DefaultTableModel) JtblEmpleados.getModel();
+// Carga los datos de empleados desde la base de datos hacia la tabla
+    public void cargarDatosEmpleados(JTable tabla) throws SQLException {
+        // Obtener el modelo de la tabla de empleados
+        DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
 
-        // Llamamos al método para limpiar la tabla antes de llenarla
-        limpiarTabla();
+        // Eliminar cualquier contenido previo de la tabla
+        limpiarTablaEmpleados();
 
-        // Llamamos al método que devuelve los datos de los empleados desde la base de datos
-        ArrayList<String[]> datos = queryBusca.buscarEmpleado();
-        // Recorremos cada fila de datos obtenidos
-        for (String[] fila : datos) {
-            // Añadimos la fila a la tabla (ID, Nombre, Apellido Paterno, Apellido Materno)
+        // Obtener la lista de empleados desde la clase de búsqueda (consultas a la BD)
+        ArrayList<String[]> listaEmpleados = queryBusca.buscarEmpleado();
+
+        // Recorrer cada fila obtenida y agregarla a la tabla
+        for (String[] fila : listaEmpleados) {
             modelo.addRow(fila);
         }
-        // Creamos un objeto que permite ordenar y filtrar las filas de la tabla
-        tr = new TableRowSorter<>(modelo);
-        // Establecemos ese objeto en la tabla para activar ordenamiento y filtros
-        JtblEmpleados.setRowSorter(tr);
-    }
 
-    /**
-     * Método para limpiar los campos de texto de búsqueda.
-     */
-    private void limpiarBuscadores() {
-        // Dejamos vacío el campo de texto del ID
-        JtxtCnsltID.setText("");
-
-        // Dejamos vacío el campo de texto del nombre
-        JtxtCnsltNombre.setText("");
-
-        // Dejamos vacío el campo de texto del apellido paterno
-        JtxtCnsltApePat.setText("");
-
-        // Dejamos vacío el campo de texto del apellido materno
-        JtxtCnsltApeMat.setText("");
-    }
-
-    /**
-     * Método que aplica filtros a la tabla usando los campos de búsqueda.
-     */
-    public void aplicaFiltros() {
-        // Obtenemos el modelo de la tabla
-        DefaultTableModel modelo = (DefaultTableModel) JtblEmpleados.getModel();
-
-        // Creamos el objeto que permite ordenar y aplicar filtros
+        // Crear un TableRowSorter que permitirá ordenar y filtrar los datos de la tabla
         tr = new TableRowSorter<>(modelo);
 
-        // Establecemos el objeto en la tabla
-        JtblEmpleados.setRowSorter(tr);
+        // Asociar el sorter a la tabla para que se activen las capacidades de filtrado
+        tabla.setRowSorter(tr);
+    }
 
-        // Creamos una lista para guardar los filtros que se van a aplicar
+// Aplica los filtros escritos en los campos de búsqueda a la tabla
+    public void aplicarFiltrosBusqueda(JTable tabla) {
+        // Obtener el modelo de la tabla actual
+        DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
+
+        // Crear un nuevo TableRowSorter con el modelo actual
+        tr = new TableRowSorter<>(modelo);
+
+        // Asignar el sorter a la tabla para activar filtrado
+        tabla.setRowSorter(tr);
+
+        // Crear una lista de filtros individuales (uno por cada campo que tenga texto válido)
         ArrayList<RowFilter<Object, Object>> filtros = new ArrayList<>();
 
-        // Si el campo de ID no está vacío, aplicamos un filtro por esa columna (columna 0)
-        if (!JtxtCnsltID.getText().isEmpty()) {
-            // (?i) indica que no importa si se escribe con mayúsculas o minúsculas
+        // ========== FILTRO PARA CAMPO DE ID ==========
+        if (!JtxtCnsltID.getText().isEmpty() && !JtxtCnsltID.getText().equals("Ingresa el ID de búsqueda")) {
+            // (?i) hace que el filtro ignore mayúsculas y minúsculas
+            // La columna 0 es la de ID
             filtros.add(RowFilter.regexFilter("(?i)" + JtxtCnsltID.getText(), 0));
         }
 
-        // Si el campo de Nombre no está vacío, aplicamos filtro en la columna 1
-        if (!JtxtCnsltNombre.getText().isEmpty()) {
+        // ========== FILTRO PARA NOMBRE ==========
+        if (!JtxtCnsltNombre.getText().isEmpty() && !JtxtCnsltNombre.getText().equals("Ingresa el Nombre de búsqueda")) {
+            // La columna 1 corresponde al nombre del empleado
             filtros.add(RowFilter.regexFilter("(?i)" + JtxtCnsltNombre.getText(), 1));
         }
 
-        // Si el campo de Apellido Paterno no está vacío, aplicamos filtro en la columna 2
-        if (!JtxtCnsltApePat.getText().isEmpty()) {
+        // ========== FILTRO PARA APELLIDO PATERNO ==========
+        if (!JtxtCnsltApePat.getText().isEmpty() && !JtxtCnsltApePat.getText().equals("Ingresa el Apellido Paterno de búsqueda")) {
+            // La columna 2 corresponde al apellido paterno
             filtros.add(RowFilter.regexFilter("(?i)" + JtxtCnsltApePat.getText(), 2));
         }
 
-        // Si el campo de Apellido Materno no está vacío, aplicamos filtro en la columna 3
-        if (!JtxtCnsltApeMat.getText().isEmpty()) {
+        // ========== FILTRO PARA APELLIDO MATERNO ==========
+        if (!JtxtCnsltApeMat.getText().isEmpty() && !JtxtCnsltApeMat.getText().equals("Ingresa el Apellido Materno de búsqueda")) {
+            // La columna 3 corresponde al apellido materno
             filtros.add(RowFilter.regexFilter("(?i)" + JtxtCnsltApeMat.getText(), 3));
         }
 
-        // Combinamos todos los filtros usando "AND", es decir, deben cumplirse todos
-        RowFilter<Object, Object> rf = RowFilter.andFilter(filtros);
+        // Combina todos los filtros activos usando "AND"
+        // Es decir, solo se mostrarán las filas que cumplan todos los filtros simultáneamente
+        RowFilter<Object, Object> filtroCompuesto = RowFilter.andFilter(filtros);
 
-        // Aplicamos el filtro combinado a la tabla
-        tr.setRowFilter(rf);
+        // Aplica el filtro compuesto al TableRowSorter
+        tr.setRowFilter(filtroCompuesto);
     }
 
-    /**
-     * Método que quita los filtros aplicados a la tabla.
-     */
-    public void limpiarFiltro() {
-        // Si el objeto para ordenar y filtrar (tr) no es nulo (existe)
+// Elimina cualquier filtro activo en la tabla
+    public void quitarFiltros() {
+        // Si existe un sorter (es decir, la tabla fue configurada con filtrado)
         if (tr != null) {
-            // Quitamos el filtro, mostrando todas las filas
+            // Quita cualquier filtro aplicado previamente
             tr.setRowFilter(null);
+        }
+    }
+
+// Evalúa si hay filtros válidos y decide si aplicar filtros o mostrar todo
+    private void actualizarFiltrosDesdeTeclado(JTable tabla) {
+        // Verifica si todos los campos están vacíos o contienen solo el placeholder
+        boolean sinTextoValido
+                = (JtxtCnsltID.getText().trim().isEmpty() || JtxtCnsltID.getText().equals("Ingresa el ID de búsqueda"))
+                && (JtxtCnsltNombre.getText().trim().isEmpty() || JtxtCnsltNombre.getText().equals("Ingresa el Nombre de búsqueda"))
+                && (JtxtCnsltApePat.getText().trim().isEmpty() || JtxtCnsltApePat.getText().equals("Ingresa el Apellido Paterno de búsqueda"))
+                && (JtxtCnsltApeMat.getText().trim().isEmpty() || JtxtCnsltApeMat.getText().equals("Ingresa el Apellido Materno de búsqueda"));
+
+        // Si no hay ningún texto válido, quitamos los filtros
+        if (sinTextoValido) {
+            quitarFiltros();
+        } else {
+            // Si hay al menos un texto válido, aplicamos los filtros correspondientes
+            aplicarFiltrosBusqueda(tabla);
+        }
+    }
+
+// Carga la lista de opciones de las zonas    
+    public void cargaZonas(JComboBox combo) throws SQLException {
+        listaZonas = (DefaultComboBoxModel) combo.getModel();
+        ArrayList<String[]> zonas = queryCarga.cargaComboZonaColonia();
+        for (String[] zona : zonas) {
+            // [0] -> Id zona
+            // [1] -> Zona
+            // [2] -> Id colonia
+            // [3] -> Colonia
+            listaZonas.addElement(zona[3]);
         }
     }
 
@@ -184,7 +222,7 @@ public class JfEmpleado extends javax.swing.JFrame {
         JbtnActualizarEmpleado = new javax.swing.JButton();
         JpnlDeleteEmp = new javax.swing.JPanel();
         JspTC = new javax.swing.JScrollPane();
-        JtblClientes = new javax.swing.JTable();
+        JtblDeleteEmpleados = new javax.swing.JTable();
         JpnlCamposDelete = new javax.swing.JPanel();
         JtxtID = new javax.swing.JTextField();
         JspTexto = new javax.swing.JSeparator();
@@ -198,7 +236,7 @@ public class JfEmpleado extends javax.swing.JFrame {
         JbtnUpdateEmpleado = new javax.swing.JButton();
         JpnlSueldos = new javax.swing.JPanel();
         JspTC1 = new javax.swing.JScrollPane();
-        JtblClientes1 = new javax.swing.JTable();
+        JtblSueldosEmpleados = new javax.swing.JTable();
         JpnlCamposSueldos = new javax.swing.JPanel();
         JcmbxFechaInicio = new javax.swing.JComboBox<>();
         JcmbxFechaFin = new javax.swing.JComboBox<>();
@@ -210,13 +248,11 @@ public class JfEmpleado extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Empleados");
-        setPreferredSize(new java.awt.Dimension(770, 390));
 
         JtbpPaneles.setBackground(new java.awt.Color(242, 220, 153));
 
         JpnlListaEmpleados.setBackground(new java.awt.Color(242, 220, 153));
 
-        JtblEmpleados.setBackground(new java.awt.Color(167, 235, 242));
         JtblEmpleados.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -252,26 +288,42 @@ public class JfEmpleado extends javax.swing.JFrame {
         JpnlCamposLista.setBackground(new java.awt.Color(167, 235, 242));
 
         JtxtCnsltID.setBackground(new java.awt.Color(167, 235, 242));
-        JtxtCnsltID.setText("Ingrese el ID de Busqueda");
         JtxtCnsltID.setBorder(null);
+        JtxtCnsltID.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                JtxtCnsltIDKeyReleased(evt);
+            }
+        });
 
         JspCnsltID.setForeground(new java.awt.Color(0, 0, 0));
 
         JtxtCnsltNombre.setBackground(new java.awt.Color(167, 235, 242));
-        JtxtCnsltNombre.setText("Ingrese el Nombre de Busqueda");
         JtxtCnsltNombre.setBorder(null);
+        JtxtCnsltNombre.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                JtxtCnsltNombreKeyReleased(evt);
+            }
+        });
 
         JspCnsltNombre.setForeground(new java.awt.Color(0, 0, 0));
 
         JtxtCnsltApePat.setBackground(new java.awt.Color(167, 235, 242));
-        JtxtCnsltApePat.setText("Ingrese el Apellido Paterno de Busqueda");
         JtxtCnsltApePat.setBorder(null);
+        JtxtCnsltApePat.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                JtxtCnsltApePatKeyReleased(evt);
+            }
+        });
 
         JspCnsltApePat.setForeground(new java.awt.Color(0, 0, 0));
 
         JtxtCnsltApeMat.setBackground(new java.awt.Color(167, 235, 242));
-        JtxtCnsltApeMat.setText("Ingrese el Apellido Materno de Busqueda");
         JtxtCnsltApeMat.setBorder(null);
+        JtxtCnsltApeMat.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                JtxtCnsltApeMatKeyReleased(evt);
+            }
+        });
 
         JspCnsltApeMat.setForeground(new java.awt.Color(0, 0, 0));
 
@@ -279,46 +331,43 @@ public class JfEmpleado extends javax.swing.JFrame {
         JpnlCamposLista.setLayout(JpnlCamposListaLayout);
         JpnlCamposListaLayout.setHorizontalGroup(
             JpnlCamposListaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 263, Short.MAX_VALUE)
-            .addGroup(JpnlCamposListaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(JpnlCamposListaLayout.createSequentialGroup()
-                    .addGap(4, 4, 4)
-                    .addGroup(JpnlCamposListaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(JtxtCnsltID, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(JspCnsltID, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(JtxtCnsltNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(JspCnsltNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(JtxtCnsltApePat, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(JspCnsltApePat, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(JtxtCnsltApeMat, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(JspCnsltApeMat, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addContainerGap(27, Short.MAX_VALUE)))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JpnlCamposListaLayout.createSequentialGroup()
+                .addGap(19, 19, 19)
+                .addGroup(JpnlCamposListaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(JtxtCnsltID, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
+                    .addComponent(JspCnsltID, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
+                    .addComponent(JtxtCnsltNombre, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
+                    .addComponent(JspCnsltNombre, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
+                    .addComponent(JtxtCnsltApePat, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
+                    .addComponent(JspCnsltApePat, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
+                    .addComponent(JtxtCnsltApeMat, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
+                    .addComponent(JspCnsltApeMat, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE))
+                .addContainerGap())
         );
         JpnlCamposListaLayout.setVerticalGroup(
             JpnlCamposListaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-            .addGroup(JpnlCamposListaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(JpnlCamposListaLayout.createSequentialGroup()
-                    .addGroup(JpnlCamposListaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(JpnlCamposListaLayout.createSequentialGroup()
-                            .addGap(25, 25, 25)
-                            .addComponent(JtxtCnsltID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(7, 7, 7)
-                            .addComponent(JspCnsltID, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(30, 30, 30)
-                            .addComponent(JtxtCnsltNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(7, 7, 7)
-                            .addComponent(JspCnsltNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(30, 30, 30)
-                            .addComponent(JtxtCnsltApePat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(7, 7, 7)
-                            .addComponent(JspCnsltApePat, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(30, 30, 30)
-                            .addComponent(JtxtCnsltApeMat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(JpnlCamposListaLayout.createSequentialGroup()
-                            .addGap(237, 237, 237)
-                            .addComponent(JspCnsltApeMat, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addContainerGap(34, Short.MAX_VALUE)))
+            .addGroup(JpnlCamposListaLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(JpnlCamposListaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(JpnlCamposListaLayout.createSequentialGroup()
+                        .addComponent(JtxtCnsltID)
+                        .addGap(7, 7, 7)
+                        .addComponent(JspCnsltID)
+                        .addGap(30, 30, 30)
+                        .addComponent(JtxtCnsltNombre)
+                        .addGap(7, 7, 7)
+                        .addComponent(JspCnsltNombre)
+                        .addGap(30, 30, 30)
+                        .addComponent(JtxtCnsltApePat)
+                        .addGap(7, 7, 7)
+                        .addComponent(JspCnsltApePat)
+                        .addGap(30, 30, 30)
+                        .addComponent(JtxtCnsltApeMat)
+                        .addGap(17, 17, 17))
+                    .addGroup(JpnlCamposListaLayout.createSequentialGroup()
+                        .addGap(212, 212, 212)
+                        .addComponent(JspCnsltApeMat)))
+                .addGap(25, 25, 25))
         );
 
         javax.swing.GroupLayout JpnlListaEmpleadosLayout = new javax.swing.GroupLayout(JpnlListaEmpleados);
@@ -335,11 +384,11 @@ public class JfEmpleado extends javax.swing.JFrame {
         JpnlListaEmpleadosLayout.setVerticalGroup(
             JpnlListaEmpleadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JpnlListaEmpleadosLayout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(39, Short.MAX_VALUE)
                 .addGroup(JpnlListaEmpleadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(JspTC2, javax.swing.GroupLayout.DEFAULT_SIZE, 347, Short.MAX_VALUE)
-                    .addComponent(JpnlCamposLista, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                    .addComponent(JpnlCamposLista, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(JspTC2, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(32, 32, 32))
         );
 
         JtbpPaneles.addTab("Lista de empleados", JpnlListaEmpleados);
@@ -405,14 +454,22 @@ public class JfEmpleado extends javax.swing.JFrame {
                             .addComponent(JtxtAgregarNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(JspAgregarNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(JtxtAgregarApMat, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
                         .addGroup(JpnlCamposAgregarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(JtxtAgregarSueldo, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(JspAgregarSueldo, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(JcmbxAgregarZonas, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JpnlCamposAgregarLayout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 95, Short.MAX_VALUE)
+                                .addComponent(JbtnAgregarEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(13, 13, 13))
                             .addGroup(JpnlCamposAgregarLayout.createSequentialGroup()
-                                .addGap(40, 40, 40)
-                                .addComponent(JbtnAgregarEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addGap(18, 18, 18)
+                                .addGroup(JpnlCamposAgregarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(JtxtAgregarSueldo)
+                                    .addGroup(JpnlCamposAgregarLayout.createSequentialGroup()
+                                        .addGroup(JpnlCamposAgregarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(JcmbxAgregarZonas, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addGroup(JpnlCamposAgregarLayout.createSequentialGroup()
+                                                .addComponent(JspAgregarSueldo, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(0, 0, Short.MAX_VALUE)))
+                                        .addContainerGap())))))
                     .addGroup(JpnlCamposAgregarLayout.createSequentialGroup()
                         .addGroup(JpnlCamposAgregarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(JspAgregarApMat, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -420,43 +477,41 @@ public class JfEmpleado extends javax.swing.JFrame {
                             .addComponent(JspAgregarApPat, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(JtxtAgregarTel, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(JspAgregarTel, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         JpnlCamposAgregarLayout.setVerticalGroup(
             JpnlCamposAgregarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JpnlCamposAgregarLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
                 .addGroup(JpnlCamposAgregarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JpnlCamposAgregarLayout.createSequentialGroup()
-                        .addComponent(JtxtAgregarid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(JtxtAgregarid)
                         .addGap(2, 2, 2)
-                        .addComponent(JspAgregarid, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(JspAgregarid, javax.swing.GroupLayout.DEFAULT_SIZE, 9, Short.MAX_VALUE)
                         .addGap(22, 22, 22)
-                        .addComponent(JtxtAgregarNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, 0)
-                        .addComponent(JspAgregarNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(10, 10, 10)
-                        .addComponent(JtxtAgregarApMat, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(20, 20, 20))
+                        .addComponent(JtxtAgregarNombre, javax.swing.GroupLayout.DEFAULT_SIZE, 19, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(JspAgregarNombre, javax.swing.GroupLayout.DEFAULT_SIZE, 9, Short.MAX_VALUE)
+                        .addGap(24, 24, 24)
+                        .addComponent(JtxtAgregarApMat, javax.swing.GroupLayout.DEFAULT_SIZE, 18, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JpnlCamposAgregarLayout.createSequentialGroup()
                         .addComponent(JtxtAgregarSueldo, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, 0)
                         .addComponent(JspAgregarSueldo, javax.swing.GroupLayout.PREFERRED_SIZE, 9, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(21, 21, 21)
+                        .addGap(18, 18, 18)
                         .addComponent(JcmbxAgregarZonas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(28, 28, 28)
-                        .addComponent(JbtnAgregarEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                .addComponent(JspAgregarApMat, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(JtxtAgregarApPat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(14, 14, 14)
-                .addComponent(JspAgregarApPat, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20)
-                .addComponent(JtxtAgregarTel, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(31, 31, 31)
+                        .addComponent(JbtnAgregarEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(JspAgregarApMat, javax.swing.GroupLayout.DEFAULT_SIZE, 9, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(JtxtAgregarApPat)
+                .addGap(9, 9, 9)
+                .addComponent(JspAgregarApPat, javax.swing.GroupLayout.DEFAULT_SIZE, 9, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(JtxtAgregarTel, javax.swing.GroupLayout.DEFAULT_SIZE, 17, Short.MAX_VALUE)
                 .addGap(10, 10, 10)
-                .addComponent(JspAgregarTel, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(JspAgregarTel, javax.swing.GroupLayout.DEFAULT_SIZE, 9, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout JpnlInsertEmpleadoLayout = new javax.swing.GroupLayout(JpnlInsertEmpleado);
@@ -476,7 +531,7 @@ public class JfEmpleado extends javax.swing.JFrame {
                 .addGap(23, 23, 23)
                 .addGroup(JpnlInsertEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(JlblimagenI)
-                    .addComponent(JpnlCamposAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(JpnlCamposAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(28, 28, 28))
         );
 
@@ -615,15 +670,14 @@ public class JfEmpleado extends javax.swing.JFrame {
                 .addGroup(JpnlUpdateEmpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(JlblimagenA)
                     .addComponent(JpnlCamposActualiza, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(86, Short.MAX_VALUE))
+                .addContainerGap(36, Short.MAX_VALUE))
         );
 
         JtbpPaneles.addTab("Actualizar un empleado", JpnlUpdateEmp);
 
         JpnlDeleteEmp.setBackground(new java.awt.Color(242, 220, 153));
 
-        JtblClientes.setBackground(new java.awt.Color(167, 235, 242));
-        JtblClientes.setModel(new javax.swing.table.DefaultTableModel(
+        JtblDeleteEmpleados.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -646,37 +700,33 @@ public class JfEmpleado extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        JtblClientes.setGridColor(new java.awt.Color(255, 255, 204));
-        JspTC.setViewportView(JtblClientes);
-        if (JtblClientes.getColumnModel().getColumnCount() > 0) {
-            JtblClientes.getColumnModel().getColumn(0).setResizable(false);
-            JtblClientes.getColumnModel().getColumn(1).setResizable(false);
-            JtblClientes.getColumnModel().getColumn(2).setResizable(false);
-            JtblClientes.getColumnModel().getColumn(3).setResizable(false);
+        JtblDeleteEmpleados.setGridColor(new java.awt.Color(255, 255, 204));
+        JspTC.setViewportView(JtblDeleteEmpleados);
+        if (JtblDeleteEmpleados.getColumnModel().getColumnCount() > 0) {
+            JtblDeleteEmpleados.getColumnModel().getColumn(0).setResizable(false);
+            JtblDeleteEmpleados.getColumnModel().getColumn(1).setResizable(false);
+            JtblDeleteEmpleados.getColumnModel().getColumn(2).setResizable(false);
+            JtblDeleteEmpleados.getColumnModel().getColumn(3).setResizable(false);
         }
 
         JpnlCamposDelete.setBackground(new java.awt.Color(167, 235, 242));
 
         JtxtID.setBackground(new java.awt.Color(167, 235, 242));
-        JtxtID.setText("Ingrese Id de busqueda");
         JtxtID.setBorder(null);
 
         JspTexto.setForeground(new java.awt.Color(0, 0, 0));
 
         JtxtNombre.setBackground(new java.awt.Color(167, 235, 242));
-        JtxtNombre.setText("Ingrese el Nombre de Busqueda");
         JtxtNombre.setBorder(null);
 
         JspNombre.setForeground(new java.awt.Color(0, 0, 0));
 
         JtxtApePat.setBackground(new java.awt.Color(167, 235, 242));
-        JtxtApePat.setText("Ingrese el Apellido Paterno de Busqueda");
         JtxtApePat.setBorder(null);
 
         JspApePat.setForeground(new java.awt.Color(0, 0, 0));
 
         JtxtApeMat.setBackground(new java.awt.Color(167, 235, 242));
-        JtxtApeMat.setText("Ingrese el Apellido Materno de Busqueda");
         JtxtApeMat.setBorder(null);
 
         JspApeMat.setForeground(new java.awt.Color(0, 0, 0));
@@ -693,7 +743,7 @@ public class JfEmpleado extends javax.swing.JFrame {
         JpnlCamposDelete.setLayout(JpnlCamposDeleteLayout);
         JpnlCamposDeleteLayout.setHorizontalGroup(
             JpnlCamposDeleteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 277, Short.MAX_VALUE)
+            .addGap(0, 255, Short.MAX_VALUE)
             .addGroup(JpnlCamposDeleteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(JpnlCamposDeleteLayout.createSequentialGroup()
                     .addGap(11, 11, 11)
@@ -710,7 +760,7 @@ public class JfEmpleado extends javax.swing.JFrame {
                             .addComponent(JbtnEliminarEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(JbtnUpdateEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addContainerGap(34, Short.MAX_VALUE)))
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         JpnlCamposDeleteLayout.setVerticalGroup(
             JpnlCamposDeleteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -737,7 +787,7 @@ public class JfEmpleado extends javax.swing.JFrame {
                     .addGroup(JpnlCamposDeleteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(JbtnEliminarEmpleado)
                         .addComponent(JbtnUpdateEmpleado))
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addContainerGap(15, Short.MAX_VALUE)))
         );
 
         javax.swing.GroupLayout JpnlDeleteEmpLayout = new javax.swing.GroupLayout(JpnlDeleteEmp);
@@ -745,31 +795,27 @@ public class JfEmpleado extends javax.swing.JFrame {
         JpnlDeleteEmpLayout.setHorizontalGroup(
             JpnlDeleteEmpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(JpnlDeleteEmpLayout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(26, Short.MAX_VALUE)
                 .addComponent(JspTC, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(JpnlCamposDelete, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(20, 20, 20))
         );
         JpnlDeleteEmpLayout.setVerticalGroup(
             JpnlDeleteEmpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(JpnlDeleteEmpLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JpnlDeleteEmpLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(JpnlDeleteEmpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(JpnlDeleteEmpLayout.createSequentialGroup()
-                        .addComponent(JpnlCamposDelete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())
-                    .addGroup(JpnlDeleteEmpLayout.createSequentialGroup()
-                        .addComponent(JspTC, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)
-                        .addGap(17, 17, 17))))
+                .addGroup(JpnlDeleteEmpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(JpnlCamposDelete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(JspTC, javax.swing.GroupLayout.DEFAULT_SIZE, 293, Short.MAX_VALUE))
+                .addGap(17, 17, 17))
         );
 
         JtbpPaneles.addTab("Eliminar a un empleado", JpnlDeleteEmp);
 
         JpnlSueldos.setBackground(new java.awt.Color(242, 220, 153));
 
-        JtblClientes1.setBackground(new java.awt.Color(167, 235, 242));
-        JtblClientes1.setModel(new javax.swing.table.DefaultTableModel(
+        JtblSueldosEmpleados.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -792,13 +838,13 @@ public class JfEmpleado extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        JtblClientes1.setGridColor(new java.awt.Color(255, 255, 204));
-        JspTC1.setViewportView(JtblClientes1);
-        if (JtblClientes1.getColumnModel().getColumnCount() > 0) {
-            JtblClientes1.getColumnModel().getColumn(0).setResizable(false);
-            JtblClientes1.getColumnModel().getColumn(1).setResizable(false);
-            JtblClientes1.getColumnModel().getColumn(2).setResizable(false);
-            JtblClientes1.getColumnModel().getColumn(3).setResizable(false);
+        JtblSueldosEmpleados.setGridColor(new java.awt.Color(255, 255, 204));
+        JspTC1.setViewportView(JtblSueldosEmpleados);
+        if (JtblSueldosEmpleados.getColumnModel().getColumnCount() > 0) {
+            JtblSueldosEmpleados.getColumnModel().getColumn(0).setResizable(false);
+            JtblSueldosEmpleados.getColumnModel().getColumn(1).setResizable(false);
+            JtblSueldosEmpleados.getColumnModel().getColumn(2).setResizable(false);
+            JtblSueldosEmpleados.getColumnModel().getColumn(3).setResizable(false);
         }
 
         JpnlCamposSueldos.setBackground(new java.awt.Color(167, 235, 242));
@@ -868,7 +914,7 @@ public class JfEmpleado extends javax.swing.JFrame {
                     .addComponent(JspTC1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(JpnlSueldosLayout.createSequentialGroup()
                         .addComponent(JpnlCamposSueldos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 180, Short.MAX_VALUE)))
+                        .addGap(0, 130, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -912,9 +958,27 @@ public class JfEmpleado extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void JtxtCnsltIDKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_JtxtCnsltIDKeyReleased
+        actualizarFiltrosDesdeTeclado(JtblEmpleados);
+    }//GEN-LAST:event_JtxtCnsltIDKeyReleased
+
+    private void JtxtCnsltNombreKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_JtxtCnsltNombreKeyReleased
+        actualizarFiltrosDesdeTeclado(JtblEmpleados);
+    }//GEN-LAST:event_JtxtCnsltNombreKeyReleased
+
+    private void JtxtCnsltApePatKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_JtxtCnsltApePatKeyReleased
+        actualizarFiltrosDesdeTeclado(JtblEmpleados);
+    }//GEN-LAST:event_JtxtCnsltApePatKeyReleased
+
+    private void JtxtCnsltApeMatKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_JtxtCnsltApeMatKeyReleased
+        actualizarFiltrosDesdeTeclado(JtblEmpleados);
+    }//GEN-LAST:event_JtxtCnsltApeMatKeyReleased
+
     public static void main(String args[]) {
+        // <editor-fold defaultstate="collapsed" desc="Generated Code">
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -932,8 +996,6 @@ public class JfEmpleado extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(JfEmpleado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
-        /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
@@ -993,9 +1055,9 @@ public class JfEmpleado extends javax.swing.JFrame {
     private javax.swing.JScrollPane JspTC1;
     private javax.swing.JScrollPane JspTC2;
     private javax.swing.JSeparator JspTexto;
-    private javax.swing.JTable JtblClientes;
-    private javax.swing.JTable JtblClientes1;
+    private javax.swing.JTable JtblDeleteEmpleados;
     private javax.swing.JTable JtblEmpleados;
+    private javax.swing.JTable JtblSueldosEmpleados;
     private javax.swing.JTabbedPane JtbpPaneles;
     private javax.swing.JTextField JtxtActlzApMat;
     private javax.swing.JTextField JtxtActlzApPat;

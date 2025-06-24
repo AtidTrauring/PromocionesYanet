@@ -80,30 +80,36 @@ public class CCargaCombos {
                 + "WHERE ca.clave_carrera = " + claveCarrera + ";";
         return cnslt.buscarValoresCombos(consulta);
     }
-    
+
     /* Inicio Cliente */
-    
     public ArrayList<String> cargaComboEstatus() throws SQLException {
         consulta = "SELECT est.estatus FROM estatus est WHERE est.idestatus < 4;";
         return cnslt.buscarValoresCombos(consulta);
     }
+
     public ArrayList<String> cargaComboEstatusAval() throws SQLException {
         consulta = "SELECT est.estatus FROM estatus est WHERE est.idestatus > 3;";
         return cnslt.buscarValoresCombos(consulta);
     }
-    
+
     public ArrayList<String> cargaComboColonias(String z) throws SQLException {
         consulta = "SELECT cl.colonia "
                 + "FROM colonia cl "
                 + "INNER JOIN zona z ON z.idzona = cl.zona_idzona "
-                + "WHERE z.idzona = '"+ z +"';";
+                + "WHERE z.idzona = '" + z + "';";
         return cnslt.buscarValoresCombos(consulta);
     }
-    
+
     public ArrayList<String> cargaComboZona() throws SQLException {
         consulta = "SELECT z.num_zona FROM zona z;";
         return cnslt.buscarValoresCombos(consulta);
     }
+
     /* Fin Cliente */
 
+    // Consulta Empleado
+    public ArrayList<String[]> cargaComboZonaColonia() throws SQLException {
+        consulta = "Select zona.idzona, zona.num_zona, colonia.idcolonia, colonia.colonia FROM colonia, zona Where colonia.zona_idzona = zona.idzona;";
+        return cnslt.buscarValores(consulta, 4);
+    }
 }
