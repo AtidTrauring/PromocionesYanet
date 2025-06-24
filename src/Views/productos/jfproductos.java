@@ -23,10 +23,12 @@ import utilitarios.CUtilitarios;
 public class jfproductos extends javax.swing.JFrame {
 
     private DefaultTableModel modelo;
+    private DefaultTableModel modelo1;
     private CBusquedas cb = new CBusquedas();
     private CUtilitarios cu = new CUtilitarios();
     private TableRowSorter tr;
     private ArrayList<String[]> datosKardex = new ArrayList<>();
+    private ArrayList<String[]> datosEliminar = new ArrayList<>();
     private static String[] datosProdu;
     private String producto, precio, stock;
     private CInserciones ci = new CInserciones();
@@ -68,8 +70,8 @@ public class jfproductos extends javax.swing.JFrame {
         modelo.setRowCount(0);
     }
     private void limpiarTabla2() {
-        modelo = (DefaultTableModel) jtblEliminarProductos.getModel();
-        modelo.setRowCount(0);
+        modelo1 = (DefaultTableModel) jtblEliminarProductos.getModel();
+        modelo1.setRowCount(0);
     }
 
     private void addFiltroListener(javax.swing.JTextField campo) {
@@ -112,7 +114,7 @@ public class jfproductos extends javax.swing.JFrame {
             if (eliminado) {
                 CUtilitarios.msg("Producto eliminado correctamente", "Eliminar");
                 jTxtElimNombreProducto.setText("");
-                cargarTablaEliminar(); // Refresca la tabla
+                cargarTablaEliminar(); 
             } else {
                 CUtilitarios.msg_error("No se pudo eliminar el producto", "Eliminar");
             }
@@ -143,12 +145,12 @@ public class jfproductos extends javax.swing.JFrame {
         }
     }
     public void cargarTablaEliminar() {
-    modelo = (DefaultTableModel) jtblEliminarProductos.getModel();
+    modelo1 = (DefaultTableModel) jtblEliminarProductos.getModel();
     try {
-        datosKardex = cb.buscarProducto();  // Reutiliza el método de búsqueda
+        datosEliminar = cb.buscarProducto();  // Reutilice el método de búsqueda
         limpiarTabla2();
-        for (String[] datoKardex : datosKardex) {
-            modelo.addRow(new Object[]{datoKardex[0], datoKardex[1], datoKardex[2], datoKardex[3]});
+        for (String[] datoKardex : datosEliminar) {
+            modelo1.addRow(new Object[]{datoKardex[0], datoKardex[1], datoKardex[2], datoKardex[3]});
         }
     } catch (SQLException ex) {
         CUtilitarios.msg_error("No se pudo cargar la tabla de productos a eliminar", "Cargando Tabla");
@@ -215,13 +217,14 @@ public class jfproductos extends javax.swing.JFrame {
     }
 
     public void agregarProducto() {
-        asignaValores(); // toma los valores desde los JTextField
+        asignaValores(); 
 
         if (validaTodosLosCampos()) {
             try {
                 if (ci.insertaProducto(producto, precio, stock)) {
                     CUtilitarios.msg("Producto insertado correctamente", "Registro Producto");
                     cargarTabla(); // actualiza JTable
+                    cargarTablaEliminar();
                 } else {
                     CUtilitarios.msg_error("No se pudo insertar el producto en la base de datos", "Registro Producto");
                 }
