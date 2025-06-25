@@ -255,7 +255,6 @@ public class CUtilitarios {
     }
 
     /* Método para limpiar tabla y cargar los campos */
-    private final CBusquedas queryBusca = new CBusquedas();
     private TableRowSorter<DefaultTableModel> tr;
 
     private void limpiarTabla(JTable jt) {
@@ -266,23 +265,24 @@ public class CUtilitarios {
         modelo.setRowCount(0);
     }
 
-    public void cargarTabla(JTable jt) throws SQLException {
-        // Obtenemos el modelo de la tabla
-        DefaultTableModel modelo = (DefaultTableModel) jt.getModel();
+    @FunctionalInterface
+    public interface ConsultaTabla {
 
-        // Llamamos al método para limpiar la tabla antes de llenarla
+        ArrayList<String[]> ejecutar() throws SQLException;
+    }
+
+    public void cargarTabla(JTable jt, ConsultaTabla consulta) throws SQLException {
+        DefaultTableModel modelo = (DefaultTableModel) jt.getModel();
         limpiarTabla(jt);
 
-        // Llamamos al método que devuelve los datos de los empleados desde la base de datos
-        ArrayList<String[]> datos = queryBusca.buscarCliente();
-        // Recorremos cada fila de datos obtenidos
+        // Ejecuta la consulta que se pasó como parámetro
+        ArrayList<String[]> datos = consulta.ejecutar();
+
         for (String[] fila : datos) {
-            // Añadimos la fila a la tabla (ID, Nombre, Apellido Paterno, Apellido Materno)
             modelo.addRow(fila);
         }
-        // Creamos un objeto que permite ordenar y filtrar las filas de la tabla
+
         tr = new TableRowSorter<>(modelo);
-        // Establecemos ese objeto en la tabla para activar ordenamiento y filtros
         jt.setRowSorter(tr);
     }
 
@@ -334,9 +334,8 @@ public class CUtilitarios {
         }
         return true;
     }
-    
-    /* Aplicación de Filtros para 4 parametros */
 
+    /* Aplicación de Filtros para 4 parametros */
     public void aplicaFiltros(JTable jt, JTextField jtf1, JTextField jtf2, JTextField jtf3, JTextField jtf4) {
         // Obtenemos el modelo de la tabla
         DefaultTableModel modelo = (DefaultTableModel) jt.getModel();

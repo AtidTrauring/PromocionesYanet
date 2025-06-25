@@ -549,6 +549,17 @@ public class CBusquedas {
                 + "ORDER BY cl.idcliente;";
         return cnslt.buscarValores(consulta, 5);
     }
+    
+    public ArrayList<String[]> buscarAval() throws SQLException {
+        consulta = "SELECT "
+                + "av.idaval, pr.nombres AS 'Nombre (s)', pr.ap_paterno AS 'Apellido Parno', pr.ap_materno AS 'Apellido Materno', es.estatus "
+                + "FROM "
+                + "persona pr "
+                + "INNER JOIN aval av ON av.persona_idpersona = pr.idpersona "
+                + "INNER JOIN estatus es ON es.idestatus = av.estatus_idestatus "
+                + "ORDER BY av.idaval;";
+        return cnslt.buscarValores(consulta, 5);
+    }
 
     public String buscarIdColonia(String col) throws SQLException {
         consulta = "SELECT cl.idcolonia "

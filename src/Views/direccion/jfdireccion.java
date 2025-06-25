@@ -21,27 +21,28 @@ public final class jfdireccion extends javax.swing.JFrame {
     CUtilitarios cu = new CUtilitarios();
     CBusquedas cb = new CBusquedas();
     CInserciones ci = new CInserciones();
-    String seleccion, col, idCol;
-    private String cll, ne, ni, nom, ap, am;
-    private int idc, ides, idesa, next, nint;
+    String seleccion, colcl, idColcl;
+    private String cllcl, ne, ni, nomcl, apcl, amcl;
+    private int idc, idescl, idescla;
 
     public jfdireccion(String[] datosZ, String[] datosP, String[] datosEs) {
         initComponents();
         this.setLocationRelativeTo(null);
-        /* Datos extraidos */
+        // Datos extraidos
         datosZona = datosZ;
         datosPersona = datosP;
         datosEstatus = datosEs;
-        /* Fin De Datos */
 
-        //  Combos
+        // Combos
         cargaComboBox(jcbcolonian, 1);
+        
+        // Placeholder JTextField
 
         cu.aplicarPlaceholder(jtfcallen, "Calle");
         cu.aplicarPlaceholder(jtfnumextn, "Número Exterior");
         cu.aplicarPlaceholder(jtfnumintn, "Numero Interior");
 
-        /* Muestra de datos transaccionados */
+        // Muestra de datos transaccionados
         System.out.println("\n\nEn dirección");
         System.out.println("Zona " + Arrays.toString(datosZ));
         System.out.println("Persona " + Arrays.toString(datosP));
@@ -77,9 +78,9 @@ public final class jfdireccion extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jpprincipaldireccion = new javax.swing.JPanel();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
-        jPanel1 = new javax.swing.JPanel();
+        jpfondo = new javax.swing.JPanel();
+        jliconodirec = new javax.swing.JLabel();
+        JlblImagen1 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jtfcallen = new javax.swing.JTextField();
         jSeparator8 = new javax.swing.JSeparator();
@@ -89,21 +90,20 @@ public final class jfdireccion extends javax.swing.JFrame {
         jSeparator10 = new javax.swing.JSeparator();
         jcbcolonian = new javax.swing.JComboBox<>();
         jbagregardirec = new javax.swing.JButton();
-        JlblImagen1 = new javax.swing.JLabel();
-        jPnlLogZonas = new javax.swing.JPanel();
-        jLblIcono = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jpprincipaldireccion.setBackground(new java.awt.Color(242, 220, 153));
+        jpfondo.setBackground(new java.awt.Color(242, 220, 153));
 
-        jTabbedPane1.setBackground(new java.awt.Color(242, 220, 153));
+        jliconodirec.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        jliconodirec.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/direcciones.png"))); // NOI18N
+        jliconodirec.setText("Dirección");
 
-        jPanel1.setBackground(new java.awt.Color(242, 220, 153));
+        JlblImagen1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/direc.png"))); // NOI18N
 
-        jPanel2.setBackground(new java.awt.Color(242, 220, 153));
+        jPanel2.setBackground(new java.awt.Color(167, 235, 242));
 
-        jtfcallen.setBackground(new java.awt.Color(242, 220, 153));
+        jtfcallen.setBackground(new java.awt.Color(167, 235, 242));
         jtfcallen.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jtfcallen.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jtfcallen.setText("Calle");
@@ -114,7 +114,7 @@ public final class jfdireccion extends javax.swing.JFrame {
         jSeparator8.setForeground(new java.awt.Color(0, 0, 0));
         jSeparator8.setToolTipText("");
 
-        jtfnumextn.setBackground(new java.awt.Color(242, 220, 153));
+        jtfnumextn.setBackground(new java.awt.Color(167, 235, 242));
         jtfnumextn.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jtfnumextn.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jtfnumextn.setText("Número Exterior");
@@ -125,7 +125,7 @@ public final class jfdireccion extends javax.swing.JFrame {
         jSeparator9.setForeground(new java.awt.Color(0, 0, 0));
         jSeparator9.setToolTipText("");
 
-        jtfnumintn.setBackground(new java.awt.Color(242, 220, 153));
+        jtfnumintn.setBackground(new java.awt.Color(167, 235, 242));
         jtfnumintn.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jtfnumintn.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jtfnumintn.setText("Número Interior");
@@ -136,7 +136,7 @@ public final class jfdireccion extends javax.swing.JFrame {
         jSeparator10.setForeground(new java.awt.Color(0, 0, 0));
         jSeparator10.setToolTipText("");
 
-        jcbcolonian.setBackground(new java.awt.Color(242, 220, 153));
+        jcbcolonian.setBackground(new java.awt.Color(167, 235, 242));
         jcbcolonian.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jcbcolonian.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Colonias" }));
         jcbcolonian.setToolTipText("");
@@ -155,12 +155,12 @@ public final class jfdireccion extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jtfnumintn)
-                    .addComponent(jtfnumextn, javax.swing.GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE)
                     .addComponent(jSeparator8)
                     .addComponent(jSeparator9)
                     .addComponent(jSeparator10)
                     .addComponent(jtfcallen)
-                    .addComponent(jcbcolonian, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jtfnumextn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE)
+                    .addComponent(jcbcolonian, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -169,132 +169,90 @@ public final class jfdireccion extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jtfcallen, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator8, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(42, 42, 42)
+                .addComponent(jSeparator8, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(jtfnumextn, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator9, javax.swing.GroupLayout.PREFERRED_SIZE, 9, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(36, 36, 36)
+                .addComponent(jSeparator9, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(jtfnumintn, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator10, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                .addComponent(jSeparator10, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(jcbcolonian, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(24, 24, 24))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jbagregardirec.setBackground(new java.awt.Color(56, 171, 242));
+        jbagregardirec.setBackground(new java.awt.Color(204, 204, 204));
         jbagregardirec.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        jbagregardirec.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/finalizar1.png"))); // NOI18N
         jbagregardirec.setText("Finalizar");
+        jbagregardirec.setBorder(null);
+        jbagregardirec.setContentAreaFilled(false);
+        jbagregardirec.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jbagregardirec.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jbagregardirec.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/finalizar1.png"))); // NOI18N
+        jbagregardirec.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/finalizar2.png"))); // NOI18N
+        jbagregardirec.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        jbagregardirec.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jbagregardirec.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jbagregardirecActionPerformed(evt);
             }
         });
 
-        JlblImagen1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/logo_vectori.png"))); // NOI18N
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        javax.swing.GroupLayout jpfondoLayout = new javax.swing.GroupLayout(jpfondo);
+        jpfondo.setLayout(jpfondoLayout);
+        jpfondoLayout.setHorizontalGroup(
+            jpfondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jpfondoLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 204, Short.MAX_VALUE)
-                .addComponent(JlblImagen1)
-                .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jbagregardirec)
-                .addGap(127, 127, 127))
+                .addGroup(jpfondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jpfondoLayout.createSequentialGroup()
+                        .addComponent(jliconodirec, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addGroup(jpfondoLayout.createSequentialGroup()
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jpfondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jpfondoLayout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(JlblImagen1)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpfondoLayout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jbagregardirec, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(101, 101, 101))))))
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        jpfondoLayout.setVerticalGroup(
+            jpfondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jpfondoLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(JlblImagen1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jbagregardirec)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        jTabbedPane1.addTab("tab1", jPanel1);
-
-        jPnlLogZonas.setBackground(new java.awt.Color(242, 220, 153));
-
-        jLblIcono.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
-        jLblIcono.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/zona.png"))); // NOI18N
-        jLblIcono.setText("Zonas");
-
-        javax.swing.GroupLayout jPnlLogZonasLayout = new javax.swing.GroupLayout(jPnlLogZonas);
-        jPnlLogZonas.setLayout(jPnlLogZonasLayout);
-        jPnlLogZonasLayout.setHorizontalGroup(
-            jPnlLogZonasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPnlLogZonasLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLblIcono)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPnlLogZonasLayout.setVerticalGroup(
-            jPnlLogZonasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPnlLogZonasLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLblIcono)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        javax.swing.GroupLayout jpprincipaldireccionLayout = new javax.swing.GroupLayout(jpprincipaldireccion);
-        jpprincipaldireccion.setLayout(jpprincipaldireccionLayout);
-        jpprincipaldireccionLayout.setHorizontalGroup(
-            jpprincipaldireccionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1)
-            .addComponent(jPnlLogZonas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        jpprincipaldireccionLayout.setVerticalGroup(
-            jpprincipaldireccionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpprincipaldireccionLayout.createSequentialGroup()
-                .addComponent(jPnlLogZonas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 381, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jliconodirec)
+                .addGroup(jpfondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jpfondoLayout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(JlblImagen1)
+                        .addGap(30, 30, 30)
+                        .addComponent(jbagregardirec, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jpfondoLayout.createSequentialGroup()
+                        .addGap(95, 95, 95)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jpprincipaldireccion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jpfondo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jpprincipaldireccion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jpfondo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jcbcolonianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbcolonianActionPerformed
-        JComboBox jcb = (JComboBox) evt.getSource(); // Asegura que el evento venga del combo correcto
-        seleccion = (String) jcb.getSelectedItem();
-
-        if (jcb.getSelectedIndex() == 0 || "Colonias".equals(seleccion)) {
-            CUtilitarios.msg_advertencia("Selecciona una colonia válida", "Validación de Colonia");
-            return;
-        }
-
-        if (!"Colonias".equals(seleccion)) {
-            col = seleccion; // Guarda la selección en la variable global
-            System.out.println(col);
-            try {
-                idCol = cb.buscarIdColonia(col);
-                System.out.println("ID COLONIA " + idCol);
-            } catch (SQLException ex) {
-                Logger.getLogger(jfmenucliente.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }//GEN-LAST:event_jcbcolonianActionPerformed
 
     private void jbagregardirecActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbagregardirecActionPerformed
         JTextField[] jtf = {jtfcallen, jtfnumextn, jtfnumintn};
@@ -302,29 +260,29 @@ public final class jfdireccion extends javax.swing.JFrame {
         String regexTextoExtendido = "^[0-9A-Za-zÁÉÍÓÚáéíóúÑñ\\s.,\\-]+$";
 
         boolean camposValidos = CUtilitarios.validaCamposTextoConFormato(
-                jtf, textosPredeterminados, textosPredeterminados, regexTextoExtendido,
-                "Debes llenar todos los campos correctamente", "Validación de Datos Dirección"
+            jtf, textosPredeterminados, textosPredeterminados, regexTextoExtendido,
+            "Debes llenar todos los campos correctamente", "Validación de Datos Dirección"
         );
         if (!camposValidos) {
             return;
         }
 
-        cll = jtfcallen.getText();
+        cllcl = jtfcallen.getText();
         ni = jtfnumintn.getText();
         ne = jtfnumextn.getText();
-        idc = Integer.parseInt(idCol); // id de colonia
+        idc = Integer.parseInt(idColcl); // id de colonia
 
-        nom = datosPersona[0];
-        ap = datosPersona[1];
-        am = datosPersona[2];
+        nomcl = datosPersona[0];
+        apcl = datosPersona[1];
+        amcl = datosPersona[2];
 
         StringBuilder mensaje = new StringBuilder(); // Acumulador de mensaje final
 
         if (datosEstatus[0] != null) {
             System.out.println("Puedes insertar estatus cliente");
-            ides = Integer.parseInt(datosEstatus[0]);
+            idescl = Integer.parseInt(datosEstatus[0]);
             try {
-                ci.insertaDPC(cll, ni, ne, idc, nom, ap, am, ides);
+                ci.insertaDPC(cllcl, ni, ne, idc, nomcl, apcl, amcl, idescl);
                 mensaje.append("Cliente ");
             } catch (SQLException ex) {
                 System.out.println("Error al insertar cliente: " + ex.getMessage());
@@ -335,9 +293,9 @@ public final class jfdireccion extends javax.swing.JFrame {
 
         if (datosEstatus[1] != null) {
             System.out.println("Puedes insertar estatus aval");
-            idesa = Integer.parseInt(datosEstatus[1]);
+            idescla = Integer.parseInt(datosEstatus[1]);
             try {
-                ci.insertaDPA(cll, ni, ne, idc, nom, ap, am, idesa);
+                ci.insertaDPA(cllcl, ni, ne, idc, nomcl, apcl, amcl, idescla);
                 mensaje.append("Aval ");
             } catch (SQLException ex) {
                 System.out.println("Error al insertar aval: " + ex.getMessage());
@@ -349,8 +307,28 @@ public final class jfdireccion extends javax.swing.JFrame {
         if (mensaje.length() > 0) {
             CUtilitarios.msg(mensaje.toString().trim() + "insertado correctamente", "Inserción Exitosa");
         }
-
     }//GEN-LAST:event_jbagregardirecActionPerformed
+
+    private void jcbcolonianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbcolonianActionPerformed
+        JComboBox jcb = (JComboBox) evt.getSource(); // Asegura que el evento venga del combo correcto
+        seleccion = (String) jcb.getSelectedItem();
+
+        if (jcb.getSelectedIndex() == 0 || "Colonias".equals(seleccion)) {
+            CUtilitarios.msg_advertencia("Selecciona una colonia válida", "Validación de Colonia");
+            return;
+        }
+
+        if (!"Colonias".equals(seleccion)) {
+            colcl = seleccion; // Guarda la selección en la variable global
+            System.out.println(colcl);
+            try {
+                idColcl = cb.buscarIdColonia(colcl);
+                System.out.println("ID COLONIA " + idColcl);
+            } catch (SQLException ex) {
+                Logger.getLogger(jfmenucliente.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_jcbcolonianActionPerformed
 
     /**
      * @param args the command line arguments
@@ -386,17 +364,14 @@ public final class jfdireccion extends javax.swing.JFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel JlblImagen1;
-    private javax.swing.JLabel jLblIcono;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPnlLogZonas;
     private javax.swing.JSeparator jSeparator10;
     private javax.swing.JSeparator jSeparator8;
     private javax.swing.JSeparator jSeparator9;
-    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JButton jbagregardirec;
     private javax.swing.JComboBox<String> jcbcolonian;
-    private javax.swing.JPanel jpprincipaldireccion;
+    private javax.swing.JLabel jliconodirec;
+    private javax.swing.JPanel jpfondo;
     private javax.swing.JTextField jtfcallen;
     private javax.swing.JTextField jtfnumextn;
     private javax.swing.JTextField jtfnumintn;

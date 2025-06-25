@@ -51,8 +51,8 @@ public final class jfmenucliente extends javax.swing.JFrame {
         cu.aplicarPlaceholder(jtfapmaternoeli, "Ingresar apellido materno de búsqueda");
 
         // Tablas
-        cu.cargarTabla(jtlistaclientes);
-        cu.cargarTabla(jtlistaclienteseli);
+//        cu.cargarTabla(jtlistaclientes);
+//        cu.cargarTabla(jtlistaclienteseli);
     }
 
     private DefaultComboBoxModel listas;
