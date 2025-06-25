@@ -323,12 +323,12 @@ public final class jfdireccion extends javax.swing.JFrame {
         if (datosEstatus[0] != null) {
             System.out.println("Puedes insertar estatus cliente");
             ides = Integer.parseInt(datosEstatus[0]);
-//            try {
-//                ci.insertaDPC(cll, ni, ne, idc, nom, ap, am, ides);
-//                mensaje.append("Cliente ");
-//            } catch (SQLException ex) {
-//                System.out.println("Error al insertar cliente: " + ex.getMessage());
-//            }
+            try {
+                ci.insertaDPC(cll, ni, ne, idc, nom, ap, am, ides);
+                mensaje.append("Cliente ");
+            } catch (SQLException ex) {
+                System.out.println("Error al insertar cliente: " + ex.getMessage());
+            }
         } else {
             System.out.println("El estatus cliente es nulo");
         }
@@ -336,12 +336,12 @@ public final class jfdireccion extends javax.swing.JFrame {
         if (datosEstatus[1] != null) {
             System.out.println("Puedes insertar estatus aval");
             idesa = Integer.parseInt(datosEstatus[1]);
-//            try {
-//                ci.insertaDPA(cll, ni, ne, idc, nom, ap, am, idesa);
-//                mensaje.append("Aval ");
-//            } catch (SQLException ex) {
-//                System.out.println("Error al insertar aval: " + ex.getMessage());
-//            }
+            try {
+                ci.insertaDPA(cll, ni, ne, idc, nom, ap, am, idesa);
+                mensaje.append("Aval ");
+            } catch (SQLException ex) {
+                System.out.println("Error al insertar aval: " + ex.getMessage());
+            }
         } else {
             System.out.println("El estatus aval es nulo");
         }

@@ -20,7 +20,6 @@ public final class jfmenucliente extends javax.swing.JFrame {
      */
     CUtilitarios cu = new CUtilitarios();
     CBusquedas cb = new CBusquedas();
-    CConsultas cc = new CConsultas();
     String seleccion, est, z, idZona, idEstatus, idEstatusAval;
 
     public jfmenucliente() throws SQLException {
@@ -258,7 +257,7 @@ public final class jfmenucliente extends javax.swing.JFrame {
         jtfappaterno.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jtfappaterno.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jtfappaterno.setText("Ingresar apellido paterno de búsqueda");
-        jtfappaterno.setToolTipText("");
+        jtfappaterno.setToolTipText("Ingresar apellido paterno de búsqueda");
         jtfappaterno.setBorder(null);
         jtfappaterno.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
 

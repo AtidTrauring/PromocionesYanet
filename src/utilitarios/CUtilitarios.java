@@ -334,5 +334,48 @@ public class CUtilitarios {
         }
         return true;
     }
+    
+    /* Aplicación de Filtros para 4 parametros */
+
+    public void aplicaFiltros(JTable jt, JTextField jtf1, JTextField jtf2, JTextField jtf3, JTextField jtf4) {
+        // Obtenemos el modelo de la tabla
+        DefaultTableModel modelo = (DefaultTableModel) jt.getModel();
+
+        // Creamos el objeto que permite ordenar y aplicar filtros
+        tr = new TableRowSorter<>(modelo);
+
+        // Establecemos el objeto en la tabla
+        jt.setRowSorter(tr);
+
+        // Creamos una lista para guardar los filtros que se van a aplicar
+        ArrayList<RowFilter<Object, Object>> filtros = new ArrayList<>();
+
+        // Si el campo de ID no está vacío, aplicamos un filtro por esa columna (columna 0)
+        if (!jtf1.getText().isEmpty()) {
+            // (?i) indica que no importa si se escribe con mayúsculas o minúsculas
+            filtros.add(RowFilter.regexFilter("(?i)" + jtf1.getText(), 0));
+        }
+
+        // Si el campo de Nombre no está vacío, aplicamos filtro en la columna 1
+        if (!jtf2.getText().isEmpty()) {
+            filtros.add(RowFilter.regexFilter("(?i)" + jtf2.getText(), 1));
+        }
+
+        // Si el campo de Apellido Paterno no está vacío, aplicamos filtro en la columna 2
+        if (!jtf3.getText().isEmpty()) {
+            filtros.add(RowFilter.regexFilter("(?i)" + jtf3.getText(), 2));
+        }
+
+        // Si el campo de Apellido Materno no está vacío, aplicamos filtro en la columna 3
+        if (!jtf4.getText().isEmpty()) {
+            filtros.add(RowFilter.regexFilter("(?i)" + jtf4.getText(), 3));
+        }
+
+        // Combinamos todos los filtros usando "AND", es decir, deben cumplirse todos
+        RowFilter<Object, Object> rf = RowFilter.andFilter(filtros);
+
+        // Aplicamos el filtro combinado a la tabla
+        tr.setRowFilter(rf);
+    }
     /* Fin De nuevos Métodos */
 }
