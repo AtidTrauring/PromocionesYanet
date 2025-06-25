@@ -4,6 +4,7 @@
  */
 package Views.productos;
 
+import crud.CActualizaciones;
 import crud.CBusquedas;
 import crud.CEliminaciones;
 import crud.CInserciones;
@@ -22,8 +23,7 @@ import utilitarios.CUtilitarios;
  */
 public class jfproductos extends javax.swing.JFrame {
 
-    private DefaultTableModel modelo;
-    private DefaultTableModel modelo1;
+    private DefaultTableModel modelo, modelo1, modelo2;
     private CBusquedas cb = new CBusquedas();
     private CUtilitarios cu = new CUtilitarios();
     private TableRowSorter tr;
@@ -33,6 +33,7 @@ public class jfproductos extends javax.swing.JFrame {
     private String producto, precio, stock;
     private CInserciones ci = new CInserciones();
     private CEliminaciones ce = new CEliminaciones();
+    private CActualizaciones ca = new CActualizaciones();
 
     /**
      * Creates new form jfproductos
@@ -44,12 +45,14 @@ public class jfproductos extends javax.swing.JFrame {
         jtblEliminarProductos.getTableHeader().setReorderingAllowed(false);
         cargarTabla();
         cargarTablaEliminar();
+        cargarTablaActualizar();
         // Activar búsqueda automática
         addFiltroListener(jTxtBusIDProd);
         addFiltroListener(jTxtBusNombreProd);
         addFiltroListener(jTxtBusPrecioProd);
         configurarEventosTablaEliminar();
-
+        configurarEventosTablaActualizar();
+        configurarEventoBuscarPorID();
     }
 
     public void asignaValores() {
@@ -69,92 +72,89 @@ public class jfproductos extends javax.swing.JFrame {
         modelo = (DefaultTableModel) jTblBuscarProd.getModel();
         modelo.setRowCount(0);
     }
+
     private void limpiarTabla2() {
         modelo1 = (DefaultTableModel) jtblEliminarProductos.getModel();
         modelo1.setRowCount(0);
     }
 
+    private void limpiarTabla3() {
+        modelo2 = (DefaultTableModel) jtblActualizarProductos.getModel();
+        modelo2.setRowCount(0);
+    }
+
     // Este método lo uso para agregar un listener (escuchador) a un campo de texto
-private void addFiltroListener(javax.swing.JTextField campo) {
-    
-    // Aquí obtengo el texto del campo de textoy agrego un DocumentListener para  cualquier cambio
-    campo.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
-        
-        // Este método se ejecuta automáticamente cuando yo escribo algo nuevo en el campo
-        public void insertUpdate(javax.swing.event.DocumentEvent e) {
-            aplicaFiltros(); // Llamo a mi método que aplica los filtros.
-        }
+    private void addFiltroListener(javax.swing.JTextField campo) {
 
-        // Este método se ejecuta cuando borro texto del campo
-        public void removeUpdate(javax.swing.event.DocumentEvent e) {
-            aplicaFiltros(); 
-        }
+        // Aquí obtengo el texto del campo de textoy agrego un DocumentListener para  cualquier cambio
+        campo.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
 
-        public void changedUpdate(javax.swing.event.DocumentEvent e) {
-            aplicaFiltros(); 
-        }
-    });
-}
-
-public void eliminarProducto() {
-    String nombre = jTxtElimNombreProducto.getText().trim();// Obtengo el texto que se escribió en el campo 
-
-    // Si el campo está vacío, aviso que debe escribir o seleccionar un producto y salgo
-    if (nombre.isEmpty()) {
-        CUtilitarios.msg_advertencia("Escribe o selecciona un producto", "Eliminar Producto");
-        return;
-    }
-
-    // Inicializo una variable para guardar el ID del producto que voy a buscar
-    String idProducto = null;
-
-    // Recorro todas las filas de la tabla para buscar el producto cuyo nombre coincida con el que escriba
-    for (int i = 0; i < jtblEliminarProductos.getRowCount(); i++) {
-        // Obtengo el nombre que está en la columna 1 de cada fila
-        String nombreEnTabla = jtblEliminarProductos.getValueAt(i, 1).toString();
-
-        // Comparo el nombre de la tabla con el nombre escrito, ignorando mayúsculas o minúsculas
-        if (nombreEnTabla.equalsIgnoreCase(nombre)) {
-            // Si coinciden, guardo el ID que está en la columna 0 de esa fila
-            idProducto = jtblEliminarProductos.getValueAt(i, 0).toString();
-            break; 
-        }
-    }
-    if (idProducto == null) { // Si no encuentra ningún producto con ese nombre, aviso y salgo
-        CUtilitarios.msg_error("No encontré el producto con ese nombre", "Eliminar Producto");
-        return;
-    }
-
-    int opcion = JOptionPane.showConfirmDialog(
-            this,
-            "¿Estás seguro que deseas eliminar el producto: " + nombre + "?",
-            "Confirmar eliminación",
-            JOptionPane.YES_NO_OPTION
-    );
-
-    // Si el usuario confirma la eliminación
-    if (opcion == JOptionPane.YES_OPTION) {
-        try {
-            // Elimino el producto usando el ID encontrado
-            boolean eliminado = ce.eliminaProducto(idProducto);
-
-            // Si se eliminó correctamente, muestro mensaje, limpio el campo y actualizo la tabla
-            if (eliminado) {
-                CUtilitarios.msg("Producto eliminado correctamente", "Eliminar");
-                jTxtElimNombreProducto.setText("");
-                cargarTablaEliminar();
-                cargarTabla();
-            } else {
-                // Si no se pudo eliminar, aviso 
-                CUtilitarios.msg_error("No se pudo eliminar el producto", "Eliminar");
+            // Este método se ejecuta automáticamente cuando yo escribo algo nuevo en el campo
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                aplicaFiltros(); // Llamo a mi método que aplica los filtros.
             }
-        } catch (SQLException ex) {
-            // Si hubo un error al intentar eliminar, muestro un mensaje de error
-            CUtilitarios.msg_error("Error al intentar eliminar", "Eliminar");
+
+            // Este método se ejecuta cuando borro texto del campo
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                aplicaFiltros();
+            }
+
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                aplicaFiltros();
+            }
+        });
+    }
+
+    public void eliminarProducto() {
+        String nombre = jTxtElimNombreProducto.getText().trim();// Obtengo el texto que se escribió en el campo 
+
+        // Si el campo está vacío, aviso que debe escribir o seleccionar un producto y salgo
+        if (nombre.isEmpty()) {
+            CUtilitarios.msg_advertencia("Escribe o selecciona un producto", "Eliminar Producto");
+            return;
+        }
+        String idProducto = null;// Inicializo una variable para guardar el ID del producto que voy a buscar
+        // Recorro todas las filas de la tabla para buscar el producto cuyo nombre coincida con el que escriba
+        for (int i = 0; i < jtblEliminarProductos.getRowCount(); i++) {
+            // Obtengo el nombre que está en la columna 1 de cada fila
+            String nombreEnTabla = jtblEliminarProductos.getValueAt(i, 1).toString();
+
+            // Comparo el nombre de la tabla con el nombre escrito, ignorando mayúsculas o minúsculas
+            if (nombreEnTabla.equalsIgnoreCase(nombre)) {
+                // Si coinciden, guardo el ID que está en la columna 0 de esa fila
+                idProducto = jtblEliminarProductos.getValueAt(i, 0).toString();
+                break;
+            }
+        }
+        if (idProducto == null) { // Si no encuentra ningún producto con ese nombre, aviso y salgo
+            CUtilitarios.msg_error("No se encuentra el producto con ese nombre", "Eliminar Producto");
+            return;
+        }
+
+        int opcion = JOptionPane.showConfirmDialog(
+                this, "¿Estás seguro que deseas eliminar el producto: " + nombre + "?",
+                "Confirmar eliminación", JOptionPane.YES_NO_OPTION
+        );
+        // Si el usuario confirma la eliminación
+        if (opcion == JOptionPane.YES_OPTION) {
+            try {
+                // Elimino el producto usando el ID encontrado
+                boolean eliminado = ce.eliminaProducto(idProducto);
+                // Si se eliminó correctamente, muestro mensaje, limpio el campo y actualizo las tabla
+                if (eliminado) {
+                    CUtilitarios.msg("Producto eliminado correctamente", "Eliminar");
+                    jTxtElimNombreProducto.setText("");
+                    cargarTablaEliminar();
+                    cargarTabla();
+                    cargarTablaActualizar();
+                } else {
+                    CUtilitarios.msg_error("No se pudo eliminar el producto", "Eliminar");// Si no se pudo eliminar, aviso 
+                }
+            } catch (SQLException ex) {
+                CUtilitarios.msg_error("Error al intentar eliminar", "Eliminar");
+            }
         }
     }
-}
-
 
     public void cargarTabla() {
         modelo = (DefaultTableModel) jTblBuscarProd.getModel();
@@ -168,31 +168,189 @@ public void eliminarProducto() {
             CUtilitarios.msg_error("No se pudo cargar la informacion en la tabla", "Cargando Tabla");
         }
     }
+
     public void cargarTablaEliminar() {
-    modelo1 = (DefaultTableModel) jtblEliminarProductos.getModel();
-    try {
-        datosEliminar = cb.buscarProducto();  // Reutilice el método de búsqueda
-        limpiarTabla2();
-        for (String[] datoKardex : datosEliminar) {
-            modelo1.addRow(new Object[]{datoKardex[0], datoKardex[1], datoKardex[2], datoKardex[3]});
+        modelo1 = (DefaultTableModel) jtblEliminarProductos.getModel();
+        try {
+            datosEliminar = cb.buscarProducto();  // Reutilice el método de búsqueda
+            limpiarTabla2();
+            for (String[] datoKardex : datosEliminar) {
+                modelo1.addRow(new Object[]{datoKardex[0], datoKardex[1], datoKardex[2], datoKardex[3]});
+            }
+        } catch (SQLException ex) {
+            CUtilitarios.msg_error("No se pudo cargar la tabla de productos a eliminar", "Cargando Tabla");
         }
-    } catch (SQLException ex) {
-        CUtilitarios.msg_error("No se pudo cargar la tabla de productos a eliminar", "Cargando Tabla");
     }
-}
+
+    public void cargarTablaActualizar() {
+        modelo2 = (DefaultTableModel) jtblActualizarProductos.getModel();
+        try {
+            datosEliminar = cb.buscarProducto();  // Reutilice el método de búsqueda
+            limpiarTabla3();
+            for (String[] datoKardex : datosEliminar) {
+                modelo2.addRow(new Object[]{datoKardex[0], datoKardex[1], datoKardex[2], datoKardex[3]});
+            }
+        } catch (SQLException ex) {
+            CUtilitarios.msg_error("No se pudo cargar la tabla de productos a eliminar", "Cargando Tabla");
+        }
+    }
 
     private void configurarEventosTablaEliminar() {
-    jtblEliminarProductos.addMouseListener(new java.awt.event.MouseAdapter() {
-        public void mouseClicked(java.awt.event.MouseEvent evt) {
-            int fila = jtblEliminarProductos.getSelectedRow();
-            if (fila != -1) {
-                String nombreProducto = jtblEliminarProductos.getValueAt(fila, 1).toString();
-                jTxtElimNombreProducto.setText(nombreProducto);
+        // Agrega un listener para detectar cuando se hace clic sobre la tabla 
+        jtblEliminarProductos.addMouseListener(new java.awt.event.MouseAdapter() {
+            // El método se ejecuta cuando se hace clic en la tabla
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                // Obtiene el índice de la fila que fue seleccionada
+                int fila = jtblEliminarProductos.getSelectedRow();
+                // Verifica que se haya seleccionado una fila 
+                if (fila != -1) {
+                    // Obtiene el valor de la columna 1 (segunda columna) de la fila seleccionada
+                    String nombreProducto = jtblEliminarProductos.getValueAt(fila, 1).toString();
+                    // Coloca el nombre del producto obtenido en el campo de texto 
+                    jTxtElimNombreProducto.setText(nombreProducto);
+                }
+            }
+        });
+    }
+
+    private void configurarEventosTablaActualizar() {
+        jtblActualizarProductos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                int fila = jtblActualizarProductos.getSelectedRow();
+                if (fila != -1) {
+                    jTxtActIDProd.setText(jtblActualizarProductos.getValueAt(fila, 0).toString());
+                    jTxtActNombreProd.setText(jtblActualizarProductos.getValueAt(fila, 1).toString());
+                    jTxtActPrecioProd.setText(jtblActualizarProductos.getValueAt(fila, 2).toString());
+                    jTxtActStockProd.setText(jtblActualizarProductos.getValueAt(fila, 3).toString());
+                }
+            }
+        });
+    }
+
+    private void configurarEventoBuscarPorID() {
+        jTxtActIDProd.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                cargarPorID();
+            }
+
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                cargarPorID();
+            }
+
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                cargarPorID();
+            }
+
+            private void cargarPorID() {
+                String id = jTxtActIDProd.getText().trim();
+                if (!id.isEmpty()) {
+                    llenarCamposPorID(id);
+                } else {
+                    jTxtActNombreProd.setText("");
+                    jTxtActPrecioProd.setText("");
+                    jTxtActStockProd.setText("");
+                }
+            }
+        });
+    }
+
+    private void llenarCamposPorID(String id) {
+        // Variable para saber si se encontró el ID en la tabla
+        boolean encontrado = false;
+
+        // Recorre todas las filas de la tabla 
+        for (int i = 0; i < jtblActualizarProductos.getRowCount(); i++) {
+            // Obtiene el valor de la primera columna de la fila actual
+            String idEnTabla = jtblActualizarProductos.getValueAt(i, 0).toString();
+
+            // Compara el ID que se busca con el ID de la fila actual
+            if (idEnTabla.equals(id)) {
+                // Si coincide, llena los campos con los valores correspondientes de la fila
+                jTxtActNombreProd.setText(jtblActualizarProductos.getValueAt(i, 1).toString());
+                jTxtActPrecioProd.setText(jtblActualizarProductos.getValueAt(i, 2).toString());
+                jTxtActStockProd.setText(jtblActualizarProductos.getValueAt(i, 3).toString());
+
+                // Marca que se encontró el ID y termina el ciclo
+                encontrado = true;
+                break;
             }
         }
-    });
-}
 
+        // Si no se encontró el ID, limpia los campos de texto
+        if (!encontrado) {
+            jTxtActNombreProd.setText("");
+            jTxtActPrecioProd.setText("");
+            jTxtActStockProd.setText("");
+        }
+    }
+
+    public boolean validaTodosLosCamposActualizar() {
+        return validaCampoProducto(jTxtActNombreProd, "^[a-zA-Z ]+$", "El campo Producto está vacío", "El nombre solo debe contener letras y espacios")
+                && validaCampoProducto(jTxtActPrecioProd, "^[0-9]+$", "El campo Precio está vacío", "El precio solo debe contener números")
+                && validaCampoProducto(jTxtActStockProd, "^[0-9]+$", "El campo Stock está vacío", "El stock solo debe contener números");
+    }
+
+    private void limpiarCamposActualizar() {
+        jTxtActIDProd.setText("");
+        jTxtActNombreProd.setText("");
+        jTxtActPrecioProd.setText("");
+        jTxtActStockProd.setText("");
+    }
+
+    public void actualizarProducto() {
+        // Obtiene y limpia los valores ingresados en los campos de texto
+        String id = jTxtActIDProd.getText().trim();
+        String nombre = jTxtActNombreProd.getText().trim();
+        String precio = jTxtActPrecioProd.getText().trim();
+        String stock = jTxtActStockProd.getText().trim();
+
+        // Verifica que el campo ID no esté vacío
+        if (id.isEmpty()) {
+            // si esta vacio, esntonces muestra un mensaje de advertencia y detiene la ejecución
+            CUtilitarios.msg_advertencia("El ID del producto no puede estar vacío", "Actualizar Producto");
+            return;
+        }
+
+        // Verifica si todos los campos cumplen con las validaciones necesarias
+        if (!validaTodosLosCamposActualizar()) {
+            // Si alguna validación falla, se detiene la ejecución
+            return;
+        }
+
+        // Muestra un cuadro de confirmación al usuario
+        int opcion = JOptionPane.showConfirmDialog(
+                this, "¿Deseas actualizar los datos del producto?",
+                "Confirmar actualización",JOptionPane.YES_NO_OPTION
+        );
+
+        // Si el usuario elige "Sí"
+        if (opcion == JOptionPane.YES_OPTION) {
+            try {
+                // Actualiza el producto 
+                boolean actualizado = ca.actualizaProducto(id, nombre, precio, stock);
+
+                // Si se actualizó correctamente
+                if (actualizado) {
+                    // Muestra mensaje de éxito
+                    CUtilitarios.msg("Producto actualizado correctamente", "Actualizar");
+
+                    // Recarga las tablas
+                    cargarTabla();
+                    cargarTablaEliminar();
+                    cargarTablaActualizar();
+
+                    // Limpia los campos 
+                    limpiarCamposActualizar();
+                } else {
+                    // Si no se pudo actualizar, muestra un mensaje de error
+                    CUtilitarios.msg_error("No se pudo actualizar el producto", "Actualizar");
+                }
+            } catch (SQLException e) {
+                // Si ocurre un error con la base de datos, muestra el mensaje de excepción
+                CUtilitarios.msg_error("Error SQL al actualizar: " + e.getMessage(), "Actualizar");
+            }
+        }
+    }
 
     public void aplicaFiltros() {
         modelo = (DefaultTableModel) jTblBuscarProd.getModel();
@@ -241,7 +399,7 @@ public void eliminarProducto() {
     }
 
     public void agregarProducto() {
-        asignaValores(); 
+        asignaValores();
 
         if (validaTodosLosCampos()) {
             try {
@@ -249,6 +407,7 @@ public void eliminarProducto() {
                     CUtilitarios.msg("Producto insertado correctamente", "Registro Producto");
                     cargarTabla(); // actualiza JTable
                     cargarTablaEliminar();
+                    cargarTablaActualizar();
                 } else {
                     CUtilitarios.msg_error("No se pudo insertar el producto en la base de datos", "Registro Producto");
                 }
@@ -323,7 +482,7 @@ public void eliminarProducto() {
         jLabel4 = new javax.swing.JLabel();
         jBtnActActualizarProd = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jtblEliminarProductos1 = new javax.swing.JTable();
+        jtblActualizarProductos = new javax.swing.JTable();
         jPnlElimProducto = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jtblEliminarProductos = new javax.swing.JTable();
@@ -699,6 +858,11 @@ public void eliminarProducto() {
         jBtnActActualizarProd.setBackground(new java.awt.Color(53, 189, 242));
         jBtnActActualizarProd.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jBtnActActualizarProd.setText("Actualizar producto");
+        jBtnActActualizarProd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtnActActualizarProdActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPnlActualizarProductoLayout = new javax.swing.GroupLayout(jPnlActualizarProducto);
         jPnlActualizarProducto.setLayout(jPnlActualizarProductoLayout);
@@ -775,7 +939,7 @@ public void eliminarProducto() {
                 .addContainerGap())
         );
 
-        jtblEliminarProductos1.setModel(new javax.swing.table.DefaultTableModel(
+        jtblActualizarProductos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -783,7 +947,7 @@ public void eliminarProducto() {
                 "Id producto", "producto", "Precio", "Stock"
             }
         ));
-        jScrollPane3.setViewportView(jtblEliminarProductos1);
+        jScrollPane3.setViewportView(jtblActualizarProductos);
 
         javax.swing.GroupLayout jPnlActProductoLayout = new javax.swing.GroupLayout(jPnlActProducto);
         jPnlActProducto.setLayout(jPnlActProductoLayout);
@@ -966,6 +1130,11 @@ public void eliminarProducto() {
         eliminarProducto();
     }//GEN-LAST:event_jBtnElmEliminarProdActionPerformed
 
+    private void jBtnActActualizarProdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnActActualizarProdActionPerformed
+        // TODO add your handling code here:
+        actualizarProducto();
+    }//GEN-LAST:event_jBtnActActualizarProdActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1060,7 +1229,7 @@ public void eliminarProducto() {
     private javax.swing.JTextField jTxtIngNombreProd;
     private javax.swing.JTextField jTxtIngPrecioProd;
     private javax.swing.JTextField jTxtIngStockProd;
+    private javax.swing.JTable jtblActualizarProductos;
     private javax.swing.JTable jtblEliminarProductos;
-    private javax.swing.JTable jtblEliminarProductos1;
     // End of variables declaration//GEN-END:variables
 }
