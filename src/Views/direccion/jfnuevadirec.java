@@ -12,10 +12,10 @@ import utilitarios.*;
  *
  * @author micky
  */
-public final class jfdireccion extends javax.swing.JFrame {
+public class jfnuevadirec extends javax.swing.JFrame {
 
     /**
-     * Creates new form jfdireccion
+     * Creates new form jfnuevadirec
      */
     private static String[] datosPersona, datosEstatus, datosZona;
     CUtilitarios cu = new CUtilitarios();
@@ -25,7 +25,7 @@ public final class jfdireccion extends javax.swing.JFrame {
     private String cllcl, ne, ni, nomcl, apcl, amcl;
     private int idc, idescl, idescla;
 
-    public jfdireccion(String[] datosZ, String[] datosP, String[] datosEs) {
+    public jfnuevadirec(String[] datosZ, String[] datosP, String[] datosEs) {
         initComponents();
         this.setLocationRelativeTo(null);
         // Datos extraidos
@@ -35,9 +35,8 @@ public final class jfdireccion extends javax.swing.JFrame {
 
         // Combos
         cargaComboBox(jcbcolonian, 1);
-        
-        // Placeholder JTextField
 
+        // Placeholder JTextField
         cu.aplicarPlaceholder(jtfcallen, "Calle");
         cu.aplicarPlaceholder(jtfnumextn, "Número Exterior");
         cu.aplicarPlaceholder(jtfnumintn, "Numero Interior");
@@ -237,7 +236,7 @@ public final class jfdireccion extends javax.swing.JFrame {
                     .addGroup(jpfondoLayout.createSequentialGroup()
                         .addGap(95, 95, 95)
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(12, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -254,14 +253,35 @@ public final class jfdireccion extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jcbcolonianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbcolonianActionPerformed
+        JComboBox jcb = (JComboBox) evt.getSource(); // Asegura que el evento venga del combo correcto
+        seleccion = (String) jcb.getSelectedItem();
+
+        if (jcb.getSelectedIndex() == 0 || "Colonias".equals(seleccion)) {
+            CUtilitarios.msg_advertencia("Selecciona una colonia válida", "Validación de Colonia");
+            return;
+        }
+
+        if (!"Colonias".equals(seleccion)) {
+            colcl = seleccion; // Guarda la selección en la variable global
+            System.out.println(colcl);
+            try {
+                idColcl = cb.buscarIdColonia(colcl);
+                System.out.println("ID COLONIA " + idColcl);
+            } catch (SQLException ex) {
+                Logger.getLogger(jfmenucliente.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_jcbcolonianActionPerformed
+
     private void jbagregardirecActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbagregardirecActionPerformed
         JTextField[] jtf = {jtfcallen, jtfnumextn, jtfnumintn};
         String[] textosPredeterminados = {"Calle", "Número Interior", "Número Exterior"};
         String regexTextoExtendido = "^[0-9A-Za-zÁÉÍÓÚáéíóúÑñ\\s.,\\-]+$";
 
         boolean camposValidos = CUtilitarios.validaCamposTextoConFormato(
-            jtf, textosPredeterminados, textosPredeterminados, regexTextoExtendido,
-            "Debes llenar todos los campos correctamente", "Validación de Datos Dirección"
+                jtf, textosPredeterminados, textosPredeterminados, regexTextoExtendido,
+                "Debes llenar todos los campos correctamente", "Validación de Datos Dirección"
         );
         if (!camposValidos) {
             return;
@@ -309,27 +329,6 @@ public final class jfdireccion extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jbagregardirecActionPerformed
 
-    private void jcbcolonianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbcolonianActionPerformed
-        JComboBox jcb = (JComboBox) evt.getSource(); // Asegura que el evento venga del combo correcto
-        seleccion = (String) jcb.getSelectedItem();
-
-        if (jcb.getSelectedIndex() == 0 || "Colonias".equals(seleccion)) {
-            CUtilitarios.msg_advertencia("Selecciona una colonia válida", "Validación de Colonia");
-            return;
-        }
-
-        if (!"Colonias".equals(seleccion)) {
-            colcl = seleccion; // Guarda la selección en la variable global
-            System.out.println(colcl);
-            try {
-                idColcl = cb.buscarIdColonia(colcl);
-                System.out.println("ID COLONIA " + idColcl);
-            } catch (SQLException ex) {
-                Logger.getLogger(jfmenucliente.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }//GEN-LAST:event_jcbcolonianActionPerformed
-
     /**
      * @param args the command line arguments
      */
@@ -347,21 +346,24 @@ public final class jfdireccion extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(jfdireccion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(jfnuevadirec.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(jfdireccion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(jfnuevadirec.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(jfdireccion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(jfnuevadirec.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(jfdireccion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(jfnuevadirec.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> {
-            new jfdireccion(datosZona, datosPersona, datosEstatus).setVisible(true);
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new jfnuevadirec(datosZona, datosPersona, datosEstatus).setVisible(true);
+            }
         });
     }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel JlblImagen1;
     private javax.swing.JPanel jPanel2;

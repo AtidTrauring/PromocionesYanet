@@ -286,6 +286,46 @@ public class CUtilitarios {
         jt.setRowSorter(tr);
     }
 
+    // Nuevo Método para cargar tablas
+    public void cargarTablaDesdeConsulta(JTable tabla, PreparedStatement ps) throws SQLException {
+        try (ResultSet rs = ps.executeQuery()) {
+            ResultSetMetaData metaData = rs.getMetaData();
+            int columnCount = metaData.getColumnCount();
+
+            // Crear un nuevo modelo
+            DefaultTableModel modelo = new DefaultTableModel();
+
+            // Agregar columnas
+            for (int i = 1; i <= columnCount; i++) {
+                modelo.addColumn(metaData.getColumnLabel(i));
+            }
+
+            // Agregar filas
+            while (rs.next()) {
+                Object[] fila = new Object[columnCount];
+                for (int i = 0; i < columnCount; i++) {
+                    fila[i] = rs.getObject(i + 1);
+                }
+                modelo.addRow(fila);
+            }
+
+            // Ahora sí: asignar el modelo a la tabla
+            tabla.setModel(modelo);
+
+            // (Opcional) Aplicar ordenamiento
+            TableRowSorter<DefaultTableModel> tr = new TableRowSorter<>(modelo);
+            tabla.setRowSorter(tr);
+        }
+    }
+
+    private final CConecta conector = new CConecta();
+
+    public void cargarConsultaEnTabla(String sql, JTable tabla) throws SQLException {
+        try (Connection cn = conector.conecta(); PreparedStatement ps = cn.prepareStatement(sql)) {
+            cargarTablaDesdeConsulta(tabla, ps);
+        }
+    }
+
     public static boolean validaCamposTextoConFormato(
             JTextField[] jtf,
             String[] textosPredeterminados,

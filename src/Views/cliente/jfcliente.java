@@ -20,7 +20,6 @@ public final class jfcliente extends javax.swing.JFrame {
      */
     CUtilitarios cu = new CUtilitarios();
     CBusquedas cb = new CBusquedas();
-    private final CBusquedas queryBusca = new CBusquedas();
     String seleccion, est, z, idZona, idEstatus, idEstatusAval;
 
     public jfcliente() throws SQLException {
@@ -45,10 +44,11 @@ public final class jfcliente extends javax.swing.JFrame {
         cu.aplicarPlaceholder(jtfnvam, "Apellido Materno");
 
         // Tablas
-        cu.cargarTabla(jtlistacliente, () -> queryBusca.buscarCliente());
-        cu.cargarTabla(jtlistaaval, () -> queryBusca.buscarAval());
-        cu.cargarTabla(jtlistaclienteact, () -> queryBusca.buscarCliente());
-        cu.cargarTabla(jtlistaavalacteli, () -> queryBusca.buscarAval());
+//        cu.cargarTabla(jtlistacliente, () -> queryBusca.buscarCliente());
+//        cu.cargarTabla(jtlistaaval, () -> queryBusca.buscarAval());
+//        cu.cargarTabla(jtlistaclienteact, () -> queryBusca.buscarCliente());
+//        cu.cargarTabla(jtlistaavalacteli, () -> queryBusca.buscarAval());
+        cargarTablas();
 
         // Selección
         configurarEventosTablaActualizar();
@@ -57,6 +57,7 @@ public final class jfcliente extends javax.swing.JFrame {
     private DefaultComboBoxModel listas;
     private ArrayList<String> datosListas = new ArrayList<>();
     private final CCargaCombos queryCarga = new CCargaCombos();
+    private final CConecta conector = new CConecta();
 
     public void cargaComboBox(JComboBox combo, int metodoCarga) {
         listas = (DefaultComboBoxModel) combo.getModel();
@@ -102,6 +103,18 @@ public final class jfcliente extends javax.swing.JFrame {
         });
     }
 
+    private String sqlClientesAvales;
+
+    private void cargarTablas() {
+        sqlClientesAvales = "Call tablaClienteAval";
+
+        try {
+            cu.cargarConsultaEnTabla(sqlClientesAvales, jtlistacliente);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error al cargar tablas: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -119,8 +132,6 @@ public final class jfcliente extends javax.swing.JFrame {
         jpfondotabla = new javax.swing.JPanel();
         jspcliente = new javax.swing.JScrollPane();
         jtlistacliente = new javax.swing.JTable();
-        jspaval = new javax.swing.JScrollPane();
-        jtlistaaval = new javax.swing.JTable();
         jpfondobusqueda = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jtfidbusqueda = new javax.swing.JTextField();
@@ -153,8 +164,6 @@ public final class jfcliente extends javax.swing.JFrame {
         jpfondotablaacteli = new javax.swing.JPanel();
         jspclienteacteli = new javax.swing.JScrollPane();
         jtlistaclienteact = new javax.swing.JTable();
-        jspavalacteli = new javax.swing.JScrollPane();
-        jtlistaavalacteli = new javax.swing.JTable();
         jpfondoacteliclienteaval = new javax.swing.JPanel();
         jtfactnombres = new javax.swing.JTextField();
         jSeparator9 = new javax.swing.JSeparator();
@@ -169,7 +178,6 @@ public final class jfcliente extends javax.swing.JFrame {
         jcbactestatuscliente = new javax.swing.JComboBox<>();
         jcbactestatusaval = new javax.swing.JComboBox<>();
         jbcontinuaract = new javax.swing.JButton();
-        jbcelimina = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -195,42 +203,12 @@ public final class jfcliente extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID Cliente", "Nombre(s)", "Apellido Paterno", "Apellido Materno", "Estatus"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
-            };
 
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
             }
-        });
+        ));
         jtlistacliente.setToolTipText("Listado de Clientes y Avales");
         jtlistacliente.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jspcliente.setViewportView(jtlistacliente);
-
-        jtlistaaval.setBackground(new java.awt.Color(167, 235, 242));
-        jtlistaaval.setFont(new java.awt.Font("Candara", 1, 12)); // NOI18N
-        jtlistaaval.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "ID Aval", "Nombre(s)", "Apellido Paterno", "Apellido Materno", "Estatus"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-        });
-        jtlistaaval.setToolTipText("Listado de Clientes y Avales");
-        jtlistaaval.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jspaval.setViewportView(jtlistaaval);
 
         javax.swing.GroupLayout jpfondotablaLayout = new javax.swing.GroupLayout(jpfondotabla);
         jpfondotabla.setLayout(jpfondotablaLayout);
@@ -238,18 +216,14 @@ public final class jfcliente extends javax.swing.JFrame {
             jpfondotablaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpfondotablaLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jpfondotablaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jspcliente, javax.swing.GroupLayout.DEFAULT_SIZE, 503, Short.MAX_VALUE)
-                    .addComponent(jspaval, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 503, Short.MAX_VALUE))
+                .addComponent(jspcliente, javax.swing.GroupLayout.DEFAULT_SIZE, 503, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jpfondotablaLayout.setVerticalGroup(
             jpfondotablaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpfondotablaLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jspcliente, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jspaval, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addComponent(jspcliente)
                 .addContainerGap())
         );
 
@@ -317,10 +291,15 @@ public final class jfcliente extends javax.swing.JFrame {
 
         jcbusuariobusqueda.setBackground(new java.awt.Color(167, 235, 242));
         jcbusuariobusqueda.setFont(new java.awt.Font("Candara", 1, 12)); // NOI18N
-        jcbusuariobusqueda.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tipo de Usuario" }));
+        jcbusuariobusqueda.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tipo de Usuario", "Cliente", "Aval", "Ambos" }));
         jcbusuariobusqueda.setToolTipText("Selecciona un tipo de Usuario");
         jcbusuariobusqueda.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jcbusuariobusqueda.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jcbusuariobusqueda.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jcbusuariobusquedaActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jpfondobusquedaLayout = new javax.swing.GroupLayout(jpfondobusqueda);
         jpfondobusqueda.setLayout(jpfondobusquedaLayout);
@@ -373,8 +352,8 @@ public final class jfcliente extends javax.swing.JFrame {
                 .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jcbestatusbusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(32, 32, 32)
-                .addComponent(jcbusuariobusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(33, 33, 33)
+                .addComponent(jcbusuariobusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -643,42 +622,12 @@ public final class jfcliente extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID Cliente", "Nombre(s)", "Apellido Paterno", "Apellido Materno", "Estatus"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
-            };
 
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
             }
-        });
+        ));
         jtlistaclienteact.setToolTipText("Listado de Clientes y Avales");
         jtlistaclienteact.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jspclienteacteli.setViewportView(jtlistaclienteact);
-
-        jtlistaavalacteli.setBackground(new java.awt.Color(167, 235, 242));
-        jtlistaavalacteli.setFont(new java.awt.Font("Candara", 1, 12)); // NOI18N
-        jtlistaavalacteli.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "ID Aval", "Nombre(s)", "Apellido Paterno", "Apellido Materno", "Estatus"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-        });
-        jtlistaavalacteli.setToolTipText("Listado de Clientes y Avales");
-        jtlistaavalacteli.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jspavalacteli.setViewportView(jtlistaavalacteli);
 
         javax.swing.GroupLayout jpfondotablaacteliLayout = new javax.swing.GroupLayout(jpfondotablaacteli);
         jpfondotablaacteli.setLayout(jpfondotablaacteliLayout);
@@ -686,18 +635,14 @@ public final class jfcliente extends javax.swing.JFrame {
             jpfondotablaacteliLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpfondotablaacteliLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jpfondotablaacteliLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jspclienteacteli, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
-                    .addComponent(jspavalacteli, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addComponent(jspclienteacteli, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jpfondotablaacteliLayout.setVerticalGroup(
             jpfondotablaacteliLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpfondotablaacteliLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jspclienteacteli, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jspavalacteli, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addComponent(jspclienteacteli, javax.swing.GroupLayout.DEFAULT_SIZE, 441, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -846,19 +791,6 @@ public final class jfcliente extends javax.swing.JFrame {
         jbcontinuaract.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
         jbcontinuaract.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
 
-        jbcelimina.setBackground(new java.awt.Color(204, 204, 204));
-        jbcelimina.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
-        jbcelimina.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/eli1.png"))); // NOI18N
-        jbcelimina.setText("Eliminar");
-        jbcelimina.setBorder(null);
-        jbcelimina.setContentAreaFilled(false);
-        jbcelimina.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jbcelimina.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jbcelimina.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/eli1.png"))); // NOI18N
-        jbcelimina.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/eli2.png"))); // NOI18N
-        jbcelimina.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
-        jbcelimina.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-
         javax.swing.GroupLayout jpactualizaeliminaLayout = new javax.swing.GroupLayout(jpactualizaelimina);
         jpactualizaelimina.setLayout(jpactualizaeliminaLayout);
         jpactualizaeliminaLayout.setHorizontalGroup(
@@ -866,17 +798,14 @@ public final class jfcliente extends javax.swing.JFrame {
             .addGroup(jpactualizaeliminaLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jpfondotablaacteli, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 73, Short.MAX_VALUE)
                 .addGroup(jpactualizaeliminaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpactualizaeliminaLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 73, Short.MAX_VALUE)
                         .addComponent(jpfondoacteliclienteaval, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(71, 71, 71))
-                    .addGroup(jpactualizaeliminaLayout.createSequentialGroup()
-                        .addGap(31, 31, 31)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpactualizaeliminaLayout.createSequentialGroup()
                         .addComponent(jbcontinuaract, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jbcelimina, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(22, 22, 22))))
+                        .addGap(181, 181, 181))))
         );
         jpactualizaeliminaLayout.setVerticalGroup(
             jpactualizaeliminaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -887,11 +816,9 @@ public final class jfcliente extends javax.swing.JFrame {
             .addGroup(jpactualizaeliminaLayout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addComponent(jpfondoacteliclienteaval, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30)
-                .addGroup(jpactualizaeliminaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jbcelimina, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jbcontinuaract, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(33, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jbcontinuaract, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jtppaneles.addTab("Actualiza / Eliminar", jpactualizaelimina);
@@ -1051,7 +978,7 @@ public final class jfcliente extends javax.swing.JFrame {
             datosZona[0] = idZona;
 
             // Si todo está validado, abrir la ventana de dirección
-            jfdireccion dir = new jfdireccion(datosZona, datosPersona, datosEstatus);
+            jfnuevadirec dir = new jfnuevadirec(datosZona, datosPersona, datosEstatus);
             dir.setVisible(true);
             this.dispose();
 
@@ -1069,6 +996,37 @@ public final class jfcliente extends javax.swing.JFrame {
             CUtilitarios.msg_error("Error inesperado", errorDetails.toString());
         }
     }//GEN-LAST:event_jbcontinuarActionPerformed
+
+    private void jcbusuariobusquedaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbusuariobusquedaActionPerformed
+        seleccion = (String) jcbusuariobusqueda.getSelectedItem();
+
+        String procedimiento;
+
+        switch (seleccion) {
+            case "Cliente":
+                procedimiento = "tablaCliente";
+                break;
+            case "Aval":
+                procedimiento = "tablaAval";
+                break;
+            case "Ambos":
+                procedimiento = "tablaClienteAval";
+                break;
+            default:
+                // Si es "Tipo de Usuario" o algo no válido, no hacer nada
+                return;
+        }
+
+        try (Connection cn = conector.conecta(); CallableStatement cs = cn.prepareCall("{CALL " + procedimiento + "()}")) {
+
+            // Reutilizas el método que llena la tabla automáticamente
+            cu.cargarTablaDesdeConsulta(jtlistacliente, cs);
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error al cargar datos de " + seleccion + " : " + ex.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_jcbusuariobusquedaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1099,15 +1057,13 @@ public final class jfcliente extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    new jfcliente().setVisible(true);
+        java.awt.EventQueue.invokeLater(() -> {
+            try {
+                new jfcliente().setVisible(true);
 
-                } catch (SQLException ex) {
-                    Logger.getLogger(jfcliente.class
-                            .getName()).log(Level.SEVERE, null, ex);
-                }
+            } catch (SQLException ex) {
+                Logger.getLogger(jfcliente.class
+                        .getName()).log(Level.SEVERE, null, ex);
             }
         });
     }
@@ -1127,7 +1083,6 @@ public final class jfcliente extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator7;
     private javax.swing.JSeparator jSeparator8;
     private javax.swing.JSeparator jSeparator9;
-    private javax.swing.JButton jbcelimina;
     private javax.swing.JButton jbcontinuar;
     private javax.swing.JButton jbcontinuaract;
     private javax.swing.JComboBox<String> jcbactestatusaval;
@@ -1153,8 +1108,6 @@ public final class jfcliente extends javax.swing.JFrame {
     private javax.swing.JRadioButton jrbnvambos;
     private javax.swing.JRadioButton jrbnvaval;
     private javax.swing.JRadioButton jrbnvcliente;
-    private javax.swing.JScrollPane jspaval;
-    private javax.swing.JScrollPane jspavalacteli;
     private javax.swing.JScrollPane jspcliente;
     private javax.swing.JScrollPane jspclienteacteli;
     private javax.swing.JTextField jtfactam;
@@ -1167,8 +1120,6 @@ public final class jfcliente extends javax.swing.JFrame {
     private javax.swing.JTextField jtfnvam;
     private javax.swing.JTextField jtfnvap;
     private javax.swing.JTextField jtfnvnombres;
-    private javax.swing.JTable jtlistaaval;
-    private javax.swing.JTable jtlistaavalacteli;
     private javax.swing.JTable jtlistacliente;
     private javax.swing.JTable jtlistaclienteact;
     private javax.swing.JTabbedPane jtppaneles;

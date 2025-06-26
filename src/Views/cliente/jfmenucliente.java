@@ -979,7 +979,7 @@ public final class jfmenucliente extends javax.swing.JFrame {
             datosZona[0] = idZona;
 
             // Si todo está validado, abrir la ventana de dirección
-            jfdireccion dir = new jfdireccion(datosZona, datosPersona, datosEstatus);
+            jfnuevad dir = new jfnuevad(datosZona, datosPersona, datosEstatus);
             dir.setVisible(true);
             this.dispose();
 
