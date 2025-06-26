@@ -162,6 +162,39 @@ public class jfzonas extends javax.swing.JFrame {
             }
         });
     }
+    private void eliminarColoniaZona() {
+    String idZona = jTxtActNumZona2.getText().trim();
+
+    // Valida si hay una fila seleccionada
+    int fila = jtblActualizarZonas.getSelectedRow();
+    if (fila == -1) {
+        CUtilitarios.msg_advertencia("Debes seleccionar una colonia de la tabla.", "Eliminar Relación");
+        return;
+    }
+
+    // Obtiene ID de colonia de la fila seleccionada (columna 0)
+    String idColonia = jtblActualizarZonas.getValueAt(fila, 0).toString();
+
+    int opcion = JOptionPane.showConfirmDialog(
+        this,  "¿Estás seguro de eliminar la colonia seleccionada de la zona?", 
+        "Confirmar Eliminación", JOptionPane.YES_NO_OPTION
+    );
+
+    if (opcion == JOptionPane.YES_OPTION) {
+        try {
+            boolean eliminado = ce.eliminarRelacionColoniaZona(idColonia, idZona);
+            if (eliminado) {
+                CUtilitarios.msg("Colonia eliminada correctamente.", "Éxito");
+                cargarColoniasPorZona(); 
+            } else {
+                CUtilitarios.msg_error("No se pudo eliminar la Colonia.", "Error");
+            }
+        } catch (SQLException e) {
+            CUtilitarios.msg_error("Error al eliminar: " + e.getMessage(), "Error SQL");
+        }
+    }
+}
+
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -519,6 +552,11 @@ public class jfzonas extends javax.swing.JFrame {
         jBtnActAgregarZona.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jBtnActAgregarZona.setText("Agregar Colonia");
         jBtnActAgregarZona.setToolTipText("");
+        jBtnActAgregarZona.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtnActAgregarZonaActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPnlEliZonaLayout = new javax.swing.GroupLayout(jPnlEliZona);
         jPnlEliZona.setLayout(jPnlEliZonaLayout);
@@ -706,7 +744,12 @@ public class jfzonas extends javax.swing.JFrame {
 
     private void jBtnEliminarZonaColoniaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnEliminarZonaColoniaActionPerformed
         // TODO add your handling code here:
+        eliminarColoniaZona();
     }//GEN-LAST:event_jBtnEliminarZonaColoniaActionPerformed
+
+    private void jBtnActAgregarZonaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnActAgregarZonaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jBtnActAgregarZonaActionPerformed
 
     /**
      * @param args the command line arguments
