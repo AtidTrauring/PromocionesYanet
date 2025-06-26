@@ -59,7 +59,6 @@ public class jfproductos extends javax.swing.JFrame {
         producto = jTxtIngNombreProd.getText();
         precio = jTxtIngPrecioProd.getText();
         stock = jTxtIngStockProd.getText();
-
     }
 
     public void limpiaValores() {

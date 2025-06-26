@@ -527,6 +527,10 @@ public class CBusquedas {
         consulta = "SELECT idzona, num_zona FROM zona ";
         return cnslt.buscarValores(consulta, 2);
     }
+    public ArrayList<String[]> buscarColonias() throws SQLException {
+        consulta = "SELECT idcolonia, colonia FROM colonia ";
+        return cnslt.buscarValores(consulta, 2);
+    }
 
     public ArrayList<String[]> buscarEmpleado() throws SQLException {
         consulta = "SELECT"

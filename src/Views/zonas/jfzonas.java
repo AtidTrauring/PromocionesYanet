@@ -9,6 +9,7 @@ import crud.CEliminaciones;
 import crud.CInserciones;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
@@ -19,13 +20,14 @@ import utilitarios.CUtilitarios;
  * @author ADMIN
  */
 public class jfzonas extends javax.swing.JFrame {
+
     private String id, zona;
-        private DefaultTableModel modelo;
-    private DefaultTableModel modelo1;
+    private DefaultTableModel modelo, modelo1, modelo2;
     private CBusquedas cb = new CBusquedas();
     private CUtilitarios cu = new CUtilitarios();
     private TableRowSorter tr;
     private ArrayList<String[]> datosZonas = new ArrayList<>();
+    private ArrayList<String[]> datosColonia = new ArrayList<>();
     private static String[] datosProdu;
     private CInserciones ci = new CInserciones();
     private CEliminaciones ce = new CEliminaciones();
@@ -34,13 +36,16 @@ public class jfzonas extends javax.swing.JFrame {
         initComponents();
         jtblBuscarZonas.getTableHeader().setReorderingAllowed(false);
         cargarTabla();
+        cargarTablaEliminar();
+        cargarTablaActualizar();
         // Activar búsqueda automática
         addFiltroListener(jTxtBusIDZona);
         addFiltroListener(jTxtBusNumZona);
     }
-       public void asignaValores() {
+
+    public void asignaValores() {
         id = jTxtBusIDZona.getText();
-        zona =jTxtBusNumZona.getText();
+        zona = jTxtBusNumZona.getText();
 
     }
 
@@ -53,7 +58,15 @@ public class jfzonas extends javax.swing.JFrame {
         modelo = (DefaultTableModel) jtblBuscarZonas.getModel();
         modelo.setRowCount(0);
     }
-    
+
+    private void limpiarTablaElminar() {
+        modelo1 = (DefaultTableModel) jtblEliminarZonas.getModel();
+        modelo1.setRowCount(0);
+    }
+    private void limpiarTablaActualizar() {
+        modelo2 = (DefaultTableModel) jtblActualizarZonas.getModel();
+        modelo2.setRowCount(0);
+    }
 
     private void addFiltroListener(javax.swing.JTextField campo) {
         campo.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
@@ -70,8 +83,8 @@ public class jfzonas extends javax.swing.JFrame {
             }
         });
     }
-    
-        public void aplicaFiltros() {
+
+    public void aplicaFiltros() {
         modelo = (DefaultTableModel) jtblBuscarZonas.getModel();
         tr = new TableRowSorter<>(modelo);
         jtblBuscarZonas.setRowSorter(tr);
@@ -84,12 +97,11 @@ public class jfzonas extends javax.swing.JFrame {
             filtros.add(RowFilter.regexFilter("(?i)" + jTxtBusNumZona.getText().trim(), 1));
         }
 
-
         RowFilter<Object, Object> rf = RowFilter.andFilter(filtros);
         tr.setRowFilter(rf);
     }
-        
-            public void cargarTabla() {
+
+    public void cargarTabla() {
         modelo = (DefaultTableModel) jtblBuscarZonas.getModel();
         try {
             datosZonas = cb.buscarZona();
@@ -101,6 +113,31 @@ public class jfzonas extends javax.swing.JFrame {
             CUtilitarios.msg_error("No se pudo cargar la informacion en la tabla", "Cargando Tabla");
         }
     }
+    public void cargarTablaEliminar() {
+        modelo1 = (DefaultTableModel) jtblEliminarZonas.getModel();
+        try {
+            datosZonas = cb.buscarZona();
+            limpiarTablaElminar();
+            for (String[] datoZon : datosZonas) {
+                modelo1.addRow(new Object[]{datoZon[0], datoZon[1]});
+            }
+        } catch (SQLException ex) {
+            CUtilitarios.msg_error("No se pudo cargar la informacion en la tabla", "Cargando Tabla");
+        }
+    }
+    public void cargarTablaActualizar() {
+        modelo2 = (DefaultTableModel) jtblActualizarZonas.getModel();
+        try {
+            datosColonia = cb.buscarColonias();
+            limpiarTablaActualizar();
+            for (String[] datoZon : datosColonia) {
+                modelo2.addRow(new Object[]{datoZon[0], datoZon[1]});
+            }
+        } catch (SQLException ex) {
+            CUtilitarios.msg_error("No se pudo cargar la informacion en la tabla", "Cargando Tabla");
+        }
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
