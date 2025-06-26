@@ -105,8 +105,13 @@ public class CCargaCombos {
         return cnslt.buscarValoresCombos(consulta);
     }
 
-    /* Fin Cliente */
+    public ArrayList<String> cargaComboColsZonas(String colonia) throws SQLException {
+        consulta = "CALL colsZonas('" + colonia + "')";
+        return cnslt.buscarValoresCombos(consulta);
+    }
 
+
+    /* Fin Cliente */
     // Consulta Empleado
     public ArrayList<String[]> cargaComboZonaColonia() throws SQLException {
         consulta = "Select zona.idzona, zona.num_zona, colonia.idcolonia, colonia.colonia FROM colonia, zona Where colonia.zona_idzona = zona.idzona;";

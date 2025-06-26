@@ -523,10 +523,12 @@ public class CBusquedas {
                 + " FROM producto ";
         return cnslt.buscarValores(consulta, 4);
     }
+
     public ArrayList<String[]> buscarZona() throws SQLException {
         consulta = "SELECT idzona, num_zona FROM zona ";
         return cnslt.buscarValores(consulta, 2);
     }
+
     public ArrayList<String[]> buscarColonias() throws SQLException {
         consulta = "SELECT idcolonia, colonia FROM colonia ";
         return cnslt.buscarValores(consulta, 2);
@@ -553,7 +555,7 @@ public class CBusquedas {
                 + "ORDER BY cl.idcliente;";
         return cnslt.buscarValores(consulta, 5);
     }
-    
+
     public ArrayList<String[]> buscarAval() throws SQLException {
         consulta = "SELECT "
                 + "av.idaval, pr.nombres AS 'Nombre (s)', pr.ap_paterno AS 'Apellido Parno', pr.ap_materno AS 'Apellido Materno', es.estatus "
@@ -571,18 +573,28 @@ public class CBusquedas {
                 + "WHERE cl.colonia = '" + col + "';";
         return cnslt.buscarValor(consulta);
     }
-    
+
     public String buscarIdEstatus(String est) throws SQLException {
         consulta = "SELECT es.idestatus "
                 + "FROM estatus es "
                 + "WHERE es.estatus = '" + est + "';";
         return cnslt.buscarValor(consulta);
     }
-    
+
     public String buscarIdZona(String z) throws SQLException {
         consulta = "SELECT z.idzona "
                 + "FROM zona z "
                 + "WHERE z.num_zona = '" + z + "';";
+        return cnslt.buscarValor(consulta);
+    }
+
+    public String[] buscarDirecPorID(int idd) throws SQLException {
+        consulta = "CALL direc(" + idd + ")";
+        return cnslt.buscarValoresLista(consulta, 5);
+    }
+
+    public String buscarColsZona(String cols) throws SQLException {
+        consulta = "CALL ('" + cols + "')";
         return cnslt.buscarValor(consulta);
     }
 }

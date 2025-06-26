@@ -1,28 +1,37 @@
 package Views.direccion;
 
+import crud.*;
+import java.awt.HeadlessException;
 import java.sql.*;
+import java.util.ArrayList;
 import javax.swing.*;
 import utilitarios.CUtilitarios;
+import java.util.logging.*;
 
 /**
  *
  * @author micky
  */
-public class jfdirec extends javax.swing.JFrame {
+public class jflistaactdirec extends javax.swing.JFrame {
 
     /**
-     * Creates new form jfdirec
+     * Creates new form jflistaactdirec
      */
-    
     CUtilitarios cu = new CUtilitarios();
-    public jfdirec() {
+    CBusquedas cb = new CBusquedas();
+    String seleccion, colcl, idColcl;
+    
+    public jflistaactdirec() {
         initComponents();
         this.setLocationRelativeTo(null);
-        
+
         // Tablas
         cargarTablas();
+
+        // Actualizar
+        configurarEventosTablaActualizar();
     }
-    
+
     private String sqlDirec;
 
     private void cargarTablas() {
@@ -30,9 +39,53 @@ public class jfdirec extends javax.swing.JFrame {
 
         try {
             cu.cargarConsultaEnTabla(sqlDirec, jtlistadirec);
+            cu.cargarConsultaEnTabla(sqlDirec, jtlistadirecact);
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Error al cargar tablas: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    private final CCargaCombos queryCarga = new CCargaCombos();
+
+    private void configurarEventosTablaActualizar() {
+        jtlistadirecact.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                int fila = jtlistadirecact.getSelectedRow();
+                if (fila != -1) {
+                    try {
+                        int idDireccion = Integer.parseInt(jtlistadirecact.getValueAt(fila, 0).toString());
+                        String[] partes = cb.buscarDirecPorID(idDireccion); // ← debe devolver 5 campos
+
+                        if (partes != null && partes.length >= 5) {
+                            // 1. Asignar campos de dirección
+                            jtfcalleact.setText(partes[0]);
+                            jtfnumintact.setText(partes[1]);
+                            jtfnumextact.setText(partes[2]);
+                            String coloniaActual = partes[3];
+
+                            // 2. Obtener las colonias de la misma zona
+                            ArrayList<String> coloniasZona = queryCarga.cargaComboColsZonas(coloniaActual);
+
+                            // 3. Limpiar y llenar el combo
+                            DefaultComboBoxModel modelo = new DefaultComboBoxModel();
+                            for (String c : coloniasZona) {
+                                modelo.addElement(c);
+                            }
+                            jcbcoloniaact.setModel(modelo);
+
+                            // 4. Seleccionar la colonia original
+                            jcbcoloniaact.setSelectedItem(coloniaActual);
+
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Resultado incompleto del procedimiento.");
+                        }
+                    } catch (HeadlessException | NumberFormatException | SQLException e) {
+                        JOptionPane.showMessageDialog(null, "Error al cargar dirección: " + e.getMessage());
+                    }
+                }
+            }
+        });
     }
 
     /**
@@ -60,6 +113,17 @@ public class jfdirec extends javax.swing.JFrame {
         jSeparator3 = new javax.swing.JSeparator();
         jcbusuariobusqueda = new javax.swing.JComboBox<>();
         jpactualizadirec = new javax.swing.JPanel();
+        jpactualizar = new javax.swing.JPanel();
+        jtfcalleact = new javax.swing.JTextField();
+        jSeparator8 = new javax.swing.JSeparator();
+        jtfnumextact = new javax.swing.JTextField();
+        jSeparator9 = new javax.swing.JSeparator();
+        jtfnumintact = new javax.swing.JTextField();
+        jSeparator10 = new javax.swing.JSeparator();
+        jcbcoloniaact = new javax.swing.JComboBox<>();
+        jpfondoacttabladirec = new javax.swing.JPanel();
+        jspdirecact = new javax.swing.JScrollPane();
+        jtlistadirecact = new javax.swing.JTable();
         jliconodirec = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -223,15 +287,142 @@ public class jfdirec extends javax.swing.JFrame {
         jpactualizadirec.setBackground(new java.awt.Color(242, 220, 153));
         jpactualizadirec.setFont(new java.awt.Font("Candara", 1, 12)); // NOI18N
 
+        jpactualizar.setBackground(new java.awt.Color(167, 235, 242));
+
+        jtfcalleact.setBackground(new java.awt.Color(167, 235, 242));
+        jtfcalleact.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        jtfcalleact.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jtfcalleact.setText("Calle");
+        jtfcalleact.setToolTipText("");
+        jtfcalleact.setBorder(null);
+        jtfcalleact.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+
+        jSeparator8.setForeground(new java.awt.Color(0, 0, 0));
+        jSeparator8.setToolTipText("");
+
+        jtfnumextact.setBackground(new java.awt.Color(167, 235, 242));
+        jtfnumextact.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        jtfnumextact.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jtfnumextact.setText("Número Exterior");
+        jtfnumextact.setToolTipText("");
+        jtfnumextact.setBorder(null);
+        jtfnumextact.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+
+        jSeparator9.setForeground(new java.awt.Color(0, 0, 0));
+        jSeparator9.setToolTipText("");
+
+        jtfnumintact.setBackground(new java.awt.Color(167, 235, 242));
+        jtfnumintact.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        jtfnumintact.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jtfnumintact.setText("Número Interior");
+        jtfnumintact.setToolTipText("");
+        jtfnumintact.setBorder(null);
+        jtfnumintact.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+
+        jSeparator10.setForeground(new java.awt.Color(0, 0, 0));
+        jSeparator10.setToolTipText("");
+
+        jcbcoloniaact.setBackground(new java.awt.Color(167, 235, 242));
+        jcbcoloniaact.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        jcbcoloniaact.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Colonias" }));
+        jcbcoloniaact.setToolTipText("");
+        jcbcoloniaact.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jcbcoloniaact.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jcbcoloniaactActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jpactualizarLayout = new javax.swing.GroupLayout(jpactualizar);
+        jpactualizar.setLayout(jpactualizarLayout);
+        jpactualizarLayout.setHorizontalGroup(
+            jpactualizarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jpactualizarLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jpactualizarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jtfnumintact)
+                    .addComponent(jSeparator8)
+                    .addComponent(jSeparator9)
+                    .addComponent(jSeparator10)
+                    .addComponent(jtfcalleact)
+                    .addComponent(jtfnumextact, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE)
+                    .addComponent(jcbcoloniaact, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jpactualizarLayout.setVerticalGroup(
+            jpactualizarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jpactualizarLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jtfcalleact, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator8, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jtfnumextact, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator9, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jtfnumintact, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator10, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jcbcoloniaact, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jpfondoacttabladirec.setBackground(new java.awt.Color(242, 220, 153));
+
+        jtlistadirecact.setBackground(new java.awt.Color(167, 235, 242));
+        jtlistadirecact.setFont(new java.awt.Font("Candara", 1, 12)); // NOI18N
+        jtlistadirecact.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+
+            }
+        ));
+        jtlistadirecact.setToolTipText("Listado de Clientes y Avales");
+        jtlistadirecact.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jspdirecact.setViewportView(jtlistadirecact);
+
+        javax.swing.GroupLayout jpfondoacttabladirecLayout = new javax.swing.GroupLayout(jpfondoacttabladirec);
+        jpfondoacttabladirec.setLayout(jpfondoacttabladirecLayout);
+        jpfondoacttabladirecLayout.setHorizontalGroup(
+            jpfondoacttabladirecLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jpfondoacttabladirecLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jspdirecact, javax.swing.GroupLayout.DEFAULT_SIZE, 535, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jpfondoacttabladirecLayout.setVerticalGroup(
+            jpfondoacttabladirecLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jpfondoacttabladirecLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jspdirecact, javax.swing.GroupLayout.DEFAULT_SIZE, 469, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
         javax.swing.GroupLayout jpactualizadirecLayout = new javax.swing.GroupLayout(jpactualizadirec);
         jpactualizadirec.setLayout(jpactualizadirecLayout);
         jpactualizadirecLayout.setHorizontalGroup(
             jpactualizadirecLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1200, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpactualizadirecLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jpfondoacttabladirec, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 215, Short.MAX_VALUE)
+                .addComponent(jpactualizar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(181, 181, 181))
         );
         jpactualizadirecLayout.setVerticalGroup(
             jpactualizadirecLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 493, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpactualizadirecLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jpactualizar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(118, 118, 118))
+            .addGroup(jpactualizadirecLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jpfondoacttabladirec, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         jTabbedPane1.addTab("Actualizar Dirección", jpactualizadirec);
@@ -273,6 +464,27 @@ public class jfdirec extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jcbcoloniaactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbcoloniaactActionPerformed
+        JComboBox jcb = (JComboBox) evt.getSource(); // Asegura que el evento venga del combo correcto
+        seleccion = (String) jcb.getSelectedItem();
+
+        if (jcb.getSelectedIndex() == 0 || "Colonias".equals(seleccion)) {
+            CUtilitarios.msg_advertencia("Selecciona una colonia válida", "Validación de Colonia");
+            return;
+        }
+
+        if (!"Colonias".equals(seleccion)) {
+            colcl = seleccion; // Guarda la selección en la variable global
+            System.out.println(colcl);
+            try {
+                idColcl = cb.buscarIdColonia(colcl);
+            } catch (SQLException ex) {
+                Logger.getLogger(jflistaactdirec.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            System.out.println("ID COLONIA " + idColcl);
+        }
+    }//GEN-LAST:event_jcbcoloniaactActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -290,39 +502,51 @@ public class jfdirec extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(jfdirec.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(jflistaactdirec.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(jfdirec.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(jflistaactdirec.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(jfdirec.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(jflistaactdirec.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(jfdirec.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(jflistaactdirec.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
-            new jfdirec().setVisible(true);
+            new jflistaactdirec().setVisible(true);
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator10;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
+    private javax.swing.JSeparator jSeparator8;
+    private javax.swing.JSeparator jSeparator9;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JComboBox<String> jcbcoloniaact;
     private javax.swing.JComboBox<String> jcbusuariobusqueda;
     private javax.swing.JLabel jliconodirec;
     private javax.swing.JPanel jpactualizadirec;
+    private javax.swing.JPanel jpactualizar;
+    private javax.swing.JPanel jpfondoacttabladirec;
     private javax.swing.JPanel jpfondobusqueda;
     private javax.swing.JPanel jpfondodireccion;
     private javax.swing.JPanel jpfondotabladirec;
     private javax.swing.JPanel jplistadirec;
     private javax.swing.JScrollPane jspdirec;
+    private javax.swing.JScrollPane jspdirecact;
+    private javax.swing.JTextField jtfcalleact;
     private javax.swing.JTextField jtfcpbusqueda;
     private javax.swing.JTextField jtfidbusqueda;
+    private javax.swing.JTextField jtfnumextact;
+    private javax.swing.JTextField jtfnumintact;
     private javax.swing.JTextField jtfpersonabusqueda;
     private javax.swing.JTable jtlistadirec;
+    private javax.swing.JTable jtlistadirecact;
     // End of variables declaration//GEN-END:variables
 }

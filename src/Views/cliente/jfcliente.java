@@ -821,7 +821,7 @@ public final class jfcliente extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jtppaneles.addTab("Actualiza / Eliminar", jpactualizaelimina);
+        jtppaneles.addTab("Actualiza un Cliente", jpactualizaelimina);
 
         javax.swing.GroupLayout jpfondoLayout = new javax.swing.GroupLayout(jpfondo);
         jpfondo.setLayout(jpfondoLayout);

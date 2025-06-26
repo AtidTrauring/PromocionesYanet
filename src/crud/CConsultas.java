@@ -90,38 +90,42 @@ public class CConsultas {
     }
 
     public ArrayList<String> buscarValoresCombos(String consulta) throws SQLException {
-        //1. Abrir la conexion
+        resultadosCombos = new ArrayList<>();
+        // Abrir conexión
         conn = conector.conecta();
-        //2. Ejecutar la query(consulta)
         try {
-            resultadosCombos = new ArrayList<>();
             stmt = conn.createStatement();
             rs = stmt.executeQuery(consulta);
-            if (rs == null) {
-                CUtilitarios.msg_advertencia("Elementos no encontrados", "buscar objetos");
-            } else {
-                while (rs.next()) {
-                    resultadosCombos.add(rs.getString(1));
-                }
+
+            if (!rs.isBeforeFirst()) {
+                // No hay resultados
+                System.out.println("No se encontraron resultados para la consulta: " + consulta);
+                return resultadosCombos; // Devuelve lista vacía en lugar de null
+            }
+
+            while (rs.next()) {
+                resultadosCombos.add(rs.getString(1));
             }
         } catch (SQLException ex) {
             String cadena = "SQLException: " + ex.getMessage() + "\n"
                     + "SQLState: " + ex.getSQLState() + "\n"
                     + "VendorError: " + ex.getErrorCode();
             CUtilitarios.msg_error(cadena, "Conexion");
-        } //3. 
-        finally {
-            //Cerrar los resultados
-            try {
-                rs.close();
-            } catch (SQLException e) {
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    // opcional: log del error
+                }
             }
-            //Cerrar el statement
-            try {
-                stmt.close();
-            } catch (SQLException e) {
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                    // opcional: log del error
+                }
             }
-            //cerrar conexion
             conector.desconecta(conn);
         }
         return resultadosCombos;
@@ -315,5 +319,4 @@ public class CConsultas {
     }
 
     /**/
-
 }
