@@ -37,7 +37,8 @@ public class jfzonas extends javax.swing.JFrame {
         jtblBuscarZonas.getTableHeader().setReorderingAllowed(false);
         cargarTabla();
         cargarTablaEliminar();
-        cargarTablaActualizar();
+        cargarColoniasPorZona();
+        BuscarPorZona();
         // Activar búsqueda automática
         addFiltroListener(jTxtBusIDZona);
         addFiltroListener(jTxtBusNumZona);
@@ -125,17 +126,41 @@ public class jfzonas extends javax.swing.JFrame {
             CUtilitarios.msg_error("No se pudo cargar la informacion en la tabla", "Cargando Tabla");
         }
     }
-    public void cargarTablaActualizar() {
-        modelo2 = (DefaultTableModel) jtblActualizarZonas.getModel();
-        try {
-            datosColonia = cb.buscarColonias();
+
+    private void cargarColoniasPorZona() {
+        String idZona = jTxtActNumZona2.getText().trim();
+
+        if (idZona.isEmpty()) {
             limpiarTablaActualizar();
-            for (String[] datoZon : datosColonia) {
-                modelo2.addRow(new Object[]{datoZon[0], datoZon[1]});
-            }
-        } catch (SQLException ex) {
-            CUtilitarios.msg_error("No se pudo cargar la informacion en la tabla", "Cargando Tabla");
+            return;
         }
+        try {
+            ArrayList<String[]> colonias = cb.buscarColoniasPorZona(idZona);
+            DefaultTableModel modelo2 = (DefaultTableModel) jtblActualizarZonas.getModel();
+            modelo2.setRowCount(0);
+
+            for (String[] col : colonias) {
+                modelo2.addRow(col);
+            }
+        } catch (SQLException e) {
+            CUtilitarios.msg_error("Error al cargar colonias: " + e.getMessage(), "Error");
+        }
+    }
+
+    private void BuscarPorZona() {
+        jTxtActNumZona2.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                cargarColoniasPorZona();
+            }
+
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                cargarColoniasPorZona();
+            }
+
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                cargarColoniasPorZona();
+            }
+        });
     }
     
     @SuppressWarnings("unchecked")

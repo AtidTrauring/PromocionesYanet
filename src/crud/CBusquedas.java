@@ -597,4 +597,11 @@ public class CBusquedas {
         consulta = "CALL ('" + cols + "')";
         return cnslt.buscarValor(consulta);
     }
+        public ArrayList<String[]> buscarColoniasPorZona(String idZona) throws SQLException {
+    consulta = "SELECT c.idcolonia, c.colonia " +
+               "FROM colonia c " +
+               "JOIN colonia_has_zona cz ON c.idcolonia = cz.colonia_idcolonia " +
+               "WHERE cz.zona_idzona = '" + idZona + "';";
+    return cnslt.buscarValores(consulta, 2);
+}
 }
