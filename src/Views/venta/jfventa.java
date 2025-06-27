@@ -1,7 +1,10 @@
 package Views.venta;
 
 import crud.CBusquedas;
+import crud.CCargaCombos;
 import java.util.ArrayList;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import utilitarios.CUtilitarios;
@@ -20,24 +23,31 @@ public class jfventa extends javax.swing.JFrame {
     private static String[] datosVenta;
     private ArrayList<String[]> datosKardex = new ArrayList<>();
     private ArrayList<String[]> datosAgregar = new ArrayList<>();
+    private DefaultComboBoxModel listasCombos; 
+    private ArrayList<String> datosCombos = new ArrayList<>();
+    private final CCargaCombos queryCargaCombos = new CCargaCombos();
 
     public jfventa(String[] datos) {
         initComponents();
         datosVenta = datos;
         cargarTablaBusqueda();
         cargarTablaAgregar();
+        cargarCombos(jCmbBoxFechas, 1);
     }
 
+    //Limpia la tabla de la busqueda.
     private void limpiarTablaBusqueda() {
         modelBusqueda = (DefaultTableModel) jTblListaVentas.getModel();
         modelBusqueda.setRowCount(0);
     }
 
+    //Limpia la tabla de la agregar/actualizar.
     private void limpiarTablaAgregar() {
         modelAgregar = (DefaultTableModel) jTblAgregarVenta.getModel(); // Cambiado a model1
         modelAgregar.setRowCount(0); // Cambiado a model1
     }
 
+    //Carga la tabla de busqueda. 
     public void cargarTablaBusqueda() {
         modelBusqueda = (DefaultTableModel) jTblListaVentas.getModel();
         try {
@@ -51,6 +61,7 @@ public class jfventa extends javax.swing.JFrame {
         }
     }
 
+    //Carga la tabla de agregar/actualizar. 
     public void cargarTablaAgregar() {
         modelAgregar = (DefaultTableModel) jTblAgregarVenta.getModel();
         try {
@@ -61,6 +72,26 @@ public class jfventa extends javax.swing.JFrame {
             }
         } catch (Exception e) {
             CUtilitarios.msg_error("No se pudo cargar la tabla", "Carga de tabla de agregar");
+        }
+    }
+    
+    //Carga de los combos. 
+    public void cargarCombos(JComboBox combo, int metodoCarga){
+        listasCombos = (DefaultComboBoxModel) combo.getModel();
+        try {
+            switch (metodoCarga) {
+                case 1:
+                    datosCombos = queryCargaCombos.cargaComboFechaVenta();
+                    for (int i = 0; i < datosCombos.size(); i++) {
+                        listasCombos.addElement(datosCombos.get(i));
+                    }
+                    datosCombos.clear();
+                    break;
+                default:
+                    throw new AssertionError();
+            }
+        } catch (Exception e) {
+            CUtilitarios.msg_error("Error al cargar los combos", "Cargar combos");
         }
     }
 

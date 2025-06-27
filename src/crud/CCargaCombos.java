@@ -117,4 +117,9 @@ public class CCargaCombos {
         consulta = "Select zona.idzona, zona.num_zona, colonia.idcolonia, colonia.colonia FROM colonia, zona Where colonia.zona_idzona = zona.idzona;";
         return cnslt.buscarValores(consulta, 4);
     }
+    
+    public ArrayList<String> cargaComboFechaVenta() throws SQLException {
+        consulta = "SELECT venta.fecha_venta FROM venta";
+        return cnslt.buscarValoresCombos(consulta);
+    }
 }

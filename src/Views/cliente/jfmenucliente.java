@@ -235,7 +235,7 @@ public final class jfmenucliente extends javax.swing.JFrame {
         jtfid.setText("Ingresa el ID de búsqueda");
         jtfid.setToolTipText("");
         jtfid.setBorder(null);
-        jtfid.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        jtfid.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         jSeparator1.setBackground(new java.awt.Color(0, 0, 0));
         jSeparator1.setForeground(new java.awt.Color(0, 0, 0));
@@ -247,7 +247,7 @@ public final class jfmenucliente extends javax.swing.JFrame {
         jtfnombres.setText("Ingresar nombre(s) de búsqueda");
         jtfnombres.setToolTipText("");
         jtfnombres.setBorder(null);
-        jtfnombres.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        jtfnombres.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         jSeparator2.setBackground(new java.awt.Color(0, 0, 0));
         jSeparator2.setForeground(new java.awt.Color(0, 0, 0));
@@ -259,7 +259,7 @@ public final class jfmenucliente extends javax.swing.JFrame {
         jtfappaterno.setText("Ingresar apellido paterno de búsqueda");
         jtfappaterno.setToolTipText("Ingresar apellido paterno de búsqueda");
         jtfappaterno.setBorder(null);
-        jtfappaterno.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        jtfappaterno.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         jSeparator3.setBackground(new java.awt.Color(0, 0, 0));
         jSeparator3.setForeground(new java.awt.Color(0, 0, 0));
@@ -271,7 +271,7 @@ public final class jfmenucliente extends javax.swing.JFrame {
         jtfapmaterno.setText("Ingresar apellido materno de búsqueda");
         jtfapmaterno.setToolTipText("");
         jtfapmaterno.setBorder(null);
-        jtfapmaterno.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        jtfapmaterno.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         jSeparator4.setBackground(new java.awt.Color(0, 0, 0));
         jSeparator4.setForeground(new java.awt.Color(0, 0, 0));
@@ -282,6 +282,11 @@ public final class jfmenucliente extends javax.swing.JFrame {
         jcbestatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Estatus" }));
         jcbestatus.setToolTipText("");
         jcbestatus.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jcbestatus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jcbestatusActionPerformed(evt);
+            }
+        });
 
         jcbtipousuario.setBackground(new java.awt.Color(242, 220, 153));
         jcbtipousuario.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
@@ -354,7 +359,7 @@ public final class jfmenucliente extends javax.swing.JFrame {
         jtfnnombres.setText("Nombres");
         jtfnnombres.setToolTipText("");
         jtfnnombres.setBorder(null);
-        jtfnnombres.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        jtfnnombres.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         jSeparator5.setForeground(new java.awt.Color(0, 0, 0));
         jSeparator5.setToolTipText("");
@@ -365,7 +370,7 @@ public final class jfmenucliente extends javax.swing.JFrame {
         jtfnapppaterno.setText("Apellido Paterno");
         jtfnapppaterno.setToolTipText("");
         jtfnapppaterno.setBorder(null);
-        jtfnapppaterno.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        jtfnapppaterno.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         jSeparator6.setForeground(new java.awt.Color(0, 0, 0));
         jSeparator6.setToolTipText("");
@@ -376,7 +381,7 @@ public final class jfmenucliente extends javax.swing.JFrame {
         jtfnapmaterno.setText("Apellido Materno");
         jtfnapmaterno.setToolTipText("");
         jtfnapmaterno.setBorder(null);
-        jtfnapmaterno.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        jtfnapmaterno.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         jSeparator7.setForeground(new java.awt.Color(0, 0, 0));
         jSeparator7.setToolTipText("");
@@ -549,7 +554,7 @@ public final class jfmenucliente extends javax.swing.JFrame {
         jtfanombres.setText("Nombres");
         jtfanombres.setToolTipText("");
         jtfanombres.setBorder(null);
-        jtfanombres.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        jtfanombres.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         jSeparator12.setForeground(new java.awt.Color(0, 0, 0));
         jSeparator12.setToolTipText("");
@@ -560,7 +565,7 @@ public final class jfmenucliente extends javax.swing.JFrame {
         jtfaapppaterno.setText("Apellido Paterno");
         jtfaapppaterno.setToolTipText("");
         jtfaapppaterno.setBorder(null);
-        jtfaapppaterno.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        jtfaapppaterno.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         jSeparator13.setForeground(new java.awt.Color(0, 0, 0));
         jSeparator13.setToolTipText("");
@@ -571,7 +576,7 @@ public final class jfmenucliente extends javax.swing.JFrame {
         jtfaapmaterno.setText("Apellido Materno");
         jtfaapmaterno.setToolTipText("");
         jtfaapmaterno.setBorder(null);
-        jtfaapmaterno.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        jtfaapmaterno.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         jSeparator14.setForeground(new java.awt.Color(0, 0, 0));
         jSeparator14.setToolTipText("");
@@ -722,7 +727,7 @@ public final class jfmenucliente extends javax.swing.JFrame {
         jtfideli.setText("Ingresa el ID de búsqueda");
         jtfideli.setToolTipText("");
         jtfideli.setBorder(null);
-        jtfideli.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        jtfideli.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         jSeparator8.setForeground(new java.awt.Color(0, 0, 0));
         jSeparator8.setToolTipText("");
@@ -733,7 +738,7 @@ public final class jfmenucliente extends javax.swing.JFrame {
         jtfnombreseli.setText("Ingresar nombre(s) de búsqueda");
         jtfnombreseli.setToolTipText("");
         jtfnombreseli.setBorder(null);
-        jtfnombreseli.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        jtfnombreseli.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         jSeparator9.setForeground(new java.awt.Color(0, 0, 0));
         jSeparator9.setToolTipText("");
@@ -744,7 +749,7 @@ public final class jfmenucliente extends javax.swing.JFrame {
         jtfappaternoeli.setText("Ingresr apellido paterno de búsqueda");
         jtfappaternoeli.setToolTipText("");
         jtfappaternoeli.setBorder(null);
-        jtfappaternoeli.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        jtfappaternoeli.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         jSeparator10.setForeground(new java.awt.Color(0, 0, 0));
         jSeparator10.setToolTipText("");
@@ -755,7 +760,7 @@ public final class jfmenucliente extends javax.swing.JFrame {
         jtfapmaternoeli.setText("Ingresar apellido materno de búsqueda");
         jtfapmaternoeli.setToolTipText("");
         jtfapmaternoeli.setBorder(null);
-        jtfapmaternoeli.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        jtfapmaternoeli.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         jSeparator11.setForeground(new java.awt.Color(0, 0, 0));
         jSeparator11.setToolTipText("");
@@ -988,6 +993,10 @@ public final class jfmenucliente extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_jbagregarActionPerformed
+
+    private void jcbestatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbestatusActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jcbestatusActionPerformed
 
     /**
      * @param args the command line arguments
