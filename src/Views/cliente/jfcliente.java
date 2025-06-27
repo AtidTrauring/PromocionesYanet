@@ -7,7 +7,6 @@ import java.sql.*;
 import java.util.*;
 import java.util.logging.*;
 import javax.swing.*;
-import javax.swing.table.*;
 
 /**
  *

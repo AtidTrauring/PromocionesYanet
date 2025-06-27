@@ -92,11 +92,16 @@ public class CCargaCombos {
         return cnslt.buscarValoresCombos(consulta);
     }
 
-    public ArrayList<String> cargaComboColonias(String z) throws SQLException {
+    public ArrayList<String> cargaComboColoniasZona(String z) throws SQLException {
         consulta = "SELECT cl.colonia "
                 + "FROM colonia cl "
                 + "INNER JOIN zona z ON z.idzona = cl.zona_idzona "
                 + "WHERE z.idzona = '" + z + "';";
+        return cnslt.buscarValoresCombos(consulta);
+    }
+
+    public ArrayList<String> cargaComboColonias() throws SQLException {
+        consulta = "SELECT co.colonia FROM colonia co";
         return cnslt.buscarValoresCombos(consulta);
     }
 
@@ -144,16 +149,16 @@ public class CCargaCombos {
     }
 
     public ArrayList<String> cargaComboZonasVenta() throws SQLException {
-        consulta = "SELECT DISTINCT zona.num_zona " +
-                    "FROM venta " +
-                    "INNER JOIN zona ON venta.zona_idzona = zona.idzona ";
+        consulta = "SELECT DISTINCT zona.num_zona "
+                + "FROM venta "
+                + "INNER JOIN zona ON venta.zona_idzona = zona.idzona ";
         return cnslt.buscarValoresCombos(consulta);
     }
-    
+
     public ArrayList<String> cargaComboClientesVenta() throws SQLException {
-        consulta = "SELECT CONCAT(p.nombres, ' ', p.ap_paterno, ' ', p.ap_materno) AS nombre_completo " +
-                    "FROM cliente c " +
-                    "JOIN persona p ON c.persona_idpersona = p.idpersona";
+        consulta = "SELECT CONCAT(p.nombres, ' ', p.ap_paterno, ' ', p.ap_materno) AS nombre_completo "
+                + "FROM cliente c "
+                + "JOIN persona p ON c.persona_idpersona = p.idpersona";
         return cnslt.buscarValoresCombos(consulta);
     }
 }

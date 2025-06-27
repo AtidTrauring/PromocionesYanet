@@ -14,16 +14,16 @@ import java.util.logging.*;
  */
 public class jflistaactdirec extends javax.swing.JFrame {
 
-    /**
-     * Creates new form jflistaactdirec
-     */
     CUtilitarios cu = new CUtilitarios();
     CBusquedas cb = new CBusquedas();
     String seleccion, colcl, idColcl;
-    
+
     public jflistaactdirec() {
         initComponents();
         this.setLocationRelativeTo(null);
+
+        // Combos
+        cargaComboBox(jcbcolonias, 1);
 
         // Tablas
         cargarTablas();
@@ -33,6 +33,8 @@ public class jflistaactdirec extends javax.swing.JFrame {
     }
 
     private String sqlDirec;
+    private int idDireccion, idc;
+    private String cllcl, ne, ni, nomcla, apcla, amcla, telcla;
 
     private void cargarTablas() {
         sqlDirec = "Call tablaDirec";
@@ -45,7 +47,26 @@ public class jflistaactdirec extends javax.swing.JFrame {
         }
     }
 
+    private DefaultComboBoxModel listas;
+    private ArrayList<String> datosListas = new ArrayList<>();
     private final CCargaCombos queryCarga = new CCargaCombos();
+    private final CActualizaciones ca = new CActualizaciones();
+
+    public void cargaComboBox(JComboBox combo, int metodoCarga) {
+        listas = (DefaultComboBoxModel) combo.getModel();
+        try {
+            switch (metodoCarga) {
+                case 1:
+                    datosListas = queryCarga.cargaComboColonias();
+                    for (int i = 0; i < datosListas.size(); i++) {
+                        listas.addElement(datosListas.get(i));
+                    }
+                    datosListas.clear();
+                    break;
+            }
+        } catch (SQLException e) {
+        }
+    }
 
     private void configurarEventosTablaActualizar() {
         jtlistadirecact.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -54,7 +75,7 @@ public class jflistaactdirec extends javax.swing.JFrame {
                 int fila = jtlistadirecact.getSelectedRow();
                 if (fila != -1) {
                     try {
-                        int idDireccion = Integer.parseInt(jtlistadirecact.getValueAt(fila, 0).toString());
+                        idDireccion = Integer.parseInt(jtlistadirecact.getValueAt(fila, 0).toString());
                         String[] partes = cb.buscarDirecPorID(idDireccion); // ← debe devolver 5 campos
 
                         if (partes != null && partes.length >= 5) {
@@ -109,9 +130,8 @@ public class jflistaactdirec extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JSeparator();
         jtfpersonabusqueda = new javax.swing.JTextField();
         jSeparator2 = new javax.swing.JSeparator();
-        jtfcpbusqueda = new javax.swing.JTextField();
-        jSeparator3 = new javax.swing.JSeparator();
-        jcbusuariobusqueda = new javax.swing.JComboBox<>();
+        jcbcolonias = new javax.swing.JComboBox<>();
+        jcbtipo = new javax.swing.JComboBox<>();
         jpactualizadirec = new javax.swing.JPanel();
         jpactualizar = new javax.swing.JPanel();
         jtfcalleact = new javax.swing.JTextField();
@@ -124,6 +144,7 @@ public class jflistaactdirec extends javax.swing.JFrame {
         jpfondoacttabladirec = new javax.swing.JPanel();
         jspdirecact = new javax.swing.JScrollPane();
         jtlistadirecact = new javax.swing.JTable();
+        jbdirecact = new javax.swing.JButton();
         jliconodirec = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -197,43 +218,37 @@ public class jflistaactdirec extends javax.swing.JFrame {
         jSeparator2.setForeground(new java.awt.Color(0, 0, 0));
         jSeparator2.setToolTipText("");
 
-        jtfcpbusqueda.setBackground(new java.awt.Color(167, 235, 242));
-        jtfcpbusqueda.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
-        jtfcpbusqueda.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-        jtfcpbusqueda.setText("Código Postal");
-        jtfcpbusqueda.setToolTipText("Ingresar Apellido Paterno");
-        jtfcpbusqueda.setBorder(null);
-        jtfcpbusqueda.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        jcbcolonias.setBackground(new java.awt.Color(167, 235, 242));
+        jcbcolonias.setFont(new java.awt.Font("Candara", 1, 12)); // NOI18N
+        jcbcolonias.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Colonia" }));
+        jcbcolonias.setToolTipText("Selecciona un tipo de Usuario");
+        jcbcolonias.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jcbcolonias.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
-        jSeparator3.setBackground(new java.awt.Color(0, 0, 0));
-        jSeparator3.setForeground(new java.awt.Color(0, 0, 0));
-        jSeparator3.setToolTipText("");
-
-        jcbusuariobusqueda.setBackground(new java.awt.Color(167, 235, 242));
-        jcbusuariobusqueda.setFont(new java.awt.Font("Candara", 1, 12)); // NOI18N
-        jcbusuariobusqueda.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tipo de Usuario", "Cliente", "Aval", "Ambos" }));
-        jcbusuariobusqueda.setToolTipText("Selecciona un tipo de Usuario");
-        jcbusuariobusqueda.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jcbusuariobusqueda.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jcbtipo.setBackground(new java.awt.Color(167, 235, 242));
+        jcbtipo.setFont(new java.awt.Font("Candara", 1, 12)); // NOI18N
+        jcbtipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tipo" }));
+        jcbtipo.setToolTipText("Selecciona un tipo de Usuario");
+        jcbtipo.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jcbtipo.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         javax.swing.GroupLayout jpfondobusquedaLayout = new javax.swing.GroupLayout(jpfondobusqueda);
         jpfondobusqueda.setLayout(jpfondobusquedaLayout);
         jpfondobusquedaLayout.setHorizontalGroup(
             jpfondobusquedaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpfondobusquedaLayout.createSequentialGroup()
+            .addGroup(jpfondobusquedaLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jpfondobusquedaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jcbusuariobusqueda, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jpfondobusquedaLayout.createSequentialGroup()
+                .addGroup(jpfondobusquedaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jcbcolonias, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jpfondobusquedaLayout.createSequentialGroup()
                         .addGroup(jpfondobusquedaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jtfpersonabusqueda)
                             .addComponent(jSeparator2)
                             .addComponent(jSeparator1)
-                            .addComponent(jtfidbusqueda, javax.swing.GroupLayout.DEFAULT_SIZE, 248, Short.MAX_VALUE)
-                            .addComponent(jSeparator3, javax.swing.GroupLayout.DEFAULT_SIZE, 248, Short.MAX_VALUE)
-                            .addComponent(jtfcpbusqueda, javax.swing.GroupLayout.DEFAULT_SIZE, 248, Short.MAX_VALUE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                            .addComponent(jtfidbusqueda, javax.swing.GroupLayout.DEFAULT_SIZE, 248, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jcbtipo, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jpfondobusquedaLayout.setVerticalGroup(
@@ -250,12 +265,10 @@ public class jflistaactdirec extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jtfcpbusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jcbusuariobusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jcbcolonias, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                .addComponent(jcbtipo, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(17, 17, 17))
         );
 
         javax.swing.GroupLayout jplistadirecLayout = new javax.swing.GroupLayout(jplistadirec);
@@ -402,6 +415,24 @@ public class jflistaactdirec extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        jbdirecact.setBackground(new java.awt.Color(204, 204, 204));
+        jbdirecact.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        jbdirecact.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/act1.png"))); // NOI18N
+        jbdirecact.setText("Continuar");
+        jbdirecact.setBorder(null);
+        jbdirecact.setContentAreaFilled(false);
+        jbdirecact.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jbdirecact.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jbdirecact.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/act1.png"))); // NOI18N
+        jbdirecact.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/act2.png"))); // NOI18N
+        jbdirecact.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        jbdirecact.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jbdirecact.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbdirecactActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jpactualizadirecLayout = new javax.swing.GroupLayout(jpactualizadirec);
         jpactualizadirec.setLayout(jpactualizadirecLayout);
         jpactualizadirecLayout.setHorizontalGroup(
@@ -409,9 +440,15 @@ public class jflistaactdirec extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpactualizadirecLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jpfondoacttabladirec, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
-                .addComponent(jpactualizar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(45, 45, 45))
+                .addGroup(jpactualizadirecLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jpactualizadirecLayout.createSequentialGroup()
+                        .addGap(36, 36, 36)
+                        .addComponent(jpactualizar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(27, 27, 27))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpactualizadirecLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jbdirecact, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(88, 88, 88))))
         );
         jpactualizadirecLayout.setVerticalGroup(
             jpactualizadirecLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -419,10 +456,12 @@ public class jflistaactdirec extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jpfondoacttabladirec, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpactualizadirecLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jpactualizadirecLayout.createSequentialGroup()
+                .addGap(55, 55, 55)
                 .addComponent(jpactualizar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(112, 112, 112))
+                .addGap(38, 38, 38)
+                .addComponent(jbdirecact, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Actualizar Dirección", jpactualizadirec);
@@ -485,6 +524,22 @@ public class jflistaactdirec extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jcbcoloniaactActionPerformed
 
+    private void jbdirecactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbdirecactActionPerformed
+        try {
+            cllcl = jtfcalleact.getText();
+            ni = jtfnumintact.getText();
+            ne = jtfnumextact.getText();
+            idc = Integer.parseInt(idColcl);
+            cb.buscarDirecPorID(idDireccion);
+            boolean actDirec = ca.actualizaDirec(cllcl, ni, ne, idc, idDireccion);
+            if (actDirec) {
+                CUtilitarios.msg("Dirección Actualizada Correctamente", "Dirección Actualizada");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(jflistaactdirec.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jbdirecactActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -524,12 +579,13 @@ public class jflistaactdirec extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator10;
     private javax.swing.JSeparator jSeparator2;
-    private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator8;
     private javax.swing.JSeparator jSeparator9;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JButton jbdirecact;
     private javax.swing.JComboBox<String> jcbcoloniaact;
-    private javax.swing.JComboBox<String> jcbusuariobusqueda;
+    private javax.swing.JComboBox<String> jcbcolonias;
+    private javax.swing.JComboBox<String> jcbtipo;
     private javax.swing.JLabel jliconodirec;
     private javax.swing.JPanel jpactualizadirec;
     private javax.swing.JPanel jpactualizar;
@@ -541,7 +597,6 @@ public class jflistaactdirec extends javax.swing.JFrame {
     private javax.swing.JScrollPane jspdirec;
     private javax.swing.JScrollPane jspdirecact;
     private javax.swing.JTextField jtfcalleact;
-    private javax.swing.JTextField jtfcpbusqueda;
     private javax.swing.JTextField jtfidbusqueda;
     private javax.swing.JTextField jtfnumextact;
     private javax.swing.JTextField jtfnumintact;

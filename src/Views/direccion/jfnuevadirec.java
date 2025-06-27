@@ -57,7 +57,7 @@ public class jfnuevadirec extends javax.swing.JFrame {
         try {
             switch (metodoCarga) {
                 case 1:
-                    datosListas = queryCarga.cargaComboColonias(datosZona[0]);
+                    datosListas = queryCarga.cargaComboColoniasZona(datosZona[0]);
                     for (int i = 0; i < datosListas.size(); i++) {
                         listas.addElement(datosListas.get(i));
                     }
