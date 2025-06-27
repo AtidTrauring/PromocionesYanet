@@ -50,9 +50,9 @@ public class jfproductos extends javax.swing.JFrame {
         addFiltroListener(jTxtBusIDProd);
         addFiltroListener(jTxtBusNombreProd);
         addFiltroListener(jTxtBusPrecioProd);
-        configurarEventosTablaEliminar();
-        configurarEventosTablaActualizar();
-        configurarEventoBuscarPorID();
+        EventosTablaEliminar();
+        EventosTablaActualizar();
+        EventoBuscarPorID();
     }
 
     public void asignaValores() {
@@ -82,7 +82,7 @@ public class jfproductos extends javax.swing.JFrame {
         modelo2.setRowCount(0);
     }
 
-    // Este método lo uso para agregar un listener (escuchador) a un campo de texto
+    // Este método lo uso para agregar un listener a un campo de texto
     private void addFiltroListener(javax.swing.JTextField campo) {
 
         // Aquí obtengo el texto del campo de textoy agrego un DocumentListener para  cualquier cambio
@@ -194,7 +194,7 @@ public class jfproductos extends javax.swing.JFrame {
         }
     }
 
-    private void configurarEventosTablaEliminar() {
+    private void EventosTablaEliminar() {
         // Agrega un listener para detectar cuando se hace clic sobre la tabla 
         jtblEliminarProductos.addMouseListener(new java.awt.event.MouseAdapter() {
             // El método se ejecuta cuando se hace clic en la tabla
@@ -212,7 +212,7 @@ public class jfproductos extends javax.swing.JFrame {
         });
     }
 
-    private void configurarEventosTablaActualizar() {
+    private void EventosTablaActualizar() {
         jtblActualizarProductos.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 int fila = jtblActualizarProductos.getSelectedRow();
@@ -226,7 +226,7 @@ public class jfproductos extends javax.swing.JFrame {
         });
     }
 
-    private void configurarEventoBuscarPorID() {
+    private void EventoBuscarPorID() {
         jTxtActIDProd.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
             public void insertUpdate(javax.swing.event.DocumentEvent e) {
                 cargarPorID();
@@ -283,7 +283,7 @@ public class jfproductos extends javax.swing.JFrame {
         }
     }
 
-    public boolean validaTodosLosCamposActualizar() {
+    public boolean validaCamposActualizar() {
         return validaCampoProducto(jTxtActNombreProd, "^[a-zA-Z ]+$", "El campo Producto está vacío", "El nombre solo debe contener letras y espacios")
                 && validaCampoProducto(jTxtActPrecioProd, "^[0-9]+$", "El campo Precio está vacío", "El precio solo debe contener números")
                 && validaCampoProducto(jTxtActStockProd, "^[0-9]+$", "El campo Stock está vacío", "El stock solo debe contener números");
@@ -311,7 +311,7 @@ public class jfproductos extends javax.swing.JFrame {
         }
 
         // Verifica si todos los campos cumplen con las validaciones necesarias
-        if (!validaTodosLosCamposActualizar()) {
+        if (!validaCamposActualizar()) {
             // Si alguna validación falla, se detiene la ejecución
             return;
         }

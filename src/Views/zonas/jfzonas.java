@@ -39,7 +39,7 @@ public class jfzonas extends javax.swing.JFrame {
         cargarTablaEliminar();
         cargarColoniasPorZona();
         BuscarPorZona();
-        // Activar búsqueda automática
+        EventosTablaEliminarZona();
         addFiltroListener(jTxtBusIDZona);
         addFiltroListener(jTxtBusNumZona);
     }
@@ -64,6 +64,7 @@ public class jfzonas extends javax.swing.JFrame {
         modelo1 = (DefaultTableModel) jtblEliminarZonas.getModel();
         modelo1.setRowCount(0);
     }
+
     private void limpiarTablaActualizar() {
         modelo2 = (DefaultTableModel) jtblActualizarZonas.getModel();
         modelo2.setRowCount(0);
@@ -114,6 +115,7 @@ public class jfzonas extends javax.swing.JFrame {
             CUtilitarios.msg_error("No se pudo cargar la informacion en la tabla", "Cargando Tabla");
         }
     }
+
     public void cargarTablaEliminar() {
         modelo1 = (DefaultTableModel) jtblEliminarZonas.getModel();
         try {
@@ -162,38 +164,90 @@ public class jfzonas extends javax.swing.JFrame {
             }
         });
     }
-    private void eliminarColoniaZona() {
-    String idZona = jTxtActNumZona2.getText().trim();
 
-    // Valida si hay una fila seleccionada
-    int fila = jtblActualizarZonas.getSelectedRow();
-    if (fila == -1) {
-        CUtilitarios.msg_advertencia("Debes seleccionar una colonia de la tabla.", "Eliminar Relación");
+    private void eliminarColoniaZona() {
+        String idZona = jTxtActNumZona2.getText().trim();
+
+        // Valida si hay una fila seleccionada
+        int fila = jtblActualizarZonas.getSelectedRow();
+        if (fila == -1) {
+            CUtilitarios.msg_advertencia("Debes seleccionar una colonia de la tabla.", "Eliminar Relación");
+            return;
+        }
+
+        // Obtiene ID de colonia de la fila seleccionada (columna 0)
+        String idColonia = jtblActualizarZonas.getValueAt(fila, 0).toString();
+
+        int opcion = JOptionPane.showConfirmDialog(
+                this, "¿Estás seguro de eliminar la colonia seleccionada de la zona?",
+                "Confirmar Eliminación", JOptionPane.YES_NO_OPTION
+        );
+
+        if (opcion == JOptionPane.YES_OPTION) {
+            try {
+                boolean eliminado = ce.eliminarRelacionColoniaZona(idColonia, idZona);
+                if (eliminado) {
+                    CUtilitarios.msg("Colonia eliminada correctamente.", "Éxito");
+                    cargarColoniasPorZona();
+                } else {
+                    CUtilitarios.msg_error("No se pudo eliminar la Colonia.", "Error");
+                }
+            } catch (SQLException e) {
+                CUtilitarios.msg_error("Error al eliminar: " + e.getMessage(), "Error SQL");
+            }
+        }
+    }
+
+    private void EventosTablaEliminarZona() {
+        jtblEliminarZonas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                int fila = jtblEliminarZonas.getSelectedRow();
+                if (fila != -1) {
+                    String idZona = jtblEliminarZonas.getValueAt(fila, 0).toString();
+                    String numZona = jtblEliminarZonas.getValueAt(fila, 1).toString();
+                    jTxtElimIDZona1.setText(idZona);
+                    jTxtElimNumZona1.setText(numZona);
+                }
+            }
+        });
+    }
+    
+    public void eliminarZona() {
+    String id = jTxtElimIDZona1.getText().trim();
+    String numZona = jTxtElimNumZona1.getText().trim();
+
+    if (id.isEmpty() || numZona.isEmpty()) {
+        CUtilitarios.msg_advertencia("Escribe o selecciona una zona para eliminar", "Eliminar Zona");
         return;
     }
 
-    // Obtiene ID de colonia de la fila seleccionada (columna 0)
-    String idColonia = jtblActualizarZonas.getValueAt(fila, 0).toString();
-
     int opcion = JOptionPane.showConfirmDialog(
-        this,  "¿Estás seguro de eliminar la colonia seleccionada de la zona?", 
-        "Confirmar Eliminación", JOptionPane.YES_NO_OPTION
+            this,
+            "¿Estás seguro que deseas eliminar la zona " + numZona + "?",
+            "Confirmar eliminación",
+            JOptionPane.YES_NO_OPTION
     );
 
     if (opcion == JOptionPane.YES_OPTION) {
         try {
-            boolean eliminado = ce.eliminarRelacionColoniaZona(idColonia, idZona);
+            boolean eliminado = ce.eliminarZona(id); // ← Método que debe eliminar en BD
             if (eliminado) {
-                CUtilitarios.msg("Colonia eliminada correctamente.", "Éxito");
+                CUtilitarios.msg("Zona eliminada correctamente", "Eliminar Zona");
+                jTxtElimIDZona1.setText("");
+                jTxtElimNumZona1.setText("");
                 cargarColoniasPorZona(); 
+                cargarTabla();
+                cargarTablaEliminar();
             } else {
-                CUtilitarios.msg_error("No se pudo eliminar la Colonia.", "Error");
+                CUtilitarios.msg_error("No se pudo eliminar la zona", "Eliminar Zona");
             }
-        } catch (SQLException e) {
-            CUtilitarios.msg_error("Error al eliminar: " + e.getMessage(), "Error SQL");
+        } catch (SQLException ex) {
+            CUtilitarios.msg_error("Error al intentar eliminar", "Eliminar Zona");
         }
     }
 }
+
+    
 
     
     @SuppressWarnings("unchecked")
@@ -690,6 +744,11 @@ public class jfzonas extends javax.swing.JFrame {
         jBtnEliminarZona.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jBtnEliminarZona.setText("Eliminar zona");
         jBtnEliminarZona.setToolTipText("");
+        jBtnEliminarZona.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtnEliminarZonaActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPnlAgrZonaLayout = new javax.swing.GroupLayout(jPnlAgrZona);
         jPnlAgrZona.setLayout(jPnlAgrZonaLayout);
@@ -750,6 +809,11 @@ public class jfzonas extends javax.swing.JFrame {
     private void jBtnActAgregarZonaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnActAgregarZonaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jBtnActAgregarZonaActionPerformed
+
+    private void jBtnEliminarZonaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnEliminarZonaActionPerformed
+        // TODO add your handling code here:
+        eliminarZona();
+    }//GEN-LAST:event_jBtnEliminarZonaActionPerformed
 
     /**
      * @param args the command line arguments
