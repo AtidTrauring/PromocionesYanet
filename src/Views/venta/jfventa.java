@@ -23,7 +23,7 @@ public class jfventa extends javax.swing.JFrame {
     private static String[] datosVenta;
     private ArrayList<String[]> datosKardex = new ArrayList<>();
     private ArrayList<String[]> datosAgregar = new ArrayList<>();
-    private DefaultComboBoxModel listasCombos; 
+    private DefaultComboBoxModel<String> listasCombos;
     private ArrayList<String> datosCombos = new ArrayList<>();
     private final CCargaCombos queryCargaCombos = new CCargaCombos();
 
@@ -33,6 +33,8 @@ public class jfventa extends javax.swing.JFrame {
         cargarTablaBusqueda();
         cargarTablaAgregar();
         cargarCombos(jCmbBoxFechas, 1);
+        cargarCombos(jCmbBoxEstatus, 2);
+        cargarCombos(jCmbBoxPagosPendi, 3);
     }
 
     //Limpia la tabla de la busqueda.
@@ -74,10 +76,10 @@ public class jfventa extends javax.swing.JFrame {
             CUtilitarios.msg_error("No se pudo cargar la tabla", "Carga de tabla de agregar");
         }
     }
-    
+
     //Carga de los combos. 
-    public void cargarCombos(JComboBox combo, int metodoCarga){
-        listasCombos = (DefaultComboBoxModel) combo.getModel();
+    public void cargarCombos(JComboBox<String> combo, int metodoCarga) {
+        DefaultComboBoxModel<String> listasCombos = (DefaultComboBoxModel<String>) combo.getModel();
         try {
             switch (metodoCarga) {
                 case 1:
@@ -85,13 +87,30 @@ public class jfventa extends javax.swing.JFrame {
                     for (int i = 0; i < datosCombos.size(); i++) {
                         listasCombos.addElement(datosCombos.get(i));
                     }
-                    datosCombos.clear();
+                    break;
+
+                case 2:
+                    datosCombos = queryCargaCombos.cargaComboEstatusVenta();
+                    for (int i = 0; i < datosCombos.size(); i++) {
+                        listasCombos.addElement(datosCombos.get(i));
+                    }
+                    break;
+
+                case 3:
+                    datosCombos = queryCargaCombos.cargaComboPagosPendientesVenta();
+                    for (int i = 0; i < datosCombos.size(); i++) {
+                        listasCombos.addElement(datosCombos.get(i));
+                    }
                     break;
                 default:
                     throw new AssertionError();
             }
         } catch (Exception e) {
             CUtilitarios.msg_error("Error al cargar los combos", "Cargar combos");
+        } finally {
+            if (datosCombos != null) {
+                datosCombos.clear(); // Limpiar el ArrayList después de usarlo
+            }
         }
     }
 
