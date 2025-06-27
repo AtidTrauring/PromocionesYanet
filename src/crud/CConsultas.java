@@ -319,4 +319,19 @@ public class CConsultas {
     }
 
     /**/
+    
+    public int obtenerValorEntero(String sql) throws SQLException {
+        conn = conector.conecta();
+        stmt = conn.createStatement();
+        rs = stmt.executeQuery(sql);
+        int valor = -1;
+        if (rs.next()) {
+            valor = rs.getInt(1); // o rs.getInt("iddireccion")
+        }
+        rs.close();
+        stmt.close();
+        conn.close();
+        return valor;
+    }
+
 }

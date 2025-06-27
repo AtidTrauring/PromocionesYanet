@@ -27,12 +27,8 @@ public final class jfcliente extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         cargaComboBox(jcbestatusbusqueda, 1);
         cargaComboBox(jcbnvestatuscliente, 1);
-        //cargaComboBox(jcbnvestatuscliente, 1);
-        //cargaComboBox(jcbestatuseli, 1);
-        cargaComboBox(jcbnvestatusaval, 2);
-        //cargaComboBox(jcbnvestatusaval, 2);
-        cargaComboBox(jcbnvzona, 3);
-        //cargaComboBox(jcbnvzona, 3);
+        cargaComboBox(jcbnvestatusaval, 1);
+        cargaComboBox(jcbnvzona, 2);
 
         // Placeholder JTextField
         cu.aplicarPlaceholder(jtfidbusqueda, "Ingresar ID");
@@ -42,12 +38,9 @@ public final class jfcliente extends javax.swing.JFrame {
         cu.aplicarPlaceholder(jtfnvnombres, "Nombre(s)");
         cu.aplicarPlaceholder(jtfnvap, "Apellido Paterno");
         cu.aplicarPlaceholder(jtfnvam, "Apellido Materno");
+        cu.aplicarPlaceholder(jtfnvtel, "Número de Teléfono");
 
         // Tablas
-//        cu.cargarTabla(jtlistacliente, () -> queryBusca.buscarCliente());
-//        cu.cargarTabla(jtlistaaval, () -> queryBusca.buscarAval());
-//        cu.cargarTabla(jtlistaclienteact, () -> queryBusca.buscarCliente());
-//        cu.cargarTabla(jtlistaavalacteli, () -> queryBusca.buscarAval());
         cargarTablas();
 
         // Selección
@@ -71,13 +64,6 @@ public final class jfcliente extends javax.swing.JFrame {
                     datosListas.clear();
                     break;
                 case 2:
-                    datosListas = queryCarga.cargaComboEstatusAval();
-                    for (int i = 0; i < datosListas.size(); i++) {
-                        listas.addElement(datosListas.get(i));
-                    }
-                    datosListas.clear();
-                    break;
-                case 3:
                     datosListas = queryCarga.cargaComboZona();
                     for (int i = 0; i < datosListas.size(); i++) {
                         listas.addElement(datosListas.get(i));
@@ -90,14 +76,14 @@ public final class jfcliente extends javax.swing.JFrame {
     }
 
     private void configurarEventosTablaActualizar() {
-        jtlistaclienteact.addMouseListener(new java.awt.event.MouseAdapter() {
+        jtlistaclienteavalact.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                int fila = jtlistaclienteact.getSelectedRow();
+                int fila = jtlistaclienteavalact.getSelectedRow();
                 if (fila != -1) {
-                    jtfactnombres.setText(jtlistaclienteact.getValueAt(fila, 0).toString());
-                    jtfactap.setText(jtlistaclienteact.getValueAt(fila, 1).toString());
-                    jtfactam.setText(jtlistaclienteact.getValueAt(fila, 2).toString());
+                    jtfactnombres.setText(jtlistaclienteavalact.getValueAt(fila, 1).toString());
+                    jtfactap.setText(jtlistaclienteavalact.getValueAt(fila, 2).toString());
+                    jtfactam.setText(jtlistaclienteavalact.getValueAt(fila, 3).toString());
                 }
             }
         });
@@ -109,12 +95,98 @@ public final class jfcliente extends javax.swing.JFrame {
         sqlClientesAvales = "Call tablaClienteAval";
 
         try {
-            cu.cargarConsultaEnTabla(sqlClientesAvales, jtlistacliente);
+            cu.cargarConsultaEnTabla(sqlClientesAvales, jtlistaclienteaval);
+            cu.cargarConsultaEnTabla(sqlClientesAvales, jtlistaclienteavalact);
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Error al cargar tablas: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
+    /**/
+    private boolean validarCamposTexto() {
+        JTextField[] campos = {jtfnvnombres, jtfnvap, jtfnvam};
+        String[] textos = {"Nombre(s)", "Apellido Paterno", "Apellido Materno"};
+        String regex = "^[A-Za-zÁÉÍÓÚáéíóúÑñ\\s]+$";
+
+        return CUtilitarios.validaCamposTextoConFormato(
+                campos, textos, textos, regex,
+                "Debes llenar todos los campos correctamente", "Validación de Datos Persona"
+        );
+    }
+
+    private boolean validarTelefono() {
+        JTextField[] campos = {jtfnvtel};
+        String[] textos = {"Número de Teléfono"};
+        String regex = "^[0-9]+$";
+
+        return CUtilitarios.validaCamposTextoConFormato(
+                campos, textos, textos, regex,
+                "El número de teléfono debe contener solo dígitos.", "Validación de Teléfono"
+        );
+    }
+
+    private boolean validarZona() {
+        if (jcbnvzona.getSelectedIndex() == 0) {
+            CUtilitarios.msg_advertencia("Selecciona una zona válida", "Validación de Zona");
+            return false;
+        }
+        return true;
+    }
+
+    private String[] validarSeleccionYEstatus() {
+        String[] datosEstatus = new String[2];
+
+        if (jrbnvcliente.isSelected()) {
+            if (jcbnvestatuscliente.getSelectedIndex() == 0) {
+                CUtilitarios.msg_advertencia("Selecciona un estatus válido para cliente", "Validación de Estatus");
+                return null;
+            }
+            datosEstatus[0] = idEstatus;
+
+        } else if (jrbnvaval.isSelected()) {
+            if (jcbnvestatusaval.getSelectedIndex() == 0) {
+                CUtilitarios.msg_advertencia("Selecciona un estatus válido para aval", "Validación de Estatus Aval");
+                return null;
+            }
+            datosEstatus[1] = idEstatusAval;
+
+        } else if (jrbnvambos.isSelected()) {
+            if (jcbnvestatuscliente.getSelectedIndex() == 0 || jcbnvestatusaval.getSelectedIndex() == 0) {
+                CUtilitarios.msg_advertencia("Selecciona estatus válidos para Cliente y Aval", "Validación de Estatus");
+                return null;
+            }
+            datosEstatus[0] = idEstatus;
+            datosEstatus[1] = idEstatusAval;
+
+        } else {
+            CUtilitarios.msg_advertencia("Debes seleccionar Cliente, Aval o Ambos", "Validación de Opción");
+            return null;
+        }
+
+        return datosEstatus;
+    }
+
+    private void abrirVentanaDireccion(String[] datosZona, String[] datosPersona, String[] datosEstatus) {
+        jfnuevadirec dir = new jfnuevadirec(datosZona, datosPersona, datosEstatus);
+        dir.setVisible(true);
+        this.dispose();
+    }
+
+    private void mostrarErrorDetallado(Exception e) {
+        StringBuilder errorDetails = new StringBuilder();
+        errorDetails.append("Mensaje: ").append(e.getMessage()).append("\n");
+        errorDetails.append("Tipo de excepción: ").append(e.getClass().getName()).append("\n");
+        errorDetails.append("Causa: ").append(e.getCause()).append("\n");
+
+        errorDetails.append("Traza del error:\n");
+        for (StackTraceElement ste : e.getStackTrace()) {
+            errorDetails.append("    en ").append(ste.toString()).append("\n");
+        }
+
+        CUtilitarios.msg_error("Error inesperado", errorDetails.toString());
+    }
+
+    /**/
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -131,7 +203,7 @@ public final class jfcliente extends javax.swing.JFrame {
         jplistaclientes = new javax.swing.JPanel();
         jpfondotabla = new javax.swing.JPanel();
         jspcliente = new javax.swing.JScrollPane();
-        jtlistacliente = new javax.swing.JTable();
+        jtlistaclienteaval = new javax.swing.JTable();
         jpfondobusqueda = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jtfidbusqueda = new javax.swing.JTextField();
@@ -158,12 +230,14 @@ public final class jfcliente extends javax.swing.JFrame {
         jrbnvambos = new javax.swing.JRadioButton();
         jcbnvestatuscliente = new javax.swing.JComboBox<>();
         jcbnvestatusaval = new javax.swing.JComboBox<>();
+        jtfnvtel = new javax.swing.JTextField();
+        jSeparator12 = new javax.swing.JSeparator();
         jLblIcono1 = new javax.swing.JLabel();
         jbcontinuar = new javax.swing.JButton();
         jpactualizaelimina = new javax.swing.JPanel();
         jpfondotablaacteli = new javax.swing.JPanel();
         jspclienteacteli = new javax.swing.JScrollPane();
-        jtlistaclienteact = new javax.swing.JTable();
+        jtlistaclienteavalact = new javax.swing.JTable();
         jpfondoacteliclienteaval = new javax.swing.JPanel();
         jtfactnombres = new javax.swing.JTextField();
         jSeparator9 = new javax.swing.JSeparator();
@@ -196,9 +270,9 @@ public final class jfcliente extends javax.swing.JFrame {
 
         jpfondotabla.setBackground(new java.awt.Color(242, 220, 153));
 
-        jtlistacliente.setBackground(new java.awt.Color(167, 235, 242));
-        jtlistacliente.setFont(new java.awt.Font("Candara", 1, 12)); // NOI18N
-        jtlistacliente.setModel(new javax.swing.table.DefaultTableModel(
+        jtlistaclienteaval.setBackground(new java.awt.Color(167, 235, 242));
+        jtlistaclienteaval.setFont(new java.awt.Font("Candara", 1, 12)); // NOI18N
+        jtlistaclienteaval.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -206,9 +280,9 @@ public final class jfcliente extends javax.swing.JFrame {
 
             }
         ));
-        jtlistacliente.setToolTipText("Listado de Clientes y Avales");
-        jtlistacliente.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jspcliente.setViewportView(jtlistacliente);
+        jtlistaclienteaval.setToolTipText("Listado de Clientes y Avales");
+        jtlistaclienteaval.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jspcliente.setViewportView(jtlistaclienteaval);
 
         javax.swing.GroupLayout jpfondotablaLayout = new javax.swing.GroupLayout(jpfondotabla);
         jpfondotabla.setLayout(jpfondotablaLayout);
@@ -216,7 +290,7 @@ public final class jfcliente extends javax.swing.JFrame {
             jpfondotablaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpfondotablaLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jspcliente, javax.swing.GroupLayout.DEFAULT_SIZE, 503, Short.MAX_VALUE)
+                .addComponent(jspcliente, javax.swing.GroupLayout.DEFAULT_SIZE, 761, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jpfondotablaLayout.setVerticalGroup(
@@ -363,8 +437,8 @@ public final class jfcliente extends javax.swing.JFrame {
             jplistaclientesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jplistaclientesLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jpfondotabla, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 65, Short.MAX_VALUE)
+                .addComponent(jpfondotabla, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(jpfondobusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(56, 56, 56))
         );
@@ -491,34 +565,53 @@ public final class jfcliente extends javax.swing.JFrame {
             }
         });
 
+        jtfnvtel.setBackground(new java.awt.Color(167, 235, 242));
+        jtfnvtel.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        jtfnvtel.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+        jtfnvtel.setText("Número de Teléfono");
+        jtfnvtel.setToolTipText("Apellido Materno");
+        jtfnvtel.setBorder(null);
+        jtfnvtel.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+
+        jSeparator12.setBackground(new java.awt.Color(0, 0, 0));
+        jSeparator12.setForeground(new java.awt.Color(0, 0, 0));
+        jSeparator12.setToolTipText("");
+
         javax.swing.GroupLayout jpfondonuevoclienteLayout = new javax.swing.GroupLayout(jpfondonuevocliente);
         jpfondonuevocliente.setLayout(jpfondonuevoclienteLayout);
         jpfondonuevoclienteLayout.setHorizontalGroup(
             jpfondonuevoclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpfondonuevoclienteLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jpfondonuevoclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jcbnvzona, 0, 248, Short.MAX_VALUE)
-                    .addComponent(jtfnvnombres, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jSeparator6, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jtfnvam, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jSeparator8, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jSeparator7, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jtfnvap, javax.swing.GroupLayout.Alignment.LEADING))
+            .addGroup(jpfondonuevoclienteLayout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jpfondonuevoclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jpfondonuevoclienteLayout.createSequentialGroup()
-                        .addGap(77, 77, 77)
-                        .addGroup(jpfondonuevoclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jrbnvcliente)
-                            .addComponent(jrbnvaval)
-                            .addComponent(jrbnvambos))
-                        .addGap(90, 90, 90))
+                    .addComponent(jtfnvtel)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpfondonuevoclienteLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jpfondonuevoclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jSeparator12, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jpfondonuevoclienteLayout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addGroup(jpfondonuevoclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(jcbnvzona, 0, 248, Short.MAX_VALUE)
+                                    .addComponent(jtfnvnombres, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jSeparator6, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jtfnvam, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jSeparator8, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jSeparator7, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jtfnvap, javax.swing.GroupLayout.Alignment.LEADING))))
                         .addGroup(jpfondonuevoclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jcbnvestatusaval, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jcbnvestatuscliente, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap())))
+                            .addGroup(jpfondonuevoclienteLayout.createSequentialGroup()
+                                .addGap(77, 77, 77)
+                                .addGroup(jpfondonuevoclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jrbnvcliente)
+                                    .addComponent(jrbnvaval)
+                                    .addComponent(jrbnvambos))
+                                .addGap(90, 90, 90))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpfondonuevoclienteLayout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jpfondonuevoclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jcbnvestatusaval, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jcbnvestatuscliente, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addContainerGap())))))
         );
         jpfondonuevoclienteLayout.setVerticalGroup(
             jpfondonuevoclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -539,21 +632,20 @@ public final class jfcliente extends javax.swing.JFrame {
                     .addComponent(jrbnvambos))
                 .addGap(10, 10, 10)
                 .addComponent(jSeparator7, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(12, 12, 12)
-                .addGroup(jpfondonuevoclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jpfondonuevoclienteLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jcbnvestatusaval, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(22, 22, 22))
-                    .addGroup(jpfondonuevoclienteLayout.createSequentialGroup()
-                        .addGroup(jpfondonuevoclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jtfnvam, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jcbnvestatuscliente, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSeparator8, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jcbnvzona, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(22, Short.MAX_VALUE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jpfondonuevoclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jtfnvam, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jcbnvestatuscliente, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator8, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jtfnvtel, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator12, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                .addGroup(jpfondonuevoclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jcbnvestatusaval, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jcbnvzona, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
         jLblIcono1.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
@@ -582,9 +674,9 @@ public final class jfcliente extends javax.swing.JFrame {
         jpnuevoclienteLayout.setHorizontalGroup(
             jpnuevoclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpnuevoclienteLayout.createSequentialGroup()
-                .addGap(29, 29, 29)
+                .addGap(114, 114, 114)
                 .addComponent(jpfondonuevocliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 79, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 205, Short.MAX_VALUE)
                 .addGroup(jpnuevoclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpnuevoclienteLayout.createSequentialGroup()
                         .addComponent(jbcontinuar, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -596,15 +688,13 @@ public final class jfcliente extends javax.swing.JFrame {
         jpnuevoclienteLayout.setVerticalGroup(
             jpnuevoclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpnuevoclienteLayout.createSequentialGroup()
-                .addGroup(jpnuevoclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(18, 18, 18)
+                .addGroup(jpnuevoclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jpfondonuevocliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jpnuevoclienteLayout.createSequentialGroup()
-                        .addGap(18, 18, 18)
                         .addComponent(jLblIcono1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jbcontinuar, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jpnuevoclienteLayout.createSequentialGroup()
-                        .addGap(67, 67, 67)
-                        .addComponent(jpfondonuevocliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jbcontinuar, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(45, Short.MAX_VALUE))
         );
 
@@ -615,9 +705,9 @@ public final class jfcliente extends javax.swing.JFrame {
 
         jpfondotablaacteli.setBackground(new java.awt.Color(242, 220, 153));
 
-        jtlistaclienteact.setBackground(new java.awt.Color(167, 235, 242));
-        jtlistaclienteact.setFont(new java.awt.Font("Candara", 1, 12)); // NOI18N
-        jtlistaclienteact.setModel(new javax.swing.table.DefaultTableModel(
+        jtlistaclienteavalact.setBackground(new java.awt.Color(167, 235, 242));
+        jtlistaclienteavalact.setFont(new java.awt.Font("Candara", 1, 12)); // NOI18N
+        jtlistaclienteavalact.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -625,9 +715,9 @@ public final class jfcliente extends javax.swing.JFrame {
 
             }
         ));
-        jtlistaclienteact.setToolTipText("Listado de Clientes y Avales");
-        jtlistaclienteact.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jspclienteacteli.setViewportView(jtlistaclienteact);
+        jtlistaclienteavalact.setToolTipText("Listado de Clientes y Avales");
+        jtlistaclienteavalact.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jspclienteacteli.setViewportView(jtlistaclienteavalact);
 
         javax.swing.GroupLayout jpfondotablaacteliLayout = new javax.swing.GroupLayout(jpfondotablaacteli);
         jpfondotablaacteli.setLayout(jpfondotablaacteliLayout);
@@ -635,7 +725,7 @@ public final class jfcliente extends javax.swing.JFrame {
             jpfondotablaacteliLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpfondotablaacteliLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jspclienteacteli, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
+                .addComponent(jspclienteacteli, javax.swing.GroupLayout.DEFAULT_SIZE, 682, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jpfondotablaacteliLayout.setVerticalGroup(
@@ -798,14 +888,14 @@ public final class jfcliente extends javax.swing.JFrame {
             .addGroup(jpactualizaeliminaLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jpfondotablaacteli, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 73, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
                 .addGroup(jpactualizaeliminaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpactualizaeliminaLayout.createSequentialGroup()
-                        .addComponent(jpfondoacteliclienteaval, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(71, 71, 71))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpactualizaeliminaLayout.createSequentialGroup()
                         .addComponent(jbcontinuaract, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(181, 181, 181))))
+                        .addGap(136, 136, 136))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpactualizaeliminaLayout.createSequentialGroup()
+                        .addComponent(jpfondoacteliclienteaval, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(28, 28, 28))))
         );
         jpactualizaeliminaLayout.setVerticalGroup(
             jpactualizaeliminaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -917,83 +1007,42 @@ public final class jfcliente extends javax.swing.JFrame {
     }//GEN-LAST:event_jcbnvestatusavalActionPerformed
 
     private void jbcontinuarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbcontinuarActionPerformed
-        String[] datosZona = new String[1];
-        String[] datosPersona = new String[3];
-        String[] datosEstatus = new String[2];
-
-        JTextField[] jtf = {jtfnvnombres, jtfnvap, jtfnvam};
-        String[] textosPredeterminados = {"Nombre(s)", "Apellido Paterno", "Apellido Materno"};
-        String regexTexto = "^[A-Za-zÁÉÍÓÚáéíóúÑñ\\s]+$";
-
         try {
-            // 1. Validar campos de texto
-            boolean camposValidos = CUtilitarios.validaCamposTextoConFormato(
-                    jtf, textosPredeterminados, textosPredeterminados, regexTexto,
-                    "Debes llenar todos los campos correctamente", "Validación de Datos Persona"
-            );
-            if (!camposValidos) {
+            // 1. Validar campos de texto básicos
+            if (!validarCamposTexto()) {
                 return;
             }
 
-            // 2. Validar zona seleccionada
-            if (jcbnvzona.getSelectedIndex() == 0) {
-                CUtilitarios.msg_advertencia("Selecciona una zona válida", "Validación de Zona");
+            // 2. Validar teléfono
+            if (!validarTelefono()) {
                 return;
             }
 
-            // 3. Validar selección de tipo (cliente/aval/ambos)
-            if (!jrbnvcliente.isSelected() && !jrbnvaval.isSelected() && !jrbnvambos.isSelected()) {
-                CUtilitarios.msg_advertencia("Debes seleccionar Cliente, Aval o Ambos", "Validación de Opción");
+            // 3. Validar zona seleccionada
+            if (!validarZona()) {
                 return;
             }
 
-            // 4. Validar estatus según selección
-            if (jrbnvcliente.isSelected()) {
-                if (jcbnvestatuscliente.getSelectedIndex() == 0) {
-                    CUtilitarios.msg_advertencia("Selecciona un estatus válido para cliente", "Validación de Estatus");
-                    return;
-                }
-                datosEstatus[0] = idEstatus;
-
-            } else if (jrbnvaval.isSelected()) {
-                if (jcbnvestatusaval.getSelectedIndex() == 0) {
-                    CUtilitarios.msg_advertencia("Selecciona un estatus válido para aval", "Validación de Estatus Aval");
-                    return;
-                }
-                datosEstatus[1] = idEstatusAval;
-
-            } else if (jrbnvambos.isSelected()) {
-                if (jcbnvestatuscliente.getSelectedIndex() == 0 || jcbnvestatusaval.getSelectedIndex() == 0) {
-                    CUtilitarios.msg_advertencia("Selecciona estatus válidos para Cliente y Aval", "Validación de Estatus");
-                    return;
-                }
-                datosEstatus[0] = idEstatus;
-                datosEstatus[1] = idEstatusAval;
+            // 4. Validar selección y estatus
+            String[] datosEstatus = validarSeleccionYEstatus();
+            if (datosEstatus == null) {
+                return;
             }
 
-            // Preparar datos persona y zona
-            datosPersona[0] = jtfnvnombres.getText().trim();
-            datosPersona[1] = jtfnvap.getText().trim();
-            datosPersona[2] = jtfnvam.getText().trim();
-            datosZona[0] = idZona;
+            // 5. Preparar datos para la siguiente ventana
+            String[] datosZona = {idZona};
+            String[] datosPersona = {
+                jtfnvnombres.getText().trim(),
+                jtfnvap.getText().trim(),
+                jtfnvam.getText().trim(),
+                jtfnvtel.getText().trim()
+            };
 
-            // Si todo está validado, abrir la ventana de dirección
-            jfnuevadirec dir = new jfnuevadirec(datosZona, datosPersona, datosEstatus);
-            dir.setVisible(true);
-            this.dispose();
+            // 6. Abrir ventana de dirección
+            abrirVentanaDireccion(datosZona, datosPersona, datosEstatus);
 
         } catch (Exception e) {
-            StringBuilder errorDetails = new StringBuilder();
-            errorDetails.append("Mensaje: ").append(e.getMessage()).append("\n");
-            errorDetails.append("Tipo de excepción: ").append(e.getClass().getName()).append("\n");
-            errorDetails.append("Causa: ").append(e.getCause()).append("\n");
-
-            errorDetails.append("Traza del error:\n");
-            for (StackTraceElement ste : e.getStackTrace()) {
-                errorDetails.append("    en ").append(ste.toString()).append("\n");
-            }
-
-            CUtilitarios.msg_error("Error inesperado", errorDetails.toString());
+            mostrarErrorDetallado(e);
         }
     }//GEN-LAST:event_jbcontinuarActionPerformed
 
@@ -1020,7 +1069,7 @@ public final class jfcliente extends javax.swing.JFrame {
         try (Connection cn = conector.conecta(); CallableStatement cs = cn.prepareCall("{CALL " + procedimiento + "()}")) {
 
             // Reutilizas el método que llena la tabla automáticamente
-            cu.cargarTablaDesdeConsulta(jtlistacliente, cs);
+            cu.cargarTablaDesdeConsulta(jtlistaclienteaval, cs);
 
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Error al cargar datos de " + seleccion + " : " + ex.getMessage(),
@@ -1076,6 +1125,7 @@ public final class jfcliente extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator10;
     private javax.swing.JSeparator jSeparator11;
+    private javax.swing.JSeparator jSeparator12;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
@@ -1120,8 +1170,9 @@ public final class jfcliente extends javax.swing.JFrame {
     private javax.swing.JTextField jtfnvam;
     private javax.swing.JTextField jtfnvap;
     private javax.swing.JTextField jtfnvnombres;
-    private javax.swing.JTable jtlistacliente;
-    private javax.swing.JTable jtlistaclienteact;
+    private javax.swing.JTextField jtfnvtel;
+    private javax.swing.JTable jtlistaclienteaval;
+    private javax.swing.JTable jtlistaclienteavalact;
     private javax.swing.JTabbedPane jtppaneles;
     // End of variables declaration//GEN-END:variables
 }

@@ -22,7 +22,7 @@ public class jfnuevadirec extends javax.swing.JFrame {
     CBusquedas cb = new CBusquedas();
     CInserciones ci = new CInserciones();
     String seleccion, colcl, idColcl;
-    private String cllcl, ne, ni, nomcl, apcl, amcl;
+    private String cllcl, ne, ni, nomcla, apcla, amcla, telcla;
     private int idc, idescl, idescla;
 
     public jfnuevadirec(String[] datosZ, String[] datosP, String[] datosEs) {
@@ -292,40 +292,52 @@ public class jfnuevadirec extends javax.swing.JFrame {
         ne = jtfnumextn.getText();
         idc = Integer.parseInt(idColcl); // id de colonia
 
-        nomcl = datosPersona[0];
-        apcl = datosPersona[1];
-        amcl = datosPersona[2];
+        nomcla = datosPersona[0];
+        apcla = datosPersona[1];
+        amcla = datosPersona[2];
+        telcla = datosPersona[3];
 
         StringBuilder mensaje = new StringBuilder(); // Acumulador de mensaje final
+        try {
+            int idDirec = ci.insertaDirec(cllcl, ni, ne, idc); // devuelve el ID generado
+            if (idDirec > 0) {
+                // Insertar persona solo si se insertó correctamente la dirección
+                int idPer = ci.insertaPersona(nomcla, apcla, amcla, telcla, idDirec);
+                if (idPer > 0) {
 
-        if (datosEstatus[0] != null) {
-            System.out.println("Puedes insertar estatus cliente");
-            idescl = Integer.parseInt(datosEstatus[0]);
-            try {
-                ci.insertaDPC(cllcl, ni, ne, idc, nomcl, apcl, amcl, idescl);
-                mensaje.append("Cliente ");
-            } catch (SQLException ex) {
-                System.out.println("Error al insertar cliente: " + ex.getMessage());
+                    // Insertar cliente si existe estatus para cliente
+                    if (datosEstatus[0] != null) {
+                        System.out.println("Puedes insertar estatus cliente");
+                        idescl = Integer.parseInt(datosEstatus[0]);
+                        boolean insertaCliente = ci.insertaCliente(idPer, idescl);
+                        if (insertaCliente) {
+                            mensaje.append("Cliente ");
+                        }
+                    }
+
+                    // Insertar aval si existe estatus para aval
+                    if (datosEstatus[1] != null) {
+                        System.out.println("Puedes insertar estatus aval");
+                        idescla = Integer.parseInt(datosEstatus[1]);
+                        boolean insertaAval = ci.insertaAval(idPer, idescla);
+                        if (insertaAval) {
+                            mensaje.append("Aval ");
+                        }
+                    }
+                } else {
+                    mensaje.append("FALLÓ la inserción de Persona ");
+                }
+            } else {
+                mensaje.append("FALLÓ la inserción de Dirección ");
             }
-        } else {
-            System.out.println("El estatus cliente es nulo");
+        } catch (SQLException ex) {
+            Logger.getLogger(jfnuevadirec.class.getName()).log(Level.SEVERE, null, ex);
+            mensaje.append("Error al insertar");
         }
 
-        if (datosEstatus[1] != null) {
-            System.out.println("Puedes insertar estatus aval");
-            idescla = Integer.parseInt(datosEstatus[1]);
-            try {
-                ci.insertaDPA(cllcl, ni, ne, idc, nomcl, apcl, amcl, idescla);
-                mensaje.append("Aval ");
-            } catch (SQLException ex) {
-                System.out.println("Error al insertar aval: " + ex.getMessage());
-            }
-        } else {
-            System.out.println("El estatus aval es nulo");
-        }
         // Mostrar mensaje final si se insertó al menos uno
         if (mensaje.length() > 0) {
-            CUtilitarios.msg(mensaje.toString().trim() + "insertado correctamente", "Inserción Exitosa");
+            CUtilitarios.msg(mensaje.toString() + " INSERTADO CORRECTAMENTE", "Inserción Exitosa");
         }
     }//GEN-LAST:event_jbagregardirecActionPerformed
 

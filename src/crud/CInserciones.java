@@ -1,6 +1,9 @@
 package crud;
 
-import java.sql.SQLException;
+import com.mysql.cj.jdbc.CallableStatement;
+import com.sun.jdi.connect.spi.Connection;
+import java.sql.*;
+import java.util.Arrays;
 
 public class CInserciones {
 
@@ -118,39 +121,23 @@ public class CInserciones {
     }
 
     /* Inseciones Cliente */
-    public boolean insertaDPC(
-            String calle,
-            String numInt,
-            String numExt,
-            int idColonia,
-            String nombres,
-            String apPaterno,
-            String apMaterno,
-            int idEstatusCliente
-    ) throws SQLException {
-        consulta = "CALL insertaDPC ('" + calle + "', '" + numInt + "', '" + numExt + "', " + idColonia + ", "
-                + "'" + nombres + "', '" + apPaterno + "', '" + apMaterno + "', " + idEstatusCliente + ", "
-                + "@iddireccion, @idpersona, @idcliente);";
+    public int insertaDirec(String calle, String numInt, String numExt, int idColonia) throws SQLException {
+        consulta = "CALL insertaDirec('" + calle + "','" + numInt + "','" + numExt + "'," + idColonia + ");";
+        return cnslt.obtenerValorEntero(consulta); // este método debe ejecutar la consulta y leer el valor retornado
+    }
 
-        System.out.println(consulta);
+    public int insertaPersona(String nombres, String apPaterno, String apMaterno, String telefono, int idDireccion) throws SQLException {
+        consulta = "CALL insertaPersona('" + nombres + "','" + apPaterno + "','" + apMaterno + "','" + telefono + "'," + idDireccion + ");";
+        return cnslt.obtenerValorEntero(consulta);
+    }
+
+    public boolean insertaCliente(int idPersona, int idEstatus) throws SQLException {
+        consulta = "CALL insertaCliente(" + idPersona + "," + idEstatus + ");";
         return cnslt.inserta(consulta);
     }
 
-    public boolean insertaDPA(
-            String calle,
-            String numInt,
-            String numExt,
-            int idColonia,
-            String nombres,
-            String apPaterno,
-            String apMaterno,
-            int idEstatusAval
-    ) throws SQLException {
-        consulta = "CALL insertaDPA ('" + calle + "', '" + numInt + "', '" + numExt + "', " + idColonia + ", "
-                + "'" + nombres + "', '" + apPaterno + "', '" + apMaterno + "', " + idEstatusAval + ", "
-                + "@iddireccion, @idpersona, @idaval);";
-
-        System.out.println(consulta);
+    public boolean insertaAval(int idPersona, int idEstatus) throws SQLException {
+        consulta = "CALL insertaAval(" + idPersona + "," + idEstatus + ");";
         return cnslt.inserta(consulta);
     }
 
