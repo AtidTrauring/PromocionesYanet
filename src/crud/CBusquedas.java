@@ -607,18 +607,28 @@ public class CBusquedas {
     }
 
     public ArrayList<String[]> buscarVenta() throws SQLException {
-        consulta = "SELECT v.Idventa AS Folio, v.fecha_venta AS Fecha,CONCAT(pc.nombres, ' ', pc.ap_paterno, ' ', pc.ap_materno) AS Cliente, " +
-                    "CONCAT(pa.nombres, ' ', pa.ap_paterno, ' ', pa.ap_materno) AS Aval, CONCAT(pe.nombres, ' ', pe.ap_paterno, ' ', pe.ap_materno) " +
-                    "AS Cobrador, e.estatus AS Estatus, v.num_pagos AS  'Pagos pendientes' " +
-                    "FROM venta v JOIN cliente c ON v .cliente_idcliente = c.idcliente " +
-                    "JOIN persona pc ON c.persona_idpersona = pc.idpersona " +
-                    "JOIN empleado em ON v.empleado_idempleado = em.idempleado " +
-                    "JOIN persona pe ON em.persona_idpersona = pe.idpersona " +
-                    "JOIN estatus e ON v.estatus_idestatus = e.idestatus " +
-                    "LEFT JOIN aval_has_venta avh ON v.Idventa = avh.venta_Idventa " +
-                    "LEFT JOIN aval a ON avh.aval_idaval = a.idaval " +
-                    "LEFT JOIN persona pa ON a.persona_idpersona = pa.idpersona " +
-                    "ORDER BY v.Idventa ";
+        consulta = "SELECT v.Idventa AS Folio, v.fecha_venta AS Fecha,CONCAT(pc.nombres, ' ', pc.ap_paterno, ' ', pc.ap_materno) AS Cliente, "
+                + "CONCAT(pa.nombres, ' ', pa.ap_paterno, ' ', pa.ap_materno) AS Aval, CONCAT(pe.nombres, ' ', pe.ap_paterno, ' ', pe.ap_materno) "
+                + "AS Cobrador, e.estatus AS Estatus, v.num_pagos AS  'Pagos pendientes' "
+                + "FROM venta v JOIN cliente c ON v .cliente_idcliente = c.idcliente "
+                + "JOIN persona pc ON c.persona_idpersona = pc.idpersona "
+                + "JOIN empleado em ON v.empleado_idempleado = em.idempleado "
+                + "JOIN persona pe ON em.persona_idpersona = pe.idpersona "
+                + "JOIN estatus e ON v.estatus_idestatus = e.idestatus "
+                + "LEFT JOIN aval_has_venta avh ON v.Idventa = avh.venta_Idventa "
+                + "LEFT JOIN aval a ON avh.aval_idaval = a.idaval "
+                + "LEFT JOIN persona pa ON a.persona_idpersona = pa.idpersona "
+                + "ORDER BY v.Idventa ";
         return cnslt.buscarValores(consulta, 7);
+    }
+
+    public ArrayList<String[]> buscarAgregarVenta() throws SQLException {
+        consulta = "SELECT venta.Idventa, producto.producto, venta.total AS Cantidad " +
+                    "FROM venta " +
+                    "INNER JOIN venta_has_producto ON venta.Idventa = venta_has_producto.venta_Idventa " +
+                    "INNER JOIN producto ON venta_has_producto.producto_idproducto = producto.idproducto " +
+                    "WHERE venta_has_producto.venta_Idventa = venta.Idventa " +
+                    "AND producto.idproducto = venta_has_producto.producto_idproducto ";
+        return cnslt.buscarValores(consulta, 3);
     }
 }

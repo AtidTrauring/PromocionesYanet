@@ -8,38 +8,59 @@ import utilitarios.CUtilitarios;
 
 /**
  *
- * @author ADMIN
+ * @author BRIS
  */
 public class jfventa extends javax.swing.JFrame {
 
-    private DefaultTableModel model;
+    private DefaultTableModel modelBusqueda;
+    private DefaultTableModel modelAgregar;
     private CBusquedas cbus = new CBusquedas();
     private CUtilitarios cuti = new CUtilitarios();
     private TableRowSorter tr;
     private static String[] datosVenta;
     private ArrayList<String[]> datosKardex = new ArrayList<>();
-    
+    private ArrayList<String[]> datosAgregar = new ArrayList<>();
+
     public jfventa(String[] datos) {
         initComponents();
         datosVenta = datos;
         cargarTablaBusqueda();
+        cargarTablaAgregar();
     }
-    
-    private void limpiarTabla() {
-        model = (DefaultTableModel) jTblListaVentas.getModel();
-        model.setRowCount(0);
+
+    private void limpiarTablaBusqueda() {
+        modelBusqueda = (DefaultTableModel) jTblListaVentas.getModel();
+        modelBusqueda.setRowCount(0);
     }
-    
+
+    private void limpiarTablaAgregar() {
+        modelAgregar = (DefaultTableModel) jTblAgregarVenta.getModel(); // Cambiado a model1
+        modelAgregar.setRowCount(0); // Cambiado a model1
+    }
+
     public void cargarTablaBusqueda() {
-        model = (DefaultTableModel) jTblListaVentas.getModel();
+        modelBusqueda = (DefaultTableModel) jTblListaVentas.getModel();
         try {
             datosKardex = cbus.buscarVenta();
-            limpiarTabla();
+            limpiarTablaBusqueda();
             for (String[] datoKardex : datosKardex) {
-                model.addRow(new Object[]{datoKardex[0], datoKardex[1], datoKardex[2], datoKardex[3], datoKardex[4], datoKardex[5], datoKardex[6]});
+                modelBusqueda.addRow(new Object[]{datoKardex[0], datoKardex[1], datoKardex[2], datoKardex[3], datoKardex[4], datoKardex[5], datoKardex[6]});
             }
         } catch (Exception e) {
-            CUtilitarios.msg_error("No se pudo cargar la tabla", "Carga de tabla");
+            CUtilitarios.msg_error("No se pudo cargar la tabla", "Carga de tabla de busqueda");
+        }
+    }
+
+    public void cargarTablaAgregar() {
+        modelAgregar = (DefaultTableModel) jTblAgregarVenta.getModel();
+        try {
+            datosAgregar = cbus.buscarAgregarVenta();
+            limpiarTablaAgregar();
+            for (String[] datoAgregar : datosAgregar) {
+                modelAgregar.addRow(new Object[]{datoAgregar[0], datoAgregar[1], datoAgregar[2]});
+            }
+        } catch (Exception e) {
+            CUtilitarios.msg_error("No se pudo cargar la tabla", "Carga de tabla de agregar");
         }
     }
 
@@ -69,7 +90,7 @@ public class jfventa extends javax.swing.JFrame {
         jTblListaVentas = new javax.swing.JTable();
         jPnlAgrVenta = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jTblAgregarVenta = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
         jLblTituloVentas = new javax.swing.JLabel();
         jLblFolioVenta = new javax.swing.JLabel();
@@ -297,7 +318,7 @@ public class jfventa extends javax.swing.JFrame {
 
         jPnlAgrVenta.setBackground(new java.awt.Color(242, 220, 153));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jTblAgregarVenta.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -305,7 +326,7 @@ public class jfventa extends javax.swing.JFrame {
                 "ID venta", "Descripción", "Cantidad"
             }
         ));
-        jScrollPane2.setViewportView(jTable1);
+        jScrollPane2.setViewportView(jTblAgregarVenta);
 
         jPanel1.setBackground(new java.awt.Color(167, 235, 242));
 
@@ -990,8 +1011,8 @@ public class jfventa extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator7;
     private javax.swing.JSeparator jSeparator8;
     private javax.swing.JSeparator jSeparator9;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTabbedPane jTbdPMenuVentas;
+    private javax.swing.JTable jTblAgregarVenta;
     private javax.swing.JTable jTblListaVentas;
     private javax.swing.JTextField jTxtBusClienteVenta;
     private javax.swing.JTextField jTxtBusCobradorVenta;
