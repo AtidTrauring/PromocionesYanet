@@ -35,6 +35,12 @@ public class jfventa extends javax.swing.JFrame {
         cargarCombos(jCmbBoxFechas, 1);
         cargarCombos(jCmbBoxEstatus, 2);
         cargarCombos(jCmbBoxPagosPendi, 3);
+        cargarCombos(jCmbBoxEstatusVenta, 2);
+        cargarCombos(jCmbBoxVendedorVenta, 4);
+        cargarCombos(jCmbBoxZonaVenta, 5);
+        cargarCombos(jCmbBoxAgAcCobradorVentaPago, 4);
+        cargarCombos(jCmbBoxCobrador, 4);
+        cargarCombos(jCmbBoxCliente, 6);
     }
 
     //Limpia la tabla de la busqueda.
@@ -98,6 +104,27 @@ public class jfventa extends javax.swing.JFrame {
 
                 case 3:
                     datosCombos = queryCargaCombos.cargaComboPagosPendientesVenta();
+                    for (int i = 0; i < datosCombos.size(); i++) {
+                        listasCombos.addElement(datosCombos.get(i));
+                    }
+                    break;
+
+                case 4:
+                    datosCombos = queryCargaCombos.cargaComboVendedoresVenta();
+                    for (int i = 0; i < datosCombos.size(); i++) {
+                        listasCombos.addElement(datosCombos.get(i));
+                    }
+                    break;
+
+                case 5:
+                    datosCombos = queryCargaCombos.cargaComboZonasVenta();
+                    for (int i = 0; i < datosCombos.size(); i++) {
+                        listasCombos.addElement(datosCombos.get(i));
+                    }
+                    break;
+
+                case 6:
+                    datosCombos = queryCargaCombos.cargaComboClientesVenta();
                     for (int i = 0; i < datosCombos.size(); i++) {
                         listasCombos.addElement(datosCombos.get(i));
                     }

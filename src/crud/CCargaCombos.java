@@ -131,8 +131,29 @@ public class CCargaCombos {
     }
 
     public ArrayList<String> cargaComboPagosPendientesVenta() throws SQLException {
-        consulta = "SELECT DISTINCT venta.num_pagos " +
-                    "FROM venta ";
+        consulta = "SELECT DISTINCT venta.num_pagos "
+                + "FROM venta ";
+        return cnslt.buscarValoresCombos(consulta);
+    }
+
+    public ArrayList<String> cargaComboVendedoresVenta() throws SQLException {
+        consulta = "SELECT CONCAT(p.nombres, ' ', p.ap_paterno, ' ', p.ap_materno) AS nombre_completo "
+                + "FROM empleado e "
+                + "JOIN persona p ON e.persona_idpersona = p.idpersona ";
+        return cnslt.buscarValoresCombos(consulta);
+    }
+
+    public ArrayList<String> cargaComboZonasVenta() throws SQLException {
+        consulta = "SELECT DISTINCT zona.num_zona " +
+                    "FROM venta " +
+                    "INNER JOIN zona ON venta.zona_idzona = zona.idzona ";
+        return cnslt.buscarValoresCombos(consulta);
+    }
+    
+    public ArrayList<String> cargaComboClientesVenta() throws SQLException {
+        consulta = "SELECT CONCAT(p.nombres, ' ', p.ap_paterno, ' ', p.ap_materno) AS nombre_completo " +
+                    "FROM cliente c " +
+                    "JOIN persona p ON c.persona_idpersona = p.idpersona";
         return cnslt.buscarValoresCombos(consulta);
     }
 }
