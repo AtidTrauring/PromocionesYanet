@@ -5,6 +5,8 @@ import crud.CCargaCombos;
 import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
+import javax.swing.JTable;
+import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import utilitarios.CUtilitarios;
@@ -42,6 +44,12 @@ public class jfventa extends javax.swing.JFrame {
         cargarCombos(jCmbBoxCobrador, 4);
         cargarCombos(jCmbBoxCliente, 6);
         cargarCombos(jCmbBoxNumAvalesVenta, 7);
+        addFiltroListener(jTxtBusIDVenta);
+        addFiltroListener(jTxtBusClienteVenta);
+        addFiltroListener(jTxtBusCobradorVenta);
+        addFiltroListener(jCmbBoxFechas);
+        addFiltroListener(jCmbBoxEstatus);
+        addFiltroListener(jCmbBoxPagosPendi);
     }
 
     //Limpia la tabla de la busqueda.
@@ -146,6 +154,91 @@ public class jfventa extends javax.swing.JFrame {
             if (datosCombos != null) {
                 datosCombos.clear(); // Limpiar el ArrayList después de usarlo
             }
+        }
+    }
+
+    //Filtros
+    public void apliFiltros(JTable tabla) {
+        DefaultTableModel modelFiltro = (DefaultTableModel) tabla.getModel();
+        tr = new TableRowSorter<>(modelFiltro);
+        tabla.setRowSorter(tr);
+        ArrayList<RowFilter<Object, Object>> filtros = new ArrayList<>();
+
+        //------TEXTFIELDS------
+        //folio
+        if (!jTxtBusIDVenta.getText().trim().isEmpty()) {
+            filtros.add(RowFilter.regexFilter("(?i)" + jTxtBusIDVenta.getText().trim(), 0));
+            //el indice 0 es para el folio
+        }
+
+        //cliente
+        if (!jTxtBusClienteVenta.getText().trim().isEmpty()) {
+            filtros.add(RowFilter.regexFilter("(?i)" + jTxtBusClienteVenta.getText().trim(), 2));
+            //el indice 2 es para el nombre del ciente
+        }
+
+        //cobrador
+        if (!jTxtBusCobradorVenta.getText().trim().isEmpty()) {
+            filtros.add(RowFilter.regexFilter("(?i)" + jTxtBusCobradorVenta.getText().trim(), 4));
+            //el indice 4 es para el nombre del cobrador
+        }
+
+        //------COMBOS-------
+        //fechas
+        if (jCmbBoxFechas.getSelectedIndex() > 0) {
+            String fechaSeleccionada = jCmbBoxFechas.getSelectedItem().toString();
+            filtros.add(RowFilter.regexFilter("(?i)^" + fechaSeleccionada + "$", 1)); // ^$ para coincidencia exacta
+            //el indice 1 es para las fechas
+        }
+
+        //estatus
+        if (jCmbBoxEstatus.getSelectedIndex() > 0) {
+            String estatusElegido = jCmbBoxEstatus.getSelectedItem().toString();
+            filtros.add(RowFilter.regexFilter("(?i)^" + estatusElegido + "$", 5));
+            //el indice 5 es para estatus
+        }
+
+        //pagos pendientes
+        if (jCmbBoxPagosPendi.getSelectedIndex() > 0) {
+            String pagosSeleccionados = jCmbBoxPagosPendi.getSelectedItem().toString();
+            filtros.add(RowFilter.regexFilter("(?i)^" + pagosSeleccionados + "$", 6));
+            //el indice 6 es de los pagos
+        }
+
+        // ------ APLICACIÓN DE FILTROS ------
+        if (!filtros.isEmpty()) {
+            tr.setRowFilter(RowFilter.andFilter(filtros)); //todos los filtros deben cumplirse
+        } else {
+            tr.setRowFilter(null); //limpia filtros
+        }
+    }
+
+    //este agrega un listener a los textfield y combos
+    private void addFiltroListener(javax.swing.JComponent componente) {
+        if (componente instanceof javax.swing.JTextField) {
+            // Listener para JTextField
+            ((javax.swing.JTextField) componente).getDocument().addDocumentListener(
+                    new javax.swing.event.DocumentListener() {
+                public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                    apliFiltros(jTblListaVentas);
+                }
+
+                public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                    apliFiltros(jTblListaVentas);
+                }
+
+                public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                    apliFiltros(jTblListaVentas);
+                }
+            });
+        } else if (componente instanceof javax.swing.JComboBox) {
+            // Listener para JComboBox
+            ((javax.swing.JComboBox<?>) componente).addActionListener(
+                    new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent e) {
+                    apliFiltros(jTblListaVentas);
+                }
+            });
         }
     }
 
@@ -287,6 +380,11 @@ public class jfventa extends javax.swing.JFrame {
         jTxtBusIDVenta.setBackground(new java.awt.Color(167, 235, 242));
         jTxtBusIDVenta.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
         jTxtBusIDVenta.setBorder(null);
+        jTxtBusIDVenta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTxtBusIDVentaActionPerformed(evt);
+            }
+        });
 
         jTxtBusClienteVenta.setBackground(new java.awt.Color(167, 235, 242));
         jTxtBusClienteVenta.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
@@ -830,7 +928,7 @@ public class jfventa extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPnlActVentaLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPnlAgreActuaPagos, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addComponent(jPnlAgreActuaPagos, javax.swing.GroupLayout.PREFERRED_SIZE, 347, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -961,7 +1059,7 @@ public class jfventa extends javax.swing.JFrame {
                         .addComponent(jLblLogoCobrador)
                         .addGap(18, 18, 18)
                         .addComponent(jBtnAsignarCobrador)))
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
 
         jTbdPMenuVentas.addTab("Asignar cobrador", jPnlElimVenta);
@@ -987,6 +1085,11 @@ public class jfventa extends javax.swing.JFrame {
     private void jRadBtnEliminarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadBtnEliminarVentaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jRadBtnEliminarVentaActionPerformed
+
+    private void jTxtBusIDVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTxtBusIDVentaActionPerformed
+        // TODO add your handling code here:
+        apliFiltros(jTblListaVentas);
+    }//GEN-LAST:event_jTxtBusIDVentaActionPerformed
 
     /**
      * @param args the command line arguments
