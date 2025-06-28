@@ -41,6 +41,7 @@ public class jfventa extends javax.swing.JFrame {
         cargarCombos(jCmbBoxAgAcCobradorVentaPago, 4);
         cargarCombos(jCmbBoxCobrador, 4);
         cargarCombos(jCmbBoxCliente, 6);
+        cargarCombos(jCmbBoxNumAvalesVenta, 7);
     }
 
     //Limpia la tabla de la busqueda.
@@ -128,6 +129,13 @@ public class jfventa extends javax.swing.JFrame {
                     for (int i = 0; i < datosCombos.size(); i++) {
                         listasCombos.addElement(datosCombos.get(i));
                     }
+                    break;
+
+                // Carga manual del combo de avales
+                case 7:
+                    listasCombos.addElement("1");
+                    listasCombos.addElement("2");
+                    listasCombos.addElement("3");
                     break;
                 default:
                     throw new AssertionError();
