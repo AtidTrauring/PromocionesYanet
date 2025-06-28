@@ -434,7 +434,7 @@
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" attributes="0">
                                       <Component id="jScrollPane2" min="-2" pref="345" max="-2" attributes="0"/>
-                                      <EmptySpace pref="20" max="32767" attributes="0"/>
+                                      <EmptySpace pref="25" max="32767" attributes="0"/>
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
                                       <Group type="103" groupAlignment="0" attributes="0">
@@ -562,21 +562,28 @@
                                   <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="1" attributes="0">
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="jLblFolioVenta" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jSeparator7" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="jTxtFFolioVenta" alignment="0" pref="221" max="32767" attributes="0"/>
-                                      <Component id="jSeparator9" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="jTxtFClienteVenta" alignment="0" pref="221" max="32767" attributes="0"/>
-                                      <Component id="jSeparator10" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="jTxtFNumPagosVenta" alignment="0" pref="221" max="32767" attributes="0"/>
-                                      <Component id="jDteChoVenta" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="jLblFechaVenta" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jLblClienteVenta" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jLblNumPagosVenta" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Group type="102" attributes="0">
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                              <Component id="jLblFolioVenta" alignment="0" min="-2" max="-2" attributes="0"/>
+                                              <Component id="jSeparator7" alignment="0" max="32767" attributes="0"/>
+                                              <Component id="jTxtFFolioVenta" alignment="0" pref="221" max="32767" attributes="0"/>
+                                              <Component id="jSeparator10" alignment="0" max="32767" attributes="0"/>
+                                              <Component id="jTxtFNumPagosVenta" alignment="0" pref="221" max="32767" attributes="0"/>
+                                              <Component id="jDteChoVenta" alignment="0" max="32767" attributes="0"/>
+                                              <Component id="jLblFechaVenta" alignment="0" min="-2" max="-2" attributes="0"/>
+                                              <Component id="jLblClienteVenta" alignment="0" min="-2" max="-2" attributes="0"/>
+                                              <Component id="jLblNumPagosVenta" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          </Group>
+                                          <EmptySpace pref="15" max="32767" attributes="0"/>
+                                      </Group>
+                                      <Group type="102" alignment="1" attributes="0">
+                                          <EmptySpace max="32767" attributes="0"/>
+                                          <Component id="jCmbBoxClientesVenta" min="-2" pref="221" max="-2" attributes="0"/>
+                                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                      </Group>
                                   </Group>
-                                  <EmptySpace pref="14" max="32767" attributes="0"/>
                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                       <Component id="jSeparator11" alignment="0" max="32767" attributes="0"/>
                                       <Component id="jTxtFTotalVenta" alignment="0" pref="221" max="32767" attributes="0"/>
@@ -625,8 +632,7 @@
                                   <Component id="jDteChoVenta" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
                                   <Component id="jLblClienteVenta" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jTxtFClienteVenta" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" attributes="0">
                                   <Component id="jCmbBoxEstatusVenta" min="-2" max="-2" attributes="0"/>
@@ -635,14 +641,15 @@
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="jCmbBoxZonaVenta" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jCmbBoxNumAvalesVenta" min="-2" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="jCmbBoxNumAvalesVenta" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jCmbBoxClientesVenta" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
                               </Group>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" attributes="0">
                               <Group type="102" attributes="0">
-                                  <Component id="jSeparator9" min="-2" pref="10" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
                                   <Component id="jLblNumPagosVenta" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                                   <Component id="jTxtFNumPagosVenta" min="-2" max="-2" attributes="0"/>
@@ -676,7 +683,7 @@
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Candara" size="14" style="0"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="Ingrese el folio de la venta:"/>
+                    <Property name="text" type="java.lang.String" value="Folio de la venta:"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="jTxtFFolioVenta">
@@ -712,27 +719,7 @@
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Candara" size="14" style="0"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="Ingrese el cliente de la venta:"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JTextField" name="jTxtFClienteVenta">
-                  <Properties>
-                    <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                      <Color blue="f2" green="eb" red="a7" type="rgb"/>
-                    </Property>
-                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="Candara" size="14" style="0"/>
-                    </Property>
-                    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                      <Border info="null"/>
-                    </Property>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JSeparator" name="jSeparator9">
-                  <Properties>
-                    <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                      <Color blue="0" green="0" red="0" type="rgb"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="Seleccione el cliente de la venta:"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLblNumPagosVenta">
@@ -881,6 +868,21 @@
                 </Component>
                 <Component class="com.toedter.calendar.JDateChooser" name="jDteChoVenta">
                 </Component>
+                <Component class="javax.swing.JComboBox" name="jCmbBoxClientesVenta">
+                  <Properties>
+                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                      <Font name="Candara" size="14" style="0"/>
+                    </Property>
+                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                      <StringArray count="1">
+                        <StringItem index="0" value="Clientes"/>
+                      </StringArray>
+                    </Property>
+                  </Properties>
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+                  </AuxValues>
+                </Component>
               </SubComponents>
             </Container>
             <Component class="javax.swing.JRadioButton" name="jRadBtnAgregarVenta">
@@ -893,6 +895,9 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Agregar venta"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jRadBtnAgregarVentaActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JRadioButton" name="jRadBtnActualizarVenta">
               <Properties>
@@ -904,6 +909,9 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Actualizar venta"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jRadBtnActualizarVentaActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="jBtnAgregarVenta">
               <Properties>
@@ -1016,7 +1024,7 @@
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jPnlAgreActuaPagos" pref="347" max="32767" attributes="0"/>
+                      <Component id="jPnlAgreActuaPagos" pref="362" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>

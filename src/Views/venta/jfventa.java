@@ -3,6 +3,7 @@ package Views.venta;
 import crud.CBusquedas;
 import crud.CCargaCombos;
 import java.util.ArrayList;
+import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JTable;
@@ -31,6 +32,7 @@ public class jfventa extends javax.swing.JFrame {
 
     public jfventa(String[] datos) {
         initComponents();
+        desactivarTodosLosComponentes();
         datosVenta = datos;
         cargarTablaBusqueda();
         cargarTablaAgregar();
@@ -44,12 +46,18 @@ public class jfventa extends javax.swing.JFrame {
         cargarCombos(jCmbBoxCobrador, 4);
         cargarCombos(jCmbBoxCliente, 6);
         cargarCombos(jCmbBoxNumAvalesVenta, 7);
+        cargarCombos(jCmbBoxClientesVenta, 6);
         addFiltroListener(jTxtBusIDVenta);
         addFiltroListener(jTxtBusClienteVenta);
         addFiltroListener(jTxtBusCobradorVenta);
         addFiltroListener(jCmbBoxFechas);
         addFiltroListener(jCmbBoxEstatus);
         addFiltroListener(jCmbBoxPagosPendi);
+        addFiltroListener(jTxtFFolioVenta);
+        ButtonGroup grupoRadios = new ButtonGroup();
+        grupoRadios.add(jRadBtnAgregarVenta);
+        grupoRadios.add(jRadBtnActualizarVenta);
+        grupoRadios.add(jRadBtnEliminarVenta);
     }
 
     //Limpia la tabla de la busqueda.
@@ -242,6 +250,86 @@ public class jfventa extends javax.swing.JFrame {
         }
     }
 
+    public void limpiarCampos() {
+        jTxtFFolioVenta.setText("");
+        jTxtFNumPagosVenta.setText("");
+        jTxtFTotalVenta.setText("");
+        jTxtFFolioProductoVenta.setText("");
+        jDteChoVenta.setDate(null);
+        jCmbBoxClientesVenta.setSelectedIndex(0);
+        jCmbBoxEstatusVenta.setSelectedIndex(0);
+        jCmbBoxVendedorVenta.setSelectedIndex(0);
+        jCmbBoxZonaVenta.setSelectedIndex(0);
+        jCmbBoxNumAvalesVenta.setSelectedIndex(0);
+    }
+
+    //desactiva todos los campos hasta que se elija una accion
+    private void desactivarTodosLosComponentes() {
+        jTxtFFolioVenta.setEnabled(false);
+        jTxtFTotalVenta.setEnabled(false);
+        jTxtFNumPagosVenta.setEnabled(false);
+        jTxtFFolioProductoVenta.setEnabled(false);
+        jDteChoVenta.setEnabled(false);
+        jCmbBoxClientesVenta.setEnabled(false);
+        jCmbBoxEstatusVenta.setEnabled(false);
+        jCmbBoxVendedorVenta.setEnabled(false);
+        jCmbBoxZonaVenta.setEnabled(false);
+        jCmbBoxNumAvalesVenta.setEnabled(false);
+        jBtnAgregarVenta.setEnabled(false);
+        jBtnActualizarVenta.setEnabled(false);
+        jBtnEliminarVenta.setEnabled(false);
+    }
+
+    private void gestionarComponentes(int modo) {
+        // 0 = Agregar, 1 = Actualizar, 2 = Eliminar
+        desactivarTodosLosComponentes();
+
+        //radio buttons
+        switch (modo) {
+            case 0:
+                jRadBtnAgregarVenta.setSelected(true);
+                break;
+            case 1:
+                jRadBtnActualizarVenta.setSelected(true);
+                break;
+            case 2:
+                jRadBtnEliminarVenta.setSelected(true);
+                break;
+        }
+
+        switch (modo) {
+            case 0:
+                jTxtFTotalVenta.setEnabled(true);
+                jDteChoVenta.setEnabled(true);
+                jCmbBoxClientesVenta.setEnabled(true);
+                jTxtFNumPagosVenta.setEnabled(true);
+                jCmbBoxEstatusVenta.setEnabled(true);
+                jCmbBoxVendedorVenta.setEnabled(true);
+                jCmbBoxZonaVenta.setEnabled(true);
+                jCmbBoxNumAvalesVenta.setEnabled(true);
+                jTxtFFolioProductoVenta.setEnabled(true);
+                jBtnAgregarVenta.setEnabled(true);
+                limpiarCampos();
+                break;
+
+            case 1:
+                jTxtFFolioVenta.setEnabled(true);
+                jTxtFTotalVenta.setEnabled(true);
+                jDteChoVenta.setEnabled(true);
+                jCmbBoxEstatusVenta.setEnabled(true);
+                jCmbBoxVendedorVenta.setEnabled(true);
+                jCmbBoxZonaVenta.setEnabled(true);
+                jBtnActualizarVenta.setEnabled(true);
+                break;
+
+            case 2:
+                jTxtFFolioVenta.setEnabled(true);
+                jBtnEliminarVenta.setEnabled(true);
+                limpiarCampos();
+                break;
+        }
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -276,8 +364,6 @@ public class jfventa extends javax.swing.JFrame {
         jSeparator7 = new javax.swing.JSeparator();
         jLblFechaVenta = new javax.swing.JLabel();
         jLblClienteVenta = new javax.swing.JLabel();
-        jTxtFClienteVenta = new javax.swing.JTextField();
-        jSeparator9 = new javax.swing.JSeparator();
         jLblNumPagosVenta = new javax.swing.JLabel();
         jTxtFNumPagosVenta = new javax.swing.JTextField();
         jSeparator10 = new javax.swing.JSeparator();
@@ -292,6 +378,7 @@ public class jfventa extends javax.swing.JFrame {
         jCmbBoxZonaVenta = new javax.swing.JComboBox<>();
         jCmbBoxNumAvalesVenta = new javax.swing.JComboBox<>();
         jDteChoVenta = new com.toedter.calendar.JDateChooser();
+        jCmbBoxClientesVenta = new javax.swing.JComboBox<>();
         jRadBtnAgregarVenta = new javax.swing.JRadioButton();
         jRadBtnActualizarVenta = new javax.swing.JRadioButton();
         jBtnAgregarVenta = new javax.swing.JButton();
@@ -517,7 +604,7 @@ public class jfventa extends javax.swing.JFrame {
         jLblTituloVentas.setText("Operaciones de ventas");
 
         jLblFolioVenta.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
-        jLblFolioVenta.setText("Ingrese el folio de la venta:");
+        jLblFolioVenta.setText("Folio de la venta:");
 
         jTxtFFolioVenta.setBackground(new java.awt.Color(167, 235, 242));
         jTxtFFolioVenta.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
@@ -529,13 +616,7 @@ public class jfventa extends javax.swing.JFrame {
         jLblFechaVenta.setText("Seleccione la fecha de la venta:");
 
         jLblClienteVenta.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
-        jLblClienteVenta.setText("Ingrese el cliente de la venta:");
-
-        jTxtFClienteVenta.setBackground(new java.awt.Color(167, 235, 242));
-        jTxtFClienteVenta.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
-        jTxtFClienteVenta.setBorder(null);
-
-        jSeparator9.setForeground(new java.awt.Color(0, 0, 0));
+        jLblClienteVenta.setText("Seleccione el cliente de la venta:");
 
         jLblNumPagosVenta.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
         jLblNumPagosVenta.setText("Ingrese el número de pagos:");
@@ -576,6 +657,9 @@ public class jfventa extends javax.swing.JFrame {
         jCmbBoxNumAvalesVenta.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
         jCmbBoxNumAvalesVenta.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Numero de avales" }));
 
+        jCmbBoxClientesVenta.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
+        jCmbBoxClientesVenta.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Clientes" }));
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -587,20 +671,24 @@ public class jfventa extends javax.swing.JFrame {
                         .addComponent(jLblTituloVentas)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLblFolioVenta)
-                            .addComponent(jSeparator7)
-                            .addComponent(jTxtFFolioVenta, javax.swing.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE)
-                            .addComponent(jSeparator9)
-                            .addComponent(jTxtFClienteVenta, javax.swing.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE)
-                            .addComponent(jSeparator10)
-                            .addComponent(jTxtFNumPagosVenta, javax.swing.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE)
-                            .addComponent(jDteChoVenta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLblFechaVenta)
-                            .addComponent(jLblClienteVenta)
-                            .addComponent(jLblNumPagosVenta))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jLblFolioVenta)
+                                    .addComponent(jSeparator7)
+                                    .addComponent(jTxtFFolioVenta, javax.swing.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE)
+                                    .addComponent(jSeparator10)
+                                    .addComponent(jTxtFNumPagosVenta, javax.swing.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE)
+                                    .addComponent(jDteChoVenta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLblFechaVenta)
+                                    .addComponent(jLblClienteVenta)
+                                    .addComponent(jLblNumPagosVenta))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jCmbBoxClientesVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jSeparator11)
                             .addComponent(jTxtFTotalVenta, javax.swing.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE)
@@ -641,8 +729,7 @@ public class jfventa extends javax.swing.JFrame {
                         .addComponent(jDteChoVenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jLblClienteVenta)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTxtFClienteVenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(25, 25, 25))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jCmbBoxEstatusVenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -650,12 +737,12 @@ public class jfventa extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jCmbBoxZonaVenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jCmbBoxNumAvalesVenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jCmbBoxNumAvalesVenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jCmbBoxClientesVenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(19, 19, 19)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jSeparator9, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLblNumPagosVenta)
                         .addGap(2, 2, 2)
                         .addComponent(jTxtFNumPagosVenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -673,10 +760,20 @@ public class jfventa extends javax.swing.JFrame {
         jRadBtnAgregarVenta.setBackground(new java.awt.Color(242, 220, 153));
         jRadBtnAgregarVenta.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
         jRadBtnAgregarVenta.setText("Agregar venta");
+        jRadBtnAgregarVenta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadBtnAgregarVentaActionPerformed(evt);
+            }
+        });
 
         jRadBtnActualizarVenta.setBackground(new java.awt.Color(242, 220, 153));
         jRadBtnActualizarVenta.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
         jRadBtnActualizarVenta.setText("Actualizar venta");
+        jRadBtnActualizarVenta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadBtnActualizarVentaActionPerformed(evt);
+            }
+        });
 
         jBtnAgregarVenta.setBackground(new java.awt.Color(53, 189, 242));
         jBtnAgregarVenta.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
@@ -712,7 +809,7 @@ public class jfventa extends javax.swing.JFrame {
                         .addGroup(jPnlAgrVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPnlAgrVentaLayout.createSequentialGroup()
                                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(20, Short.MAX_VALUE))
+                                .addContainerGap(25, Short.MAX_VALUE))
                             .addGroup(jPnlAgrVentaLayout.createSequentialGroup()
                                 .addGroup(jPnlAgrVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jRadBtnAgregarVenta)
@@ -928,7 +1025,7 @@ public class jfventa extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPnlActVentaLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPnlAgreActuaPagos, javax.swing.GroupLayout.PREFERRED_SIZE, 347, Short.MAX_VALUE)
+                .addComponent(jPnlAgreActuaPagos, javax.swing.GroupLayout.PREFERRED_SIZE, 362, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -1083,13 +1180,21 @@ public class jfventa extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jRadBtnEliminarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadBtnEliminarVentaActionPerformed
-        // TODO add your handling code here:
+        gestionarComponentes(2);
     }//GEN-LAST:event_jRadBtnEliminarVentaActionPerformed
 
     private void jTxtBusIDVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTxtBusIDVentaActionPerformed
         // TODO add your handling code here:
         apliFiltros(jTblListaVentas);
     }//GEN-LAST:event_jTxtBusIDVentaActionPerformed
+
+    private void jRadBtnAgregarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadBtnAgregarVentaActionPerformed
+        gestionarComponentes(0);
+    }//GEN-LAST:event_jRadBtnAgregarVentaActionPerformed
+
+    private void jRadBtnActualizarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadBtnActualizarVentaActionPerformed
+        gestionarComponentes(1);
+    }//GEN-LAST:event_jRadBtnActualizarVentaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1136,6 +1241,7 @@ public class jfventa extends javax.swing.JFrame {
     private javax.swing.JButton jBtnGuardarPago;
     private javax.swing.JComboBox<String> jCmbBoxAgAcCobradorVentaPago;
     private javax.swing.JComboBox<String> jCmbBoxCliente;
+    private javax.swing.JComboBox<String> jCmbBoxClientesVenta;
     private javax.swing.JComboBox<String> jCmbBoxCobrador;
     private javax.swing.JComboBox<String> jCmbBoxEstatus;
     private javax.swing.JComboBox<String> jCmbBoxEstatusVenta;
@@ -1198,7 +1304,6 @@ public class jfventa extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator6;
     private javax.swing.JSeparator jSeparator7;
     private javax.swing.JSeparator jSeparator8;
-    private javax.swing.JSeparator jSeparator9;
     private javax.swing.JTabbedPane jTbdPMenuVentas;
     private javax.swing.JTable jTblAgregarVenta;
     private javax.swing.JTable jTblListaVentas;
@@ -1208,7 +1313,6 @@ public class jfventa extends javax.swing.JFrame {
     private javax.swing.JTextField jTxtFAgAcFolioVentaPago;
     private javax.swing.JTextField jTxtFAgAcPagosPago;
     private javax.swing.JTextField jTxtFAgAcRestantePago;
-    private javax.swing.JTextField jTxtFClienteVenta;
     private javax.swing.JTextField jTxtFCobradorBusqueda;
     private javax.swing.JTextField jTxtFFolioGeneCobrador;
     private javax.swing.JTextField jTxtFFolioProductoVenta;
