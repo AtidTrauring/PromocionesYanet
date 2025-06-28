@@ -548,8 +548,24 @@ public ArrayList<String[]> buscarColoniasDisponibles() throws SQLException {
                 + "FROM empleado;";
         return cnslt.buscarValores(consulta, 4);
     }
+    
+    public String buscarPersonaCliente(int idcl) throws SQLException {
+        consulta = "SELECT pr.idpersona "
+                + "FROM persona pr "
+                + "INNER JOIN cliente cl ON cl.persona_idpersona = pr.idpersona "
+                + "WHERE cl.idcliente = "+idcl+";";
+        return cnslt.buscarValor(consulta);
+    }
+    
+    public String buscarPersonaAval(int idav) throws SQLException {
+        consulta = "SELECT pr.idpersona "
+                + "FROM persona pr "
+                + "INNER JOIN aval av ON av.persona_idpersona = pr.idpersona "
+                + "WHERE av.idaval = "+idav+";";
+        return cnslt.buscarValor(consulta);
+    }
 
-    /* Clientes */
+    /* Fin Clientes */
     public ArrayList<String[]> buscarCliente() throws SQLException {
         consulta = "SELECT "
                 + "cl.idcliente, pr.nombres AS 'Nombre (s)', pr.ap_paterno AS 'Apellido Parno', pr.ap_materno AS 'Apellido Materno', es.estatus "

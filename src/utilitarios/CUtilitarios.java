@@ -5,6 +5,7 @@ import java.awt.*;
 import java.sql.*;
 import java.util.*;
 import javax.swing.*;
+import javax.swing.JTable;
 import javax.swing.table.*;
 
 public class CUtilitarios {
@@ -254,70 +255,7 @@ public class CUtilitarios {
         });
     }
 
-    /* Método para limpiar tabla y cargar los campos */
-    private TableRowSorter<DefaultTableModel> tr;
-
-    private void limpiarTabla(JTable jt) {
-        // Obtenemos el modelo de la tabla (estructura de filas y columnas)
-        DefaultTableModel modelo = (DefaultTableModel) jt.getModel();
-
-        // Establecemos que el número de filas sea 0, es decir, vaciar la tabla
-        modelo.setRowCount(0);
-    }
-
-    @FunctionalInterface
-    public interface ConsultaTabla {
-
-        ArrayList<String[]> ejecutar() throws SQLException;
-    }
-
-    public void cargarTabla(JTable jt, ConsultaTabla consulta) throws SQLException {
-        DefaultTableModel modelo = (DefaultTableModel) jt.getModel();
-        limpiarTabla(jt);
-
-        // Ejecuta la consulta que se pasó como parámetro
-        ArrayList<String[]> datos = consulta.ejecutar();
-
-        for (String[] fila : datos) {
-            modelo.addRow(fila);
-        }
-
-        tr = new TableRowSorter<>(modelo);
-        jt.setRowSorter(tr);
-    }
-
-    // Nuevo Método para cargar tablas
-    public void cargarTablaDesdeConsulta(JTable tabla, PreparedStatement ps) throws SQLException {
-        try (ResultSet rs = ps.executeQuery()) {
-            ResultSetMetaData metaData = rs.getMetaData();
-            int columnCount = metaData.getColumnCount();
-
-            // Crear un nuevo modelo
-            DefaultTableModel modelo = new DefaultTableModel();
-
-            // Agregar columnas
-            for (int i = 1; i <= columnCount; i++) {
-                modelo.addColumn(metaData.getColumnLabel(i));
-            }
-
-            // Agregar filas
-            while (rs.next()) {
-                Object[] fila = new Object[columnCount];
-                for (int i = 0; i < columnCount; i++) {
-                    fila[i] = rs.getObject(i + 1);
-                }
-                modelo.addRow(fila);
-            }
-
-            // Ahora sí: asignar el modelo a la tabla
-            tabla.setModel(modelo);
-
-            // (Opcional) Aplicar ordenamiento
-            TableRowSorter<DefaultTableModel> tr = new TableRowSorter<>(modelo);
-            tabla.setRowSorter(tr);
-        }
-    }
-
+    /*Métodos*/
     private final CConecta conector = new CConecta();
 
     public void cargarConsultaEnTabla(String sql, JTable tabla) throws SQLException {
@@ -375,7 +313,94 @@ public class CUtilitarios {
         return true;
     }
 
+    /* Método para limpiar tabla y cargar los campos */
+    // Nuevo Método para cargar tablas
+    public void cargarTablaDesdeConsulta(JTable tabla, PreparedStatement ps) throws SQLException {
+        try (ResultSet rs = ps.executeQuery()) {
+            ResultSetMetaData metaData = rs.getMetaData();
+            int columnCount = metaData.getColumnCount();
+
+            // Crear un nuevo modelo
+            DefaultTableModel modelo = new DefaultTableModel();
+
+            // Agregar columnas
+            for (int i = 1; i <= columnCount; i++) {
+                modelo.addColumn(metaData.getColumnLabel(i));
+            }
+
+            // Agregar filas
+            while (rs.next()) {
+                Object[] fila = new Object[columnCount];
+                for (int i = 0; i < columnCount; i++) {
+                    fila[i] = rs.getObject(i + 1);
+                }
+                modelo.addRow(fila);
+            }
+
+            // Ahora sí: asignar el modelo a la tabla
+            tabla.setModel(modelo);
+
+            // (Opcional) Aplicar ordenamiento
+            TableRowSorter<DefaultTableModel> tr = new TableRowSorter<>(modelo);
+            tabla.setRowSorter(tr);
+        }
+    }
+
+    private TableRowSorter<DefaultTableModel> tr;
+
+    private void limpiarTabla(JTable jt) {
+        // Obtenemos el modelo de la tabla (estructura de filas y columnas)
+        DefaultTableModel modelo = (DefaultTableModel) jt.getModel();
+
+        // Establecemos que el número de filas sea 0, es decir, vaciar la tabla
+        modelo.setRowCount(0);
+    }
+
+    @FunctionalInterface
+    public interface ConsultaTabla {
+
+        ArrayList<String[]> ejecutar() throws SQLException;
+    }
+
+    public void cargarTabla(JTable jt, ConsultaTabla consulta) throws SQLException {
+        DefaultTableModel modelo = (DefaultTableModel) jt.getModel();
+        limpiarTabla(jt);
+
+        // Ejecuta la consulta que se pasó como parámetro
+        ArrayList<String[]> datos = consulta.ejecutar();
+
+        for (String[] fila : datos) {
+            modelo.addRow(fila);
+        }
+
+        tr = new TableRowSorter<>(modelo);
+        jt.setRowSorter(tr);
+    }
+
     /* Aplicación de Filtros para 4 parametros */
+    // Carga los datos de empleados desde la base de datos hacia la tabla
+    public void cargarDatos(JTable jt, ConsultaTabla consulta) throws SQLException {
+        // Obtener el modelo de la tabla de empleados
+        DefaultTableModel modelo = (DefaultTableModel) jt.getModel();
+
+        // Eliminar cualquier contenido previo de la tabla
+        limpiarTabla(jt);
+
+        // Obtener la lista de empleados desde la clase de búsqueda (consultas a la BD)
+        ArrayList<String[]> lista = consulta.ejecutar();
+
+        // Recorrer cada fila obtenida y agregarla a la tabla
+        for (String[] fila : lista) {
+            modelo.addRow(fila);
+        }
+
+        // Crear un TableRowSorter que permitirá ordenar y filtrar los datos de la tabla
+        tr = new TableRowSorter<>(modelo);
+
+        // Asociar el sorter a la tabla para que se activen las capacidades de filtrado
+        jt.setRowSorter(tr);
+    }
+
     public void aplicaFiltros(JTable jt, JTextField jtf1, JTextField jtf2, JTextField jtf3, JTextField jtf4) {
         // Obtenemos el modelo de la tabla
         DefaultTableModel modelo = (DefaultTableModel) jt.getModel();

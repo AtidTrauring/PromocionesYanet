@@ -70,13 +70,13 @@ public final class jfmenucliente extends javax.swing.JFrame {
                     }
                     datosListas.clear();
                     break;
-                case 2:
-                    datosListas = queryCarga.cargaComboEstatusAval();
-                    for (int i = 0; i < datosListas.size(); i++) {
-                        listas.addElement(datosListas.get(i));
-                    }
-                    datosListas.clear();
-                    break;
+//                case 2:
+//                    datosListas = queryCarga.cargaComboEstatusAval();
+//                    for (int i = 0; i < datosListas.size(); i++) {
+//                        listas.addElement(datosListas.get(i));
+//                    }
+//                    datosListas.clear();
+//                    break;
                 case 3:
                     datosListas = queryCarga.cargaComboZona();
                     for (int i = 0; i < datosListas.size(); i++) {

@@ -87,11 +87,6 @@ public class CCargaCombos {
         return cnslt.buscarValoresCombos(consulta);
     }
 
-    public ArrayList<String> cargaComboEstatusAval() throws SQLException {
-        consulta = "SELECT est.estatus FROM estatus est WHERE est.idestatus > 3;";
-        return cnslt.buscarValoresCombos(consulta);
-    }
-
     public ArrayList<String> cargaComboColoniasZona(String z) throws SQLException {
         consulta = "SELECT cl.colonia "
                 + "FROM colonia cl "

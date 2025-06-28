@@ -19,7 +19,10 @@ public final class jfcliente extends javax.swing.JFrame {
      */
     CUtilitarios cu = new CUtilitarios();
     CBusquedas cb = new CBusquedas();
-    String seleccion, est, z, idZona, idEstatus, idEstatusAval;
+    CEliminaciones celi = new CEliminaciones();
+    String seleccion, est, z, idZona, idEstatus, idEstatusAval, esttabla, tipo, idPersona;
+    String idPerEli, nombreEli, apEli, amEli;
+    int idcl, idav, idpr;
 
     public jfcliente() throws SQLException {
         initComponents();
@@ -28,13 +31,20 @@ public final class jfcliente extends javax.swing.JFrame {
         cargaComboBox(jcbnvestatuscliente, 1);
         cargaComboBox(jcbnvestatusaval, 1);
         cargaComboBox(jcbnvzona, 2);
+        cargaComboBox(jcbactestatuscliente, 1);
+        cargaComboBox(jcbactestatusaval, 1);
+        cargaComboBox(jcbactzona, 2);
 
         // Placeholder JTextField
         cu.aplicarPlaceholder(jtfidbusqueda, "Ingresar ID");
-        cu.aplicarPlaceholder(jtfnombresbusqueda, "Ingresar Nombre(s)");
+        cu.aplicarPlaceholder(jtfnombresbusqueda, "Ingresar Nombres");
         cu.aplicarPlaceholder(jtfapbusqueda, "Ingresar Apellido Paterno");
         cu.aplicarPlaceholder(jtfambusqueda, "Ingresar Apellido Maternos");
-        cu.aplicarPlaceholder(jtfnvnombres, "Nombre(s)");
+        cu.aplicarPlaceholder(jtfidbusquedaeli, "Ingresar ID");
+        cu.aplicarPlaceholder(jtfnombresbusquedaeli, "Ingresar Nombres");
+        cu.aplicarPlaceholder(jtfapbusquedaeli, "Ingresar Apellido Paterno");
+        cu.aplicarPlaceholder(jtfambusquedaeli, "Ingresar Apellido Maternos");
+        cu.aplicarPlaceholder(jtfnvnombres, "Nombres");
         cu.aplicarPlaceholder(jtfnvap, "Apellido Paterno");
         cu.aplicarPlaceholder(jtfnvam, "Apellido Materno");
         cu.aplicarPlaceholder(jtfnvtel, "Número de Teléfono");
@@ -83,6 +93,11 @@ public final class jfcliente extends javax.swing.JFrame {
                     jtfactnombres.setText(jtlistaclienteavalact.getValueAt(fila, 1).toString());
                     jtfactap.setText(jtlistaclienteavalact.getValueAt(fila, 2).toString());
                     jtfactam.setText(jtlistaclienteavalact.getValueAt(fila, 3).toString());
+                    esttabla = jtlistaclienteavalact.getValueAt(fila, 4).toString();
+                    System.out.println(esttabla);
+                    tipo = jtlistaclienteavalact.getValueAt(fila, 5).toString();
+                    System.out.println(tipo);
+
                 }
             }
         });
@@ -96,21 +111,58 @@ public final class jfcliente extends javax.swing.JFrame {
         try {
             cu.cargarConsultaEnTabla(sqlClientesAvales, jtlistaclienteaval);
             cu.cargarConsultaEnTabla(sqlClientesAvales, jtlistaclienteavalact);
+            cu.cargarConsultaEnTabla(sqlClientesAvales, jtlistaclienteavaleli);
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Error al cargar tablas: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    /**/
+    /* Filtros Tabla */
+
+ /**/
     private boolean validarCamposTexto() {
         JTextField[] campos = {jtfnvnombres, jtfnvap, jtfnvam};
-        String[] textos = {"Nombre(s)", "Apellido Paterno", "Apellido Materno"};
+        String[] textos = {"Nombres", "Apellido Paterno", "Apellido Materno"};
         String regex = "^[A-Za-zÁÉÍÓÚáéíóúÑñ\\s]+$";
 
         return CUtilitarios.validaCamposTextoConFormato(
                 campos, textos, textos, regex,
                 "Debes llenar todos los campos correctamente", "Validación de Datos Persona"
         );
+    }
+
+    private boolean validarCamposTextoEli() {
+        JTextField[] campos = {jtfnombresbusquedaeli, jtfapbusquedaeli, jtfambusquedaeli};
+        String[] nombresCampos = {"Nombres", "Apellido Paterno", "Apellido Materno"};
+        String regex = "^[A-Za-zÁÉÍÓÚáéíóúÑñ\\s]+$";
+
+        boolean alMenosUnoLleno = false;
+
+        for (int i = 0; i < campos.length; i++) {
+            String texto = campos[i].getText().trim();
+
+            if (!texto.isEmpty()) {
+                alMenosUnoLleno = true;
+
+                if (!texto.matches(regex)) {
+                    CUtilitarios.msg_advertencia(
+                            "El campo " + nombresCampos[i] + " contiene caracteres inválidos.",
+                            "Validación de Datos para Eliminar"
+                    );
+                    return false;
+                }
+            }
+        }
+
+        if (!alMenosUnoLleno) {
+            CUtilitarios.msg_advertencia(
+                    "Debes llenar al menos uno de los campos (Nombre o Apellidos) para buscar o eliminar.",
+                    "Validación de Datos para Eliminar"
+            );
+            return false;
+        }
+
+        return true;
     }
 
     private boolean validarTelefono() {
@@ -185,6 +237,69 @@ public final class jfcliente extends javax.swing.JFrame {
         CUtilitarios.msg_error("Error inesperado", errorDetails.toString());
     }
 
+    private void eliminarDesdeBoton() {
+        int fila = jtlistaclienteavaleli.getSelectedRow();
+        if (fila == -1 && !validarCamposTextoEli()) {
+            CUtilitarios.msg_advertencia(
+                    "Selecciona una fila de la tabla o escribe el ID para eliminar.",
+                    "Eliminar Persona"
+            );
+            return;
+        }
+        try {
+            if (fila != -1) {
+                // Tomar datos desde la tabla seleccionada
+                idcl = Integer.parseInt(jtlistaclienteavaleli.getValueAt(fila, 0).toString());
+                tipo = jtlistaclienteavaleli.getValueAt(fila, 5).toString();
+            } else {
+                // ID manualmente ingresado, pero sin forma de saber si es Cliente o Aval
+                CUtilitarios.msg_advertencia(
+                        "Debes seleccionar una fila para saber si es Cliente o Aval",
+                        "Eliminar Persona"
+                );
+                return;
+            }
+
+            if (tipo.equalsIgnoreCase("Cliente")) {
+                idPersona = cb.buscarPersonaCliente(idcl);
+                idpr = Integer.parseInt(idPersona);
+                System.out.println(idpr);
+            } else if (tipo.equalsIgnoreCase("Aval")) {
+                idPersona = cb.buscarPersonaAval(idcl);
+                System.out.println(idPersona);
+            } else {
+                CUtilitarios.msg_error("Tipo no reconocido (ni cliente ni aval)", "Error");
+                return;
+            }
+
+            if (idPersona != null && !idPersona.isEmpty()) {
+                int confirmar = JOptionPane.showConfirmDialog(
+                        null,
+                        "¿Deseas eliminar esta persona y su registro como " + tipo + "?",
+                        "Confirmar eliminación",
+                        JOptionPane.YES_NO_OPTION
+                );
+
+                if (confirmar == JOptionPane.YES_OPTION) {
+                    boolean eliminado = celi.eliminarPersona(Integer.parseInt(idPersona));
+                    if (eliminado) {
+                        CUtilitarios.msg("Persona eliminada correctamente", "Eliminar");
+                        cargarTablas();
+                    } else {
+                        CUtilitarios.msg_error("No se pudo eliminar a la persona", "Error");
+                    }
+                }
+
+            } else {
+                CUtilitarios.msg_error("No se encontró la persona asociada", "Error");
+            }
+        } catch (NumberFormatException e) {
+            CUtilitarios.msg_error("ID inválido. Asegúrate de escribir un número válido.", "Error");
+        } catch (SQLException e) {
+            CUtilitarios.msg_error("Error en la base de datos al eliminar", "Error");
+        }
+    }
+
     /**/
     /**
      * This method is called from within the constructor to initialize the form.
@@ -251,6 +366,21 @@ public final class jfcliente extends javax.swing.JFrame {
         jcbactestatuscliente = new javax.swing.JComboBox<>();
         jcbactestatusaval = new javax.swing.JComboBox<>();
         jbcontinuaract = new javax.swing.JButton();
+        jpeliminar = new javax.swing.JPanel();
+        jpfondotablaeli = new javax.swing.JPanel();
+        jspclienteavaleli = new javax.swing.JScrollPane();
+        jtlistaclienteavaleli = new javax.swing.JTable();
+        jpfondobusquedaeli = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        jtfidbusquedaeli = new javax.swing.JTextField();
+        jSeparator5 = new javax.swing.JSeparator();
+        jtfnombresbusquedaeli = new javax.swing.JTextField();
+        jSeparator13 = new javax.swing.JSeparator();
+        jtfapbusquedaeli = new javax.swing.JTextField();
+        jSeparator14 = new javax.swing.JSeparator();
+        jtfambusquedaeli = new javax.swing.JTextField();
+        jSeparator15 = new javax.swing.JSeparator();
+        jbcontinuaract1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -310,7 +440,6 @@ public final class jfcliente extends javax.swing.JFrame {
         jtfidbusqueda.setBackground(new java.awt.Color(167, 235, 242));
         jtfidbusqueda.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jtfidbusqueda.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-        jtfidbusqueda.setText("Ingresar ID");
         jtfidbusqueda.setToolTipText("Ingresar ID");
         jtfidbusqueda.setBorder(null);
         jtfidbusqueda.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
@@ -322,7 +451,6 @@ public final class jfcliente extends javax.swing.JFrame {
         jtfnombresbusqueda.setBackground(new java.awt.Color(167, 235, 242));
         jtfnombresbusqueda.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jtfnombresbusqueda.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-        jtfnombresbusqueda.setText("Ingresar Nombre(s)");
         jtfnombresbusqueda.setToolTipText("Ingresar Nombre(s)");
         jtfnombresbusqueda.setBorder(null);
         jtfnombresbusqueda.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
@@ -334,7 +462,6 @@ public final class jfcliente extends javax.swing.JFrame {
         jtfapbusqueda.setBackground(new java.awt.Color(167, 235, 242));
         jtfapbusqueda.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jtfapbusqueda.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-        jtfapbusqueda.setText("Ingresar Apellido Paterno");
         jtfapbusqueda.setToolTipText("Ingresar Apellido Paterno");
         jtfapbusqueda.setBorder(null);
         jtfapbusqueda.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
@@ -346,7 +473,6 @@ public final class jfcliente extends javax.swing.JFrame {
         jtfambusqueda.setBackground(new java.awt.Color(167, 235, 242));
         jtfambusqueda.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jtfambusqueda.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-        jtfambusqueda.setText("Ingresar Apellido Materno");
         jtfambusqueda.setToolTipText("Ingresar Apellido Materno");
         jtfambusqueda.setBorder(null);
         jtfambusqueda.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
@@ -583,7 +709,11 @@ public final class jfcliente extends javax.swing.JFrame {
             .addGroup(jpfondonuevoclienteLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jpfondonuevoclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jtfnvtel)
+                    .addGroup(jpfondonuevoclienteLayout.createSequentialGroup()
+                        .addComponent(jtfnvtel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jcbnvestatusaval, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpfondonuevoclienteLayout.createSequentialGroup()
                         .addGroup(jpfondonuevoclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jSeparator12, javax.swing.GroupLayout.Alignment.LEADING)
@@ -607,9 +737,7 @@ public final class jfcliente extends javax.swing.JFrame {
                                 .addGap(90, 90, 90))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpfondonuevoclienteLayout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jpfondonuevoclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jcbnvestatusaval, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jcbnvestatuscliente, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jcbnvestatuscliente, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap())))))
         );
         jpfondonuevoclienteLayout.setVerticalGroup(
@@ -638,13 +766,14 @@ public final class jfcliente extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator8, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jtfnvtel, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator12, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jpfondonuevoclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jpfondonuevoclienteLayout.createSequentialGroup()
+                        .addComponent(jtfnvtel, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSeparator12, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jcbnvestatusaval, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
-                .addGroup(jpfondonuevoclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jcbnvestatusaval, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jcbnvzona, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addComponent(jcbnvzona, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         jLblIcono1.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
@@ -784,16 +913,31 @@ public final class jfcliente extends javax.swing.JFrame {
         jrbactcliente.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jrbactcliente.setText("Cliente");
         jrbactcliente.setToolTipText("Cliente");
+        jrbactcliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jrbactclienteActionPerformed(evt);
+            }
+        });
 
         bgnvestatus.add(jrbactaval);
         jrbactaval.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jrbactaval.setText("Aval");
         jrbactaval.setToolTipText("Aval");
+        jrbactaval.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jrbactavalActionPerformed(evt);
+            }
+        });
 
         bgnvestatus.add(jrbactambos);
         jrbactambos.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jrbactambos.setText("Ambos");
         jrbactambos.setToolTipText("Ambos");
+        jrbactambos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jrbactambosActionPerformed(evt);
+            }
+        });
 
         jcbactestatuscliente.setBackground(new java.awt.Color(167, 235, 242));
         jcbactestatuscliente.setFont(new java.awt.Font("Candara", 1, 12)); // NOI18N
@@ -802,6 +946,11 @@ public final class jfcliente extends javax.swing.JFrame {
         jcbactestatuscliente.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jcbactestatuscliente.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jcbactestatuscliente.setEnabled(false);
+        jcbactestatuscliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jcbactestatusclienteActionPerformed(evt);
+            }
+        });
 
         jcbactestatusaval.setBackground(new java.awt.Color(167, 235, 242));
         jcbactestatusaval.setFont(new java.awt.Font("Candara", 1, 12)); // NOI18N
@@ -810,6 +959,11 @@ public final class jfcliente extends javax.swing.JFrame {
         jcbactestatusaval.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jcbactestatusaval.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jcbactestatusaval.setEnabled(false);
+        jcbactestatusaval.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jcbactestatusavalActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jpfondoacteliclienteavalLayout = new javax.swing.GroupLayout(jpfondoacteliclienteaval);
         jpfondoacteliclienteaval.setLayout(jpfondoacteliclienteavalLayout);
@@ -879,6 +1033,11 @@ public final class jfcliente extends javax.swing.JFrame {
         jbcontinuaract.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/act2.png"))); // NOI18N
         jbcontinuaract.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
         jbcontinuaract.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jbcontinuaract.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbcontinuaractActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jpactualizaeliminaLayout = new javax.swing.GroupLayout(jpactualizaelimina);
         jpactualizaelimina.setLayout(jpactualizaeliminaLayout);
@@ -911,6 +1070,187 @@ public final class jfcliente extends javax.swing.JFrame {
         );
 
         jtppaneles.addTab("Actualiza un Cliente", jpactualizaelimina);
+
+        jpeliminar.setBackground(new java.awt.Color(242, 220, 153));
+
+        jpfondotablaeli.setBackground(new java.awt.Color(242, 220, 153));
+
+        jtlistaclienteavaleli.setBackground(new java.awt.Color(167, 235, 242));
+        jtlistaclienteavaleli.setFont(new java.awt.Font("Candara", 1, 12)); // NOI18N
+        jtlistaclienteavaleli.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+
+            }
+        ));
+        jtlistaclienteavaleli.setToolTipText("Listado de Clientes y Avales");
+        jtlistaclienteavaleli.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jspclienteavaleli.setViewportView(jtlistaclienteavaleli);
+
+        javax.swing.GroupLayout jpfondotablaeliLayout = new javax.swing.GroupLayout(jpfondotablaeli);
+        jpfondotablaeli.setLayout(jpfondotablaeliLayout);
+        jpfondotablaeliLayout.setHorizontalGroup(
+            jpfondotablaeliLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jpfondotablaeliLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jspclienteavaleli, javax.swing.GroupLayout.DEFAULT_SIZE, 761, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jpfondotablaeliLayout.setVerticalGroup(
+            jpfondotablaeliLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jpfondotablaeliLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jspclienteavaleli, javax.swing.GroupLayout.DEFAULT_SIZE, 429, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        jpfondobusquedaeli.setBackground(new java.awt.Color(167, 235, 242));
+
+        jLabel2.setBackground(new java.awt.Color(167, 235, 242));
+        jLabel2.setFont(new java.awt.Font("Candara", 1, 18)); // NOI18N
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText("Realiza Búsqueda");
+
+        jtfidbusquedaeli.setBackground(new java.awt.Color(167, 235, 242));
+        jtfidbusquedaeli.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        jtfidbusquedaeli.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+        jtfidbusquedaeli.setToolTipText("Ingresar ID");
+        jtfidbusquedaeli.setBorder(null);
+        jtfidbusquedaeli.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+
+        jSeparator5.setBackground(new java.awt.Color(0, 0, 0));
+        jSeparator5.setForeground(new java.awt.Color(0, 0, 0));
+        jSeparator5.setToolTipText("");
+
+        jtfnombresbusquedaeli.setBackground(new java.awt.Color(167, 235, 242));
+        jtfnombresbusquedaeli.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        jtfnombresbusquedaeli.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+        jtfnombresbusquedaeli.setToolTipText("Ingresar Nombre(s)");
+        jtfnombresbusquedaeli.setBorder(null);
+        jtfnombresbusquedaeli.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+
+        jSeparator13.setBackground(new java.awt.Color(0, 0, 0));
+        jSeparator13.setForeground(new java.awt.Color(0, 0, 0));
+        jSeparator13.setToolTipText("");
+
+        jtfapbusquedaeli.setBackground(new java.awt.Color(167, 235, 242));
+        jtfapbusquedaeli.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        jtfapbusquedaeli.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+        jtfapbusquedaeli.setToolTipText("Ingresar Apellido Paterno");
+        jtfapbusquedaeli.setBorder(null);
+        jtfapbusquedaeli.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+
+        jSeparator14.setBackground(new java.awt.Color(0, 0, 0));
+        jSeparator14.setForeground(new java.awt.Color(0, 0, 0));
+        jSeparator14.setToolTipText("");
+
+        jtfambusquedaeli.setBackground(new java.awt.Color(167, 235, 242));
+        jtfambusquedaeli.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        jtfambusquedaeli.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+        jtfambusquedaeli.setToolTipText("Ingresar Apellido Materno");
+        jtfambusquedaeli.setBorder(null);
+        jtfambusquedaeli.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+
+        jSeparator15.setBackground(new java.awt.Color(0, 0, 0));
+        jSeparator15.setForeground(new java.awt.Color(0, 0, 0));
+        jSeparator15.setToolTipText("");
+
+        jbcontinuaract1.setBackground(new java.awt.Color(204, 204, 204));
+        jbcontinuaract1.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        jbcontinuaract1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/eli1.png"))); // NOI18N
+        jbcontinuaract1.setText("Eliminar");
+        jbcontinuaract1.setBorder(null);
+        jbcontinuaract1.setContentAreaFilled(false);
+        jbcontinuaract1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jbcontinuaract1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jbcontinuaract1.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/eli1.png"))); // NOI18N
+        jbcontinuaract1.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/eli2.png"))); // NOI18N
+        jbcontinuaract1.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        jbcontinuaract1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jbcontinuaract1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbcontinuaract1ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jpfondobusquedaeliLayout = new javax.swing.GroupLayout(jpfondobusquedaeli);
+        jpfondobusquedaeli.setLayout(jpfondobusquedaeliLayout);
+        jpfondobusquedaeliLayout.setHorizontalGroup(
+            jpfondobusquedaeliLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpfondobusquedaeliLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jpfondobusquedaeliLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jpfondobusquedaeliLayout.createSequentialGroup()
+                        .addGroup(jpfondobusquedaeliLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jtfnombresbusquedaeli)
+                            .addComponent(jSeparator13)
+                            .addComponent(jSeparator5)
+                            .addComponent(jtfidbusquedaeli, javax.swing.GroupLayout.DEFAULT_SIZE, 248, Short.MAX_VALUE)
+                            .addComponent(jtfambusquedaeli)
+                            .addComponent(jSeparator15)
+                            .addComponent(jSeparator14, javax.swing.GroupLayout.DEFAULT_SIZE, 248, Short.MAX_VALUE)
+                            .addComponent(jtfapbusquedaeli, javax.swing.GroupLayout.DEFAULT_SIZE, 248, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+            .addGroup(jpfondobusquedaeliLayout.createSequentialGroup()
+                .addGap(75, 75, 75)
+                .addComponent(jbcontinuaract1, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jpfondobusquedaeliLayout.setVerticalGroup(
+            jpfondobusquedaeliLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jpfondobusquedaeliLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel2)
+                .addGap(18, 18, 18)
+                .addComponent(jtfidbusquedaeli, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jtfnombresbusquedaeli, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator13, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jtfapbusquedaeli, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator14, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jtfambusquedaeli, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator15, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jbcontinuaract1, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout jpeliminarLayout = new javax.swing.GroupLayout(jpeliminar);
+        jpeliminar.setLayout(jpeliminarLayout);
+        jpeliminarLayout.setHorizontalGroup(
+            jpeliminarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jpeliminarLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jpfondotablaeli, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(jpfondobusquedaeli, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(56, 56, 56))
+        );
+        jpeliminarLayout.setVerticalGroup(
+            jpeliminarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpeliminarLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jpeliminarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jpeliminarLayout.createSequentialGroup()
+                        .addComponent(jpfondotablaeli, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(18, 18, 18))
+                    .addGroup(jpeliminarLayout.createSequentialGroup()
+                        .addComponent(jpfondobusquedaeli, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+        );
+
+        jtppaneles.addTab("Eliminar un Cliente", jpeliminar);
 
         javax.swing.GroupLayout jpfondoLayout = new javax.swing.GroupLayout(jpfondo);
         jpfondo.setLayout(jpfondoLayout);
@@ -1076,6 +1416,78 @@ public final class jfcliente extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jcbusuariobusquedaActionPerformed
 
+    private void jrbactclienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jrbactclienteActionPerformed
+        jcbactestatuscliente.setEnabled(true);
+        jcbactestatusaval.setEnabled(false);
+    }//GEN-LAST:event_jrbactclienteActionPerformed
+
+    private void jrbactavalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jrbactavalActionPerformed
+        jcbactestatuscliente.setEnabled(false);
+        jcbactestatusaval.setEnabled(true);
+    }//GEN-LAST:event_jrbactavalActionPerformed
+
+    private void jrbactambosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jrbactambosActionPerformed
+        jcbactestatuscliente.setEnabled(true);
+        jcbactestatusaval.setEnabled(true);
+    }//GEN-LAST:event_jrbactambosActionPerformed
+
+    private void jcbactestatusclienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbactestatusclienteActionPerformed
+        JComboBox jcb = (JComboBox) evt.getSource(); // Asegura que el evento venga del combo correcto
+        seleccion = (String) jcb.getSelectedItem();
+        if (!"Estatus".equals(seleccion)) {
+            est = seleccion;
+            System.out.println(est);
+            try {
+                idEstatus = cb.buscarIdEstatus(est);
+                System.out.println("ESTATUS " + idEstatus);
+            } catch (SQLException ex) {
+                Logger.getLogger(jfcliente.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_jcbactestatusclienteActionPerformed
+
+    private void jcbactestatusavalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbactestatusavalActionPerformed
+        JComboBox jcb = (JComboBox) evt.getSource(); // Asegura que el evento venga del combo correcto
+        seleccion = (String) jcb.getSelectedItem();
+        if (!"Estatus".equals(seleccion)) {
+            est = seleccion;
+            System.out.println(est);
+            try {
+                idEstatusAval = cb.buscarIdEstatus(est);
+                System.out.println("ESTATUS AVAL " + idEstatusAval);
+            } catch (SQLException ex) {
+                Logger.getLogger(jfcliente.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_jcbactestatusavalActionPerformed
+
+    private void jbcontinuaractActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbcontinuaractActionPerformed
+        // Actualizar
+        // 1. Validar campos de texto básicos
+        if (!validarCamposTexto()) {
+            return;
+        }
+
+        // 2. Validar teléfono
+        if (!validarTelefono()) {
+            return;
+        }
+
+        // 3. Validar zona seleccionada
+        if (!validarZona()) {
+            return;
+        }
+        // 4. Validar selección y estatus
+        String[] datosEstatus = validarSeleccionYEstatus();
+        if (datosEstatus == null) {
+            return;
+        }
+    }//GEN-LAST:event_jbcontinuaractActionPerformed
+
+    private void jbcontinuaract1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbcontinuaract1ActionPerformed
+        eliminarDesdeBoton();
+    }//GEN-LAST:event_jbcontinuaract1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1119,21 +1531,27 @@ public final class jfcliente extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup bgnvestatus;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLblIcono;
     private javax.swing.JLabel jLblIcono1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator10;
     private javax.swing.JSeparator jSeparator11;
     private javax.swing.JSeparator jSeparator12;
+    private javax.swing.JSeparator jSeparator13;
+    private javax.swing.JSeparator jSeparator14;
+    private javax.swing.JSeparator jSeparator15;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
+    private javax.swing.JSeparator jSeparator5;
     private javax.swing.JSeparator jSeparator6;
     private javax.swing.JSeparator jSeparator7;
     private javax.swing.JSeparator jSeparator8;
     private javax.swing.JSeparator jSeparator9;
     private javax.swing.JButton jbcontinuar;
     private javax.swing.JButton jbcontinuaract;
+    private javax.swing.JButton jbcontinuaract1;
     private javax.swing.JComboBox<String> jcbactestatusaval;
     private javax.swing.JComboBox<String> jcbactestatuscliente;
     private javax.swing.JComboBox<String> jcbactzona;
@@ -1143,12 +1561,15 @@ public final class jfcliente extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> jcbnvzona;
     private javax.swing.JComboBox<String> jcbusuariobusqueda;
     private javax.swing.JPanel jpactualizaelimina;
+    private javax.swing.JPanel jpeliminar;
     private javax.swing.JPanel jpfondo;
     private javax.swing.JPanel jpfondoacteliclienteaval;
     private javax.swing.JPanel jpfondobusqueda;
+    private javax.swing.JPanel jpfondobusquedaeli;
     private javax.swing.JPanel jpfondonuevocliente;
     private javax.swing.JPanel jpfondotabla;
     private javax.swing.JPanel jpfondotablaacteli;
+    private javax.swing.JPanel jpfondotablaeli;
     private javax.swing.JPanel jplistaclientes;
     private javax.swing.JPanel jpnuevocliente;
     private javax.swing.JRadioButton jrbactambos;
@@ -1159,19 +1580,25 @@ public final class jfcliente extends javax.swing.JFrame {
     private javax.swing.JRadioButton jrbnvcliente;
     private javax.swing.JScrollPane jspcliente;
     private javax.swing.JScrollPane jspclienteacteli;
+    private javax.swing.JScrollPane jspclienteavaleli;
     private javax.swing.JTextField jtfactam;
     private javax.swing.JTextField jtfactap;
     private javax.swing.JTextField jtfactnombres;
     private javax.swing.JTextField jtfambusqueda;
+    private javax.swing.JTextField jtfambusquedaeli;
     private javax.swing.JTextField jtfapbusqueda;
+    private javax.swing.JTextField jtfapbusquedaeli;
     private javax.swing.JTextField jtfidbusqueda;
+    private javax.swing.JTextField jtfidbusquedaeli;
     private javax.swing.JTextField jtfnombresbusqueda;
+    private javax.swing.JTextField jtfnombresbusquedaeli;
     private javax.swing.JTextField jtfnvam;
     private javax.swing.JTextField jtfnvap;
     private javax.swing.JTextField jtfnvnombres;
     private javax.swing.JTextField jtfnvtel;
     private javax.swing.JTable jtlistaclienteaval;
     private javax.swing.JTable jtlistaclienteavalact;
+    private javax.swing.JTable jtlistaclienteavaleli;
     private javax.swing.JTabbedPane jtppaneles;
     // End of variables declaration//GEN-END:variables
 }

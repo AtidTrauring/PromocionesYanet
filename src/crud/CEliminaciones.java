@@ -22,5 +22,12 @@ public class CEliminaciones {
         consulta = "DELETE FROM zona WHERE idzona = '" + idZona + "';";
         return cnslt.elimina(consulta);
     }
+    
+    /* Personas */
+    
+    public boolean eliminarPersona(int idPer) throws SQLException {
+        consulta = "DELETE FROM persona WHERE idpersona = '" + idPer + "';";
+        return cnslt.elimina(consulta);
+    }
 
 }
