@@ -28,6 +28,13 @@ public class CInserciones {
                 + "VALUES ('" + producto + "', '" + precio + "', '" + stock + "');";
         return cnslt.inserta(consulta);
     }
+public boolean insertarColoniaZona(String idColonia, String idZona) throws SQLException {
+    consulta = "INSERT INTO colonia_has_zona (colonia_idcolonia, zona_idzona) "
+             + "VALUES ('" + idColonia + "', '" + idZona + "')";
+    return cnslt.inserta(consulta);
+}
+
+
 
 // ---------------------------Inserciones Direccion-----------------------------------------
     public boolean insertaMunicipio(String claveMunicipio, String municipio, String claveEstado) throws SQLException {

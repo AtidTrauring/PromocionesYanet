@@ -9,6 +9,8 @@ import crud.CEliminaciones;
 import crud.CInserciones;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
@@ -38,10 +40,11 @@ public class jfzonas extends javax.swing.JFrame {
         cargarTabla();
         cargarTablaEliminar();
         cargarColoniasPorZona();
-        BuscarPorZona();
+        BuscarPorZona();;
         EventosTablaEliminarZona();
         addFiltroListener(jTxtBusIDZona);
         addFiltroListener(jTxtBusNumZona);
+        cargaComboBoxNumeros(jCmBoxNumColonias1);
     }
 
     public void asignaValores() {
@@ -138,7 +141,7 @@ public class jfzonas extends javax.swing.JFrame {
         }
         try {
             ArrayList<String[]> colonias = cb.buscarColoniasPorZona(idZona);
-            DefaultTableModel modelo2 = (DefaultTableModel) jtblActualizarZonas.getModel();
+            modelo2 = (DefaultTableModel) jtblActualizarZonas.getModel();
             modelo2.setRowCount(0);
 
             for (String[] col : colonias) {
@@ -246,10 +249,98 @@ public class jfzonas extends javax.swing.JFrame {
         }
     }
 }
+    
+        public void cargaComboBoxNumeros(JComboBox combo) {
+    DefaultComboBoxModel<String> modelo = new DefaultComboBoxModel<>();
+    modelo.addElement("Num. Colonias"); // Opción inicial guía
+
+    for (int i = 1; i <= 15; i++) {
+        modelo.addElement(String.valueOf(i));
+    }
+
+    combo.setModel(modelo);
+}
 
     
+    private void limpiarCamposAgregar() {
+    jTxtIngNumZona1.setText("");
+    jCmBoxNumColonias1.setSelectedIndex(0); // Asumiendo que 0 es "Num. Colonias"
+}
 
-    
+public void agregarColoniasAZona() {
+    String idZona = jTxtIngNumZona1.getText().trim();
+    int numColonias = jCmBoxNumColonias1.getSelectedIndex();
+
+    if (idZona.isEmpty() || numColonias <= 0) {
+        CUtilitarios.msg_advertencia("Selecciona una zona y un número válido de colonias.", "Agregar Colonias");
+        return;
+    }
+
+    try {
+        ArrayList<String[]> colonias = cb.buscarColoniasDisponibles();
+
+        if (colonias.isEmpty()) {
+            CUtilitarios.msg_advertencia("No hay colonias disponibles para agregar a esta zona.", "Sin colonias disponibles");
+            limpiarCamposAgregar();
+            return;
+        }
+
+        for (int i = 0; i < numColonias; i++) {
+            colonias = cb.buscarColoniasDisponibles();
+
+            if (colonias.isEmpty()) {
+                CUtilitarios.msg("No quedan más colonias disponibles para agregar.", "Información");
+                limpiarCamposAgregar();
+                return;
+            }
+            String[] nombresColonias = colonias.stream()
+                                               .map(c -> c[1]) //Extrae el nombre de la posicion en el array
+                                               .toArray(String[]::new); //Lo convierte en un arreglo de string
+            String seleccion = (String) JOptionPane.showInputDialog(
+                this, "Selecciona la colonia #" + (i + 1),
+                "Agregar Colonia a Zona", JOptionPane.QUESTION_MESSAGE,
+                null,nombresColonias, nombresColonias[0]
+            );
+            if (seleccion == null) {
+                CUtilitarios.msg_advertencia("Operación cancelada por el usuario.", "Cancelado");
+                limpiarCamposAgregar();
+                return;
+            }
+
+            String idColonia = null;
+            for (String[] c : colonias) { //recorre la lista de las colonias disponibles
+                if (c[1].equals(seleccion)) { //Si la eleccion coincide con el indice
+                    idColonia = c[0];//lo gaurda con el indice 0
+                    break;
+                }
+            }
+
+            if (idColonia == null) {
+                CUtilitarios.msg_error("Colonia no encontrada.", "Error");
+                limpiarCamposAgregar();
+                return;
+            }
+
+            try {
+                boolean insertar = ci.insertarColoniaZona(idColonia, idZona);
+                if (!insertar) {
+                    CUtilitarios.msg_error("No se pudo insertar colonia: " + seleccion, "Error al insertar");
+                }
+            } catch (SQLException ex) {
+                CUtilitarios.msg_error("Error al insertar las colonias", "Insertar colonias");
+                limpiarCamposAgregar();
+                return;
+            }
+        }
+        CUtilitarios.msg("Colonias agregadas correctamente.", "Éxito");
+        limpiarCamposAgregar();
+
+    } catch (SQLException e) {
+        CUtilitarios.msg_error("Error SQL: " + e.getMessage(), "Error al agregar colonias");
+        limpiarCamposAgregar();
+    }
+}
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -276,6 +367,7 @@ public class jfzonas extends javax.swing.JFrame {
         jLblIngNumZona1 = new javax.swing.JLabel();
         jSeparator7 = new javax.swing.JSeparator();
         jCmBoxNumColonias1 = new javax.swing.JComboBox<>();
+        jLblIngNumZona2 = new javax.swing.JLabel();
         jBtnIngGuardarZona = new javax.swing.JButton();
         jPnlEliZona = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -466,22 +558,38 @@ public class jfzonas extends javax.swing.JFrame {
         jCmBoxNumColonias1.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jCmBoxNumColonias1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Núm. colonias" }));
 
+        jLblIngNumZona2.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
+        jLblIngNumZona2.setText("Seleccione el numero de colonias a ingresar:");
+
         javax.swing.GroupLayout jPnlAgregarZona1Layout = new javax.swing.GroupLayout(jPnlAgregarZona1);
         jPnlAgregarZona1.setLayout(jPnlAgregarZona1Layout);
         jPnlAgregarZona1Layout.setHorizontalGroup(
             jPnlAgregarZona1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPnlAgregarZona1Layout.createSequentialGroup()
-                .addGap(34, 34, 34)
                 .addGroup(jPnlAgregarZona1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPnlAgregarZona1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLblIngresoZona1))
-                    .addComponent(jCmBoxNumColonias1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPnlAgregarZona1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jLblIngNumZona1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jTxtIngNumZona1)
-                        .addComponent(jSeparator7, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(64, Short.MAX_VALUE))
+                        .addGroup(jPnlAgregarZona1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPnlAgregarZona1Layout.createSequentialGroup()
+                                .addGap(106, 106, 106)
+                                .addComponent(jLblIngresoZona1))
+                            .addGroup(jPnlAgregarZona1Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jLblIngNumZona1, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPnlAgregarZona1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPnlAgregarZona1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLblIngNumZona2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE)
+                            .addGroup(jPnlAgregarZona1Layout.createSequentialGroup()
+                                .addGroup(jPnlAgregarZona1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jTxtIngNumZona1, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jSeparator7, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(0, 0, Short.MAX_VALUE)))))
+                .addContainerGap())
+            .addGroup(jPnlAgregarZona1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jCmBoxNumColonias1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPnlAgregarZona1Layout.setVerticalGroup(
             jPnlAgregarZona1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -495,14 +603,21 @@ public class jfzonas extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator7, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
+                .addComponent(jLblIngNumZona2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jCmBoxNumColonias1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(71, Short.MAX_VALUE))
+                .addContainerGap(47, Short.MAX_VALUE))
         );
 
         jBtnIngGuardarZona.setBackground(new java.awt.Color(53, 189, 242));
         jBtnIngGuardarZona.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jBtnIngGuardarZona.setText("Guardar zona");
         jBtnIngGuardarZona.setToolTipText("");
+        jBtnIngGuardarZona.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtnIngGuardarZonaActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPnlActZonaLayout = new javax.swing.GroupLayout(jPnlActZona);
         jPnlActZona.setLayout(jPnlActZonaLayout);
@@ -815,6 +930,11 @@ public class jfzonas extends javax.swing.JFrame {
         eliminarZona();
     }//GEN-LAST:event_jBtnEliminarZonaActionPerformed
 
+    private void jBtnIngGuardarZonaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnIngGuardarZonaActionPerformed
+        // TODO add your handling code here:
+        agregarColoniasAZona();
+    }//GEN-LAST:event_jBtnIngGuardarZonaActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -868,6 +988,7 @@ public class jfzonas extends javax.swing.JFrame {
     private javax.swing.JLabel jLblElimZona1;
     private javax.swing.JLabel jLblIcono;
     private javax.swing.JLabel jLblIngNumZona1;
+    private javax.swing.JLabel jLblIngNumZona2;
     private javax.swing.JLabel jLblIngresoZona1;
     private javax.swing.JPanel jPnlActZona;
     private javax.swing.JPanel jPnlActuaZona2;

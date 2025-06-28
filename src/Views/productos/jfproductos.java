@@ -127,6 +127,7 @@ public class jfproductos extends javax.swing.JFrame {
         }
         if (idProducto == null) { // Si no encuentra ningún producto con ese nombre, aviso y salgo
             CUtilitarios.msg_error("No se encuentra el producto con ese nombre", "Eliminar Producto");
+            jTxtElimNombreProducto.setText("");
             return;
         }
 

@@ -533,6 +533,11 @@ public class CBusquedas {
         consulta = "SELECT idcolonia, colonia FROM colonia ";
         return cnslt.buscarValores(consulta, 2);
     }
+public ArrayList<String[]> buscarColoniasDisponibles() throws SQLException {
+    consulta = "SELECT c.idcolonia, c.colonia FROM colonia c " +
+               "WHERE c.idcolonia NOT IN (SELECT DISTINCT colonia_idcolonia FROM colonia_has_zona)";
+    return cnslt.buscarValores(consulta, 2);
+}
 
     public ArrayList<String[]> buscarEmpleado() throws SQLException {
         consulta = "SELECT"
@@ -587,6 +592,7 @@ public class CBusquedas {
                 + "WHERE z.num_zona = '" + z + "';";
         return cnslt.buscarValor(consulta);
     }
+    
 
     public String[] buscarDirecPorID(int idd) throws SQLException {
         consulta = "CALL direc(" + idd + ")";
@@ -631,4 +637,5 @@ public class CBusquedas {
                     "AND producto.idproducto = venta_has_producto.producto_idproducto ";
         return cnslt.buscarValores(consulta, 3);
     }
+
 }
