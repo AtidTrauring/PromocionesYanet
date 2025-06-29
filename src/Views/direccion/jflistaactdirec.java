@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import javax.swing.*;
 import utilitarios.CUtilitarios;
 import java.util.logging.*;
+import javax.swing.table.*;
 
 /**
  *
@@ -34,14 +35,15 @@ public class jflistaactdirec extends javax.swing.JFrame {
 
     private String sqlDirec;
     private int idDireccion, idc;
-    private String cllcl, ne, ni, nomcla, apcla, amcla, telcla;
+    private String cllcl, ne, ni;
+    private TableRowSorter<TableModel> trClienteAval;
 
     private void cargarTablas() {
         sqlDirec = "Call tablaDirec";
 
         try {
-            cu.cargarConsultaEnTabla(sqlDirec, jtlistadirec);
-            cu.cargarConsultaEnTabla(sqlDirec, jtlistadirecact);
+            cu.cargarConsultaEnTabla(sqlDirec, jtlistadirec, sorter -> trClienteAval = sorter);
+            cu.cargarConsultaEnTabla(sqlDirec, jtlistadirecact, sorter -> trClienteAval = sorter);
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Error al cargar tablas: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }

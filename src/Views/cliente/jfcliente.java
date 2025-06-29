@@ -7,6 +7,7 @@ import java.sql.*;
 import java.util.*;
 import java.util.logging.*;
 import javax.swing.*;
+import javax.swing.table.*;
 
 /**
  *
@@ -16,50 +17,56 @@ public final class jfcliente extends javax.swing.JFrame {
 
     /**
      * Creates new form jfcliente
+     *
+     * @throws java.sql.SQLException
      */
-    CUtilitarios cu = new CUtilitarios();
-    CBusquedas cb = new CBusquedas();
-    CEliminaciones celi = new CEliminaciones();
-    String seleccion, est, z, idZona, idEstatus, idEstatusAval, esttabla, tipo, idPersona;
-    String idPerEli, nombreEli, apEli, amEli;
-    int idcl, idav, idpr;
-
+    // Campos y placeholders globales en la clase (por ejemplo en jfcliente)
     public jfcliente() throws SQLException {
         initComponents();
         this.setLocationRelativeTo(null);
+
+        // Tablas
+        cargarTablas();
+
+        /* Filtros */
+        configurarFiltroBusqueda();
+
         cargaComboBox(jcbestatusbusqueda, 1);
         cargaComboBox(jcbnvestatuscliente, 1);
         cargaComboBox(jcbnvestatusaval, 1);
         cargaComboBox(jcbnvzona, 2);
-        cargaComboBox(jcbactestatuscliente, 1);
-        cargaComboBox(jcbactestatusaval, 1);
-        cargaComboBox(jcbactzona, 2);
 
         // Placeholder JTextField
         cu.aplicarPlaceholder(jtfidbusqueda, "Ingresar ID");
         cu.aplicarPlaceholder(jtfnombresbusqueda, "Ingresar Nombres");
         cu.aplicarPlaceholder(jtfapbusqueda, "Ingresar Apellido Paterno");
-        cu.aplicarPlaceholder(jtfambusqueda, "Ingresar Apellido Maternos");
+        cu.aplicarPlaceholder(jtfambusqueda, "Ingresar Apellido Materno");
         cu.aplicarPlaceholder(jtfidbusquedaeli, "Ingresar ID");
         cu.aplicarPlaceholder(jtfnombresbusquedaeli, "Ingresar Nombres");
         cu.aplicarPlaceholder(jtfapbusquedaeli, "Ingresar Apellido Paterno");
-        cu.aplicarPlaceholder(jtfambusquedaeli, "Ingresar Apellido Maternos");
+        cu.aplicarPlaceholder(jtfambusquedaeli, "Ingresar Apellido Materno");
         cu.aplicarPlaceholder(jtfnvnombres, "Nombres");
         cu.aplicarPlaceholder(jtfnvap, "Apellido Paterno");
         cu.aplicarPlaceholder(jtfnvam, "Apellido Materno");
         cu.aplicarPlaceholder(jtfnvtel, "Número de Teléfono");
 
-        // Tablas
-        cargarTablas();
-
         // Selección
         configurarEventosTablaActualizar();
     }
 
-    private DefaultComboBoxModel listas;
-    private ArrayList<String> datosListas = new ArrayList<>();
+    private final CUtilitarios cu = new CUtilitarios();
+    private final CBusquedas cb = new CBusquedas();
+    private final CEliminaciones celi = new CEliminaciones();
     private final CCargaCombos queryCarga = new CCargaCombos();
     private final CConecta conector = new CConecta();
+    private ArrayList<String> datosListas = new ArrayList<>();
+    private DefaultComboBoxModel listas;
+    private TableRowSorter<TableModel> trClienteAval;
+    private TableRowSorter<TableModel> trClienteAvalAct;
+    private TableRowSorter<TableModel> trClienteAvalEli;
+    private String sqlClientesAvales = "Call tablaClienteAval";
+    private String seleccion, est, z, idZona, idEstatus, idEstatusAval, esttabla, tipo, idPersona, zona;
+    private int idclav, idpr;
 
     public void cargaComboBox(JComboBox combo, int metodoCarga) {
         listas = (DefaultComboBoxModel) combo.getModel();
@@ -90,36 +97,65 @@ public final class jfcliente extends javax.swing.JFrame {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 int fila = jtlistaclienteavalact.getSelectedRow();
                 if (fila != -1) {
-                    jtfactnombres.setText(jtlistaclienteavalact.getValueAt(fila, 1).toString());
-                    jtfactap.setText(jtlistaclienteavalact.getValueAt(fila, 2).toString());
-                    jtfactam.setText(jtlistaclienteavalact.getValueAt(fila, 3).toString());
-                    esttabla = jtlistaclienteavalact.getValueAt(fila, 4).toString();
-                    System.out.println(esttabla);
-                    tipo = jtlistaclienteavalact.getValueAt(fila, 5).toString();
-                    System.out.println(tipo);
+                    try {
+                        idclav = Integer.parseInt(jtlistaclienteavaleli.getValueAt(fila, 0).toString());
+                        jtfactnombres.setText(jtlistaclienteavalact.getValueAt(fila, 1).toString());
+                        jtfactap.setText(jtlistaclienteavalact.getValueAt(fila, 2).toString());
+                        jtfactam.setText(jtlistaclienteavalact.getValueAt(fila, 3).toString());
+                        esttabla = jtlistaclienteavalact.getValueAt(fila, 4).toString();
+                        tipo = jtlistaclienteavalact.getValueAt(fila, 5).toString();
 
+                        if (tipo.equalsIgnoreCase("Cliente")) {
+                            cargaComboBox(jcbactestatuscliente, 1);
+                            jcbactestatuscliente.setSelectedItem(esttabla);
+                        } else if (tipo.equalsIgnoreCase("Aval")) {
+                            cargaComboBox(jcbactestatusaval, 1);
+                            jcbactestatusaval.setSelectedItem(esttabla);
+                        }
+                        
+                        if (tipo.equalsIgnoreCase("Cliente")) {
+                            idPersona = cb.buscarPersonaCliente(idclav);
+                            idpr = Integer.parseInt(idPersona);
+                            zona = cb.buscarZonaPorPersona(idpr);
+                        } else if (tipo.equalsIgnoreCase("Aval")) {
+                            idPersona = cb.buscarPersonaAval(idclav);
+                            idpr = Integer.parseInt(idPersona);
+                            zona = cb.buscarZonaPorPersona(idpr);
+                        } else {
+                            CUtilitarios.msg_error("Tipo no reconocido (ni cliente ni aval)", "Error");
+                        }
+
+                        // Cargar el combo de Zona y seleccionar la actual
+                        cargaComboBox(jcbactzona, 2); // Método que carga todas las zonas disponibles
+                        jcbactzona.setSelectedItem(zona); // Selecciona la zona actual
+                    } catch (SQLException e) {
+                    }
                 }
             }
         });
     }
 
-    private String sqlClientesAvales;
-
     private void cargarTablas() {
         sqlClientesAvales = "Call tablaClienteAval";
 
         try {
-            cu.cargarConsultaEnTabla(sqlClientesAvales, jtlistaclienteaval);
-            cu.cargarConsultaEnTabla(sqlClientesAvales, jtlistaclienteavalact);
-            cu.cargarConsultaEnTabla(sqlClientesAvales, jtlistaclienteavaleli);
+            cu.cargarConsultaEnTabla(sqlClientesAvales, jtlistaclienteaval, sorter -> trClienteAval = sorter);
+            cu.cargarConsultaEnTabla(sqlClientesAvales, jtlistaclienteavalact, sorter -> trClienteAvalAct = sorter);
+            cu.cargarConsultaEnTabla(sqlClientesAvales, jtlistaclienteavaleli, sorter -> trClienteAvalEli = sorter);
+
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Error al cargar tablas: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     /* Filtros Tabla */
+    private void configurarFiltroBusqueda() {
+        cu.fitroTabla(jtfnombresbusqueda, trClienteAval, "Ingresar Nombres", 1);
+        cu.fitroTabla(jtfapbusqueda, trClienteAval, "Ingresar Apellido Paterno", 2);
+        cu.fitroTabla(jtfambusqueda, trClienteAval, "Ingresar Apellido Materno", 3);
+    }
 
- /**/
+    /**/
     private boolean validarCamposTexto() {
         JTextField[] campos = {jtfnvnombres, jtfnvap, jtfnvam};
         String[] textos = {"Nombres", "Apellido Paterno", "Apellido Materno"};
@@ -249,7 +285,7 @@ public final class jfcliente extends javax.swing.JFrame {
         try {
             if (fila != -1) {
                 // Tomar datos desde la tabla seleccionada
-                idcl = Integer.parseInt(jtlistaclienteavaleli.getValueAt(fila, 0).toString());
+                idclav = Integer.parseInt(jtlistaclienteavaleli.getValueAt(fila, 0).toString());
                 tipo = jtlistaclienteavaleli.getValueAt(fila, 5).toString();
             } else {
                 // ID manualmente ingresado, pero sin forma de saber si es Cliente o Aval
@@ -261,11 +297,11 @@ public final class jfcliente extends javax.swing.JFrame {
             }
 
             if (tipo.equalsIgnoreCase("Cliente")) {
-                idPersona = cb.buscarPersonaCliente(idcl);
+                idPersona = cb.buscarPersonaCliente(idclav);
                 idpr = Integer.parseInt(idPersona);
                 System.out.println(idpr);
             } else if (tipo.equalsIgnoreCase("Aval")) {
-                idPersona = cb.buscarPersonaAval(idcl);
+                idPersona = cb.buscarPersonaAval(idclav);
                 System.out.println(idPersona);
             } else {
                 CUtilitarios.msg_error("Tipo no reconocido (ni cliente ni aval)", "Error");
@@ -273,6 +309,7 @@ public final class jfcliente extends javax.swing.JFrame {
             }
 
             if (idPersona != null && !idPersona.isEmpty()) {
+                CUtilitarios.msg_advertencia("Al eliminar a la persona se eliminara TODA relación con ella", "Advertencia");
                 int confirmar = JOptionPane.showConfirmDialog(
                         null,
                         "¿Deseas eliminar esta persona y su registro como " + tipo + "?",
@@ -300,7 +337,6 @@ public final class jfcliente extends javax.swing.JFrame {
         }
     }
 
-    /**/
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -1407,8 +1443,8 @@ public final class jfcliente extends javax.swing.JFrame {
 
         try (Connection cn = conector.conecta(); CallableStatement cs = cn.prepareCall("{CALL " + procedimiento + "()}")) {
 
-            // Reutilizas el método que llena la tabla automáticamente
-            cu.cargarTablaDesdeConsulta(jtlistaclienteaval, cs);
+            // ✅ Aquí pasamos un Consumer válido para capturar el nuevo sorter
+            cu.cargarTablaDesdeConsulta(jtlistaclienteaval, cs, sorter -> trClienteAval = sorter);
 
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Error al cargar datos de " + seleccion + " : " + ex.getMessage(),

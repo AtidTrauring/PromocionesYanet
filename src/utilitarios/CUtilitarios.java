@@ -2,13 +2,19 @@ package utilitarios;
 
 import crud.*;
 import java.awt.*;
+import java.awt.event.*;
 import java.sql.*;
 import java.util.*;
+import java.util.List;
+import java.util.function.Consumer;
 import javax.swing.*;
 import javax.swing.JTable;
+import javax.swing.event.*;
 import javax.swing.table.*;
 
 public class CUtilitarios {
+
+    DefaultTableModel modelo;
 
     private static Set<String> usuariosGenerados = new HashSet<>(); // Almacén de usuarios generados
 
@@ -258,12 +264,6 @@ public class CUtilitarios {
     /*Métodos*/
     private final CConecta conector = new CConecta();
 
-    public void cargarConsultaEnTabla(String sql, JTable tabla) throws SQLException {
-        try (Connection cn = conector.conecta(); PreparedStatement ps = cn.prepareStatement(sql)) {
-            cargarTablaDesdeConsulta(tabla, ps);
-        }
-    }
-
     public static boolean validaCamposTextoConFormato(
             JTextField[] jtf,
             String[] textosPredeterminados,
@@ -314,132 +314,78 @@ public class CUtilitarios {
     }
 
     /* Método para limpiar tabla y cargar los campos */
-    // Nuevo Método para cargar tablas
-    public void cargarTablaDesdeConsulta(JTable tabla, PreparedStatement ps) throws SQLException {
-        try (ResultSet rs = ps.executeQuery()) {
-            ResultSetMetaData metaData = rs.getMetaData();
-            int columnCount = metaData.getColumnCount();
-
-            // Crear un nuevo modelo
-            DefaultTableModel modelo = new DefaultTableModel();
-
-            // Agregar columnas
-            for (int i = 1; i <= columnCount; i++) {
-                modelo.addColumn(metaData.getColumnLabel(i));
-            }
-
-            // Agregar filas
-            while (rs.next()) {
-                Object[] fila = new Object[columnCount];
-                for (int i = 0; i < columnCount; i++) {
-                    fila[i] = rs.getObject(i + 1);
-                }
-                modelo.addRow(fila);
-            }
-
-            // Ahora sí: asignar el modelo a la tabla
-            tabla.setModel(modelo);
-
-            // (Opcional) Aplicar ordenamiento
-            TableRowSorter<DefaultTableModel> tr = new TableRowSorter<>(modelo);
-            tabla.setRowSorter(tr);
-        }
-    }
-
-    private TableRowSorter<DefaultTableModel> tr;
-
     private void limpiarTabla(JTable jt) {
         // Obtenemos el modelo de la tabla (estructura de filas y columnas)
-        DefaultTableModel modelo = (DefaultTableModel) jt.getModel();
+        modelo = (DefaultTableModel) jt.getModel();
 
         // Establecemos que el número de filas sea 0, es decir, vaciar la tabla
         modelo.setRowCount(0);
     }
 
-    @FunctionalInterface
-    public interface ConsultaTabla {
+    public void cargarTablaDesdeConsulta(JTable tabla, PreparedStatement ps, Consumer<TableRowSorter<TableModel>> sorterConsumer) throws SQLException {
+        try (ResultSet rs = ps.executeQuery()) {
+            ResultSetMetaData metaData = rs.getMetaData();
+            int columnCount = metaData.getColumnCount();
 
-        ArrayList<String[]> ejecutar() throws SQLException;
+            DefaultTableModel nuevoModelo = new DefaultTableModel();
+
+            for (int i = 1; i <= columnCount; i++) {
+                nuevoModelo.addColumn(metaData.getColumnLabel(i));
+            }
+
+            while (rs.next()) {
+                Object[] fila = new Object[columnCount];
+                for (int i = 0; i < columnCount; i++) {
+                    fila[i] = rs.getObject(i + 1);
+                }
+                nuevoModelo.addRow(fila);
+            }
+
+            tabla.setModel(nuevoModelo);
+
+            TableRowSorter<TableModel> nuevoSorter = new TableRowSorter<>(nuevoModelo);
+            tabla.setRowSorter(nuevoSorter);
+
+            // Pasamos el sorter al consumidor para asignarlo a su variable
+            sorterConsumer.accept(nuevoSorter);
+        }
     }
 
-    public void cargarTabla(JTable jt, ConsultaTabla consulta) throws SQLException {
-        DefaultTableModel modelo = (DefaultTableModel) jt.getModel();
-        limpiarTabla(jt);
-
-        // Ejecuta la consulta que se pasó como parámetro
-        ArrayList<String[]> datos = consulta.ejecutar();
-
-        for (String[] fila : datos) {
-            modelo.addRow(fila);
+    public void cargarConsultaEnTabla(String sql, JTable tabla, Consumer<TableRowSorter<TableModel>> sorterConsumer) throws SQLException {
+        try (Connection cn = conector.conecta(); PreparedStatement ps = cn.prepareStatement(sql)) {
+            cargarTablaDesdeConsulta(tabla, ps, sorterConsumer);
         }
-
-        tr = new TableRowSorter<>(modelo);
-        jt.setRowSorter(tr);
     }
 
-    /* Aplicación de Filtros para 4 parametros */
-    // Carga los datos de empleados desde la base de datos hacia la tabla
-    public void cargarDatos(JTable jt, ConsultaTabla consulta) throws SQLException {
-        // Obtener el modelo de la tabla de empleados
-        DefaultTableModel modelo = (DefaultTableModel) jt.getModel();
+    public void fitroTabla(JTextField jtf, TableRowSorter trs, String campo, int pos) {
+        jtf.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                filtrar();
+            }
 
-        // Eliminar cualquier contenido previo de la tabla
-        limpiarTabla(jt);
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                filtrar();
+            }
 
-        // Obtener la lista de empleados desde la clase de búsqueda (consultas a la BD)
-        ArrayList<String[]> lista = consulta.ejecutar();
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                filtrar();
+            }
 
-        // Recorrer cada fila obtenida y agregarla a la tabla
-        for (String[] fila : lista) {
-            modelo.addRow(fila);
-        }
-
-        // Crear un TableRowSorter que permitirá ordenar y filtrar los datos de la tabla
-        tr = new TableRowSorter<>(modelo);
-
-        // Asociar el sorter a la tabla para que se activen las capacidades de filtrado
-        jt.setRowSorter(tr);
-    }
-
-    public void aplicaFiltros(JTable jt, JTextField jtf1, JTextField jtf2, JTextField jtf3, JTextField jtf4) {
-        // Obtenemos el modelo de la tabla
-        DefaultTableModel modelo = (DefaultTableModel) jt.getModel();
-
-        // Creamos el objeto que permite ordenar y aplicar filtros
-        tr = new TableRowSorter<>(modelo);
-
-        // Establecemos el objeto en la tabla
-        jt.setRowSorter(tr);
-
-        // Creamos una lista para guardar los filtros que se van a aplicar
-        ArrayList<RowFilter<Object, Object>> filtros = new ArrayList<>();
-
-        // Si el campo de ID no está vacío, aplicamos un filtro por esa columna (columna 0)
-        if (!jtf1.getText().isEmpty()) {
-            // (?i) indica que no importa si se escribe con mayúsculas o minúsculas
-            filtros.add(RowFilter.regexFilter("(?i)" + jtf1.getText(), 0));
-        }
-
-        // Si el campo de Nombre no está vacío, aplicamos filtro en la columna 1
-        if (!jtf2.getText().isEmpty()) {
-            filtros.add(RowFilter.regexFilter("(?i)" + jtf2.getText(), 1));
-        }
-
-        // Si el campo de Apellido Paterno no está vacío, aplicamos filtro en la columna 2
-        if (!jtf3.getText().isEmpty()) {
-            filtros.add(RowFilter.regexFilter("(?i)" + jtf3.getText(), 2));
-        }
-
-        // Si el campo de Apellido Materno no está vacío, aplicamos filtro en la columna 3
-        if (!jtf4.getText().isEmpty()) {
-            filtros.add(RowFilter.regexFilter("(?i)" + jtf4.getText(), 3));
-        }
-
-        // Combinamos todos los filtros usando "AND", es decir, deben cumplirse todos
-        RowFilter<Object, Object> rf = RowFilter.andFilter(filtros);
-
-        // Aplicamos el filtro combinado a la tabla
-        tr.setRowFilter(rf);
+            private void filtrar() {
+                String texto = jtf.getText().trim();
+                if (trs != null) {
+                    if (texto.isEmpty() || texto.equals(campo)) {
+                        trs.setRowFilter(null);
+//                        limpiarTabla(jt);
+                    } else {
+                        trs.setRowFilter(RowFilter.regexFilter("(?i)" + texto, pos));
+                    }
+                }
+            }
+        });
     }
     /* Fin De nuevos Métodos */
 }
