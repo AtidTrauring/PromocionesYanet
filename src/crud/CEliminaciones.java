@@ -30,4 +30,8 @@ public class CEliminaciones {
         return cnslt.elimina(consulta);
     }
 
+    public boolean eliminaVEnta(String idVenta) throws SQLException {
+        String consulta = "DELETE FROM venta WHERE Idventa = " + idVenta + ";";
+        return cnslt.elimina(consulta);
+    }
 }

@@ -966,6 +966,9 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Eliminar la venta"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jBtnEliminarVentaActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JRadioButton" name="jRadBtnEliminarVenta">
               <Properties>

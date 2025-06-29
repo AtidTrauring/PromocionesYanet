@@ -5,7 +5,9 @@ import com.toedter.calendar.JDateChooser;
 import crud.CActualizaciones;
 import crud.CBusquedas;
 import crud.CCargaCombos;
+import crud.CEliminaciones;
 import crud.CInserciones;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -47,6 +49,7 @@ public class jfventa extends javax.swing.JFrame {
             idvendedorSeleccionado, idzonaSeleccionada, idAvalSeleccionado;
     private CInserciones cInser = new CInserciones();
     private CActualizaciones cActu = new CActualizaciones();
+    private CEliminaciones cEli = new CEliminaciones();
 
     public jfventa(String[] datos) {
         initComponents();
@@ -468,6 +471,7 @@ public class jfventa extends javax.swing.JFrame {
 
         // Verifica si todos los campos cumplen con las validaciones necesarias (le copie a Kevin)
         if (!validaTodosCampos()) {
+            limpiarCampos();
             return; // Si alguna validación falla, se detiene la ejecución
         }
 
@@ -578,6 +582,54 @@ public class jfventa extends javax.swing.JFrame {
                 }
             }
         });
+    }
+    
+    public void eliminarVenta() {
+        String idEliminar = jTxtFFolioVenta.getText().trim();// Obtengo el ID que se escribió 
+
+        // Verifica si todos los campos cumplen con las validaciones necesarias (le copie a Kevin)
+        if (!validaTodosCampos()) {
+            limpiarCampos();
+            return; // Si alguna validación falla, se detiene la ejecución
+        }
+        
+        if (idEliminar.isEmpty()) {
+            cuti.msg_advertencia("Escriba un folio", "Eliminar");
+            return;
+        }
+
+        for (int i = 0; i < jTblListaVentas.getRowCount(); i++) {
+            // Obtengo el ID que está en la columna 1 de cada fila
+            String IDEnTabla = jTblListaVentas.getValueAt(i, 0).toString();
+        }
+        if (idEliminar == null || idEliminar.isEmpty()) { 
+            CUtilitarios.msg_error("No se encuentra la venta con ese ID o no ingreso un folio", "Eliminar la venta");
+            limpiarCampos();
+            return;
+        }
+
+        int opcion = JOptionPane.showConfirmDialog(
+                this, "¿Estás seguro que deseas eliminar la venta: " + idEliminar + "?",
+                "Confirmar eliminación", JOptionPane.YES_NO_OPTION
+        );
+        // Si el usuario confirma la eliminación
+        if (opcion == JOptionPane.YES_OPTION) {
+            try {
+                // Elimino el producto usando el ID encontrado
+                boolean eliminado = cEli.eliminaVEnta(idEliminar);
+                // Si se eliminó correctamente, muestro mensaje, limpio el campo y actualizo las tabla
+                if (eliminado) {
+                    cuti.msg("La venta se elimino correctamente", "Eliminacion de venta");
+                    limpiarCampos();
+                    cargarTablaAgregar();
+                    cargarTablaBusqueda();
+                } else {
+                    cuti.msg_error("No se pudo eliminar la venta", "Eliminacion de venta");
+                }
+            } catch (SQLException ex) {
+                CUtilitarios.msg_error("Error al intentar eliminar", "Eliminar");
+            }
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -1071,6 +1123,11 @@ public class jfventa extends javax.swing.JFrame {
         jBtnEliminarVenta.setBackground(new java.awt.Color(53, 189, 242));
         jBtnEliminarVenta.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jBtnEliminarVenta.setText("Eliminar la venta");
+        jBtnEliminarVenta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtnEliminarVentaActionPerformed(evt);
+            }
+        });
 
         jRadBtnEliminarVenta.setBackground(new java.awt.Color(242, 220, 153));
         jRadBtnEliminarVenta.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
@@ -1550,8 +1607,13 @@ public class jfventa extends javax.swing.JFrame {
     }//GEN-LAST:event_jBtnActualizarVentaActionPerformed
 
     private void jTxtFFolioVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTxtFFolioVentaActionPerformed
-        EventoBuscarPorID();;
+        EventoBuscarPorID();
+        apliFiltros(jTblAgregarVenta);
     }//GEN-LAST:event_jTxtFFolioVentaActionPerformed
+
+    private void jBtnEliminarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnEliminarVentaActionPerformed
+        eliminarVenta();
+    }//GEN-LAST:event_jBtnEliminarVentaActionPerformed
 
     /**
      * @param args the command line arguments
