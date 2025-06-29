@@ -341,6 +341,80 @@ public void agregarColoniasAZona() {
     }
 }
 
+ public void agregarUnaColoniaAZona() {
+        String idZona = jTxtActNumZona2.getText().trim();
+
+        if (idZona.isEmpty()) {
+            CUtilitarios.msg_advertencia("Primero selecciona o escribe una zona válida.", "Agregar Colonia");
+            return;
+        }
+
+        try {
+            if (!cb.existeZona(idZona)) {
+                CUtilitarios.msg_advertencia("La zona " + idZona + " no existe. Ingresa una válida.", "Zona inválida");
+                return;
+            }
+        } catch (SQLException e) {
+            CUtilitarios.msg_error("Error al validar la zona: " + e.getMessage(), "Error");
+            return;
+        }
+
+        try {
+            ArrayList<String[]> colonias = cb.buscarColoniasDisponibles();
+
+            if (colonias.isEmpty()) {
+                CUtilitarios.msg_advertencia("No hay colonias disponibles para agregar.", "Sin colonias disponibles");
+                return;
+            }
+
+            String[] nombresColonias = colonias.stream()
+                    .map(c -> c[1])
+                    .toArray(String[]::new);
+
+            String seleccion = (String) JOptionPane.showInputDialog(
+                    this, "Selecciona la colonia a agregar:",
+                    "Agregar Colonia a Zona", JOptionPane.QUESTION_MESSAGE,
+                    null, nombresColonias, nombresColonias[0]);
+
+            if (seleccion == null) {
+                CUtilitarios.msg_advertencia("Operación cancelada.", "Cancelado");
+                return;
+            }
+
+            String idColonia = null;
+            for (String[] c : colonias) {
+                if (c[1].equals(seleccion)) {
+                    idColonia = c[0];
+                    break;
+                }
+            }
+
+            if (idColonia == null) {
+                CUtilitarios.msg_error("Colonia no encontrada.", "Error");
+                return;
+            }
+
+            try {
+                boolean insertado = ci.insertarColoniaZona(idColonia, idZona);
+                if (insertado) {
+                    CUtilitarios.msg("Colonia agregada correctamente.", "Éxito");
+                    cargarColoniasPorZona(); // Actualiza tabla
+                } else {
+                    CUtilitarios.msg_error("No se pudo insertar la colonia.", "Error");
+                }
+            } catch (SQLException ex) {
+                if (ex.getMessage().toLowerCase().contains("duplicate")
+                        || ex.getMessage().toLowerCase().contains("foreign key")) {
+                    CUtilitarios.msg_advertencia("La colonia '" + seleccion + "' ya está relacionada con una zona.", "Restricción");
+                } else {
+                    CUtilitarios.msg_error("Error SQL: " + ex.getMessage(), "Error al insertar");
+                }
+            }
+
+        } catch (SQLException e) {
+            CUtilitarios.msg_error("Error SQL: " + e.getMessage(), "Error al obtener colonias");
+        }
+    }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -923,6 +997,7 @@ public void agregarColoniasAZona() {
 
     private void jBtnActAgregarZonaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnActAgregarZonaActionPerformed
         // TODO add your handling code here:
+        agregarUnaColoniaAZona();
     }//GEN-LAST:event_jBtnActAgregarZonaActionPerformed
 
     private void jBtnEliminarZonaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnEliminarZonaActionPerformed

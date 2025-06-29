@@ -620,6 +620,12 @@ public class CBusquedas {
         return cnslt.buscarValor(consulta);
     }
 
+    public boolean existeZona(String idZona) throws SQLException {
+        consulta = "SELECT COUNT(*) FROM zona WHERE idzona = '" + idZona + "';";
+        String resultado = cnslt.buscarValor(consulta);
+        return resultado != null && !resultado.equals("0");
+    }
+
     public String[] buscarDirecPorID(int idd) throws SQLException {
         consulta = "CALL direc(" + idd + ")";
         return cnslt.buscarValoresLista(consulta, 5);
@@ -665,9 +671,9 @@ public class CBusquedas {
     }
 
     public String buscarIdClienteVenta(String clienteSeleccionado) throws SQLException {
-        consulta = "SELECT cliente.idcliente " +
-                "FROM cliente INNER JOIN persona " +
-                "ON cliente.persona_idpersona = '" + clienteSeleccionado + "';";
+        consulta = "SELECT cliente.idcliente "
+                + "FROM cliente INNER JOIN persona "
+                + "ON cliente.persona_idpersona = '" + clienteSeleccionado + "';";
         return cnslt.buscarValor(consulta);
     }
 
@@ -677,12 +683,12 @@ public class CBusquedas {
                 + "WHERE es.estatus = '" + estatusSeleccionado + "';";
         return cnslt.buscarValor(consulta);
     }
-    
+
     public String buscarIdVendedorVenta(String vendedorSeleccionado) throws SQLException {
-        consulta = "SELECT empleado.idempleado " +
-                "FROM empleado INNER JOIN persona " +
-                "ON empleado.persona_idpersona = '" + vendedorSeleccionado + "';";
+        consulta = "SELECT empleado.idempleado "
+                + "FROM empleado INNER JOIN persona "
+                + "ON empleado.persona_idpersona = '" + vendedorSeleccionado + "';";
         return cnslt.buscarValor(consulta);
     }
-   
+
 }
