@@ -156,4 +156,11 @@ public class CCargaCombos {
                 + "JOIN persona p ON c.persona_idpersona = p.idpersona";
         return cnslt.buscarValoresCombos(consulta);
     }
+    
+    public ArrayList<String> cargaComboAvalesVenta() throws SQLException {
+        consulta = "SELECT CONCAT(p.nombres, ' ', p.ap_paterno, ' ', p.ap_materno) AS nombre_completo "
+                + "FROM aval a "
+                + "JOIN persona p ON a.persona_idpersona = p.idpersona ";
+        return cnslt.buscarValoresCombos(consulta);
+    }
 }
