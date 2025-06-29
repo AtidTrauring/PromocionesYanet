@@ -1,5 +1,6 @@
 package Views.venta;
 
+import Views.cliente.jfmenucliente;
 import com.toedter.calendar.JDateChooser;
 import crud.CBusquedas;
 import crud.CCargaCombos;
@@ -7,6 +8,8 @@ import crud.CInserciones;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
@@ -38,9 +41,8 @@ public class jfventa extends javax.swing.JFrame {
     private ArrayList<String> datosCombos = new ArrayList<>();
     private final CCargaCombos queryCargaCombos = new CCargaCombos();
     String folioVenta, numPagos, totalVenta, folioProducto, clienteSeleccionado, estatusSeleccionado, vendedorSeleccionado,
-            zonaSeleccionada, numAvalesSeleccionado, fechaSeleccionada;
-    private int idclienteSeleccionado, idestatusSeleccionado, idvendedorSeleccionado,
-            idzonaSeleccionada, idAvalSeleccionado;
+            zonaSeleccionada, numAvalesSeleccionado, fechaSeleccionada, seleccion, idclienteSeleccionado, idestatusSeleccionado,
+            idvendedorSeleccionado, idzonaSeleccionada, idAvalSeleccionado;
     private CInserciones cInser = new CInserciones();
 
     public jfventa(String[] datos) {
@@ -386,7 +388,7 @@ public class jfventa extends javax.swing.JFrame {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         return sdf.format(fecha);
     }
-    
+
     //Obtiene los valores que se insegren del usuario
     public void valoresObtenidos() {
         folioVenta = jTxtFFolioVenta.getText();
@@ -400,12 +402,12 @@ public class jfventa extends javax.swing.JFrame {
         numAvalesSeleccionado = jCmbBoxNumAvalesVenta.getSelectedItem().toString();
         fechaSeleccionada = formatearFecha(jDteChoVenta.getDate());
     }
-   
+
     public void agregarVenta() {
         valoresObtenidos();
         if (validaTodosCampos()) {
             try {
-                if (cInser.insertaVenta(totalVenta, fechaSeleccionada, numPagos, vendedorSeleccionado, clienteSeleccionado, 
+                if (cInser.insertaVenta(totalVenta, fechaSeleccionada, numPagos, vendedorSeleccionado, clienteSeleccionado,
                         zonaSeleccionada, estatusSeleccionado)) {
                     cuti.msg("Venta insertada correctamente", "Registro de venta");
                     cargarTablaAgregar();
@@ -739,18 +741,38 @@ public class jfventa extends javax.swing.JFrame {
 
         jCmbBoxEstatusVenta.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
         jCmbBoxEstatusVenta.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Estatus" }));
+        jCmbBoxEstatusVenta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCmbBoxEstatusVentaActionPerformed(evt);
+            }
+        });
 
         jCmbBoxVendedorVenta.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
         jCmbBoxVendedorVenta.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Vendedor" }));
+        jCmbBoxVendedorVenta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCmbBoxVendedorVentaActionPerformed(evt);
+            }
+        });
 
         jCmbBoxZonaVenta.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
         jCmbBoxZonaVenta.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Zona" }));
+        jCmbBoxZonaVenta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCmbBoxZonaVentaActionPerformed(evt);
+            }
+        });
 
         jCmbBoxNumAvalesVenta.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
         jCmbBoxNumAvalesVenta.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Numero de avales" }));
 
         jCmbBoxClientesVenta.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
         jCmbBoxClientesVenta.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Clientes" }));
+        jCmbBoxClientesVenta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCmbBoxClientesVentaActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -1287,6 +1309,66 @@ public class jfventa extends javax.swing.JFrame {
     private void jRadBtnActualizarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadBtnActualizarVentaActionPerformed
         gestionarComponentes(1);
     }//GEN-LAST:event_jRadBtnActualizarVentaActionPerformed
+
+    private void jCmbBoxClientesVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCmbBoxClientesVentaActionPerformed
+        JComboBox jcb = (JComboBox) evt.getSource();
+        seleccion = (String) jcb.getSelectedItem();
+        if (!"Cliente".equals(seleccion)) {
+            clienteSeleccionado = seleccion;
+            System.out.println(clienteSeleccionado);
+            try {
+                idclienteSeleccionado = cbus.buscarIdClienteVenta(clienteSeleccionado);
+                System.out.println("Cliente: " + idclienteSeleccionado);
+            } catch (Exception e) {
+                Logger.getLogger(jfmenucliente.class.getName()).log(Level.SEVERE, null, e);
+            }
+        }
+    }//GEN-LAST:event_jCmbBoxClientesVentaActionPerformed
+
+    private void jCmbBoxEstatusVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCmbBoxEstatusVentaActionPerformed
+        JComboBox jcb = (JComboBox) evt.getSource();
+        seleccion = (String) jcb.getSelectedItem();
+        if (!"Estatus".equals(seleccion)) {
+            estatusSeleccionado = seleccion;
+            System.out.println(estatusSeleccionado);
+            try {
+                idestatusSeleccionado = cbus.buscarIdEstatusVenta(estatusSeleccionado);
+                System.out.println("Estatus: " + idestatusSeleccionado);
+            } catch (Exception e) {
+                Logger.getLogger(jfmenucliente.class.getName()).log(Level.SEVERE, null, e);
+            }
+        }
+    }//GEN-LAST:event_jCmbBoxEstatusVentaActionPerformed
+
+    private void jCmbBoxVendedorVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCmbBoxVendedorVentaActionPerformed
+        JComboBox jcb = (JComboBox) evt.getSource();
+        seleccion = (String) jcb.getSelectedItem();
+        if (!"Vendedor".equals(seleccion)) {
+            vendedorSeleccionado = seleccion;
+            System.out.println(vendedorSeleccionado);
+            try {
+                idvendedorSeleccionado = cbus.buscarIdVendedorVenta(vendedorSeleccionado);
+                System.out.println("Vendedor: " + idvendedorSeleccionado);
+            } catch (Exception e) {
+                Logger.getLogger(jfmenucliente.class.getName()).log(Level.SEVERE, null, e);
+            }
+        }
+    }//GEN-LAST:event_jCmbBoxVendedorVentaActionPerformed
+
+    private void jCmbBoxZonaVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCmbBoxZonaVentaActionPerformed
+        JComboBox jcb = (JComboBox) evt.getSource();
+        seleccion = (String) jcb.getSelectedItem();
+        if (!"Zona".equals(seleccion)) {
+            zonaSeleccionada = seleccion;
+            System.out.println(zonaSeleccionada);
+            try {
+                idzonaSeleccionada = cbus.buscarIdZona(zonaSeleccionada);
+                System.out.println("zona: " + idzonaSeleccionada);
+            } catch (Exception e) {
+                Logger.getLogger(jfmenucliente.class.getName()).log(Level.SEVERE, null, e);
+            }
+        }
+    }//GEN-LAST:event_jCmbBoxZonaVentaActionPerformed
 
     /**
      * @param args the command line arguments

@@ -533,11 +533,12 @@ public class CBusquedas {
         consulta = "SELECT idcolonia, colonia FROM colonia ";
         return cnslt.buscarValores(consulta, 2);
     }
-public ArrayList<String[]> buscarColoniasDisponibles() throws SQLException {
-    consulta = "SELECT c.idcolonia, c.colonia FROM colonia c " +
-               "WHERE c.idcolonia NOT IN (SELECT DISTINCT colonia_idcolonia FROM colonia_has_zona)";
-    return cnslt.buscarValores(consulta, 2);
-}
+
+    public ArrayList<String[]> buscarColoniasDisponibles() throws SQLException {
+        consulta = "SELECT c.idcolonia, c.colonia FROM colonia c "
+                + "WHERE c.idcolonia NOT IN (SELECT DISTINCT colonia_idcolonia FROM colonia_has_zona)";
+        return cnslt.buscarValores(consulta, 2);
+    }
 
     public ArrayList<String[]> buscarEmpleado() throws SQLException {
         consulta = "SELECT"
@@ -548,28 +549,28 @@ public ArrayList<String[]> buscarColoniasDisponibles() throws SQLException {
                 + "FROM empleado;";
         return cnslt.buscarValores(consulta, 4);
     }
-    
+
     public ArrayList<String[]> buscarClienteAval() throws SQLException {
         consulta = "Call tablaClienteAval";
         return cnslt.buscarValores(consulta, 6);
     }
-    
+
     public String buscarPersonaCliente(int idcl) throws SQLException {
         consulta = "SELECT pr.idpersona "
                 + "FROM persona pr "
                 + "INNER JOIN cliente cl ON cl.persona_idpersona = pr.idpersona "
-                + "WHERE cl.idcliente = "+idcl+";";
+                + "WHERE cl.idcliente = " + idcl + ";";
         return cnslt.buscarValor(consulta);
     }
-    
+
     public String buscarPersonaAval(int idav) throws SQLException {
         consulta = "SELECT pr.idpersona "
                 + "FROM persona pr "
                 + "INNER JOIN aval av ON av.persona_idpersona = pr.idpersona "
-                + "WHERE av.idaval = "+idav+";";
+                + "WHERE av.idaval = " + idav + ";";
         return cnslt.buscarValor(consulta);
     }
-    
+
     public String buscarZonaPorPersona(int ipr) throws SQLException {
         consulta = "CALL zonaPorPersona (" + ipr + ")";
         return cnslt.buscarValor(consulta);
@@ -618,7 +619,6 @@ public ArrayList<String[]> buscarColoniasDisponibles() throws SQLException {
                 + "WHERE z.num_zona = '" + z + "';";
         return cnslt.buscarValor(consulta);
     }
-    
 
     public String[] buscarDirecPorID(int idd) throws SQLException {
         consulta = "CALL direc(" + idd + ")";
@@ -655,13 +655,34 @@ public ArrayList<String[]> buscarColoniasDisponibles() throws SQLException {
     }
 
     public ArrayList<String[]> buscarAgregarVenta() throws SQLException {
-        consulta = "SELECT venta.Idventa, producto.producto, venta.total AS Cantidad " +
-                    "FROM venta " +
-                    "INNER JOIN venta_has_producto ON venta.Idventa = venta_has_producto.venta_Idventa " +
-                    "INNER JOIN producto ON venta_has_producto.producto_idproducto = producto.idproducto " +
-                    "WHERE venta_has_producto.venta_Idventa = venta.Idventa " +
-                    "AND producto.idproducto = venta_has_producto.producto_idproducto ";
+        consulta = "SELECT venta.Idventa, producto.producto, venta.total AS Cantidad "
+                + "FROM venta "
+                + "INNER JOIN venta_has_producto ON venta.Idventa = venta_has_producto.venta_Idventa "
+                + "INNER JOIN producto ON venta_has_producto.producto_idproducto = producto.idproducto "
+                + "WHERE venta_has_producto.venta_Idventa = venta.Idventa "
+                + "AND producto.idproducto = venta_has_producto.producto_idproducto ";
         return cnslt.buscarValores(consulta, 3);
     }
 
+    public String buscarIdClienteVenta(String clienteSeleccionado) throws SQLException {
+        consulta = "SELECT cliente.idcliente " +
+                "FROM cliente INNER JOIN persona " +
+                "ON cliente.persona_idpersona = '" + clienteSeleccionado + "';";
+        return cnslt.buscarValor(consulta);
+    }
+
+    public String buscarIdEstatusVenta(String estatusSeleccionado) throws SQLException {
+        consulta = "SELECT es.idestatus "
+                + "FROM estatus es "
+                + "WHERE es.estatus = '" + estatusSeleccionado + "';";
+        return cnslt.buscarValor(consulta);
+    }
+    
+    public String buscarIdVendedorVenta(String vendedorSeleccionado) throws SQLException {
+        consulta = "SELECT empleado.idempleado " +
+                "FROM empleado INNER JOIN persona " +
+                "ON empleado.persona_idpersona = '" + vendedorSeleccionado + "';";
+        return cnslt.buscarValor(consulta);
+    }
+   
 }
