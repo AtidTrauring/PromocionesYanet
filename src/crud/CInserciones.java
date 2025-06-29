@@ -147,5 +147,14 @@ public boolean insertarColoniaZona(String idColonia, String idZona) throws SQLEx
         consulta = "CALL insertaAval(" + idPersona + "," + idEstatus + ");";
         return cnslt.inserta(consulta);
     }
+    
+    //-----------INSERCION de venta
+    public boolean insertaVenta(String totalVenta, String fechaSeleccionada, String numPagos, String vendedorSeleccionado,
+            String clienteSeleccionado, String zonaSeleccionada, String estatusSeleccionado) throws SQLException {
+        consulta = "INSERT INTO venta(total, fecha_venta, num_pagos, empleado_idempleado, cliente_idcliente, zona_idzona, estatus_idestatus) " + 
+                "VALUES ('" + totalVenta + "',' " + fechaSeleccionada + "','" + numPagos + "','" + vendedorSeleccionado + "','" +
+                clienteSeleccionado + "','" + zonaSeleccionada + "','" + estatusSeleccionado + "');";
+        return cnslt.inserta(consulta);
+    }
 
 }

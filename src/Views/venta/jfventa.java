@@ -1,13 +1,21 @@
 package Views.venta;
 
+import com.toedter.calendar.JDateChooser;
 import crud.CBusquedas;
 import crud.CCargaCombos;
+import crud.CInserciones;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.RowFilter;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import utilitarios.CUtilitarios;
@@ -29,10 +37,15 @@ public class jfventa extends javax.swing.JFrame {
     private DefaultComboBoxModel<String> listasCombos;
     private ArrayList<String> datosCombos = new ArrayList<>();
     private final CCargaCombos queryCargaCombos = new CCargaCombos();
+    String folioVenta, numPagos, totalVenta, folioProducto, clienteSeleccionado, estatusSeleccionado, vendedorSeleccionado,
+            zonaSeleccionada, numAvalesSeleccionado, fechaSeleccionada;
+    private int idclienteSeleccionado, idestatusSeleccionado, idvendedorSeleccionado,
+            idzonaSeleccionada, idAvalSeleccionado;
+    private CInserciones cInser = new CInserciones();
 
     public jfventa(String[] datos) {
         initComponents();
-        desactivarTodosLosComponentes();
+        desactivarComponentes();
         datosVenta = datos;
         cargarTablaBusqueda();
         cargarTablaAgregar();
@@ -47,13 +60,13 @@ public class jfventa extends javax.swing.JFrame {
         cargarCombos(jCmbBoxCliente, 6);
         cargarCombos(jCmbBoxNumAvalesVenta, 7);
         cargarCombos(jCmbBoxClientesVenta, 6);
-        addFiltroListener(jTxtBusIDVenta);
-        addFiltroListener(jTxtBusClienteVenta);
-        addFiltroListener(jTxtBusCobradorVenta);
-        addFiltroListener(jCmbBoxFechas);
-        addFiltroListener(jCmbBoxEstatus);
-        addFiltroListener(jCmbBoxPagosPendi);
-        addFiltroListener(jTxtFFolioVenta);
+        addFiltroListener(jTxtBusIDVenta, jTblListaVentas);
+        addFiltroListener(jTxtBusClienteVenta, jTblListaVentas);
+        addFiltroListener(jTxtBusCobradorVenta, jTblListaVentas);
+        addFiltroListener(jCmbBoxFechas, jTblListaVentas);
+        addFiltroListener(jCmbBoxEstatus, jTblListaVentas);
+        addFiltroListener(jCmbBoxPagosPendi, jTblListaVentas);
+        addFiltroListener(jTxtFFolioVenta, jTblAgregarVenta);
         ButtonGroup grupoRadios = new ButtonGroup();
         grupoRadios.add(jRadBtnAgregarVenta);
         grupoRadios.add(jRadBtnActualizarVenta);
@@ -168,85 +181,70 @@ public class jfventa extends javax.swing.JFrame {
     //Filtros
     public void apliFiltros(JTable tabla) {
         DefaultTableModel modelFiltro = (DefaultTableModel) tabla.getModel();
-        tr = new TableRowSorter<>(modelFiltro);
+        TableRowSorter<DefaultTableModel> tr = new TableRowSorter<>(modelFiltro);
         tabla.setRowSorter(tr);
         ArrayList<RowFilter<Object, Object>> filtros = new ArrayList<>();
 
-        //------TEXTFIELDS------
-        //folio
-        if (!jTxtBusIDVenta.getText().trim().isEmpty()) {
-            filtros.add(RowFilter.regexFilter("(?i)" + jTxtBusIDVenta.getText().trim(), 0));
-            //el indice 0 es para el folio
+        //es para ver que filtros aplicar a que tabla (ayuda del chat jajajaja)
+        boolean esPrimeraTabla = (tabla == jTblListaVentas);
+        boolean esSegundaTabla = (tabla == jTblAgregarVenta);
+
+        if (esPrimeraTabla) {
+            if (!jTxtBusIDVenta.getText().trim().isEmpty()) {
+                filtros.add(RowFilter.regexFilter("(?i)" + jTxtBusIDVenta.getText().trim(), 0));
+            }
+            if (!jTxtBusClienteVenta.getText().trim().isEmpty()) {
+                filtros.add(RowFilter.regexFilter("(?i)" + jTxtBusClienteVenta.getText().trim(), 2));
+            }
+            if (!jTxtBusCobradorVenta.getText().trim().isEmpty()) {
+                filtros.add(RowFilter.regexFilter("(?i)" + jTxtBusCobradorVenta.getText().trim(), 4));
+            }
+            if (jCmbBoxFechas.getSelectedIndex() > 0) {
+                String fechaSeleccionada = jCmbBoxFechas.getSelectedItem().toString();
+                filtros.add(RowFilter.regexFilter("(?i)^" + fechaSeleccionada + "$", 1));
+            }
+            if (jCmbBoxEstatus.getSelectedIndex() > 0) {
+                String estatusElegido = jCmbBoxEstatus.getSelectedItem().toString();
+                filtros.add(RowFilter.regexFilter("(?i)^" + estatusElegido + "$", 5));
+            }
+            if (jCmbBoxPagosPendi.getSelectedIndex() > 0) {
+                String pagosSeleccionados = jCmbBoxPagosPendi.getSelectedItem().toString();
+                filtros.add(RowFilter.regexFilter("(?i)^" + pagosSeleccionados + "$", 6));
+            }
+        } else if (esSegundaTabla) {
+            if (!jTxtFFolioVenta.getText().trim().isEmpty()) {
+                filtros.add(RowFilter.regexFilter("(?i)" + jTxtFFolioVenta.getText().trim(), 0));
+            }
         }
 
-        //cliente
-        if (!jTxtBusClienteVenta.getText().trim().isEmpty()) {
-            filtros.add(RowFilter.regexFilter("(?i)" + jTxtBusClienteVenta.getText().trim(), 2));
-            //el indice 2 es para el nombre del ciente
-        }
-
-        //cobrador
-        if (!jTxtBusCobradorVenta.getText().trim().isEmpty()) {
-            filtros.add(RowFilter.regexFilter("(?i)" + jTxtBusCobradorVenta.getText().trim(), 4));
-            //el indice 4 es para el nombre del cobrador
-        }
-
-        //------COMBOS-------
-        //fechas
-        if (jCmbBoxFechas.getSelectedIndex() > 0) {
-            String fechaSeleccionada = jCmbBoxFechas.getSelectedItem().toString();
-            filtros.add(RowFilter.regexFilter("(?i)^" + fechaSeleccionada + "$", 1)); // ^$ para coincidencia exacta
-            //el indice 1 es para las fechas
-        }
-
-        //estatus
-        if (jCmbBoxEstatus.getSelectedIndex() > 0) {
-            String estatusElegido = jCmbBoxEstatus.getSelectedItem().toString();
-            filtros.add(RowFilter.regexFilter("(?i)^" + estatusElegido + "$", 5));
-            //el indice 5 es para estatus
-        }
-
-        //pagos pendientes
-        if (jCmbBoxPagosPendi.getSelectedIndex() > 0) {
-            String pagosSeleccionados = jCmbBoxPagosPendi.getSelectedItem().toString();
-            filtros.add(RowFilter.regexFilter("(?i)^" + pagosSeleccionados + "$", 6));
-            //el indice 6 es de los pagos
-        }
-
-        // ------ APLICACIÓN DE FILTROS ------
+        //aplica los filtros
         if (!filtros.isEmpty()) {
-            tr.setRowFilter(RowFilter.andFilter(filtros)); //todos los filtros deben cumplirse
+            tr.setRowFilter(RowFilter.andFilter(filtros));
         } else {
-            tr.setRowFilter(null); //limpia filtros
+            tr.setRowFilter(null);
         }
     }
 
     //este agrega un listener a los textfield y combos
-    private void addFiltroListener(javax.swing.JComponent componente) {
-        if (componente instanceof javax.swing.JTextField) {
-            // Listener para JTextField
-            ((javax.swing.JTextField) componente).getDocument().addDocumentListener(
-                    new javax.swing.event.DocumentListener() {
-                public void insertUpdate(javax.swing.event.DocumentEvent e) {
-                    apliFiltros(jTblListaVentas);
+    private void addFiltroListener(JComponent componente, JTable tabla) {
+        if (componente instanceof JTextField) {
+            ((JTextField) componente).getDocument().addDocumentListener(
+                    new DocumentListener() {
+                public void insertUpdate(DocumentEvent e) {
+                    apliFiltros(tabla);
                 }
 
-                public void removeUpdate(javax.swing.event.DocumentEvent e) {
-                    apliFiltros(jTblListaVentas);
+                public void removeUpdate(DocumentEvent e) {
+                    apliFiltros(tabla);
                 }
 
-                public void changedUpdate(javax.swing.event.DocumentEvent e) {
-                    apliFiltros(jTblListaVentas);
+                public void changedUpdate(DocumentEvent e) {
+                    apliFiltros(tabla);
                 }
             });
-        } else if (componente instanceof javax.swing.JComboBox) {
-            // Listener para JComboBox
-            ((javax.swing.JComboBox<?>) componente).addActionListener(
-                    new java.awt.event.ActionListener() {
-                public void actionPerformed(java.awt.event.ActionEvent e) {
-                    apliFiltros(jTblListaVentas);
-                }
-            });
+        } else if (componente instanceof JComboBox) {
+            ((JComboBox<?>) componente).addActionListener(
+                    e -> apliFiltros(tabla));
         }
     }
 
@@ -264,7 +262,7 @@ public class jfventa extends javax.swing.JFrame {
     }
 
     //desactiva todos los campos hasta que se elija una accion
-    private void desactivarTodosLosComponentes() {
+    private void desactivarComponentes() {
         jTxtFFolioVenta.setEnabled(false);
         jTxtFTotalVenta.setEnabled(false);
         jTxtFNumPagosVenta.setEnabled(false);
@@ -282,7 +280,7 @@ public class jfventa extends javax.swing.JFrame {
 
     private void gestionarComponentes(int modo) {
         // 0 = Agregar, 1 = Actualizar, 2 = Eliminar
-        desactivarTodosLosComponentes();
+        desactivarComponentes();
 
         //radio buttons
         switch (modo) {
@@ -319,6 +317,7 @@ public class jfventa extends javax.swing.JFrame {
                 jCmbBoxEstatusVenta.setEnabled(true);
                 jCmbBoxVendedorVenta.setEnabled(true);
                 jCmbBoxZonaVenta.setEnabled(true);
+                jCmbBoxNumAvalesVenta.setEnabled(true);
                 jBtnActualizarVenta.setEnabled(true);
                 break;
 
@@ -327,6 +326,99 @@ public class jfventa extends javax.swing.JFrame {
                 jBtnEliminarVenta.setEnabled(true);
                 limpiarCampos();
                 break;
+        }
+    }
+
+    public boolean validaCamposVenta(JComponent componente, String regex, String mensajeVacio, String mensajeInvalido) {
+        if (componente instanceof JTextField) {
+            JTextField campo = (JTextField) componente;
+            String texto;
+
+            if (regex.equals("^[a-zA-Z ]+$")) {
+                texto = cuti.devuelveCadenatexto(campo, regex);
+            } else {
+                texto = cuti.devuelveCadenaNum(campo, regex);
+            }
+
+            if (texto == null) {
+                CUtilitarios.msg_advertencia(mensajeVacio, "Validación");
+                return false;
+            } else if ("NoValido".equals(texto)) {
+                CUtilitarios.msg_error(mensajeInvalido, "Validación");
+                return false;
+            }
+        } else if (componente instanceof JComboBox) {
+            JComboBox<?> combo = (JComboBox<?>) componente;
+
+            if (combo.getSelectedIndex() <= 0) {
+                CUtilitarios.msg_advertencia(mensajeVacio, "Validación");
+                return false;
+            }
+        } else if (componente instanceof JDateChooser) {
+            JDateChooser dateChooser = (JDateChooser) componente;
+
+            if (dateChooser.getDate() == null) {
+                CUtilitarios.msg_advertencia(mensajeVacio, "Validación");
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean validaTodosCampos() {
+        return validaCamposVenta(jTxtFFolioVenta, "^[0-9]+$", "El folio de la venta esta vacio", "Solo se buscan numeros en el folio")
+                && validaCamposVenta(jTxtFNumPagosVenta, "^[0-9]+$", "El numero de pagos esta vacio", "Solo se aceptan numeros")
+                && validaCamposVenta(jTxtFTotalVenta, "^[0-9]+$", "El total esta vacio", "Soo se aceptan numeros en el total")
+                && validaCamposVenta(jLblFolioProductoVenta, "^[0-9]+$", "El folio del producto esta vacio", "Solo se aceptan numeros en el folio del producto")
+                && validaCamposVenta(jDteChoVenta, null, "No se escogio una fecha", null)
+                && validaCamposVenta(jCmbBoxClientesVenta, null, "No se eligio a un cliente", null)
+                && validaCamposVenta(jCmbBoxEstatusVenta, null, "No se eligio un estatus", null)
+                && validaCamposVenta(jCmbBoxVendedorVenta, null, "No se eligio un vendedor", null)
+                && validaCamposVenta(jCmbBoxZonaVenta, null, "No se escogio una venta", null)
+                && validaCamposVenta(jCmbBoxNumAvalesVenta, null, "No se eligio el numero de avales", null);
+    }
+
+    //La fecha sale como 3 jun 2024, y en la base se registra como 2024-06-03, por lo que el metodo la formatea
+    private String formatearFecha(Date fecha) {
+        if (fecha == null) {
+            return null;
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        return sdf.format(fecha);
+    }
+    
+    //Obtiene los valores que se insegren del usuario
+    public void valoresObtenidos() {
+        folioVenta = jTxtFFolioVenta.getText();
+        numPagos = jTxtFNumPagosVenta.getText();
+        totalVenta = jTxtFTotalVenta.getText();
+        folioProducto = jTxtFFolioProductoVenta.getText();
+        clienteSeleccionado = jCmbBoxClientesVenta.getSelectedItem().toString();
+        estatusSeleccionado = jCmbBoxEstatusVenta.getSelectedItem().toString();
+        vendedorSeleccionado = jCmbBoxVendedorVenta.getSelectedItem().toString();
+        zonaSeleccionada = jCmbBoxZonaVenta.getSelectedItem().toString();
+        numAvalesSeleccionado = jCmbBoxNumAvalesVenta.getSelectedItem().toString();
+        fechaSeleccionada = formatearFecha(jDteChoVenta.getDate());
+    }
+   
+    public void agregarVenta() {
+        valoresObtenidos();
+        if (validaTodosCampos()) {
+            try {
+                if (cInser.insertaVenta(totalVenta, fechaSeleccionada, numPagos, vendedorSeleccionado, clienteSeleccionado, 
+                        zonaSeleccionada, estatusSeleccionado)) {
+                    cuti.msg("Venta insertada correctamente", "Registro de venta");
+                    cargarTablaAgregar();
+                    cargarTablaBusqueda();
+                } else {
+                }
+            } catch (Exception e) {
+                cuti.msg_error("Error SQL: " + e.getMessage(), "Registro de venta");
+            } finally {
+                limpiarCampos();
+            }
+        } else {
+            cuti.msg_advertencia("Ingrese todos los campos por favor", "Registro de venta");
         }
     }
 
@@ -637,7 +729,7 @@ public class jfventa extends javax.swing.JFrame {
         jSeparator11.setForeground(new java.awt.Color(0, 0, 0));
 
         jLblFolioProductoVenta.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
-        jLblFolioProductoVenta.setText("Ingrese el folio del producto:");
+        jLblFolioProductoVenta.setText("Folio del producto:");
 
         jTxtFFolioProductoVenta.setBackground(new java.awt.Color(167, 235, 242));
         jTxtFFolioProductoVenta.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
@@ -1025,7 +1117,7 @@ public class jfventa extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPnlActVentaLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPnlAgreActuaPagos, javax.swing.GroupLayout.PREFERRED_SIZE, 362, Short.MAX_VALUE)
+                .addComponent(jPnlAgreActuaPagos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
 

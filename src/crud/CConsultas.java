@@ -319,7 +319,6 @@ public class CConsultas {
     }
 
     /**/
-    
     public int obtenerValorEntero(String sql) throws SQLException {
         conn = conector.conecta();
         stmt = conn.createStatement();
@@ -334,4 +333,24 @@ public class CConsultas {
         return valor;
     }
 
+    //Metodo para buscar valores de combos con ID
+    public ArrayList<String> buscarValoresCombosConID(String consulta) throws SQLException {
+        ArrayList<String> resultados = new ArrayList<>();
+        try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(consulta)) {
+            ResultSetMetaData metaData = rs.getMetaData();
+            int columnCount = metaData.getColumnCount();
+
+            while (rs.next()) {
+                StringBuilder fila = new StringBuilder();
+                for (int i = 1; i <= columnCount; i++) {
+                    if (i > 1) {
+                        fila.append("|");
+                    }
+                    fila.append(rs.getString(i));
+                }
+                resultados.add(fila.toString());
+            }
+        }
+        return resultados;
+    }
 }
