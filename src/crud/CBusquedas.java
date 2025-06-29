@@ -671,9 +671,10 @@ public class CBusquedas {
     }
 
     public String buscarIdClienteVenta(String clienteSeleccionado) throws SQLException {
-        consulta = "SELECT cliente.idcliente "
-                + "FROM cliente INNER JOIN persona "
-                + "ON cliente.persona_idpersona = '" + clienteSeleccionado + "';";
+        consulta = "SELECT c.idcliente " +
+                "FROM cliente c INNER JOIN persona p " +
+                "ON c.persona_idpersona = p.idpersona " +
+                "WHERE CONCAT(p.nombres, ' ', p.ap_paterno, ' ', p.ap_materno) = '" + clienteSeleccionado + "';";
         return cnslt.buscarValor(consulta);
     }
 
@@ -685,9 +686,10 @@ public class CBusquedas {
     }
 
     public String buscarIdVendedorVenta(String vendedorSeleccionado) throws SQLException {
-        consulta = "SELECT empleado.idempleado "
-                + "FROM empleado INNER JOIN persona "
-                + "ON empleado.persona_idpersona = '" + vendedorSeleccionado + "';";
+        consulta = "SELECT e.idempleado "
+                + "FROM empleado e INNER JOIN persona p "
+                + "ON e.persona_idpersona = p.idpersona " +
+                "WHERE CONCAT(p.nombres, ' ', p.ap_paterno, ' ', p.ap_materno) = '" + vendedorSeleccionado + "';";
         return cnslt.buscarValor(consulta);
     }
 

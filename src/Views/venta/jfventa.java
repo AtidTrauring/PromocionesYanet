@@ -439,8 +439,8 @@ public class jfventa extends javax.swing.JFrame {
         valoresObtenidos();
         if (validaTodosCampos()) {
             try {
-                if (cInser.insertaVenta(totalVenta, fechaSeleccionada, numPagos, vendedorSeleccionado, clienteSeleccionado,
-                        zonaSeleccionada, estatusSeleccionado)) {
+                if (cInser.insertaVenta(totalVenta, fechaSeleccionada, numPagos, idvendedorSeleccionado, idclienteSeleccionado,
+                        idzonaSeleccionada, idestatusSeleccionado)) {
                     cuti.msg("Venta insertada correctamente", "Registro de venta");
                     cargarTablaAgregar();
                     cargarTablaBusqueda();
