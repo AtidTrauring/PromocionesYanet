@@ -33,6 +33,11 @@ public boolean insertarColoniaZona(String idColonia, String idZona) throws SQLEx
              + "VALUES ('" + idColonia + "', '" + idZona + "')";
     return cnslt.inserta(consulta);
 }
+public boolean insertarZona(String idZona) throws SQLException {
+    String consulta = "INSERT INTO zona (idzona, num_zona) VALUES ('" + idZona + "', '" + idZona + "')";
+    return cnslt.inserta(consulta);
+}
+
 
 
 

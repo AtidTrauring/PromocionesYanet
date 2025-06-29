@@ -261,14 +261,13 @@ public class jfzonas extends javax.swing.JFrame {
     combo.setModel(modelo);
 }
 
-    
-    private void limpiarCamposAgregar() {
+  private void limpiarCamposAgregar() {
     jTxtIngNumZona1.setText("");
     jCmBoxNumColonias1.setSelectedIndex(0); // Asumiendo que 0 es "Num. Colonias"
 }
 
 public void agregarColoniasAZona() {
-    String idZona = jTxtIngNumZona1.getText().trim();
+    String idZona = jTxtIngNumZona1.getText().trim(); 
     int numColonias = jCmBoxNumColonias1.getSelectedIndex();
 
     if (idZona.isEmpty() || numColonias <= 0) {
@@ -277,6 +276,32 @@ public void agregarColoniasAZona() {
     }
 
     try {
+        if (cb.existeZona(idZona)) {
+            CUtilitarios.msg_advertencia("La zona '" + idZona + "' ya existe. No se pueden agregar colonias.", "Zona existente");
+            limpiarCamposAgregar();
+            return;
+        }
+
+        int opc = JOptionPane.showConfirmDialog(
+            this,
+            "La zona '" + idZona + "' no existe. ¿Deseas crearla?",
+            "Zona no encontrada",
+            JOptionPane.YES_NO_OPTION
+        );
+
+        if (opc != JOptionPane.YES_OPTION) {
+            CUtilitarios.msg_advertencia("Operación cancelada. Ingresa una zona válida.", "Zona no válida");
+            return;
+        }
+
+        boolean insertada = ci.insertarZona(idZona);
+        if (!insertada) {
+            CUtilitarios.msg_error("No se pudo crear la zona.", "Error al crear zona");
+            return;
+        }
+
+        CUtilitarios.msg("Zona creada exitosamente.", "Zona creada");
+
         ArrayList<String[]> colonias = cb.buscarColoniasDisponibles();
 
         if (colonias.isEmpty()) {
@@ -286,21 +311,28 @@ public void agregarColoniasAZona() {
         }
 
         for (int i = 0; i < numColonias; i++) {
-            colonias = cb.buscarColoniasDisponibles();
+            colonias = cb.buscarColoniasDisponibles(); 
 
             if (colonias.isEmpty()) {
                 CUtilitarios.msg("No quedan más colonias disponibles para agregar.", "Información");
                 limpiarCamposAgregar();
                 return;
             }
+
             String[] nombresColonias = colonias.stream()
-                                               .map(c -> c[1]) //Extrae el nombre de la posicion en el array
-                                               .toArray(String[]::new); //Lo convierte en un arreglo de string
+                                               .map(c -> c[1])
+                                               .toArray(String[]::new);
+
             String seleccion = (String) JOptionPane.showInputDialog(
-                this, "Selecciona la colonia #" + (i + 1),
-                "Agregar Colonia a Zona", JOptionPane.QUESTION_MESSAGE,
-                null,nombresColonias, nombresColonias[0]
+                this,
+                "Selecciona la colonia #" + (i + 1),
+                "Agregar Colonia a Zona",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                nombresColonias,
+                nombresColonias[0]
             );
+
             if (seleccion == null) {
                 CUtilitarios.msg_advertencia("Operación cancelada por el usuario.", "Cancelado");
                 limpiarCamposAgregar();
@@ -308,9 +340,9 @@ public void agregarColoniasAZona() {
             }
 
             String idColonia = null;
-            for (String[] c : colonias) { //recorre la lista de las colonias disponibles
-                if (c[1].equals(seleccion)) { //Si la eleccion coincide con el indice
-                    idColonia = c[0];//lo gaurda con el indice 0
+            for (String[] c : colonias) {
+                if (c[1].equals(seleccion)) {
+                    idColonia = c[0];
                     break;
                 }
             }
@@ -327,11 +359,17 @@ public void agregarColoniasAZona() {
                     CUtilitarios.msg_error("No se pudo insertar colonia: " + seleccion, "Error al insertar");
                 }
             } catch (SQLException ex) {
-                CUtilitarios.msg_error("Error al insertar las colonias", "Insertar colonias");
+                if (ex.getMessage().toLowerCase().contains("duplicate") ||
+                    ex.getMessage().toLowerCase().contains("foreign key")) {
+                    CUtilitarios.msg_advertencia("La colonia '" + seleccion + "' ya está relacionada con una zona.", "Restricción");
+                } else {
+                    CUtilitarios.msg_error("Error al insertar: " + ex.getMessage(), "Error SQL");
+                }
                 limpiarCamposAgregar();
                 return;
             }
         }
+
         CUtilitarios.msg("Colonias agregadas correctamente.", "Éxito");
         limpiarCamposAgregar();
 
@@ -625,7 +663,7 @@ public void agregarColoniasAZona() {
         jTxtIngNumZona1.setBorder(null);
 
         jLblIngNumZona1.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
-        jLblIngNumZona1.setText("Número de la zona:");
+        jLblIngNumZona1.setText("Ingrese el nombre de la zona:");
 
         jSeparator7.setForeground(new java.awt.Color(0, 0, 0));
 
