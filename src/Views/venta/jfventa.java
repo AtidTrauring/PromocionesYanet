@@ -368,16 +368,48 @@ public class jfventa extends javax.swing.JFrame {
     }
 
     public boolean validaTodosCampos() {
-        return validaCamposVenta(jTxtFFolioVenta, "^[0-9]+$", "El folio de la venta esta vacio", "Solo se buscan numeros en el folio")
-                && validaCamposVenta(jTxtFNumPagosVenta, "^[0-9]+$", "El numero de pagos esta vacio", "Solo se aceptan numeros")
-                && validaCamposVenta(jTxtFTotalVenta, "^[0-9]+$", "El total esta vacio", "Soo se aceptan numeros en el total")
-                && validaCamposVenta(jLblFolioProductoVenta, "^[0-9]+$", "El folio del producto esta vacio", "Solo se aceptan numeros en el folio del producto")
-                && validaCamposVenta(jDteChoVenta, null, "No se escogio una fecha", null)
-                && validaCamposVenta(jCmbBoxClientesVenta, null, "No se eligio a un cliente", null)
-                && validaCamposVenta(jCmbBoxEstatusVenta, null, "No se eligio un estatus", null)
-                && validaCamposVenta(jCmbBoxVendedorVenta, null, "No se eligio un vendedor", null)
-                && validaCamposVenta(jCmbBoxZonaVenta, null, "No se escogio una venta", null)
-                && validaCamposVenta(jCmbBoxNumAvalesVenta, null, "No se eligio el numero de avales", null);
+        // Validar campos según si están habilitados
+        if (jTxtFFolioVenta.isEnabled()
+                && !validaCamposVenta(jTxtFFolioVenta, "^[0-9]+$", "El folio de la venta está vacío", "Solo se buscan números en el folio")) {
+            return false;
+        }
+        if (jTxtFNumPagosVenta.isEnabled()
+                && !validaCamposVenta(jTxtFNumPagosVenta, "^[0-9]+$", "El número de pagos está vacío", "Solo se aceptan números")) {
+            return false;
+        }
+        if (jTxtFTotalVenta.isEnabled()
+                && !validaCamposVenta(jTxtFTotalVenta, "^[0-9]+$", "El total está vacío", "Solo se aceptan números en el total")) {
+            return false;
+        }
+        if (jTxtFFolioProductoVenta.isEnabled()
+                && !validaCamposVenta(jTxtFFolioProductoVenta, "^[0-9]+$", "El folio del producto está vacío", "Solo se aceptan números en el folio del producto")) {
+            return false;
+        }
+        if (jDteChoVenta.isEnabled()
+                && !validaCamposVenta(jDteChoVenta, null, "No se escogió una fecha", null)) {
+            return false;
+        }
+        if (jCmbBoxClientesVenta.isEnabled()
+                && !validaCamposVenta(jCmbBoxClientesVenta, null, "No se eligió a un cliente", null)) {
+            return false;
+        }
+        if (jCmbBoxEstatusVenta.isEnabled()
+                && !validaCamposVenta(jCmbBoxEstatusVenta, null, "No se eligió un estatus", null)) {
+            return false;
+        }
+        if (jCmbBoxVendedorVenta.isEnabled()
+                && !validaCamposVenta(jCmbBoxVendedorVenta, null, "No se eligió un vendedor", null)) {
+            return false;
+        }
+        if (jCmbBoxZonaVenta.isEnabled()
+                && !validaCamposVenta(jCmbBoxZonaVenta, null, "No se escogió una zona", null)) {
+            return false;
+        }
+        if (jCmbBoxNumAvalesVenta.isEnabled()
+                && !validaCamposVenta(jCmbBoxNumAvalesVenta, null, "No se eligió el número de avales", null)) {
+            return false;
+        }
+        return true;
     }
 
     //La fecha sale como 3 jun 2024, y en la base se registra como 2024-06-03, por lo que el metodo la formatea
@@ -892,6 +924,11 @@ public class jfventa extends javax.swing.JFrame {
         jBtnAgregarVenta.setBackground(new java.awt.Color(53, 189, 242));
         jBtnAgregarVenta.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jBtnAgregarVenta.setText("Agregar la venta");
+        jBtnAgregarVenta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtnAgregarVentaActionPerformed(evt);
+            }
+        });
 
         jBtnActualizarVenta.setBackground(new java.awt.Color(53, 189, 242));
         jBtnActualizarVenta.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
@@ -1369,6 +1406,10 @@ public class jfventa extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_jCmbBoxZonaVentaActionPerformed
+
+    private void jBtnAgregarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnAgregarVentaActionPerformed
+        agregarVenta();
+    }//GEN-LAST:event_jBtnAgregarVentaActionPerformed
 
     /**
      * @param args the command line arguments
