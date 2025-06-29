@@ -2,6 +2,7 @@ package Views.venta;
 
 import Views.cliente.jfmenucliente;
 import com.toedter.calendar.JDateChooser;
+import crud.CActualizaciones;
 import crud.CBusquedas;
 import crud.CCargaCombos;
 import crud.CInserciones;
@@ -14,6 +15,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.RowFilter;
@@ -44,6 +46,7 @@ public class jfventa extends javax.swing.JFrame {
             zonaSeleccionada, numAvalesSeleccionado, fechaSeleccionada, seleccion, idclienteSeleccionado, idestatusSeleccionado,
             idvendedorSeleccionado, idzonaSeleccionada, idAvalSeleccionado;
     private CInserciones cInser = new CInserciones();
+    private CActualizaciones cActu = new CActualizaciones();
 
     public jfventa(String[] datos) {
         initComponents();
@@ -423,15 +426,15 @@ public class jfventa extends javax.swing.JFrame {
 
     //Obtiene los valores que se insegren del usuario
     public void valoresObtenidos() {
-        folioVenta = jTxtFFolioVenta.getText();
-        numPagos = jTxtFNumPagosVenta.getText();
-        totalVenta = jTxtFTotalVenta.getText();
-        folioProducto = jTxtFFolioProductoVenta.getText();
-        clienteSeleccionado = jCmbBoxClientesVenta.getSelectedItem().toString();
-        estatusSeleccionado = jCmbBoxEstatusVenta.getSelectedItem().toString();
-        vendedorSeleccionado = jCmbBoxVendedorVenta.getSelectedItem().toString();
-        zonaSeleccionada = jCmbBoxZonaVenta.getSelectedItem().toString();
-        numAvalesSeleccionado = jCmbBoxNumAvalesVenta.getSelectedItem().toString();
+        folioVenta = jTxtFFolioVenta.getText().trim();
+        numPagos = jTxtFNumPagosVenta.getText().trim();
+        totalVenta = jTxtFTotalVenta.getText().trim();
+        folioProducto = jTxtFFolioProductoVenta.getText().trim();
+        clienteSeleccionado = jCmbBoxClientesVenta.getSelectedItem().toString().trim();
+        estatusSeleccionado = jCmbBoxEstatusVenta.getSelectedItem().toString().trim();
+        vendedorSeleccionado = jCmbBoxVendedorVenta.getSelectedItem().toString().trim();
+        zonaSeleccionada = jCmbBoxZonaVenta.getSelectedItem().toString().trim();
+        numAvalesSeleccionado = jCmbBoxNumAvalesVenta.getSelectedItem().toString().trim();
         fechaSeleccionada = formatearFecha(jDteChoVenta.getDate());
     }
 
@@ -454,6 +457,127 @@ public class jfventa extends javax.swing.JFrame {
         } else {
             cuti.msg_advertencia("Ingrese todos los campos por favor", "Registro de venta");
         }
+    }
+
+    public void actualizarVenta() {
+        valoresObtenidos();
+        if (folioVenta.isEmpty()) {
+            cuti.msg_advertencia("El folio de la venta no puede estar vacio", "Actualizar venta");
+            return;
+        }
+
+        // Verifica si todos los campos cumplen con las validaciones necesarias (le copie a Kevin)
+        if (!validaTodosCampos()) {
+            return; // Si alguna validación falla, se detiene la ejecución
+        }
+
+        // Muestra un cuadro de confirmación al usuario
+        int opcion = JOptionPane.showConfirmDialog(
+                this, "¿Desea actualizar los datos de la venta?",
+                "Confirmar actualización", JOptionPane.YES_NO_OPTION
+        );
+
+        if (opcion == JOptionPane.YES_OPTION) {
+            try {
+                boolean actualizado = cActu.actualizaVenta(folioVenta, totalVenta, fechaSeleccionada, numPagos,
+                        idvendedorSeleccionado, idzonaSeleccionada, idestatusSeleccionado);
+
+                if (actualizado) {
+                    cuti.msg("La venta se actualizo de forma correcta", "Actualizar venta");
+                    cargarTablaAgregar();
+                    cargarTablaBusqueda();
+                    limpiarCampos();
+                } else {
+                    cuti.msg_error("No se pudo actualizar la venta", "Actualizar venta");
+                }
+            } catch (Exception e) {
+                cuti.msg_error("Error SQL al actualizar: " + e.getMessage(), "Actualizar venta");
+            }
+        }
+    }
+
+    //Va a asignar la fecha que se traiga de la tabla al datechoose
+    private void asignarFechaSimple(int fila, int columna) {
+        try {
+            String fechaStr = jTblListaVentas.getValueAt(fila, columna).toString();
+            jDteChoVenta.setDate(new SimpleDateFormat("yyyy-MM-dd").parse(fechaStr));
+        } catch (Exception e) {
+            jDteChoVenta.setDate(null);
+        }
+    }
+
+    private void llenarCamposPorID(String id) {
+        // Variable para saber si se encontró el ID en la tabla
+        boolean encontrado = false;
+
+        // Recorre todas las filas de la tabla 
+        for (int i = 0; i < jTblListaVentas.getRowCount(); i++) {
+            // Obtiene el valor de la primera columna de la fila actual
+            String idEnTabla = jTblListaVentas.getValueAt(i, 0).toString();
+
+            // Compara el ID que se busca con el ID de la fila actual
+            if (idEnTabla.equals(id)) {
+                // Si coincide, llena los campos con los valores correspondientes de la fila
+                asignarFechaSimple(i, 1);
+                //Combos
+                try {
+                    // Asignar nombre del cliente
+                    Object cliente = jTblListaVentas.getValueAt(i, 2);
+                    if (cliente != null) {
+                        jCmbBoxClientesVenta.setSelectedItem(cliente.toString().trim());
+                    }
+
+                    // Asignar nombre del vendedor
+                    Object vendedor = jTblListaVentas.getValueAt(i, 4);
+                    if (vendedor != null) {
+                        jCmbBoxVendedorVenta.setSelectedItem(vendedor.toString().trim());
+                    }
+
+                    // Asignar estatus
+                    Object estatus = jTblListaVentas.getValueAt(i, 5);
+                    if (vendedor != null) {
+                        jCmbBoxEstatusVenta.setSelectedItem(estatus.toString().trim());
+                    }
+                } catch (Exception e) {
+                    cuti.msg_error("Error al cargar datos", e.getMessage());
+                }
+                jTxtFNumPagosVenta.setText(jTblListaVentas.getValueAt(i, 6).toString());
+
+                // Marca que se encontró el ID y termina el ciclo
+                encontrado = true;
+                break;
+            }
+        }
+
+        // Si no se encontró el ID, limpia los campos de texto
+        if (!encontrado) {
+            limpiarCampos();
+        }
+    }
+
+    private void EventoBuscarPorID() {
+        jTxtFFolioVenta.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                cargarPorID();
+            }
+
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                cargarPorID();
+            }
+
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                cargarPorID();
+            }
+
+            private void cargarPorID() {
+                String id = jTxtFFolioVenta.getText().trim();
+                if (!id.isEmpty()) {
+                    llenarCamposPorID(id);
+                } else {
+                    limpiarCampos();
+                }
+            }
+        });
     }
 
     @SuppressWarnings("unchecked")
@@ -735,6 +859,11 @@ public class jfventa extends javax.swing.JFrame {
         jTxtFFolioVenta.setBackground(new java.awt.Color(167, 235, 242));
         jTxtFFolioVenta.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
         jTxtFFolioVenta.setBorder(null);
+        jTxtFFolioVenta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTxtFFolioVentaActionPerformed(evt);
+            }
+        });
 
         jSeparator7.setForeground(new java.awt.Color(0, 0, 0));
 
@@ -933,6 +1062,11 @@ public class jfventa extends javax.swing.JFrame {
         jBtnActualizarVenta.setBackground(new java.awt.Color(53, 189, 242));
         jBtnActualizarVenta.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jBtnActualizarVenta.setText("Actualizar la venta");
+        jBtnActualizarVenta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtnActualizarVentaActionPerformed(evt);
+            }
+        });
 
         jBtnEliminarVenta.setBackground(new java.awt.Color(53, 189, 242));
         jBtnEliminarVenta.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
@@ -1410,6 +1544,14 @@ public class jfventa extends javax.swing.JFrame {
     private void jBtnAgregarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnAgregarVentaActionPerformed
         agregarVenta();
     }//GEN-LAST:event_jBtnAgregarVentaActionPerformed
+
+    private void jBtnActualizarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnActualizarVentaActionPerformed
+        actualizarVenta();
+    }//GEN-LAST:event_jBtnActualizarVentaActionPerformed
+
+    private void jTxtFFolioVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTxtFFolioVentaActionPerformed
+        EventoBuscarPorID();;
+    }//GEN-LAST:event_jTxtFFolioVentaActionPerformed
 
     /**
      * @param args the command line arguments

@@ -21,4 +21,12 @@ public class CActualizaciones {
         consulta = "UPDATE direccion SET calle='"+calle+"', num_int='"+nint+"', num_ext='"+next+"', colonia_idcolonia="+idcol+" WHERE iddireccion = "+idd+";";
         return cnslt.actualiza(consulta);
     }
+    
+    public boolean actualizaVenta(String idVenta, String totalVenta, String fechaSeleccionada, String numPagos,
+            String vendedorSeleccionado, String zonaSeleccionada, String estatusSeleccionado) throws SQLException {
+        String consulta = "UPDATE venta SET total ='" + totalVenta + "', fecha_venta='" + fechaSeleccionada + 
+                "', num_pagos='" + numPagos + "', empleado_idempleado='" + vendedorSeleccionado + "', zona_idzona='" + zonaSeleccionada + "', estatus_idestatus ='" + estatusSeleccionado + "' WHERE " +
+                "Idventa = '" + idVenta + "';";
+        return cnslt.actualiza(consulta);
+    }
 }

@@ -590,6 +590,11 @@ public final class jfmenucliente extends javax.swing.JFrame {
         jbactualizar.setBackground(new java.awt.Color(56, 171, 242));
         jbactualizar.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jbactualizar.setText("Actualizar");
+        jbactualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbactualizarActionPerformed(evt);
+            }
+        });
 
         bgact.add(jrbclienteact);
         jrbclienteact.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
@@ -997,6 +1002,10 @@ public final class jfmenucliente extends javax.swing.JFrame {
     private void jcbestatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbestatusActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jcbestatusActionPerformed
+
+    private void jbactualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbactualizarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jbactualizarActionPerformed
 
     /**
      * @param args the command line arguments

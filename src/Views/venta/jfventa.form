@@ -698,6 +698,9 @@
                       <Border info="null"/>
                     </Property>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTxtFFolioVentaActionPerformed"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JSeparator" name="jSeparator7">
                   <Properties>
@@ -949,6 +952,9 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Actualizar la venta"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jBtnActualizarVentaActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="jBtnEliminarVenta">
               <Properties>
