@@ -83,6 +83,9 @@ public class jfventa extends javax.swing.JFrame {
         grupoRadios.add(jRadBtnAgregarVenta);
         grupoRadios.add(jRadBtnActualizarVenta);
         grupoRadios.add(jRadBtnEliminarVenta);
+        ButtonGroup grupoPagos = new ButtonGroup();
+        grupoPagos.add(jRadButActualizarPago);
+        grupoPagos.add(jRadButGuardarPago);
     }
 
     //Limpia la tabla de la busqueda.
@@ -96,7 +99,7 @@ public class jfventa extends javax.swing.JFrame {
         modelAgregar = (DefaultTableModel) jTblAgregarVenta.getModel(); // Cambiado a model1
         modelAgregar.setRowCount(0); // Cambiado a model1
     }
-    
+
     private void limpiarTablaPagos() {
         modelAgregar = (DefaultTableModel) jTblAgregarVenta.getModel(); // Cambiado a model1
         modelAgregar.setRowCount(0); // Cambiado a model1
@@ -143,7 +146,7 @@ public class jfventa extends javax.swing.JFrame {
             CUtilitarios.msg_error("No se pudo cargar la tabla", "Carga de tabla de pagos");
         }
     }
-    
+
     //Carga de los combos. 
     public void cargarCombos(JComboBox<String> combo, int metodoCarga) {
         DefaultComboBoxModel<String> listasCombos = (DefaultComboBoxModel<String>) combo.getModel();
@@ -290,6 +293,11 @@ public class jfventa extends javax.swing.JFrame {
         jCmbBoxVendedorVenta.setSelectedIndex(0);
         jCmbBoxZonaVenta.setSelectedIndex(0);
         jCmbBoxNumAvalesVenta.setSelectedIndex(0);
+        jTxtFAgAcFolioVentaPago.setText("");
+        jCmbBoxAgAcCobradorVentaPago.setSelectedItem(0);
+        jDateChoPago.setDate(null);
+        jTxtFAgAcPagosPago.setText("");
+        jTxtFAgAcRestantePago.setText("");
     }
 
     //desactiva todos los campos hasta que se elija una accion
@@ -307,6 +315,13 @@ public class jfventa extends javax.swing.JFrame {
         jBtnAgregarVenta.setEnabled(false);
         jBtnActualizarVenta.setEnabled(false);
         jBtnEliminarVenta.setEnabled(false);
+        jTxtFAgAcFolioVentaPago.setEnabled(false);
+        jCmbBoxAgAcCobradorVentaPago.setEnabled(false);
+        jDateChoPago.setEnabled(false);
+        jTxtFAgAcPagosPago.setEnabled(false);
+        jTxtFAgAcRestantePago.setEnabled(false);
+        jBtnActualizarPago.setEnabled(false);
+        jBtnGuardarPago.setEnabled(false);
     }
 
     private void gestionarComponentes(int modo) {
@@ -358,6 +373,29 @@ public class jfventa extends javax.swing.JFrame {
                 limpiarCampos();
                 break;
         }
+    }
+
+    private void gestionarComponentesPagos(int modo) {
+        desactivarComponentes();
+
+        // No necesitas los switch separados
+        if (modo == 0) {
+            jRadButActualizarPago.setSelected(true);
+            jTxtFAgAcFolioVentaPago.setEnabled(true);
+            jDateChoPago.setEnabled(true);
+            jTxtFAgAcPagosPago.setEnabled(true);
+            jBtnActualizarPago.setEnabled(true);
+        } else {
+            jRadButGuardarPago.setSelected(true);
+            jTxtFAgAcFolioVentaPago.setEnabled(true);
+            jCmbBoxAgAcCobradorVentaPago.setEnabled(true);
+            jDateChoPago.setEnabled(true);
+            jTxtFAgAcPagosPago.setEnabled(true);
+            jTxtFAgAcRestantePago.setEnabled(true);
+            jBtnGuardarPago.setEnabled(true);
+        }
+
+        limpiarCampos();
     }
 
     public boolean validaCamposVenta(JComponent componente, String regex, String mensajeVacio, String mensajeInvalido) {
@@ -630,6 +668,80 @@ public class jfventa extends javax.swing.JFrame {
                 String id = jTxtFFolioVenta.getText().trim();
                 if (!id.isEmpty()) {
                     llenarCamposPorID(id);
+                } else {
+                    limpiarCampos();
+                }
+            }
+        });
+    }
+    
+    private void llenarCamposPorIDPagos(String id) {
+        // Variable para saber si se encontró el ID en la tabla
+        boolean encontrado = false;
+
+        // Recorre todas las filas de la tabla 
+        for (int i = 0; i < jTblListaVentas.getRowCount(); i++) {
+            // Obtiene el valor de la primera columna de la fila actual
+            String idEnTabla = jTblListaVentas.getValueAt(i, 0).toString();
+
+            // Compara el ID que se busca con el ID de la fila actual
+            if (idEnTabla.equals(id)) {
+                // Si coincide, llena los campos con los valores correspondientes de la fila
+                asignarFechaSimple(i, 1);
+                //Combos
+                try {
+                    // Asignar nombre del cliente
+                    Object cliente = jTblListaVentas.getValueAt(i, 2);
+                    if (cliente != null) {
+                        jCmbBoxClientesVenta.setSelectedItem(cliente.toString().trim());
+                    }
+
+                    // Asignar nombre del vendedor
+                    Object vendedor = jTblListaVentas.getValueAt(i, 4);
+                    if (vendedor != null) {
+                        jCmbBoxVendedorVenta.setSelectedItem(vendedor.toString().trim());
+                    }
+
+                    // Asignar estatus
+                    Object estatus = jTblListaVentas.getValueAt(i, 5);
+                    if (vendedor != null) {
+                        jCmbBoxEstatusVenta.setSelectedItem(estatus.toString().trim());
+                    }
+                } catch (Exception e) {
+                    cuti.msg_error("Error al cargar datos", e.getMessage());
+                }
+                jTxtFNumPagosVenta.setText(jTblListaVentas.getValueAt(i, 6).toString());
+
+                // Marca que se encontró el ID y termina el ciclo
+                encontrado = true;
+                break;
+            }
+        }
+
+        // Si no se encontró el ID, limpia los campos de texto
+        if (!encontrado) {
+            limpiarCampos();
+        }
+    }
+    
+    private void EventoBuscarPorIDPagos() {
+        jTxtFAgAcFolioVentaPago.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                cargarPorID();
+            }
+
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                cargarPorID();
+            }
+
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                cargarPorID();
+            }
+
+            private void cargarPorID() {
+                String id = jTxtFAgAcFolioVentaPago.getText().trim();
+                if (!id.isEmpty()) {
+                    llenarCamposPorIDPagos(id);
                 } else {
                     limpiarCampos();
                 }
@@ -1272,6 +1384,11 @@ public class jfventa extends javax.swing.JFrame {
         jTxtFAgAcFolioVentaPago.setBackground(new java.awt.Color(167, 235, 242));
         jTxtFAgAcFolioVentaPago.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
         jTxtFAgAcFolioVentaPago.setBorder(null);
+        jTxtFAgAcFolioVentaPago.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTxtFAgAcFolioVentaPagoActionPerformed(evt);
+            }
+        });
 
         jSeparator4.setForeground(new java.awt.Color(0, 0, 0));
 
@@ -1296,7 +1413,7 @@ public class jfventa extends javax.swing.JFrame {
 
         jSeparator6.setForeground(new java.awt.Color(0, 0, 0));
 
-        jDateChoPago.setBackground(new java.awt.Color(167, 235, 242));
+        jDateChoPago.setBackground(new java.awt.Color(255, 255, 255));
 
         jLblFechaPago.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
         jLblFechaPago.setText("Seleccione la fecha del pago:");
@@ -1364,10 +1481,20 @@ public class jfventa extends javax.swing.JFrame {
         jRadButActualizarPago.setBackground(new java.awt.Color(242, 220, 153));
         jRadButActualizarPago.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
         jRadButActualizarPago.setText("Actualizar Pago");
+        jRadButActualizarPago.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadButActualizarPagoActionPerformed(evt);
+            }
+        });
 
         jRadButGuardarPago.setBackground(new java.awt.Color(242, 220, 153));
         jRadButGuardarPago.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
         jRadButGuardarPago.setText("Guardar pago");
+        jRadButGuardarPago.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadButGuardarPagoActionPerformed(evt);
+            }
+        });
 
         jBtnActualizarPago.setBackground(new java.awt.Color(53, 189, 242));
         jBtnActualizarPago.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
@@ -1559,7 +1686,7 @@ public class jfventa extends javax.swing.JFrame {
                         .addComponent(jLblLogoCobrador)
                         .addGap(18, 18, 18)
                         .addComponent(jBtnAsignarCobrador)))
-                .addContainerGap(29, Short.MAX_VALUE))
+                .addContainerGap(27, Short.MAX_VALUE))
         );
 
         jTbdPMenuVentas.addTab("Asignar cobrador", jPnlElimVenta);
@@ -1576,7 +1703,7 @@ public class jfventa extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPnlLogoVentas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTbdPMenuVentas))
+                .addComponent(jTbdPMenuVentas, javax.swing.GroupLayout.DEFAULT_SIZE, 401, Short.MAX_VALUE))
         );
 
         pack();
@@ -1679,6 +1806,18 @@ public class jfventa extends javax.swing.JFrame {
     private void jBtnEliminarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnEliminarVentaActionPerformed
         eliminarVenta();
     }//GEN-LAST:event_jBtnEliminarVentaActionPerformed
+
+    private void jRadButActualizarPagoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadButActualizarPagoActionPerformed
+        gestionarComponentesPagos(0);
+    }//GEN-LAST:event_jRadButActualizarPagoActionPerformed
+
+    private void jRadButGuardarPagoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadButGuardarPagoActionPerformed
+        gestionarComponentesPagos(1);
+    }//GEN-LAST:event_jRadButGuardarPagoActionPerformed
+
+    private void jTxtFAgAcFolioVentaPagoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTxtFAgAcFolioVentaPagoActionPerformed
+        EventoBuscarPorIDPagos();
+    }//GEN-LAST:event_jTxtFAgAcFolioVentaPagoActionPerformed
 
     /**
      * @param args the command line arguments
