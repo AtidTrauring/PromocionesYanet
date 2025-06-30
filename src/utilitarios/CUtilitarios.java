@@ -240,6 +240,7 @@ public class CUtilitarios {
 
     public void aplicarPlaceholder(JTextField jtf, String dato) {
         jtf.setText(dato);
+        jtf.setToolTipText(dato);
         jtf.setForeground(fondovacio);
 
         jtf.addFocusListener(new java.awt.event.FocusListener() {

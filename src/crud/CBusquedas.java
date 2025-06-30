@@ -700,4 +700,20 @@ public class CBusquedas {
                 + "WHERE pagos_tarjetas.venta_Idventa = venta.Idventa;";
         return cnslt.buscarValores(consulta, 3);
     }
+
+    public ArrayList<String[]> buscarSueldos() throws SQLException {
+        consulta = "SELECT "
+                + "    empleado.idempleado AS 'Id Empleado', "
+                + "    CONCAT(persona.nombres, ' ', persona.ap_paterno, ' ', persona.ap_materno) AS 'Nombre(s)', "
+                + "    sueldo.sueldo AS 'Sueldo', "
+                + "    sueldo.fecha_inicio AS 'Fecha Inicial', "
+                + "    sueldo.fecha_final AS 'Fecha Final' "
+                + "FROM sueldo "
+                + "JOIN empleado ON sueldo.empleado_idempleado = empleado.idempleado "
+                + "JOIN persona ON empleado.persona_idpersona = persona.idpersona "
+                + "ORDER BY sueldo.fecha_inicio DESC;";
+
+        return cnslt.buscarValores(consulta, 5);
+    }
+
 }

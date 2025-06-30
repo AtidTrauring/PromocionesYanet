@@ -156,11 +156,27 @@ public class CCargaCombos {
                 + "JOIN persona p ON c.persona_idpersona = p.idpersona";
         return cnslt.buscarValoresCombos(consulta);
     }
-    
+
     public ArrayList<String> cargaComboAvalesVenta() throws SQLException {
         consulta = "SELECT CONCAT(p.nombres, ' ', p.ap_paterno, ' ', p.ap_materno) AS nombre_completo "
                 + "FROM aval a "
                 + "JOIN persona p ON a.persona_idpersona = p.idpersona ";
         return cnslt.buscarValoresCombos(consulta);
     }
+
+    public ArrayList<String> cargaComboFechaInicioSueldos() throws SQLException {
+        consulta = "SELECT DISTINCT DATE_FORMAT(fecha_inicio, '%Y-%m-%d') FROM sueldo ORDER BY fecha_inicio DESC";
+        return cnslt.buscarValoresCombos(consulta);
+    }
+
+    public ArrayList<String> cargaComboFechaFinalSueldos() throws SQLException {
+        consulta = "SELECT DISTINCT DATE_FORMAT(fecha_final, '%Y-%m-%d') FROM sueldo ORDER BY fecha_final DESC";
+        return cnslt.buscarValoresCombos(consulta);
+    }
+
+    public ArrayList<String> cargaComboMontoSueldos() throws SQLException {
+        consulta = "SELECT DISTINCT sueldo FROM sueldo ORDER BY sueldo DESC";
+        return cnslt.buscarValoresCombos(consulta);
+    }
+
 }
