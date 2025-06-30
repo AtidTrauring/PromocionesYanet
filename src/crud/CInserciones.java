@@ -162,9 +162,10 @@ public boolean insertarZona(String idZona) throws SQLException {
         return cnslt.inserta(consulta);
     }
 
-    public boolean insertaAvalVenta(String idVenta, String idAval) throws SQLException {
-        consulta = "INSERT INTO aval_has_venta (aval_idaval, venta_Idventa) " +
-                "VALUES ('" + idVenta + "','" + idAval + "');";
+    public boolean insertaAvalVenta(String idAval, String idVenta) throws SQLException {
+            consulta = "INSERT INTO aval_has_venta (aval_idaval, venta_Idventa) " +
+                    "VALUES ('" + idAval + "','" + idVenta + "');";
+            System.out.println(consulta);
         return cnslt.inserta(consulta);
     }
     

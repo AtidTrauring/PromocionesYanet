@@ -660,13 +660,10 @@ public class CBusquedas {
         return cnslt.buscarValores(consulta, 7);
     }
 
-    public ArrayList<String[]> buscarAgregarVenta() throws SQLException {
-        consulta = "SELECT venta.Idventa, producto.producto, venta.total AS Cantidad "
-                + "FROM venta "
-                + "INNER JOIN venta_has_producto ON venta.Idventa = venta_has_producto.venta_Idventa "
-                + "INNER JOIN producto ON venta_has_producto.producto_idproducto = producto.idproducto "
-                + "WHERE venta_has_producto.venta_Idventa = venta.Idventa "
-                + "AND producto.idproducto = venta_has_producto.producto_idproducto ";
+    public ArrayList<String[]> buscarProductoVenta(String idProducto) throws SQLException {
+        consulta = "SELECT producto.idproducto, producto.producto, producto.precio "
+                + "FROM producto "
+                + "WHERE producto.idproducto = '" + idProducto + "';";
         return cnslt.buscarValores(consulta, 3);
     }
 
@@ -716,4 +713,16 @@ public class CBusquedas {
         return cnslt.buscarValores(consulta, 5);
     }
 
+    public String buscaMaximoVenta() throws SQLException {
+        consulta = "SELECT MAX(venta.Idventa) FROM venta;";
+        return cnslt.buscarValor(consulta);
+    }
+
+    public String buscarIdAvalVenta(String avalSeleccionado) throws SQLException {
+        consulta = "SELECT a.idaval "
+                + "FROM aval a INNER JOIN persona p "
+                + "ON a.persona_idpersona = p.idpersona "
+                + "WHERE CONCAT(p.nombres, ' ', p.ap_paterno, ' ', p.ap_materno) = '" + avalSeleccionado + "';";
+        return cnslt.buscarValor(consulta);
+    }
 }
