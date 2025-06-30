@@ -49,7 +49,8 @@ public class jfventa extends javax.swing.JFrame {
     private final CCargaCombos queryCargaCombos = new CCargaCombos();
     String folioVenta, numPagos, totalVenta, folioProducto, clienteSeleccionado, estatusSeleccionado, vendedorSeleccionado,
             zonaSeleccionada, numAvalesSeleccionado, fechaSeleccionada, seleccion, idclienteSeleccionado, idestatusSeleccionado,
-            idvendedorSeleccionado, idzonaSeleccionada, idAvalSeleccionado;
+            idvendedorSeleccionado, idzonaSeleccionada, idAvalSeleccionado, folioVentaPago, cobradorSeleccionadoPago, fechaSeleccionadaPago,
+            pagoSeleccionado, restanteSeleccionado;
     private CInserciones cInser = new CInserciones();
     private CActualizaciones cActu = new CActualizaciones();
     private CEliminaciones cEli = new CEliminaciones();
@@ -476,6 +477,26 @@ public class jfventa extends javax.swing.JFrame {
                 && !validaCamposVenta(jCmbBoxNumAvalesVenta, null, "No se eligió el número de avales", null)) {
             return false;
         }
+        if (jTxtFAgAcFolioVentaPago.isEnabled()
+                && !validaCamposVenta(jTxtFAgAcFolioVentaPago, "^[0-9]+$", "El folio de la venta no puede estar vacio", "Solo se buscan numeros en el folio")) {
+            return false;
+        }
+        if (jCmbBoxAgAcCobradorVentaPago.isEnabled()
+                && !validaCamposVenta(jCmbBoxAgAcCobradorVentaPago, null, "No se eligio un cobrador", null)) {
+            return false;
+        }
+        if (jDateChoPago.isEnabled()
+                && !validaCamposVenta(jDateChoPago, null, "No se eligio una fecha", null)) {
+            return false;
+        }
+        if (jTxtFAgAcPagosPago.isEnabled()
+                && !validaCamposVenta(jTxtFAgAcPagosPago, "^[0-9]+$", "El pago no puede estar vacio", "Solo ingrese numeros en el pago")) {
+            return false;
+        }
+        if (jTxtFAgAcRestantePago.isEnabled()
+                &&!validaCamposVenta(jTxtFAgAcRestantePago, "^[0-9]+$", "El restante no puede estar vacio", "Solo ingrese numeros en el restante")) {
+            return false;
+        }
         return true;
     }
 
@@ -500,6 +521,11 @@ public class jfventa extends javax.swing.JFrame {
         zonaSeleccionada = jCmbBoxZonaVenta.getSelectedItem().toString().trim();
         numAvalesSeleccionado = jCmbBoxNumAvalesVenta.getSelectedItem().toString().trim();
         fechaSeleccionada = formatearFecha(jDteChoVenta.getDate());
+        folioVentaPago = jTxtFAgAcFolioVentaPago.getText().trim();
+        cobradorSeleccionadoPago = jCmbBoxAgAcCobradorVentaPago.getSelectedItem().toString().trim();
+        fechaSeleccionadaPago = formatearFecha(jDateChoPago.getDate());
+        pagoSeleccionado = jTxtFAgAcPagosPago.getText().trim();
+        restanteSeleccionado = jTxtFAgAcRestantePago.getText().trim();
     }
 
     public void agregarVenta() throws SQLException {
@@ -674,7 +700,7 @@ public class jfventa extends javax.swing.JFrame {
             }
         });
     }
-    
+
     private void llenarCamposPorIDPagos(String id) {
         // Variable para saber si se encontró el ID en la tabla
         boolean encontrado = false;
@@ -707,6 +733,12 @@ public class jfventa extends javax.swing.JFrame {
                     if (vendedor != null) {
                         jCmbBoxEstatusVenta.setSelectedItem(estatus.toString().trim());
                     }
+                    
+                    // Asignar total
+                    Object total = jTblListaVentas.getValueAt(i, 5);
+                    if (vendedor != null) {
+                        jTxtFTotalVenta.setText(total.toString().trim());
+                    }
                 } catch (Exception e) {
                     cuti.msg_error("Error al cargar datos", e.getMessage());
                 }
@@ -723,7 +755,7 @@ public class jfventa extends javax.swing.JFrame {
             limpiarCampos();
         }
     }
-    
+
     private void EventoBuscarPorIDPagos() {
         jTxtFAgAcFolioVentaPago.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
             public void insertUpdate(javax.swing.event.DocumentEvent e) {
@@ -794,6 +826,28 @@ public class jfventa extends javax.swing.JFrame {
             } catch (SQLException ex) {
                 CUtilitarios.msg_error("Error al intentar eliminar", "Eliminar");
             }
+        }
+    }
+
+    private void agregarPago() {
+        valoresObtenidos();
+
+        if (validaTodosCampos()) {
+            try {
+                if (cInser.insertaPagoVenta(folioVenta, numPagos, folioVenta, numPagos, numPagos, numPagos)) {
+                    cuti.msg("Venta insertada correctamente", "Registro de venta");
+                    cargarTablaAgregar();
+                    cargarTablaBusqueda();
+                    cargarTablaPagos();
+                } else {
+                }
+            } catch (Exception e) {
+                cuti.msg_error("Error SQL: " + e.getMessage(), "Registro de venta");
+            } finally {
+                limpiarCampos();
+            }
+        } else {
+            cuti.msg_advertencia("Ingrese todos los campos por favor", "Registro de venta");
         }
     }
 
@@ -1503,6 +1557,11 @@ public class jfventa extends javax.swing.JFrame {
         jBtnGuardarPago.setBackground(new java.awt.Color(53, 189, 242));
         jBtnGuardarPago.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jBtnGuardarPago.setText("Guardar pago");
+        jBtnGuardarPago.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtnGuardarPagoActionPerformed(evt);
+            }
+        });
 
         jTblPagosVenta.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -1703,7 +1762,7 @@ public class jfventa extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPnlLogoVentas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTbdPMenuVentas, javax.swing.GroupLayout.DEFAULT_SIZE, 401, Short.MAX_VALUE))
+                .addComponent(jTbdPMenuVentas))
         );
 
         pack();
@@ -1800,7 +1859,6 @@ public class jfventa extends javax.swing.JFrame {
 
     private void jTxtFFolioVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTxtFFolioVentaActionPerformed
         EventoBuscarPorID();
-        apliFiltros(jTblAgregarVenta);
     }//GEN-LAST:event_jTxtFFolioVentaActionPerformed
 
     private void jBtnEliminarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnEliminarVentaActionPerformed
@@ -1818,6 +1876,10 @@ public class jfventa extends javax.swing.JFrame {
     private void jTxtFAgAcFolioVentaPagoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTxtFAgAcFolioVentaPagoActionPerformed
         EventoBuscarPorIDPagos();
     }//GEN-LAST:event_jTxtFAgAcFolioVentaPagoActionPerformed
+
+    private void jBtnGuardarPagoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnGuardarPagoActionPerformed
+        agregarPago();
+    }//GEN-LAST:event_jBtnGuardarPagoActionPerformed
 
     /**
      * @param args the command line arguments

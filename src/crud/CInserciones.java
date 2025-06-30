@@ -167,4 +167,11 @@ public boolean insertarZona(String idZona) throws SQLException {
                 "VALUES ('" + idVenta + "','" + idAval + "');";
         return cnslt.inserta(consulta);
     }
+    
+    public boolean insertaPagoVenta(String idEmVe, String idEmpleado, String idVenta, String pago, String restante,
+            String fechaPago) throws SQLException {
+        consulta = "INSERT INTO pagos_tarjetas(idemve, empleado_idempleado, venta_Idventa, pago, restante, fecha_pago) " +
+                "VALUES ('" + idEmpleado + "','" + idVenta + "','" + pago + "','" + restante + "','" + fechaPago + "');";
+        return cnslt.inserta(consulta);
+    }
 }
