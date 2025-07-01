@@ -1008,7 +1008,7 @@
                 <Property name="toolTipText" type="java.lang.String" value=""/>
                 <Property name="contentAreaFilled" type="boolean" value="false"/>
                 <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-                  <Color id="Cursor de Espera"/>
+                  <Color id="Cursor de Mano"/>
                 </Property>
                 <Property name="pressedIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/imagenes/eli1.png"/>

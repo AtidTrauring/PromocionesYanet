@@ -286,8 +286,8 @@ public class jfproductos extends javax.swing.JFrame {
 
     public boolean validaCamposActualizar() {
         return validaCampoProducto(jTxtActNombreProd, "^[a-zA-Z ]+$", "El campo Producto está vacío", "El nombre solo debe contener letras y espacios")
-                && validaCampoProducto(jTxtActPrecioProd, "^[0-9]+$", "El campo Precio está vacío", "El precio solo debe contener números")
-                && validaCampoProducto(jTxtActStockProd, "^[0-9]+$", "El campo Stock está vacío", "El stock solo debe contener números");
+                && validaCampoProducto(jTxtActPrecioProd, "^[0-9]+$", "El campo Precio está vacío", "El precio solo debe contener números enteros")
+                && validaCampoProducto(jTxtActStockProd, "^[0-9]+$", "El campo Stock está vacío", "El stock solo debe contener números enteros");
     }
 
     private void limpiarCamposActualizar() {
@@ -320,7 +320,7 @@ public class jfproductos extends javax.swing.JFrame {
         // Muestra un cuadro de confirmación al usuario
         int opcion = JOptionPane.showConfirmDialog(
                 this, "¿Deseas actualizar los datos del producto?",
-                "Confirmar actualización",JOptionPane.YES_NO_OPTION
+                "Confirmar actualización", JOptionPane.YES_NO_OPTION
         );
 
         // Si el usuario elige "Sí"
@@ -394,8 +394,8 @@ public class jfproductos extends javax.swing.JFrame {
 
     public boolean validaTodosLosCampos() {
         return validaCampoProducto(jTxtIngNombreProd, "^[a-zA-Z ]+$", "El campo Producto está vacío", "El nombre solo debe contener letras y espacios")
-                && validaCampoProducto(jTxtIngPrecioProd, "^[0-9]+$", "El campo Precio está vacío", "El precio solo debe contener números")
-                && validaCampoProducto(jTxtIngStockProd, "^[0-9]+$", "El campo Stock está vacío", "El stock solo debe contener números");
+                && validaCampoProducto(jTxtIngPrecioProd, "^[0-9]+$", "El campo Precio está vacío", "El precio solo debe contener números enteros")
+                && validaCampoProducto(jTxtIngStockProd, "^[0-9]+$", "El campo Stock está vacío", "El stock solo debe contener números enteros");
     }
 
     public void agregarProducto() {
@@ -403,9 +403,16 @@ public class jfproductos extends javax.swing.JFrame {
 
         if (validaTodosLosCampos()) {
             try {
+                // Validar si el producto ya existe (sin importar mayúsculas)
+                if (cb.buscarProductoPorNombre(producto)) {
+                    CUtilitarios.msg_advertencia("El producto \"" + producto + "\" ya está registrado.", "Registro duplicado");
+                    return;
+                }
+
+                // Si no existe, lo inserta
                 if (ci.insertaProducto(producto, precio, stock)) {
                     CUtilitarios.msg("Producto insertado correctamente", "Registro Producto");
-                    cargarTabla(); // actualiza JTable
+                    cargarTabla();
                     cargarTablaEliminar();
                     cargarTablaActualizar();
                 } else {

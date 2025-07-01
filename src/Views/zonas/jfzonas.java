@@ -993,7 +993,7 @@ public void agregarColoniasAZona() {
         jBtnEliminarZona.setText("Eliminar zona");
         jBtnEliminarZona.setToolTipText("");
         jBtnEliminarZona.setContentAreaFilled(false);
-        jBtnEliminarZona.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+        jBtnEliminarZona.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jBtnEliminarZona.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/eli1.png"))); // NOI18N
         jBtnEliminarZona.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/eli2.png"))); // NOI18N
         jBtnEliminarZona.addActionListener(new java.awt.event.ActionListener() {
