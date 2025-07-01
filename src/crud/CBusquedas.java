@@ -1,7 +1,11 @@
 package crud;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.sql.SQLException;
+import utilitarios.CUtilitarios;
 
 public class CBusquedas {
 
@@ -584,6 +588,79 @@ public class CBusquedas {
     public String buscarZonaPorPersona(int ipr) throws SQLException {
         consulta = "CALL zonaPorPersona (" + ipr + ")";
         return cnslt.buscarValor(consulta);
+    }
+    
+    private Connection conn = null;
+    private final CConecta conector = new CConecta();
+    private PreparedStatement stmt = null; //Capacidad para traducir las query
+    private ResultSet rs = null;
+
+    public String[] buscarCredencialesI(String usuario, String contrasena) throws SQLException {
+        String[] persona = new String[2];
+
+        // 1. Abrir conexión
+        conn = conector.conecta();
+
+        // 2. Preparar y ejecutar consulta
+        try {
+            consulta = "SELECT pr.idpersona, CONCAT(pr.nombres, ' ', pr.ap_paterno, ' ', pr.ap_materno) AS Persona "
+                    + "FROM credencial cr "
+                    + "INNER JOIN persona pr ON pr.idpersona = cr.persona_idpersona "
+                    + "WHERE cr.credencial = ? AND cr.contraseña = ?";
+
+            stmt = conn.prepareStatement(consulta);
+            stmt.setString(1, usuario);
+            stmt.setString(2, contrasena);
+
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                persona = new String[2];
+                persona[0] = rs.getString("idpersona");
+                persona[1] = rs.getString("Persona");
+            }
+
+        } catch (SQLException ex) {
+            String cadena = "SQLException: " + ex.getMessage() + "\n"
+                    + "SQLState: " + ex.getSQLState() + "\n"
+                    + "VendorError: " + ex.getErrorCode();
+            CUtilitarios.msg_error(cadena, "Conexion");
+        } finally {
+            // Cierre seguro
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (SQLException e) {
+            }
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            } catch (SQLException e) {
+            }
+            conector.desconecta(conn); // o conector.desconecta(conn) si usas ese
+        }
+
+        return persona;
+    }
+
+    public int buscarIdEm(int idPersona) throws SQLException {
+        consulta = "SELECT em.idempleado "
+                + "FROM persona pr "
+                + "INNER JOIN empleado em ON em.persona_idpersona = pr.idpersona "
+                + "WHERE pr.idpersona = " + idPersona;
+        String resultado = cnslt.buscarValor(consulta);
+        return (resultado != null && !resultado.isEmpty()) ? Integer.parseInt(resultado) : -1;
+    }
+
+    public int buscarIdCr(int idPersona) throws SQLException {
+        consulta = "SELECT cr.idcredencial "
+                + "FROM credencial cr "
+                + "INNER JOIN persona pr ON pr.idpersona = cr.persona_idpersona "
+                + "WHERE pr.idpersona = " + idPersona;
+        String resultado = cnslt.buscarValor(consulta);
+        return (resultado != null && !resultado.isEmpty()) ? Integer.parseInt(resultado) : -1;
     }
 
     /* Fin Clientes */

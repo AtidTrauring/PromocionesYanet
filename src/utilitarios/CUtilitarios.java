@@ -152,6 +152,32 @@ public class CUtilitarios {
     }
 
     /* Incio De Nuevos Métodos */
+    Color fondoMenu = new Color(123, 187, 137);
+    Color colorLetra = new Color(0, 0, 0);
+
+    public void estiloMenu(JMenuBar jmi) {
+        jmi.setLayout(new GridLayout(1, 0)); // 1 fila, columnas dinámicas
+        jmi.setBorder(BorderFactory.createEmptyBorder()); // Sin bordes
+    }
+
+    public void estiloMenu(JMenuItem menuItem, String url) {
+        // Configurar ícono si se proporciona
+        if (url != null && !url.isEmpty()) {
+            Icon icon = new ImageIcon(new ImageIcon(getClass().getResource(url))
+                    .getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH));
+            menuItem.setIcon(icon);
+        }
+        // Configurar estilo
+        menuItem.setOpaque(true);
+        menuItem.setBackground(fondoMenu);
+        menuItem.setForeground(colorLetra);
+        menuItem.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        menuItem.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createEmptyBorder(8, 8, 8, 8), // Margen superior, izquierda, inferior, derecha
+                BorderFactory.createEmptyBorder() // Sin bordes visibles
+        ));
+    }
+
     Color fondovacio = new Color(12, 12, 12);
     Color fondoescrito = new Color(0, 0, 0);
 
@@ -297,12 +323,4 @@ public class CUtilitarios {
         });
     }
     /* Fin De nuevos Métodos */
-
-    public void estiloMenu(JMenuBar jmbmenu) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    public void estiloMenu(JMenu jmalmacen, String imagenesalmacenpng) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
 }

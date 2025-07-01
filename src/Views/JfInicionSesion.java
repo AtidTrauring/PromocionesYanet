@@ -1,30 +1,72 @@
 package Views;
 
+import Views.venta.jfventa;
 import crud.CBusquedas;
-import java.sql.SQLException;
-import utilitarios.CUtilitarios;
+import java.sql.*;
+import javax.management.JMX;
+import utilitarios.*;
 
 public class JfInicionSesion extends javax.swing.JFrame {
 
     // Instancia
     CBusquedas cb = new CBusquedas();
+    String persona[], datos[] = {};
+    int idpr, idem, idcr;
 
     public JfInicionSesion() {
         initComponents();
+        this.setLocationRelativeTo(null);
     }
 
     public void validaUsuario(String user, String password) throws SQLException {
-        String persona = cb.buscarCredenciales(user, password);
-        System.out.println("Hola " + persona);
+        persona = cb.buscarCredencialesI(user, password);
+        if (persona != null) {
+            System.out.println("Hola " + persona[1] + " (ID: " + persona[0] + ")");
+        } else {
+            System.out.println("Credenciales incorrectas");
+        }
     }
-    
-//    public void validaCampos() {
-//        if (jtfusuario.getText().isEmpty() || new String(jpfcontra.getPassword()).isEmpty()) {
-//            CUtilitarios.msg_advertencia("Ingrese usuario y contraseña\n ¡Por favor!", "Inicio de sesion");
-//        } else {
-//            validaUsuario(jtfusuario.getText(), jpfcontra.getText());
-//        }
-//    }
+
+    public void validaCampos() {
+        String user = jtfusuario.getText().trim();
+        String pass = new String(jpfcontra.getPassword()).trim();
+
+        if (user.isEmpty() || pass.isEmpty()) {
+            CUtilitarios.msg_advertencia("Ingrese usuario y contraseña\n¡Por favor!", "Inicio de sesión");
+        } else {
+            try {
+                persona = cb.buscarCredencialesI(user, pass);
+
+                if (persona != null && persona.length == 2) {
+                    int idpersona = Integer.parseInt(persona[0]);
+
+                    int idEmpleado = cb.buscarIdEm(idpersona);  // buscar si es empleado
+                    int idCredencial = cb.buscarIdCr(idpersona);  // buscar si tiene credencial (admin)
+
+                    if (idEmpleado > 0) {
+                        jfventa venta = new jfventa(datos);
+                        CUtilitarios.msg("¡Bienvenido Empleado " + persona[1] + "!", "Acceso correcto");
+                        venta.setVisible(true);
+                        this.dispose();
+                    } else if (idCredencial > 0) {
+                        jfmenuinicio mi = new jfmenuinicio();
+                        CUtilitarios.msg("¡Bienvenido Administrador " + persona[1] + "!", "Acceso correcto");
+                        mi.setVisible(true);
+                        this.dispose();
+                    } else {
+                        CUtilitarios.msg_error("No se encontraron roles asignados.", "Acceso denegado");
+                    }
+
+                } else {
+                    CUtilitarios.msg_error("Credenciales incorrectas", "Error de inicio de sesión");
+                }
+            } catch (SQLException e) {
+                CUtilitarios.msg_error("Error de conexión a la base de datos:\n" + e.getMessage(), "Error");
+            } catch (NumberFormatException e) {
+                CUtilitarios.msg_error("ID inválido recuperado:\n" + e.getMessage(), "Error");
+            }
+        }
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -37,6 +79,8 @@ public class JfInicionSesion extends javax.swing.JFrame {
         jSeparator7 = new javax.swing.JSeparator();
         jbcontinuar = new javax.swing.JButton();
         jpfcontra = new javax.swing.JPasswordField();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Inicio de sesion");
@@ -48,8 +92,7 @@ public class JfInicionSesion extends javax.swing.JFrame {
 
         jtfusuario.setBackground(new java.awt.Color(242, 220, 153));
         jtfusuario.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
-        jtfusuario.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-        jtfusuario.setText("Usuario");
+        jtfusuario.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jtfusuario.setToolTipText("Usuario");
         jtfusuario.setBorder(null);
         jtfusuario.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
@@ -82,9 +125,17 @@ public class JfInicionSesion extends javax.swing.JFrame {
 
         jpfcontra.setBackground(new java.awt.Color(242, 220, 153));
         jpfcontra.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
-        jpfcontra.setText("12345678");
+        jpfcontra.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jpfcontra.setToolTipText("Contraseña");
         jpfcontra.setBorder(null);
+
+        jLabel1.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("Ingresar Usuario");
+
+        jLabel2.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText("Ingresar Contraseña");
 
         javax.swing.GroupLayout JpnlLienzoLayout = new javax.swing.GroupLayout(JpnlLienzo);
         JpnlLienzo.setLayout(JpnlLienzoLayout);
@@ -98,20 +149,25 @@ public class JfInicionSesion extends javax.swing.JFrame {
                                 .addContainerGap()
                                 .addComponent(jtfusuario, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(JpnlLienzoLayout.createSequentialGroup()
-                                .addGap(46, 46, 46)
-                                .addComponent(JlblImagen))
-                            .addGroup(JpnlLienzoLayout.createSequentialGroup()
                                 .addGap(70, 70, 70)
                                 .addComponent(jbcontinuar, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(JpnlLienzoLayout.createSequentialGroup()
+                                .addGap(42, 42, 42)
+                                .addComponent(JlblImagen))
+                            .addGroup(JpnlLienzoLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(jpfcontra, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(jSeparator6, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JpnlLienzoLayout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(JpnlLienzoLayout.createSequentialGroup()
+                        .addContainerGap()
                         .addGroup(JpnlLienzoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jSeparator6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jSeparator7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(JpnlLienzoLayout.createSequentialGroup()
+                                .addGroup(JpnlLienzoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jpfcontra, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jSeparator7, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         JpnlLienzoLayout.setVerticalGroup(
@@ -119,15 +175,19 @@ public class JfInicionSesion extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JpnlLienzoLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(JlblImagen)
-                .addGap(18, 18, 18)
+                .addGap(14, 14, 14)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jtfusuario, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator6, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30)
+                .addGap(16, 16, 16)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jpfcontra, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator7, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(13, 13, 13)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jbcontinuar, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -148,7 +208,7 @@ public class JfInicionSesion extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jbcontinuarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbcontinuarActionPerformed
-        // TODO add your handling code here:
+        validaCampos();
     }//GEN-LAST:event_jbcontinuarActionPerformed
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -186,6 +246,8 @@ public class JfInicionSesion extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel JlblImagen;
     private javax.swing.JPanel JpnlLienzo;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JSeparator jSeparator6;
     private javax.swing.JSeparator jSeparator7;
     private javax.swing.JButton jbcontinuar;
