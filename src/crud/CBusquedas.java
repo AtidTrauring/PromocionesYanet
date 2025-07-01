@@ -735,6 +735,7 @@ public class CBusquedas {
                 + "WHERE CONCAT(p.nombres, ' ', p.ap_paterno, ' ', p.ap_materno) = '" + avalSeleccionado + "';";
         return cnslt.buscarValor(consulta);
     }
+
     public ArrayList<String[]> buscarPagosPorIdVenta(String idVenta) throws SQLException {
         consulta = "SELECT p.pago, p.restante, p.fecha_pago "
                 + "FROM pagos_tarjetas p "
@@ -771,13 +772,14 @@ public class CBusquedas {
         consulta = "SELECT total FROM venta WHERE idventa = '" + idVenta + "';";
         return cnslt.buscarValor(consulta);
     }
-public String buscarIdEmpleadoPorNombre(String nombreCompleto) throws SQLException {
-    consulta = "SELECT e.idempleado " +
-               "FROM empleado e " +
-               "JOIN persona p ON e.persona_idpersona = p.idpersona " +
-               "WHERE CONCAT(p.nombres, ' ', p.ap_paterno, ' ', p.ap_materno) = '" + nombreCompleto + "';";
-    return cnslt.buscarValor(consulta);
-}
+
+    public String buscarIdEmpleadoPorNombre(String nombreCompleto) throws SQLException {
+        consulta = "SELECT e.idempleado "
+                + "FROM empleado e "
+                + "JOIN persona p ON e.persona_idpersona = p.idpersona "
+                + "WHERE CONCAT(p.nombres, ' ', p.ap_paterno, ' ', p.ap_materno) = '" + nombreCompleto + "';";
+        return cnslt.buscarValor(consulta);
+    }
 
     public String buscarSumaPagosPorVenta(String idVenta) throws SQLException {
         consulta = "SELECT SUM(pago) FROM pagos_tarjetas WHERE venta_Idventa = '" + idVenta + "';";
@@ -785,8 +787,12 @@ public String buscarIdEmpleadoPorNombre(String nombreCompleto) throws SQLExcepti
     }
 
     public String buscarFechaVentaPorId(String idVenta) throws SQLException {
-    String consulta = "SELECT fecha_venta FROM venta WHERE Idventa = '" + idVenta + "';";
-    return cnslt.buscarValor(consulta);
-}
+        String consulta = "SELECT fecha_venta FROM venta WHERE Idventa = '" + idVenta + "';";
+        return cnslt.buscarValor(consulta);
+    }
 
+    public String buscaTotalVentaID(String idVenta) throws SQLException {
+        String consulta = "SELECT venta.total FROM venta WHERE venta.Idventa = '" + idVenta + "';";
+        return cnslt.buscarValor(consulta);
+    }
 }

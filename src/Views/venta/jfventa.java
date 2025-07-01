@@ -6,7 +6,6 @@ import crud.CBusquedas;
 import crud.CCargaCombos;
 import crud.CEliminaciones;
 import crud.CInserciones;
-import java.awt.CardLayout;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -59,7 +58,7 @@ public class jfventa extends javax.swing.JFrame {
     private CEliminaciones cEli = new CEliminaciones();
     List<String> idAvalesSeleccionado = new ArrayList<>();
     //Estas variables son para pasar al panel del cobrador, se usa para manejar los paneles dentro del mismo frame.
-    //private JTabbedPane tabbedPanePrincipal; 
+    private JTabbedPane tabbedPanePrincipal;
 
     public jfventa(String[] datos) {
         initComponents();
@@ -75,8 +74,6 @@ public class jfventa extends javax.swing.JFrame {
         cargarCombos(jCmbBoxVendedorVenta, 4);
         cargarCombos(jCmbBoxZonaVenta, 5);
         cargarCombos(jCmbBoxAgAcCobradorVentaPago, 4);
-        cargarCombos(jCmbBoxCobrador, 4);
-        cargarCombos(jCmbBoxCliente, 6);
         cargarCombos(jCmbBoxNumAvalesVenta, 7);
         cargarCombos(jCmbBoxClientesVenta, 6);
         addFiltroListener(jTxtBusIDVenta, jTblListaVentas);
@@ -94,7 +91,7 @@ public class jfventa extends javax.swing.JFrame {
         grupoPagos.add(jRadButActualizarPago);
         grupoPagos.add(jRadButGuardarPago);
         //Se iguala la variable creada del tabbedPane con el del diseño
-        //tabbedPanePrincipal = jTbdPMenuVentas;
+        tabbedPanePrincipal = jTbdPMenuVentas;
     }
 
     //Limpia la tabla de la busqueda.
@@ -105,13 +102,13 @@ public class jfventa extends javax.swing.JFrame {
 
     //Limpia la tabla de la agregar/actualizar.
     private void limpiarTablaAgregar() {
-        modelAgregar = (DefaultTableModel) jTblAgregarVenta.getModel(); // Cambiado a model1
-        modelAgregar.setRowCount(0); // Cambiado a model1
+        modelAgregar = (DefaultTableModel) jTblAgregarVenta.getModel();
+        modelAgregar.setRowCount(0);
     }
 
     private void limpiarTablaPagos() {
-        modelAgregar = (DefaultTableModel) jTblAgregarVenta.getModel(); // Cambiado a model1
-        modelAgregar.setRowCount(0); // Cambiado a model1
+        modelAgregar = (DefaultTableModel) jTblAgregarVenta.getModel();
+        modelAgregar.setRowCount(0);
     }
 
     //Carga la tabla de busqueda. 
@@ -213,7 +210,7 @@ public class jfventa extends javax.swing.JFrame {
         jTxtFAgAcPagosPago.setText("");
         jTxtFAgAcRestantePago.setText("");
         jDateChoPago.setDate(null);
-        jCmbBoxAgAcCobradorVentaPago.setSelectedIndex(-1);
+        jCmbBoxAgAcCobradorVentaPago.setSelectedIndex(0);
     }
 
     private void actualizarPago() {
@@ -455,13 +452,13 @@ public class jfventa extends javax.swing.JFrame {
         jBtnAgregarVenta.setEnabled(false);
         jBtnActualizarVenta.setEnabled(false);
         jBtnEliminarVenta.setEnabled(false);
-        jTxtFAgAcFolioVentaPago.setEnabled(false);
-        jCmbBoxAgAcCobradorVentaPago.setEnabled(false);
-        jDateChoPago.setEnabled(false);
-        jTxtFAgAcPagosPago.setEnabled(false);
-        jTxtFAgAcRestantePago.setEnabled(false);
-        jBtnActualizarPago.setEnabled(false);
-        jBtnGuardarPago.setEnabled(false);
+//        jTxtFAgAcFolioVentaPago.setEnabled(false);
+//        jCmbBoxAgAcCobradorVentaPago.setEnabled(false);
+//        jDateChoPago.setEnabled(false);
+//        jTxtFAgAcPagosPago.setEnabled(false);
+//        jTxtFAgAcRestantePago.setEnabled(false);
+//        jBtnActualizarPago.setEnabled(false);
+//        jBtnGuardarPago.setEnabled(false);
         jBtnEliminarProdVenta.setEnabled(false);
         jBtnAgregarProdVenta.setEnabled(false);
     }
@@ -592,10 +589,10 @@ public class jfventa extends javax.swing.JFrame {
                 && !validaCamposVenta(jTxtFTotalVenta, "^[0-9]+$", "El total está vacío", "Solo se aceptan números en el total")) {
             return false;
         }
-        if (jTxtFFolioProductoVenta.isEnabled()
-                && !validaCamposVenta(jTxtFFolioProductoVenta, "^[0-9]+$", "El folio del producto está vacío", "Solo se aceptan números en el folio del producto")) {
-            return false;
-        }
+//        if (jTxtFFolioProductoVenta.isEnabled()
+//                && !validaCamposVenta(jTxtFFolioProductoVenta, "^[0-9]+$", "El folio del producto está vacío", "Solo se aceptan números en el folio del producto")) {
+//            return false;
+//        }
         if (jDteChoVenta.isEnabled()
                 && !validaCamposVenta(jDteChoVenta, null, "No se escogió una fecha", null)) {
             return false;
@@ -620,26 +617,26 @@ public class jfventa extends javax.swing.JFrame {
                 && !validaCamposVenta(jCmbBoxNumAvalesVenta, null, "No se eligió el número de avales", null)) {
             return false;
         }
-        if (jTxtFAgAcFolioVentaPago.isEnabled()
-                && !validaCamposVenta(jTxtFAgAcFolioVentaPago, "^[0-9]+$", "El folio de la venta no puede estar vacio", "Solo se buscan numeros en el folio")) {
-            return false;
-        }
-        if (jCmbBoxAgAcCobradorVentaPago.isEnabled()
-                && !validaCamposVenta(jCmbBoxAgAcCobradorVentaPago, null, "No se eligio un cobrador", null)) {
-            return false;
-        }
-        if (jDateChoPago.isEnabled()
-                && !validaCamposVenta(jDateChoPago, null, "No se eligio una fecha", null)) {
-            return false;
-        }
-        if (jTxtFAgAcPagosPago.isEnabled()
-                && !validaCamposVenta(jTxtFAgAcPagosPago, "^[0-9]+$", "El pago no puede estar vacio", "Solo ingrese numeros en el pago")) {
-            return false;
-        }
-        if (jTxtFAgAcRestantePago.isEnabled()
-                && !validaCamposVenta(jTxtFAgAcRestantePago, "^[0-9]+$", "El restante no puede estar vacio", "Solo ingrese numeros en el restante")) {
-            return false;
-        }
+//        if (jTxtFAgAcFolioVentaPago.isEnabled()
+//                && !validaCamposVenta(jTxtFAgAcFolioVentaPago, "^[0-9]+$", "El folio de la venta no puede estar vacio", "Solo se buscan numeros en el folio")) {
+//            return false;
+//        }
+//        if (jCmbBoxAgAcCobradorVentaPago.isEnabled()
+//                && !validaCamposVenta(jCmbBoxAgAcCobradorVentaPago, null, "No se eligio un cobrador", null)) {
+//            return false;
+//        }
+//        if (jDateChoPago.isEnabled()
+//                && !validaCamposVenta(jDateChoPago, null, "No se eligio una fecha", null)) {
+//            return false;
+//        }
+//        if (jTxtFAgAcPagosPago.isEnabled()
+//                && !validaCamposVenta(jTxtFAgAcPagosPago, "^[0-9]+$", "El pago no puede estar vacio", "Solo ingrese numeros en el pago")) {
+//            return false;
+//        }
+//        if (jTxtFAgAcRestantePago.isEnabled()
+//                && !validaCamposVenta(jTxtFAgAcRestantePago, "^[0-9]+$", "El restante no puede estar vacio", "Solo ingrese numeros en el restante")) {
+//            return false;
+//        }
         return true;
     }
 
@@ -665,60 +662,80 @@ public class jfventa extends javax.swing.JFrame {
         numAvalesSeleccionado = jCmbBoxNumAvalesVenta.getSelectedItem().toString().trim();
         fechaSeleccionada = formatearFecha(jDteChoVenta.getDate());
         folioVentaPago = jTxtFAgAcFolioVentaPago.getText().trim();
-        cobradorSeleccionadoPago = jCmbBoxAgAcCobradorVentaPago.getSelectedItem().toString().trim();
-        fechaSeleccionadaPago = formatearFecha(jDateChoPago.getDate());
-        pagoSeleccionado = jTxtFAgAcPagosPago.getText().trim();
-        restanteSeleccionado = jTxtFAgAcRestantePago.getText().trim();
+        //cobradorSeleccionadoPago = jCmbBoxAgAcCobradorVentaPago.getSelectedItem().toString().trim();
+//        fechaSeleccionadaPago = formatearFecha(jDateChoPago.getDate());
+//        pagoSeleccionado = jTxtFAgAcPagosPago.getText().trim();
+//        restanteSeleccionado = jTxtFAgAcRestantePago.getText().trim();
     }
-    
-    //Este metodo va a cambiar de la pestaña de la venta a la de cobrador. 
-//    private void cambiarPestaña(String tituloPestaña) {
-//        for (int i = 0; i < tabbedPanePrincipal.getTabCount(); i++) { //Recorrera todas las pestañas, el gesTabCount devuelve el numero total de pestañas
-//            if (tabbedPanePrincipal.getTitleAt(i).equals(tituloPestaña)) { //Comparara si el titulo obtenido es igual al buscado
-//                tabbedPanePrincipal.setSelectedIndex(i); //Hace visible la pestaña buscada por el indice
-//                break;
-//            }
-//        }
-//    }
 
     public void agregarVenta() throws SQLException {
         valoresObtenidos();
 
-        //Lista de Avales
-        List<String> avalesSeleccionados = new ArrayList<>();
-        int cantidadAvales = Integer.parseInt(numAvalesSeleccionado);
+        if (validaTodosCampos()) {
+            //Lista de Avales
+            List<String> avalesSeleccionados = new ArrayList<>();
+            int cantidadAvales = Integer.parseInt(numAvalesSeleccionado);
 
-        for (int i = 1; i <= cantidadAvales; i++) {
-            //Obtener lista de posibles avales y quitar los ya seleccionados
-            List<String> posiblesAvales = queryCargaCombos.cargaComboAvalesVenta();
-            cbus.buscarIdAvalVenta(idAvalSeleccionado);
-            posiblesAvales.removeAll(avalesSeleccionados); // Evita duplicados automáticamente
+            for (int i = 1; i <= cantidadAvales; i++) {
+                //Obtener lista de posibles avales y quitar los ya seleccionados
+                List<String> posiblesAvales = queryCargaCombos.cargaComboAvalesVenta();
+                cbus.buscarIdAvalVenta(idAvalSeleccionado);
+                posiblesAvales.removeAll(avalesSeleccionados); // Evita duplicados automáticamente
 
-            // Crear JComboBox con la lista filtrada
-            JComboBox<String> comboAval = new JComboBox<>(posiblesAvales.toArray(new String[0]));
+                // Crear JComboBox con la lista filtrada
+                JComboBox<String> comboAval = new JComboBox<>(posiblesAvales.toArray(new String[0]));
 
-            int opcion = JOptionPane.showConfirmDialog(
-                    null,
-                    comboAval,
-                    "Seleccione el aval " + i,
-                    JOptionPane.OK_CANCEL_OPTION,
-                    JOptionPane.QUESTION_MESSAGE
-            );
+                int opcion = JOptionPane.showConfirmDialog(
+                        null,
+                        comboAval,
+                        "Seleccione el aval " + i,
+                        JOptionPane.OK_CANCEL_OPTION,
+                        JOptionPane.QUESTION_MESSAGE
+                );
 
-            if (opcion == JOptionPane.OK_OPTION) {
-                String avalSeleccionado = (String) comboAval.getSelectedItem();
-                avalesSeleccionados.add(avalSeleccionado);
-                System.out.println(avalSeleccionado);
-                String idAval = cbus.buscarIdAvalVenta(avalSeleccionado);
-                System.out.println(idAval);
-                idAvalesSeleccionado.add(idAval);
-            } else {
-                cuti.msg_advertencia("Operación cancelada. Debes seleccionar todos los avales.", "Registro de venta");
+                if (opcion == JOptionPane.OK_OPTION) {
+                    String avalSeleccionado = (String) comboAval.getSelectedItem();
+                    avalesSeleccionados.add(avalSeleccionado);
+                    System.out.println(avalSeleccionado);
+                    String idAval = cbus.buscarIdAvalVenta(avalSeleccionado);
+                    System.out.println(idAval);
+                    idAvalesSeleccionado.add(idAval);
+                } else {
+                    cuti.msg_advertencia("Operación cancelada. Debes seleccionar todos los avales.", "Registro de venta");
+                    return;
+                }
+            }
+            
+            //Esta parte del codigo va a servir para el total de la venta
+            List<String[]> productosVenta = new ArrayList<>();
+            DefaultTableModel modelo = (DefaultTableModel) jTblAgregarVenta.getModel();
+            int conteoFila = modelo.getRowCount();
+
+            if (conteoFila == 0) { //Si es igual a 0 significa que no hay productos en la tabla
+                cuti.msg_advertencia("Debe agregar al menos un producto", "Registro de venta");
                 return;
             }
-        }
 
-        if (validaTodosCampos()) {
+            double totalCalculado = 0.0; //Se declara un total calculado
+            for (int i = 0; i < conteoFila; i++) { //Va a recorrer cada fila de la tabla que se vaya cargando por el empleado
+                String idProducto = (String) modelo.getValueAt(i, 0); //Indice 0 para el ID
+                String descripcion = (String) modelo.getValueAt(i, 1); //Indice 1 para el producto (nombre)
+                String cantidadStr = (String) modelo.getValueAt(i, 2); //Indice 2 para la cantidad
+
+                try {
+                    double cantidad = Double.parseDouble(cantidadStr); //Parsea de STRING a double
+                    totalCalculado += cantidad; //Suma y asigna la cantidad
+                } catch (NumberFormatException e) {
+                    cuti.msg_error("Cantidad no válida en producto " + idProducto, "Error");
+                    return;
+                }
+
+                productosVenta.add(new String[]{idProducto, cantidadStr});
+            }
+
+            //se asigna el total 
+            totalVenta = String.valueOf(totalCalculado);
+            System.out.println(totalVenta);
             try {
                 if (cInser.insertaVenta(totalVenta, fechaSeleccionada, numPagos, idvendedorSeleccionado, idclienteSeleccionado,
                         idzonaSeleccionada, idestatusSeleccionado)) {
@@ -731,7 +748,7 @@ public class jfventa extends javax.swing.JFrame {
                     cuti.msg("Venta insertada correctamente", "Registro de venta");
                     cargarTablaBusqueda();
                     cargarTablaPagos(folioVenta);
-                    //tabbedPanePrincipal.setSelectedIndex(3); //Cambia al panel del cobrador
+                    tabbedPanePrincipal.setSelectedIndex(2); //Cambia al panel del cobrador
                 } else {
                 }
             } catch (Exception e) {
@@ -791,7 +808,7 @@ public class jfventa extends javax.swing.JFrame {
         }
     }
 
-    private void llenarCamposPorID(String id) {
+    private void llenarCamposPorID(String id) throws SQLException {
         // Variable para saber si se encontró el ID en la tabla
         boolean encontrado = false;
 
@@ -827,6 +844,7 @@ public class jfventa extends javax.swing.JFrame {
                     cuti.msg_error("Error al cargar datos", e.getMessage());
                 }
                 jTxtFNumPagosVenta.setText(jTblListaVentas.getValueAt(i, 6).toString());
+                jTxtFTotalVenta.setText(cbus.buscaTotalVentaID(idEnTabla));
 
                 // Marca que se encontró el ID y termina el ciclo
                 encontrado = true;
@@ -843,18 +861,30 @@ public class jfventa extends javax.swing.JFrame {
     private void EventoBuscarPorID() {
         jTxtFFolioVenta.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
             public void insertUpdate(javax.swing.event.DocumentEvent e) {
-                cargarPorID();
+                try {
+                    cargarPorID();
+                } catch (SQLException ex) {
+                    Logger.getLogger(jfventa.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
 
             public void removeUpdate(javax.swing.event.DocumentEvent e) {
-                cargarPorID();
+                try {
+                    cargarPorID();
+                } catch (SQLException ex) {
+                    Logger.getLogger(jfventa.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
 
             public void changedUpdate(javax.swing.event.DocumentEvent e) {
-                cargarPorID();
+                try {
+                    cargarPorID();
+                } catch (SQLException ex) {
+                    Logger.getLogger(jfventa.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
 
-            private void cargarPorID() {
+            private void cargarPorID() throws SQLException {
                 String id = jTxtFFolioVenta.getText().trim();
                 if (!id.isEmpty()) {
                     llenarCamposPorID(id);
@@ -1159,21 +1189,6 @@ public class jfventa extends javax.swing.JFrame {
         jBtnGuardarPago = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTblPagosVenta = new javax.swing.JTable();
-        jPnlElimVenta = new javax.swing.JPanel();
-        jLblLogoCobrador = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
-        jLblTituloCobrador = new javax.swing.JLabel();
-        jLblFolioCobrador = new javax.swing.JLabel();
-        jTxtFFolioGeneCobrador = new javax.swing.JTextField();
-        jSeparator8 = new javax.swing.JSeparator();
-        jCmbBoxCliente = new javax.swing.JComboBox<>();
-        jCmbBoxCobrador = new javax.swing.JComboBox<>();
-        jDateChooser1 = new com.toedter.calendar.JDateChooser();
-        jLblCobradorBusqueda = new javax.swing.JLabel();
-        jTxtFCobradorBusqueda = new javax.swing.JTextField();
-        jSeparator13 = new javax.swing.JSeparator();
-        jLblFechaCobrador = new javax.swing.JLabel();
-        jBtnAsignarCobrador = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -1881,136 +1896,6 @@ public class jfventa extends javax.swing.JFrame {
 
         jTbdPMenuVentas.addTab("Agregar/Actualizar pagos", jPnlActVenta);
 
-        jPnlElimVenta.setBackground(new java.awt.Color(242, 220, 153));
-
-        jLblLogoCobrador.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/cobradores.png"))); // NOI18N
-
-        jPanel2.setBackground(new java.awt.Color(167, 235, 242));
-
-        jLblTituloCobrador.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
-        jLblTituloCobrador.setText("Asignar cobrador");
-
-        jLblFolioCobrador.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
-        jLblFolioCobrador.setText("Folio generado:");
-
-        jTxtFFolioGeneCobrador.setBackground(new java.awt.Color(167, 235, 242));
-        jTxtFFolioGeneCobrador.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
-        jTxtFFolioGeneCobrador.setBorder(null);
-
-        jSeparator8.setForeground(new java.awt.Color(0, 0, 0));
-
-        jCmbBoxCliente.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
-        jCmbBoxCliente.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cliente" }));
-
-        jCmbBoxCobrador.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
-        jCmbBoxCobrador.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cobrador" }));
-
-        jLblCobradorBusqueda.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
-        jLblCobradorBusqueda.setText("Ingrese el cobrador de búsqueda:");
-
-        jTxtFCobradorBusqueda.setBackground(new java.awt.Color(167, 235, 242));
-        jTxtFCobradorBusqueda.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
-        jTxtFCobradorBusqueda.setBorder(null);
-
-        jSeparator13.setForeground(new java.awt.Color(0, 0, 0));
-
-        jLblFechaCobrador.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
-        jLblFechaCobrador.setText("Seleccione la fecha:");
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLblTituloCobrador)
-                .addGap(112, 112, 112))
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLblFechaCobrador)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTxtFFolioGeneCobrador)
-                            .addComponent(jSeparator8)
-                            .addComponent(jSeparator13)
-                            .addComponent(jTxtFCobradorBusqueda, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jDateChooser1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLblFolioCobrador)
-                                    .addComponent(jLblCobradorBusqueda))
-                                .addGap(0, 106, Short.MAX_VALUE))
-                            .addComponent(jCmbBoxCobrador, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jCmbBoxCliente, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addContainerGap())))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLblTituloCobrador)
-                .addGap(18, 18, 18)
-                .addComponent(jLblFolioCobrador)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTxtFFolioGeneCobrador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator8, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jCmbBoxCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jCmbBoxCobrador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
-                .addComponent(jLblFechaCobrador)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLblCobradorBusqueda)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTxtFCobradorBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator13, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-
-        jBtnAsignarCobrador.setBackground(new java.awt.Color(53, 189, 242));
-        jBtnAsignarCobrador.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
-        jBtnAsignarCobrador.setText("Asignar cobrador");
-
-        javax.swing.GroupLayout jPnlElimVentaLayout = new javax.swing.GroupLayout(jPnlElimVenta);
-        jPnlElimVenta.setLayout(jPnlElimVentaLayout);
-        jPnlElimVentaLayout.setHorizontalGroup(
-            jPnlElimVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPnlElimVentaLayout.createSequentialGroup()
-                .addGroup(jPnlElimVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPnlElimVentaLayout.createSequentialGroup()
-                        .addGap(94, 94, 94)
-                        .addComponent(jLblLogoCobrador)
-                        .addGap(75, 75, 75))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPnlElimVentaLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jBtnAsignarCobrador)
-                        .addGap(142, 142, 142)))
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(102, Short.MAX_VALUE))
-        );
-        jPnlElimVentaLayout.setVerticalGroup(
-            jPnlElimVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPnlElimVentaLayout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addGroup(jPnlElimVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPnlElimVentaLayout.createSequentialGroup()
-                        .addComponent(jLblLogoCobrador)
-                        .addGap(18, 18, 18)
-                        .addComponent(jBtnAsignarCobrador)))
-                .addContainerGap(43, Short.MAX_VALUE))
-        );
-
-        jTbdPMenuVentas.addTab("Asignar cobrador", jPnlElimVenta);
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -2189,14 +2074,11 @@ public class jfventa extends javax.swing.JFrame {
     private javax.swing.JButton jBtnActualizarVenta;
     private javax.swing.JButton jBtnAgregarProdVenta;
     private javax.swing.JButton jBtnAgregarVenta;
-    private javax.swing.JButton jBtnAsignarCobrador;
     private javax.swing.JButton jBtnEliminarProdVenta;
     private javax.swing.JButton jBtnEliminarVenta;
     private javax.swing.JButton jBtnGuardarPago;
     private javax.swing.JComboBox<String> jCmbBoxAgAcCobradorVentaPago;
-    private javax.swing.JComboBox<String> jCmbBoxCliente;
     private javax.swing.JComboBox<String> jCmbBoxClientesVenta;
-    private javax.swing.JComboBox<String> jCmbBoxCobrador;
     private javax.swing.JComboBox<String> jCmbBoxEstatus;
     private javax.swing.JComboBox<String> jCmbBoxEstatusVenta;
     private javax.swing.JComboBox<String> jCmbBoxFechas;
@@ -2205,7 +2087,6 @@ public class jfventa extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> jCmbBoxVendedorVenta;
     private javax.swing.JComboBox<String> jCmbBoxZonaVenta;
     private com.toedter.calendar.JDateChooser jDateChoPago;
-    private com.toedter.calendar.JDateChooser jDateChooser1;
     private com.toedter.calendar.JDateChooser jDteChoVenta;
     private javax.swing.JLabel jLblAgAcFolioVentaPago;
     private javax.swing.JLabel jLblAgAcPagosPago;
@@ -2214,29 +2095,22 @@ public class jfventa extends javax.swing.JFrame {
     private javax.swing.JLabel jLblBusCobradorVenta;
     private javax.swing.JLabel jLblBusIDVenta;
     private javax.swing.JLabel jLblClienteVenta;
-    private javax.swing.JLabel jLblCobradorBusqueda;
-    private javax.swing.JLabel jLblFechaCobrador;
     private javax.swing.JLabel jLblFechaPago;
     private javax.swing.JLabel jLblFechaVenta;
-    private javax.swing.JLabel jLblFolioCobrador;
     private javax.swing.JLabel jLblFolioProductoVenta;
     private javax.swing.JLabel jLblFolioVenta;
     private javax.swing.JLabel jLblIconoVenta;
-    private javax.swing.JLabel jLblLogoCobrador;
     private javax.swing.JLabel jLblNumPagosVenta;
     private javax.swing.JLabel jLblTituloBusqueda;
-    private javax.swing.JLabel jLblTituloCobrador;
     private javax.swing.JLabel jLblTituloPagos;
     private javax.swing.JLabel jLblTituloVentas;
     private javax.swing.JLabel jLblTotalVenta;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPnlActVenta;
     private javax.swing.JPanel jPnlAgrVenta;
     private javax.swing.JPanel jPnlAgreActuaPagos;
     private javax.swing.JPanel jPnlBusVenta;
     private javax.swing.JPanel jPnlBusquedaVentas;
-    private javax.swing.JPanel jPnlElimVenta;
     private javax.swing.JPanel jPnlLogoVentas;
     private javax.swing.JRadioButton jRadBtnActualizarVenta;
     private javax.swing.JRadioButton jRadBtnAgregarVenta;
@@ -2250,14 +2124,12 @@ public class jfventa extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator10;
     private javax.swing.JSeparator jSeparator11;
     private javax.swing.JSeparator jSeparator12;
-    private javax.swing.JSeparator jSeparator13;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JSeparator jSeparator5;
     private javax.swing.JSeparator jSeparator6;
     private javax.swing.JSeparator jSeparator7;
-    private javax.swing.JSeparator jSeparator8;
     private javax.swing.JTabbedPane jTbdPMenuVentas;
     private javax.swing.JTable jTblAgregarVenta;
     private javax.swing.JTable jTblListaVentas;
@@ -2268,8 +2140,6 @@ public class jfventa extends javax.swing.JFrame {
     private javax.swing.JTextField jTxtFAgAcFolioVentaPago;
     private javax.swing.JTextField jTxtFAgAcPagosPago;
     private javax.swing.JTextField jTxtFAgAcRestantePago;
-    private javax.swing.JTextField jTxtFCobradorBusqueda;
-    private javax.swing.JTextField jTxtFFolioGeneCobrador;
     private javax.swing.JTextField jTxtFFolioProductoVenta;
     private javax.swing.JTextField jTxtFFolioVenta;
     private javax.swing.JTextField jTxtFNumPagosVenta;
