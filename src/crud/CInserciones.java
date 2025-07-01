@@ -34,9 +34,14 @@ public boolean insertarColoniaZona(String idColonia, String idZona) throws SQLEx
     return cnslt.inserta(consulta);
 }
 public boolean insertarZona(String idZona) throws SQLException {
-    String consulta = "INSERT INTO zona (idzona, num_zona) VALUES ('" + idZona + "', '" + idZona + "')";
+    consulta = "INSERT INTO zona (idzona, num_zona) VALUES ('" + idZona + "', '" + idZona + "')";
     return cnslt.inserta(consulta);
 }
+    public boolean insertarPago(String idVenta, String pago, String restante, String fechaPago, String cobrador) throws SQLException {
+        consulta = "INSERT INTO pagos_tarjetas (empleado_idempleado, venta_Idventa, pago, restante, fecha_pago) "
+                + "VALUES ('" + cobrador + "', '" + idVenta + "','" + pago + "', '" + restante + "', '" + fechaPago + "');";
+        return cnslt.inserta(consulta);
+    }
 
 
 

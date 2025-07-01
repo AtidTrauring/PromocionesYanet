@@ -735,4 +735,58 @@ public class CBusquedas {
                 + "WHERE CONCAT(p.nombres, ' ', p.ap_paterno, ' ', p.ap_materno) = '" + avalSeleccionado + "';";
         return cnslt.buscarValor(consulta);
     }
+    public ArrayList<String[]> buscarPagosPorIdVenta(String idVenta) throws SQLException {
+        consulta = "SELECT p.pago, p.restante, p.fecha_pago "
+                + "FROM pagos_tarjetas p "
+                + "WHERE p.venta_Idventa = '" + idVenta + "';";
+        return cnslt.buscarValores(consulta, 3);
+    }
+
+    public String buscarCobradorPorVenta(String idVenta) throws SQLException {
+        consulta = "SELECT CONCAT(pe.nombres, ' ', pe.ap_paterno, ' ', pe.ap_materno) "
+                + "FROM empleado e "
+                + "INNER JOIN persona pe ON e.persona_idpersona = pe.idpersona "
+                + "INNER JOIN venta v ON v.empleado_idempleado = e.idempleado "
+                + "WHERE v.Idventa = '" + idVenta + "';";
+        return cnslt.buscarValor(consulta);
+    }
+
+    public String[] buscarUltimoPagoPorIdVenta(String idVenta) throws SQLException {
+        consulta = "SELECT p.pago, p.restante, p.fecha_pago "
+                + "FROM pagos_tarjetas p "
+                + "WHERE p.venta_Idventa = '" + idVenta + "' "
+                + "ORDER BY p.fecha_pago DESC LIMIT 1;";
+        return cnslt.buscarValoresLista(consulta, 3);
+    }
+
+    public String[] buscarIdUltimoPagoYValores(String idVenta) throws SQLException {
+        consulta = "SELECT idemve, pago, restante "
+                + "FROM pagos_tarjetas "
+                + "WHERE venta_Idventa = '" + idVenta + "' "
+                + "ORDER BY fecha_pago DESC LIMIT 1;";
+        return cnslt.buscarValoresLista(consulta, 3);
+    }
+
+    public String buscarTotalVentaPorId(String idVenta) throws SQLException {
+        consulta = "SELECT total FROM venta WHERE idventa = '" + idVenta + "';";
+        return cnslt.buscarValor(consulta);
+    }
+public String buscarIdEmpleadoPorNombre(String nombreCompleto) throws SQLException {
+    consulta = "SELECT e.idempleado " +
+               "FROM empleado e " +
+               "JOIN persona p ON e.persona_idpersona = p.idpersona " +
+               "WHERE CONCAT(p.nombres, ' ', p.ap_paterno, ' ', p.ap_materno) = '" + nombreCompleto + "';";
+    return cnslt.buscarValor(consulta);
+}
+
+    public String buscarSumaPagosPorVenta(String idVenta) throws SQLException {
+        consulta = "SELECT SUM(pago) FROM pagos_tarjetas WHERE venta_Idventa = '" + idVenta + "';";
+        return cnslt.buscarValor(consulta);
+    }
+
+    public String buscarFechaVentaPorId(String idVenta) throws SQLException {
+    String consulta = "SELECT fecha_venta FROM venta WHERE Idventa = '" + idVenta + "';";
+    return cnslt.buscarValor(consulta);
+}
+
 }

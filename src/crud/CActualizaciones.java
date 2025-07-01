@@ -29,4 +29,11 @@ public class CActualizaciones {
                 "Idventa = '" + idVenta + "';";
         return cnslt.actualiza(consulta);
     }
+        public boolean actualizarPago(String idPago, double nuevoPago, String nuevaFecha, double nuevoRestante) throws SQLException {
+    consulta = "UPDATE pagos_tarjetas SET pago = " + nuevoPago +
+                      ", fecha_pago = '" + nuevaFecha + "'" +
+                      ", restante = " + nuevoRestante +
+                      " WHERE idemve = " + idPago + ";";
+    return cnslt.actualiza(consulta);  
+}
 }

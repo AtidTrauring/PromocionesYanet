@@ -65,7 +65,8 @@ public class jfventa extends javax.swing.JFrame {
         desactivarComponentes();
         datosVenta = datos;
         cargarTablaBusqueda();
-        cargarTablaPagos();
+        cargarTablaPagos(folioVenta);
+        eventoCargarDatosPago();
         cargarCombos(jCmbBoxFechas, 1);
         cargarCombos(jCmbBoxEstatus, 2);
         cargarCombos(jCmbBoxPagosPendi, 3);
@@ -139,19 +140,151 @@ public class jfventa extends javax.swing.JFrame {
         }
     }
 
-    //Carga la tabla de pagos. 
-    public void cargarTablaPagos() {
-        modelPagos = (DefaultTableModel) jTblPagosVenta.getModel();
+
+    private void cargarTablaPagos(String idVenta) {
         try {
-            datosPago = cbus.buscarPagoVenta();
-            limpiarTablaPagos();
-            for (String[] datoPago : datosPago) {
-                modelPagos.addRow(new Object[]{datoPago[0], datoPago[1], datoPago[2]});
+            modelPagos = (DefaultTableModel) jTblPagosVenta.getModel();
+            ArrayList<String[]> pagos = cbus.buscarPagosPorIdVenta(idVenta);
+
+            modelPagos.setRowCount(0);
+            limpiarCamposPago();
+
+            for (String[] pago : pagos) {
+                modelPagos.addRow(new Object[]{pago[0], pago[1], pago[2]});
             }
-        } catch (Exception e) {
-            CUtilitarios.msg_error("No se pudo cargar la tabla", "Carga de tabla de pagos");
+
+            // Cargaar último pago
+            String[] ultimoPago = cbus.buscarUltimoPagoPorIdVenta(idVenta);
+            if (ultimoPago != null) {
+                jTxtFAgAcPagosPago.setText(ultimoPago[0]);
+                jTxtFAgAcRestantePago.setText(ultimoPago[1]);
+                jDateChoPago.setDate(java.sql.Date.valueOf(ultimoPago[2]));
+            }
+
+            // Cargaarr cobrador
+            String cobrador = cbus.buscarCobradorPorVenta(idVenta);
+            if (cobrador != null) {
+                jCmbBoxAgAcCobradorVentaPago.setSelectedItem(cobrador);
+            }
+
+        } catch (SQLException e) {
+            CUtilitarios.msg_error("Error al cargar datos de la venta", "Error");
         }
     }
+
+    private void eventoCargarDatosPago() {
+        jTxtFAgAcFolioVentaPago.getDocument().addDocumentListener(new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) {
+                cargar();
+            }
+
+            public void removeUpdate(DocumentEvent e) {
+                cargar();
+            }
+
+            public void changedUpdate(DocumentEvent e) {
+                cargar();
+            }
+
+            private void cargar() {
+                String idVenta = jTxtFAgAcFolioVentaPago.getText().trim();
+                if (!idVenta.isEmpty()) {
+                    cargarTablaPagos(idVenta);
+                } else {
+                    limpiarCamposPago();
+                    DefaultTableModel model = (DefaultTableModel) jTblPagosVenta.getModel();
+                    model.setRowCount(0);
+                }
+            }
+        });
+    }
+
+    private void limpiarInsCamposPago() {
+        jTxtFAgAcFolioVentaPago.setText("");
+        jTxtFAgAcPagosPago.setText("");
+        jTxtFAgAcRestantePago.setText("");
+        jDateChoPago.setDate(null);
+        jCmbBoxAgAcCobradorVentaPago.setSelectedIndex(-1);
+    }
+
+    private void limpiarCamposPago() {
+        jTxtFAgAcPagosPago.setText("");
+        jTxtFAgAcRestantePago.setText("");
+        jDateChoPago.setDate(null);
+        jCmbBoxAgAcCobradorVentaPago.setSelectedIndex(-1);
+    }
+
+private void actualizarPago() {
+    try {
+        String idVenta = jTxtFAgAcFolioVentaPago.getText().trim();
+        if (idVenta.isEmpty()) {
+            return;
+        }
+
+        // Validaa que el monto sea número entero
+        String montoTexto = jTxtFAgAcPagosPago.getText().trim();
+        if (!montoTexto.matches("^[0-9]+$")) {
+            CUtilitarios.msg_advertencia("El monto debe contener solo números enteros", "Validación");
+            return;
+        }
+
+        double nuevoPago = Double.parseDouble(montoTexto);
+
+        java.util.Date nuevaFecha = jDateChoPago.getDate();
+        if (nuevaFecha == null) {
+            CUtilitarios.msg_advertencia("Debe seleccionar una fecha válida", "Validación");
+            return;
+        }
+
+        // Validaa que la fecha del pago no sea anterior a la fecha de la venta
+        String fechaVentaStr = cbus.buscarFechaVentaPorId(idVenta);
+        if (fechaVentaStr != null) {
+            java.util.Date fechaVenta = java.sql.Date.valueOf(fechaVentaStr);
+            if (nuevaFecha.before(fechaVenta)) {
+                CUtilitarios.msg_advertencia("La fecha del pago no puede ser anterior a la fecha de la venta (" +
+                        new SimpleDateFormat("dd/MM/yyyy").format(fechaVenta) + ")", "Validación");
+                return;
+            }
+        }
+
+        // Obtener datos del último pago
+        String[] datosUltimoPago = cbus.buscarIdUltimoPagoYValores(idVenta);
+        if (datosUltimoPago == null) {
+            return;
+        }
+
+        String idPago = datosUltimoPago[0];
+        double pagoAnterior = Double.parseDouble(datosUltimoPago[1]);
+        double restanteAnterior = Double.parseDouble(datosUltimoPago[2]);
+
+        // Validar que el nuevo pago no ase el total restante
+        double nuevoRestante = restanteAnterior + pagoAnterior - nuevoPago;
+
+        if (nuevoPago > (restanteAnterior + pagoAnterior)) {
+            double restanteCalculado = restanteAnterior + pagoAnterior;
+            CUtilitarios.msg_advertencia("El pago ingresado excede lo que resta por pagar. " +
+                    "El restante actual es: $" + restanteCalculado, "Validación");
+            return;
+        }
+
+        // Convertir la fecha a string
+        String nuevaFechaStr = new SimpleDateFormat("yyyy-MM-dd").format(nuevaFecha);
+
+        cActu.actualizarPago(idPago, nuevoPago, nuevaFechaStr, nuevoRestante);
+        cargarTablaPagos(idVenta);
+
+        CUtilitarios.msg("Pago actualizado correctamente", "Actualizar");
+
+        // si el restante ha llegado a 0
+        if (nuevoRestante == 0) {
+            CUtilitarios.msg("La cuenta ha sido pagada completamente con este pago.", "Cuenta saldada");
+        }
+
+    } catch (Exception e) {
+        CUtilitarios.msg_error("Error al actualizar el pago:\n" + e.getMessage(), "Error");
+    }
+}
+
 
     //Carga de los combos. 
     public void cargarCombos(JComboBox<String> combo, int metodoCarga) {
@@ -586,7 +719,7 @@ public class jfventa extends javax.swing.JFrame {
                     }
                     cuti.msg("Venta insertada correctamente", "Registro de venta");
                     cargarTablaBusqueda();
-                    cargarTablaPagos();
+                    cargarTablaPagos(folioVenta);
                 } else {
                 }
             } catch (Exception e) {
@@ -845,26 +978,96 @@ public class jfventa extends javax.swing.JFrame {
         }
     }
 
-    private void agregarPago() {
-        valoresObtenidos();
+private void agregarPago() {
+    try {
+        String idVenta = jTxtFAgAcFolioVentaPago.getText().trim();
+        String montoPagoStr = jTxtFAgAcPagosPago.getText().trim();
+        String nombreCobrador = (jCmbBoxAgAcCobradorVentaPago.getSelectedItem() != null)
+                ? jCmbBoxAgAcCobradorVentaPago.getSelectedItem().toString()
+                : "";
 
-        if (validaTodosCampos()) {
-            try {
-                if (cInser.insertaPagoVenta(folioVenta, numPagos, folioVenta, numPagos, numPagos, numPagos)) {
-                    cuti.msg("Venta insertada correctamente", "Registro de venta");
-                    cargarTablaBusqueda();
-                    cargarTablaPagos();
-                } else {
-                }
-            } catch (Exception e) {
-                cuti.msg_error("Error SQL: " + e.getMessage(), "Registro de venta");
-            } finally {
-                limpiarCampos();
-            }
-        } else {
-            cuti.msg_advertencia("Ingrese todos los campos por favor", "Registro de venta");
+        java.util.Date fecha = jDateChoPago.getDate();
+        if (fecha == null) {
+            CUtilitarios.msg_advertencia("Debe seleccionar una fecha válida", "Validación");
+            return;
         }
+        String fechaPago = new SimpleDateFormat("yyyy-MM-dd").format(fecha);
+
+        // Validar monto
+        if (!montoPagoStr.matches("^[0-9]+$")) {
+            CUtilitarios.msg_advertencia("El monto debe contener solo números enteros", "Validación");
+            return;
+        }
+
+        int pagoActual = Integer.parseInt(montoPagoStr);
+
+        // Validar cobrador
+        if (nombreCobrador.isEmpty()) {
+            CUtilitarios.msg_advertencia("Debe seleccionar un cobrador", "Validación");
+            return;
+        }
+
+        String idCobrador = cbus.buscarIdEmpleadoPorNombre(nombreCobrador);
+        if (idCobrador == null) {
+            CUtilitarios.msg_advertencia("No se encontró el ID del cobrador", "Error");
+            return;
+        }
+
+        // Validar que la fecha del pago no sea anterior a la fecha de la venta
+        String fechaVentaStr = cbus.buscarFechaVentaPorId(idVenta);
+        if (fechaVentaStr != null) {
+            java.util.Date fechaVenta = java.sql.Date.valueOf(fechaVentaStr);
+            if (fecha.before(fechaVenta)) {
+                CUtilitarios.msg_advertencia("La fecha del pago no puede ser anterior a la fecha de la venta (" +
+                        new SimpleDateFormat("dd/MM/yyyy").format(fechaVenta) + ")", "Validación");
+                return;
+            }
+        }
+
+        // Obtener total de la venta
+        String totalStr = cbus.buscarTotalVentaPorId(idVenta);
+        if (totalStr == null) {
+            CUtilitarios.msg_advertencia("No se encontró el total de la venta", "Error");
+            return;
+        }
+        int total = Integer.parseInt(totalStr);
+
+        // Obtener suma de pagos anteriores
+        String sumaPagosStr = cbus.buscarSumaPagosPorVenta(idVenta);
+        int sumaPagos = (sumaPagosStr == null) ? 0 : Integer.parseInt(sumaPagosStr);
+
+        // Valida si ya está pagada la cuenta
+        if (sumaPagos >= total) {
+            CUtilitarios.msg_advertencia("La cuenta ya ha sido pagada completamente", "Validación");
+            return;
+        }
+
+        // Calcular restante después del pago actual
+        int nuevoRestante = total - (sumaPagos + pagoActual);
+
+        if (nuevoRestante < 0) {
+            CUtilitarios.msg_advertencia("El pago ingresado excede el restante. Restante actual: $" + (total - sumaPagos), "Validación");
+            return;
+        }
+
+        // Insertar pago
+        if (cInser.insertarPago(idVenta, montoPagoStr, String.valueOf(nuevoRestante), fechaPago, idCobrador)) {
+            CUtilitarios.msg("Pago insertado correctamente", "Registro de pago");
+            cargarTablaPagos(idVenta);
+            limpiarInsCamposPago();
+
+            if (nuevoRestante == 0) {
+                CUtilitarios.msg("La cuenta ha sido pagada completamente con este pago.", "Cuenta saldada");
+            }
+
+        } else {
+            CUtilitarios.msg_advertencia("No se pudo insertar el pago", "Error");
+        }
+
+    } catch (Exception e) {
+        CUtilitarios.msg_error("Error al insertar el pago:\n" + e.getMessage(), "Error");
     }
+}
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -1594,6 +1797,11 @@ public class jfventa extends javax.swing.JFrame {
         jBtnActualizarPago.setBackground(new java.awt.Color(53, 189, 242));
         jBtnActualizarPago.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jBtnActualizarPago.setText("Actualizar pago");
+        jBtnActualizarPago.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtnActualizarPagoActionPerformed(evt);
+            }
+        });
 
         jBtnGuardarPago.setBackground(new java.awt.Color(53, 189, 242));
         jBtnGuardarPago.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
@@ -1921,6 +2129,11 @@ public class jfventa extends javax.swing.JFrame {
     private void jBtnAgregarProdVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnAgregarProdVentaActionPerformed
         cargarTablaAgregar();
     }//GEN-LAST:event_jBtnAgregarProdVentaActionPerformed
+
+    private void jBtnActualizarPagoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnActualizarPagoActionPerformed
+        // TODO add your handling code here:
+        actualizarPago();
+    }//GEN-LAST:event_jBtnActualizarPagoActionPerformed
 
     /**
      * @param args the command line arguments
