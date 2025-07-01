@@ -2,6 +2,7 @@ package Views.empleado;
 
 import crud.CBusquedas;
 import crud.CCargaCombos;
+import java.awt.event.ItemEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -22,211 +23,175 @@ public final class JfEmpleado extends javax.swing.JFrame {
     // Utilidad para manejar placeholders en campos de texto
     private final CUtilitarios cu = new CUtilitarios();
 
-    // Controladores para operaciones con la base de datos:
-    private final CBusquedas queryBusca = new CBusquedas();      // Para consultas de búsqueda
-    private final CCargaCombos queryCarga = new CCargaCombos();  // Para carga de combobox
+// Controladores para operaciones con la base de datos
+    private final CBusquedas queryBusca = new CBusquedas();      // Consultas de búsqueda
+    private final CCargaCombos queryCarga = new CCargaCombos();  // Carga de datos en combobox
 
-    // Modelo de datos para los combobox de zonas/colonias
+// Modelo para combobox de zonas/colonias
     private DefaultComboBoxModel listaZonas;
 
-    // Filtros independientes para cada tabla (uno por pestaña):
-    private TableRowSorter<DefaultTableModel> trListaEmpleados;    // Filtros para pestaña Lista
-    private TableRowSorter<DefaultTableModel> trActualizaEmpleados;// Filtros para pestaña Actualizar
-    private TableRowSorter<DefaultTableModel> trDeleteEmpleados;   // Filtros para pestaña Eliminar
-    private TableRowSorter<DefaultTableModel> trSueldosEmpleados;  // Filtros para pestaña Sueldos
+// Filtros independientes para cada tabla (por pestaña)
+    private TableRowSorter<DefaultTableModel> trListaEmpleados;    // Filtro pestaña Lista
+    private TableRowSorter<DefaultTableModel> trActualizaEmpleados;// Filtro pestaña Actualizar
+    private TableRowSorter<DefaultTableModel> trDeleteEmpleados;   // Filtro pestaña Eliminar
+    private TableRowSorter<DefaultTableModel> trSueldosEmpleados;  // Filtro pestaña Sueldos
 
     public JfEmpleado() throws SQLException {
         initComponents();
-        // 1. Configuración adicional de la interfaz
-        ConfigurarInterfaz();
+        // Configuración inicial de la interfaz
+        configurarInterfaz();
 
-        // 2. Carga inicial de datos desde la base de datos
-        CargarDatosIniciales();
+        // Carga inicial de datos desde la base de datos
+        cargarDatosIniciales();
     }
 
-    // ========================================================================
-    // MÉTODOS DE CONFIGURACIÓN DE LA INTERFAZ
-    // ========================================================================
+// ========================================================================
+// MÉTODOS DE CONFIGURACIÓN DE LA INTERFAZ
+// ========================================================================
     /**
-     * Configura todos los aspectos visuales y funcionales de la interfaz. Orden
-     * de ejecución: 1. AplicarPlaceholders(): Establece textos guía en campos
-     * de búsqueda 2. ConfigurarModelosTablas(): Prepara las estructuras de
-     * datos para las tablas 3. ConfigurarFiltros(): Habilita el filtrado
-     * dinámico en las tablas
+     * Configura los elementos visuales y funcionales de la interfaz en el orden
+     * correcto para su correcto funcionamiento.
      */
-    private void ConfigurarInterfaz() {
-        // 1. Establecer textos de ayuda en campos de búsqueda
-        AplicarPlaceholders();
-
-        // 2. Preparar las estructuras de datos para las tablas
-        ConfigurarModelosTablas();
-
-        // 3. Configurar el sistema de filtrado dinámico
-        ConfigurarFiltros();
+    private void configurarInterfaz() {
+        aplicarPlaceholders();      // Textos guía en campos de texto
+        configurarModelosTablas();  // Modelos para las tablas
+        configurarFiltros();        // Habilitar filtros dinámicos
     }
 
     /**
-     * Establece textos temporales (placeholders) en todos los campos de texto.
-     * Estos textos: - Guían al usuario sobre qué información ingresar - Sirven
-     * como referencia para validar campos vacíos - Se eliminan automáticamente
-     * al hacer clic en el campo
+     * Aplica textos temporales (placeholders) a los campos de texto, para
+     * orientar al usuario y validar entradas.
      */
-    private void AplicarPlaceholders() {
-        // --------- Pestaña "Lista de empleados" ---------
+    private void aplicarPlaceholders() {
+        // Pestaña "Lista de empleados"
         cu.aplicarPlaceholder(JtxtCnsltID, "Ingresa el ID de búsqueda");
         cu.aplicarPlaceholder(JtxtCnsltNombre, "Ingresa el Nombre de búsqueda");
         cu.aplicarPlaceholder(JtxtCnsltApePat, "Ingresa el Apellido Paterno de búsqueda");
         cu.aplicarPlaceholder(JtxtCnsltApeMat, "Ingresa el Apellido Materno de búsqueda");
 
-        // --------- Pestaña "Agregar Empleados" ---------
-        cu.aplicarPlaceholder(JtxtAgregarNombre, "Nomnbre");
+        // Pestaña "Agregar Empleados"
+        cu.aplicarPlaceholder(JtxtAgregarNombre, "Nombre");
         cu.aplicarPlaceholder(JtxtAgregarApMat, "Apellido Materno");
         cu.aplicarPlaceholder(JtxtAgregarApPat, "Apellido Paterno");
         cu.aplicarPlaceholder(JtxtAgregarSueldo, "Sueldo");
-        cu.aplicarPlaceholder(JtxtAgregarTel, "Telefono");
+        cu.aplicarPlaceholder(JtxtAgregarTel, "Teléfono");
 
-        // --------- Pestaña "Actualizar empleado" ---------
+        // Pestaña "Actualizar empleado"
         cu.aplicarPlaceholder(JtxtActlzid, "ID del Empleado");
         cu.aplicarPlaceholder(JtxtActlzNombre, "Nombre");
         cu.aplicarPlaceholder(JtxtActlzApMat, "Apellido Materno");
         cu.aplicarPlaceholder(JtxtActlzApPat, "Apellido Paterno");
         cu.aplicarPlaceholder(JtxtActlzSueldo, "Sueldo Inicial");
-        cu.aplicarPlaceholder(JtxtActlzTel, "Telefono");
+        cu.aplicarPlaceholder(JtxtActlzTel, "Teléfono");
 
-        // --------- Pestaña "Eliminar empleado" ---------
+        // Pestaña "Eliminar empleado"
         cu.aplicarPlaceholder(JtxtElmID, "Ingresa el ID de búsqueda");
         cu.aplicarPlaceholder(JtxtElmNombre, "Ingresa el Nombre de búsqueda");
         cu.aplicarPlaceholder(JtxtElmApePat, "Ingresa el Apellido Paterno de búsqueda");
         cu.aplicarPlaceholder(JtxtElmApeMat, "Ingresa el Apellido Materno de búsqueda");
 
-        // --------- Pestaña "Sueldos" ---------
+        // Pestaña "Sueldos"
         cu.aplicarPlaceholder(JtxtSldEmpleado, "Empleado");
 
-        // --------- Pestaña "Asignar Sueldos" ---------
+        // Pestaña "Asignar Sueldos"
         cu.aplicarPlaceholder(JtxtAIDEmpleado, "Ingresa el ID de búsqueda");
         cu.aplicarPlaceholder(JtxtAEmpleado, "Empleado");
         cu.aplicarPlaceholder(JtxtASueldo, "Sueldo");
     }
 
     /**
-     * Configura los modelos de datos para todas las tablas de la interfaz. Cada
-     * tabla tiene: - Columnas específicas según su función - Celdas no
-     * editables directamente - Capacidad para ordenar/filtrar datos
+     * Configura los modelos de datos para las tablas, definiendo columnas y
+     * propiedades como no editables.
      */
-    private void ConfigurarModelosTablas() {
-        // Configurar modelos para tablas de empleados (3 tablas con misma estructura)
-        ConfigurarModeloTablaEmpleados(JtblListaEmpleados);    // Tabla principal
-        ConfigurarModeloTablaEmpleados(JtblActualizaEmpleados);// Tabla actualización
-        ConfigurarModeloTablaEmpleados(JtblDeleteEmpleados);   // Tabla eliminación
+    private void configurarModelosTablas() {
+        // Tablas de empleados (mismo formato)
+        configurarModeloTablaEmpleados(JtblListaEmpleados);
+        configurarModeloTablaEmpleados(JtblActualizaEmpleados);
+        configurarModeloTablaEmpleados(JtblDeleteEmpleados);
 
-        // Configurar modelos para tablas de sueldos (2 tablas con misma estructura)
-        ConfigurarModeloTablaSueldos(JtblSueldosEmpleados);  // Historial de sueldos
-        ConfigurarModeloTablaSueldos(JtblAsignaSueldos);     // Asignación de sueldos
+        // Tablas de sueldos (mismo formato)
+        configurarModeloTablaSueldos(JtblSueldosEmpleados);
+        configurarModeloTablaSueldos(JtblAsignaSueldos);
     }
 
     /**
-     * Configura el modelo estándar para una tabla de empleados. Estructura de
-     * columnas: 0 - Id Empleado | 1 - Nombre(s) | 2 - Apellido Paterno | 3 -
-     * Apellido Materno
-     *
-     * @param tabla La tabla JTable que se configurará
+     * Define el modelo estándar para tablas de empleados. Columnas: Id,
+     * Nombre(s), Apellido Paterno, Apellido Materno.
      */
-    private void ConfigurarModeloTablaEmpleados(JTable tabla) {
-        // Crear modelo con 4 columnas y datos inicialmente vacíos
+    private void configurarModeloTablaEmpleados(JTable tabla) {
         DefaultTableModel modelo = new DefaultTableModel(
-                new Object[][]{}, // Datos vacíos inicialmente
-                new String[]{"Id Empleado", "Nombre(s)", "Apellido Paterno", "Apellido Materno"} // Nombres de columnas
+                new Object[][]{},
+                new String[]{"Id Empleado", "Nombre(s)", "Apellido Paterno", "Apellido Materno"}
         ) {
-            // Sobrescribir método para hacer todas las celdas no editables
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; // Todas las celdas son de solo lectura
+                return false; // Celdas solo lectura
             }
         };
-        // Aplicar el modelo a la tabla
         tabla.setModel(modelo);
     }
 
     /**
-     * Configura el modelo estándar para una tabla de sueldos. Estructura de
-     * columnas: 0 - Id Empleado | 1 - Nombre(s) | 2 - Sueldo | 3 - Fecha
-     * Inicial | 4 - Fecha Final
-     *
-     * @param tabla La tabla JTable que se configurará
+     * Define el modelo estándar para tablas de sueldos. Columnas: Id,
+     * Nombre(s), Sueldo, Fecha Inicial, Fecha Final.
      */
-    private void ConfigurarModeloTablaSueldos(JTable tabla) {
-        // Crear modelo con 5 columnas y datos inicialmente vacíos
+    private void configurarModeloTablaSueldos(JTable tabla) {
         DefaultTableModel modelo = new DefaultTableModel(
-                new Object[][]{}, // Datos vacíos inicialmente
-                new String[]{"Id Empleado", "Nombre(s)", "Sueldo", "Fecha Inicial", "Fecha Final"} // Nombres de columnas
+                new Object[][]{},
+                new String[]{"Id Empleado", "Nombre(s)", "Sueldo", "Fecha Inicial", "Fecha Final"}
         ) {
-            // Sobrescribir método para hacer todas las celdas no editables
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; // Todas las celdas son de solo lectura
+                return false; // Celdas solo lectura
             }
         };
-        // Aplicar el modelo a la tabla
         tabla.setModel(modelo);
     }
 
-    // ========================================================================
-    // MÉTODOS PARA FILTRADO DE DATOS
-    // ========================================================================
+// ========================================================================
+// MÉTODOS PARA FILTRADO DE DATOS
+// ========================================================================
     /**
-     * Configura el sistema de filtrado para todas las tablas. Cada tabla tiene
-     * su propio TableRowSorter independiente. Se asignan listeners a los campos
-     * de texto para filtrado dinámico.
+     * Inicializa los filtros dinámicos para cada tabla, asignando un
+     * TableRowSorter independiente y configurando su uso.
      */
-    private void ConfigurarFiltros() {
-        /* ===== INICIALIZAR FILTROS PARA CADA TABLA ===== */
-
-        // 1. Tabla principal de empleados (pestaña "Lista")
+    private void configurarFiltros() {
         trListaEmpleados = new TableRowSorter<>((DefaultTableModel) JtblListaEmpleados.getModel());
         JtblListaEmpleados.setRowSorter(trListaEmpleados);
 
-        // 2. Tabla de actualización de empleados
         trActualizaEmpleados = new TableRowSorter<>((DefaultTableModel) JtblActualizaEmpleados.getModel());
         JtblActualizaEmpleados.setRowSorter(trActualizaEmpleados);
 
-        // 3. Tabla de eliminación de empleados
         trDeleteEmpleados = new TableRowSorter<>((DefaultTableModel) JtblDeleteEmpleados.getModel());
         JtblDeleteEmpleados.setRowSorter(trDeleteEmpleados);
 
-        // 4. Tabla de historial de sueldos
         trSueldosEmpleados = new TableRowSorter<>((DefaultTableModel) JtblSueldosEmpleados.getModel());
         JtblSueldosEmpleados.setRowSorter(trSueldosEmpleados);
-
     }
 
     /**
-     * Configura un filtro dinámico que reacciona al escribir en un campo de
-     * texto.
-     *
-     * @param tabla La tabla JTable que se filtrará
-     * @param sorter El mecanismo de ordenamiento/filtrado de la tabla
-     * @param campoTexto El JTextField que activará el filtro al escribir
-     * @param columna El índice de la columna a filtrar (0-based)
+     * Aplica filtros combinados por texto en una tabla específica, permitiendo
+     * filtrar en múltiples columnas de forma parcial e insensible a mayúsculas.
      */
     private void aplicarFiltrosCombinados(JTable tabla,
             TableRowSorter<DefaultTableModel> sorter,
             JTextField[] camposTexto,
-            int[] indicesColumnas) {
+            int[] columnasTexto) {
 
         ArrayList<RowFilter<Object, Object>> filtros = new ArrayList<>();
 
-        for (int i = 0; i < camposTexto.length; i++) {
-            JTextField campo = camposTexto[i];
-            String texto = campo.getText().trim();
-            String placeholder = campo.getToolTipText();
+        if (camposTexto != null && columnasTexto != null) {
+            for (int i = 0; i < camposTexto.length; i++) {
+                JTextField campo = camposTexto[i];
+                String texto = campo.getText().trim();
+                String placeholder = campo.getToolTipText();
 
-            // ⚠️ Evita filtrar si el campo está vacío o si contiene el placeholder
-            if (!texto.isEmpty() && (placeholder == null || !texto.equals(placeholder))) {
-                filtros.add(RowFilter.regexFilter("(?i).*" + Pattern.quote(texto) + ".*", indicesColumnas[i]));
+                if (!texto.isEmpty() && (placeholder == null || !texto.equals(placeholder))) {
+                    filtros.add(RowFilter.regexFilter("(?i).*" + Pattern.quote(texto) + ".*", columnasTexto[i]));
+                }
             }
         }
 
-        // Si no hay filtros, mostrar todo
         if (filtros.isEmpty()) {
             sorter.setRowFilter(null);
         } else {
@@ -234,111 +199,115 @@ public final class JfEmpleado extends javax.swing.JFrame {
         }
     }
 
-    // ========================================================================
-    // MÉTODOS PARA CARGA DE DATOS
-    // ========================================================================
     /**
-     * Carga todos los datos iniciales necesarios para la aplicación: 1. Datos
-     * de empleados en todas las tablas relevantes 2. Historial de sueldos 3.
-     * Zonas/colonias para combobox
-     *
-     * @throws SQLException Si ocurre un error al acceder a la base de datos
+     * Aplica filtros combinados específicos para la tabla de sueldos, usando
+     * texto y selecciones en JComboBox.
      */
-    private void CargarDatosIniciales() throws SQLException {
-        /* ===== CARGAR DATOS DE EMPLEADOS ===== */
-        // Cargar en la tabla principal
-        CargarDatosEmpleados(JtblListaEmpleados);
-        // Cargar en la tabla de actualización
-        CargarDatosEmpleados(JtblActualizaEmpleados);
-        // Cargar en la tabla de eliminación
-        CargarDatosEmpleados(JtblDeleteEmpleados);
+    private void aplicarFiltrosSueldos() {
+        ArrayList<RowFilter<Object, Object>> filtros = new ArrayList<>();
 
-        /* ===== CARGAR DATOS DE SUELDOS ===== */
-        // Cargar en el historial de sueldos
-        CargarDatosSueldos(JtblSueldosEmpleados);
-        // Cargar en la tabla de asignación de sueldos
-        CargarDatosSueldos(JtblAsignaSueldos);
+        // Filtro por nombre o ID empleado (columna 1)
+        String filtroEmpleado = JtxtSldEmpleado.getText().trim();
+        if (!filtroEmpleado.isEmpty() && (JtxtSldEmpleado.getToolTipText() == null || !filtroEmpleado.equals(JtxtSldEmpleado.getToolTipText()))) {
+            filtros.add(RowFilter.regexFilter("(?i).*" + Pattern.quote(filtroEmpleado) + ".*", 1));
+        }
 
-        /* ===== CARGAR COMBOBOX ===== */
-        CargarComboDinamico(JcmbxAgregarZonas);
-        CargarComboDinamico(JcmbxActlzZonas);
-        CargarComboDinamico(JcmbxSldSueldo);
-        CargarComboDinamico(JcmbxSldFechaInicio);
-        CargarComboDinamico(JcmbxSldFechaFin);
+        // Filtro por sueldo (columna 2)
+        String seleccionadoSueldo = (String) JcmbxSldSueldo.getSelectedItem();
+        if (seleccionadoSueldo != null && !seleccionadoSueldo.equalsIgnoreCase("Sueldo")) {
+            filtros.add(RowFilter.regexFilter("(?i).*" + Pattern.quote(seleccionadoSueldo) + ".*", 2));
+        }
+
+        // Filtro por fecha inicio (columna 3)
+        String seleccionadoFechaInicio = (String) JcmbxSldFechaInicio.getSelectedItem();
+        if (seleccionadoFechaInicio != null && !seleccionadoFechaInicio.equalsIgnoreCase("Fecha Inicio")) {
+            filtros.add(RowFilter.regexFilter("(?i).*" + Pattern.quote(seleccionadoFechaInicio) + ".*", 3));
+        }
+
+        // Filtro por fecha final (columna 4)
+        String seleccionadoFechaFin = (String) JcmbxSldFechaFin.getSelectedItem();
+        if (seleccionadoFechaFin != null && !seleccionadoFechaFin.equalsIgnoreCase("Fecha Final")) {
+            filtros.add(RowFilter.regexFilter("(?i).*" + Pattern.quote(seleccionadoFechaFin) + ".*", 4));
+        }
+
+        // Aplicar filtros combinados o mostrar todo si no hay filtros
+        if (filtros.isEmpty()) {
+            trSueldosEmpleados.setRowFilter(null);
+        } else {
+            trSueldosEmpleados.setRowFilter(RowFilter.andFilter(filtros));
+        }
+    }
+
+// ========================================================================
+// MÉTODOS PARA CARGA DE DATOS
+// ========================================================================
+    /**
+     * Carga inicial de datos para todas las tablas y combobox usados en la
+     * interfaz, desde la base de datos.
+     */
+    private void cargarDatosIniciales() throws SQLException {
+        // Datos empleados para cada tabla correspondiente
+        cargarDatosEmpleados(JtblListaEmpleados);
+        cargarDatosEmpleados(JtblActualizaEmpleados);
+        cargarDatosEmpleados(JtblDeleteEmpleados);
+
+        // Datos sueldos para tablas relacionadas
+        cargarDatosSueldos(JtblSueldosEmpleados);
+        cargarDatosSueldos(JtblAsignaSueldos);
+
+        // Cargar opciones dinámicas para combobox
+        cargarComboDinamico(JcmbxAgregarZonas);
+        cargarComboDinamico(JcmbxActlzZonas);
+        cargarComboDinamico(JcmbxSldSueldo);
+        cargarComboDinamico(JcmbxSldFechaInicio);
+        cargarComboDinamico(JcmbxSldFechaFin);
     }
 
     /**
-     * Carga datos de empleados desde la base de datos a una tabla específica.
-     *
-     * @param tabla La tabla JTable que recibirá los datos
-     * @throws SQLException Si falla la conexión o consulta a la base de datos
+     * Carga datos de empleados a la tabla especificada, limpiando antes la
+     * tabla y agregando filas con datos obtenidos.
      */
-    public void CargarDatosEmpleados(JTable tabla) throws SQLException {
-        // 1. Obtener el modelo de datos de la tabla
+    public void cargarDatosEmpleados(JTable tabla) throws SQLException {
         DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
-
-        // 2. Limpiar cualquier dato existente (prevención de duplicados)
-        LimpiarTabla(tabla);
-
-        // 3. Obtener datos frescos desde la base de datos
+        limpiarTabla(tabla);
         ArrayList<String[]> listaEmpleados = queryBusca.buscarEmpleado();
 
-        // 4. Poblar la tabla fila por fila
         for (String[] empleado : listaEmpleados) {
-            modelo.addRow(empleado); // Añade cada registro como nueva fila
+            modelo.addRow(empleado);
         }
     }
 
     /**
-     * Carga datos de sueldos desde la base de datos a una tabla específica.
-     *
-     * @param tabla La tabla JTable que recibirá los datos
-     * @throws SQLException Si falla la conexión o consulta a la base de datos
+     * Carga datos de sueldos a la tabla especificada, limpiando antes y
+     * agregando filas con datos formateados.
      */
-    public void CargarDatosSueldos(JTable tabla) throws SQLException {
+    public void cargarDatosSueldos(JTable tabla) throws SQLException {
         DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
-        LimpiarTabla(tabla);
-
+        limpiarTabla(tabla);
         ArrayList<String[]> listaSueldos = queryBusca.buscarSueldos();
+
         for (String[] sueldo : listaSueldos) {
+            sueldo[2] = "$ " + sueldo[2]; // Formato de sueldo con símbolo
             modelo.addRow(sueldo);
         }
-
-        // Aplica el renderizador a la columna de sueldo (índice 2)
-        tabla.getColumnModel().getColumn(2).setCellRenderer(new DefaultTableCellRenderer() {
-            @Override
-            public void setValue(Object value) {
-                if (value != null && !value.toString().isEmpty()) {
-                    super.setValue("$ " + value.toString());
-                } else {
-                    super.setValue(value);
-                }
-            }
-        });
     }
 
-    // ========================================================================
-    // MÉTODOS AUXILIARES
-    // ========================================================================
+// ========================================================================
+// MÉTODOS AUXILIARES
+// ========================================================================
     /**
-     * Limpia completamente el contenido de una tabla.
-     *
-     * @param tabla La tabla JTable que se limpiará
+     * Elimina todas las filas de la tabla recibida para limpiar su contenido.
      */
-    private void LimpiarTabla(JTable tabla) {
-        // Obtener el modelo de datos de la tabla
+    private void limpiarTabla(JTable tabla) {
         DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
-        // Eliminar todas las filas del modelo
         modelo.setRowCount(0);
     }
 
     /**
-     * Carga las opciones de zonas/colonias en un combobox específico.
-     *
-     * @param combo El JComboBox que recibirá las opciones
-     * @throws SQLException Si falla la conexión o consulta a la base de datos
+     * Carga dinámicamente los elementos en un combobox según su tipo,
+     * consultando la base de datos.
      */
-    public void CargarComboDinamico(JComboBox combo) throws SQLException {
+    public void cargarComboDinamico(JComboBox combo) throws SQLException {
         DefaultComboBoxModel modelo = (DefaultComboBoxModel) combo.getModel();
 
         if (combo == JcmbxAgregarZonas || combo == JcmbxActlzZonas) {
@@ -363,42 +332,6 @@ public final class JfEmpleado extends javax.swing.JFrame {
             }
         } else {
             modelo.addElement("ComboBox no identificado");
-        }
-    }
-
-    private String convirtiendoComboATexto(JComboBox<String> combo, String valorIgnorar) {
-        String seleccionado = (String) combo.getSelectedItem();
-        if (seleccionado == null || seleccionado.equalsIgnoreCase(valorIgnorar)) {
-            return ""; // Ignorar filtro si es el valor por defecto
-        }
-        return seleccionado;
-    }
-
-    private void aplicarFiltrosSueldos() {
-        String filtroIdEmpleado = JtxtSldEmpleado.getText().trim();
-        String filtroSueldo = convirtiendoComboATexto(JcmbxSldSueldo, "Saldo");
-        String filtroFechaInicio = convirtiendoComboATexto(JcmbxSldFechaInicio, "Fecha Inicio");
-        String filtroFechaFin = convirtiendoComboATexto(JcmbxSldFechaFin, "Fecha Final");
-
-        ArrayList<RowFilter<Object, Object>> filtros = new ArrayList<>();
-
-        if (!filtroIdEmpleado.isEmpty()) {
-            filtros.add(RowFilter.regexFilter("(?i).*" + Pattern.quote(filtroIdEmpleado) + ".*", 0)); // Columna 0: Id Empleado
-        }
-        if (!filtroSueldo.isEmpty()) {
-            filtros.add(RowFilter.regexFilter("(?i).*" + Pattern.quote(filtroSueldo) + ".*", 2)); // Columna 2: Sueldo
-        }
-        if (!filtroFechaInicio.isEmpty()) {
-            filtros.add(RowFilter.regexFilter("(?i).*" + Pattern.quote(filtroFechaInicio) + ".*", 3)); // Columna 3: Fecha Inicial
-        }
-        if (!filtroFechaFin.isEmpty()) {
-            filtros.add(RowFilter.regexFilter("(?i).*" + Pattern.quote(filtroFechaFin) + ".*", 4)); // Columna 4: Fecha Final
-        }
-
-        if (filtros.isEmpty()) {
-            trSueldosEmpleados.setRowFilter(null);
-        } else {
-            trSueldosEmpleados.setRowFilter(RowFilter.andFilter(filtros));
         }
     }
 
@@ -1394,51 +1327,43 @@ public final class JfEmpleado extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void JtxtCnsltIDKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_JtxtCnsltIDKeyReleased
-        aplicarFiltrosCombinados(JtblListaEmpleados, trListaEmpleados,
+        aplicarFiltrosCombinados(
+                JtblListaEmpleados,
+                trListaEmpleados,
                 new JTextField[]{JtxtCnsltID, JtxtCnsltNombre, JtxtCnsltApePat, JtxtCnsltApeMat},
                 new int[]{0, 1, 2, 3});
     }//GEN-LAST:event_JtxtCnsltIDKeyReleased
 
     private void JtxtCnsltNombreKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_JtxtCnsltNombreKeyReleased
-        aplicarFiltrosCombinados(JtblListaEmpleados, trListaEmpleados,
-                new JTextField[]{JtxtCnsltID, JtxtCnsltNombre, JtxtCnsltApePat, JtxtCnsltApeMat},
-                new int[]{0, 1, 2, 3});
+        JtxtCnsltIDKeyReleased(evt);
     }//GEN-LAST:event_JtxtCnsltNombreKeyReleased
 
     private void JtxtCnsltApePatKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_JtxtCnsltApePatKeyReleased
-        aplicarFiltrosCombinados(JtblListaEmpleados, trListaEmpleados,
-                new JTextField[]{JtxtCnsltID, JtxtCnsltNombre, JtxtCnsltApePat, JtxtCnsltApeMat},
-                new int[]{0, 1, 2, 3});
+        JtxtCnsltIDKeyReleased(evt);
     }//GEN-LAST:event_JtxtCnsltApePatKeyReleased
 
     private void JtxtCnsltApeMatKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_JtxtCnsltApeMatKeyReleased
-        aplicarFiltrosCombinados(JtblListaEmpleados, trListaEmpleados,
-                new JTextField[]{JtxtCnsltID, JtxtCnsltNombre, JtxtCnsltApePat, JtxtCnsltApeMat},
-                new int[]{0, 1, 2, 3});
+        JtxtCnsltIDKeyReleased(evt);
     }//GEN-LAST:event_JtxtCnsltApeMatKeyReleased
 
     private void JtxtElmIDKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_JtxtElmIDKeyReleased
-        aplicarFiltrosCombinados(JtblDeleteEmpleados, trDeleteEmpleados,
+        aplicarFiltrosCombinados(
+                JtblDeleteEmpleados,
+                trDeleteEmpleados,
                 new JTextField[]{JtxtElmID, JtxtElmNombre, JtxtElmApePat, JtxtElmApeMat},
                 new int[]{0, 1, 2, 3});
     }//GEN-LAST:event_JtxtElmIDKeyReleased
 
     private void JtxtElmNombreKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_JtxtElmNombreKeyReleased
-        aplicarFiltrosCombinados(JtblDeleteEmpleados, trDeleteEmpleados,
-                new JTextField[]{JtxtElmID, JtxtElmNombre, JtxtElmApePat, JtxtElmApeMat},
-                new int[]{0, 1, 2, 3});
+        JtxtElmIDKeyReleased(evt);
     }//GEN-LAST:event_JtxtElmNombreKeyReleased
 
     private void JtxtElmApePatKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_JtxtElmApePatKeyReleased
-        aplicarFiltrosCombinados(JtblDeleteEmpleados, trDeleteEmpleados,
-                new JTextField[]{JtxtElmID, JtxtElmNombre, JtxtElmApePat, JtxtElmApeMat},
-                new int[]{0, 1, 2, 3});
+        JtxtElmIDKeyReleased(evt);
     }//GEN-LAST:event_JtxtElmApePatKeyReleased
 
     private void JtxtElmApeMatKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_JtxtElmApeMatKeyReleased
-        aplicarFiltrosCombinados(JtblDeleteEmpleados, trDeleteEmpleados,
-                new JTextField[]{JtxtElmID, JtxtElmNombre, JtxtElmApePat, JtxtElmApeMat},
-                new int[]{0, 1, 2, 3});
+        JtxtElmIDKeyReleased(evt);
     }//GEN-LAST:event_JtxtElmApeMatKeyReleased
 
     private void JtxtSldEmpleadoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_JtxtSldEmpleadoKeyReleased
@@ -1446,15 +1371,21 @@ public final class JfEmpleado extends javax.swing.JFrame {
     }//GEN-LAST:event_JtxtSldEmpleadoKeyReleased
 
     private void JcmbxSldFechaInicioItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_JcmbxSldFechaInicioItemStateChanged
-        aplicarFiltrosSueldos();
+        if (evt.getStateChange() == ItemEvent.SELECTED) {
+            aplicarFiltrosSueldos();
+        }
     }//GEN-LAST:event_JcmbxSldFechaInicioItemStateChanged
 
     private void JcmbxSldFechaFinItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_JcmbxSldFechaFinItemStateChanged
-        aplicarFiltrosSueldos();
+        if (evt.getStateChange() == ItemEvent.SELECTED) {
+            aplicarFiltrosSueldos();
+        }
     }//GEN-LAST:event_JcmbxSldFechaFinItemStateChanged
 
     private void JcmbxSldSueldoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_JcmbxSldSueldoItemStateChanged
-        aplicarFiltrosSueldos();
+        if (evt.getStateChange() == ItemEvent.SELECTED) {
+            aplicarFiltrosSueldos();
+        }
     }//GEN-LAST:event_JcmbxSldSueldoItemStateChanged
 
     public static void main(String args[]) {
