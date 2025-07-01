@@ -505,6 +505,7 @@ public void agregarColoniasAZona() {
         jSeparator6 = new javax.swing.JSeparator();
         jTxtElimNumZona1 = new javax.swing.JTextField();
         jBtnEliminarZona = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -630,7 +631,7 @@ public void agregarColoniasAZona() {
             .addGroup(jPnlListaZonasLayout.createSequentialGroup()
                 .addGap(22, 22, 22)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 424, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
                 .addComponent(jPnlBusquedaZona, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(47, 47, 47))
         );
@@ -651,7 +652,7 @@ public void agregarColoniasAZona() {
 
         jPnlActZona.setBackground(new java.awt.Color(242, 220, 153));
 
-        JlblImagen1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/logo_vectori.png"))); // NOI18N
+        JlblImagen1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/ag_zona.png"))); // NOI18N
 
         jPnlAgregarZona1.setBackground(new java.awt.Color(167, 235, 242));
 
@@ -723,8 +724,13 @@ public void agregarColoniasAZona() {
 
         jBtnIngGuardarZona.setBackground(new java.awt.Color(53, 189, 242));
         jBtnIngGuardarZona.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        jBtnIngGuardarZona.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/continuar1.png"))); // NOI18N
         jBtnIngGuardarZona.setText("Guardar zona");
         jBtnIngGuardarZona.setToolTipText("");
+        jBtnIngGuardarZona.setContentAreaFilled(false);
+        jBtnIngGuardarZona.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jBtnIngGuardarZona.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/continuar1.png"))); // NOI18N
+        jBtnIngGuardarZona.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/continuar2.png"))); // NOI18N
         jBtnIngGuardarZona.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jBtnIngGuardarZonaActionPerformed(evt);
@@ -736,26 +742,31 @@ public void agregarColoniasAZona() {
         jPnlActZonaLayout.setHorizontalGroup(
             jPnlActZonaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPnlActZonaLayout.createSequentialGroup()
-                .addGap(59, 59, 59)
-                .addComponent(JlblImagen1, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPnlActZonaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPnlActZonaLayout.createSequentialGroup()
+                        .addGap(65, 65, 65)
+                        .addComponent(JlblImagen1, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPnlActZonaLayout.createSequentialGroup()
+                        .addGap(84, 84, 84)
+                        .addComponent(jBtnIngGuardarZona, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 117, Short.MAX_VALUE)
                 .addComponent(jPnlAgregarZona1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(83, 83, 83))
-            .addGroup(jPnlActZonaLayout.createSequentialGroup()
-                .addGap(146, 146, 146)
-                .addComponent(jBtnIngGuardarZona)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPnlActZonaLayout.setVerticalGroup(
             jPnlActZonaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPnlActZonaLayout.createSequentialGroup()
-                .addGap(40, 40, 40)
                 .addGroup(jPnlActZonaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPnlAgregarZona1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(JlblImagen1, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(36, 36, 36)
-                .addComponent(jBtnIngGuardarZona)
-                .addContainerGap(15, Short.MAX_VALUE))
+                    .addGroup(jPnlActZonaLayout.createSequentialGroup()
+                        .addGap(40, 40, 40)
+                        .addComponent(jPnlAgregarZona1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPnlActZonaLayout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addComponent(JlblImagen1, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jBtnIngGuardarZona, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE)))
+                .addContainerGap())
         );
 
         jTbPnlMenuZonas.addTab("Agregar zona", jPnlActZona);
@@ -774,15 +785,20 @@ public void agregarColoniasAZona() {
 
         jBtnEliminarZonaColonia.setBackground(new java.awt.Color(53, 189, 242));
         jBtnEliminarZonaColonia.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        jBtnEliminarZonaColonia.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/eli1.png"))); // NOI18N
         jBtnEliminarZonaColonia.setText("Eliminar Colonia");
         jBtnEliminarZonaColonia.setToolTipText("");
+        jBtnEliminarZonaColonia.setContentAreaFilled(false);
+        jBtnEliminarZonaColonia.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jBtnEliminarZonaColonia.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/eli1.png"))); // NOI18N
+        jBtnEliminarZonaColonia.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/eli2.png"))); // NOI18N
         jBtnEliminarZonaColonia.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jBtnEliminarZonaColoniaActionPerformed(evt);
             }
         });
 
-        JlblImagen2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/logo_vectori.png"))); // NOI18N
+        JlblImagen2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/act_zona.png"))); // NOI18N
 
         jPnlActuaZona2.setBackground(new java.awt.Color(167, 235, 242));
 
@@ -831,8 +847,13 @@ public void agregarColoniasAZona() {
 
         jBtnActAgregarZona.setBackground(new java.awt.Color(53, 189, 242));
         jBtnActAgregarZona.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        jBtnActAgregarZona.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/continuar1.png"))); // NOI18N
         jBtnActAgregarZona.setText("Agregar Colonia");
         jBtnActAgregarZona.setToolTipText("");
+        jBtnActAgregarZona.setContentAreaFilled(false);
+        jBtnActAgregarZona.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jBtnActAgregarZona.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/continuar1.png"))); // NOI18N
+        jBtnActAgregarZona.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/continuar2.png"))); // NOI18N
         jBtnActAgregarZona.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jBtnActAgregarZonaActionPerformed(evt);
@@ -844,39 +865,38 @@ public void agregarColoniasAZona() {
         jPnlEliZonaLayout.setHorizontalGroup(
             jPnlEliZonaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPnlEliZonaLayout.createSequentialGroup()
-                .addGap(45, 45, 45)
+                .addGap(44, 44, 44)
                 .addComponent(JlblImagen2, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPnlEliZonaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPnlEliZonaLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPnlEliZonaLayout.createSequentialGroup()
+                        .addComponent(jBtnActAgregarZona, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 61, Short.MAX_VALUE)
+                        .addComponent(jBtnEliminarZonaColonia, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(33, 33, 33))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPnlEliZonaLayout.createSequentialGroup()
                         .addComponent(jPnlActuaZona2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPnlEliZonaLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 62, Short.MAX_VALUE)
-                        .addGroup(jPnlEliZonaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPnlEliZonaLayout.createSequentialGroup()
-                                .addComponent(jBtnActAgregarZona)
-                                .addGap(60, 60, 60)
-                                .addComponent(jBtnEliminarZonaColonia)
-                                .addGap(61, 61, 61))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPnlEliZonaLayout.createSequentialGroup()
-                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 429, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(25, 25, 25))))))
+                        .addGap(99, 99, 99))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPnlEliZonaLayout.createSequentialGroup()
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 429, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(22, 22, 22))))
         );
         jPnlEliZonaLayout.setVerticalGroup(
             jPnlEliZonaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPnlEliZonaLayout.createSequentialGroup()
-                .addGap(19, 19, 19)
+                .addContainerGap()
                 .addComponent(jPnlActuaZona2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(jPnlEliZonaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jBtnEliminarZonaColonia)
-                    .addComponent(jBtnActAgregarZona))
-                .addGap(29, 29, 29)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                .addGap(19, 19, 19))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPnlEliZonaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jBtnEliminarZonaColonia, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPnlEliZonaLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jBtnActAgregarZona, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 126, Short.MAX_VALUE)
+                .addContainerGap())
             .addGroup(jPnlEliZonaLayout.createSequentialGroup()
-                .addGap(41, 41, 41)
+                .addGap(61, 61, 61)
                 .addComponent(JlblImagen2, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -969,42 +989,54 @@ public void agregarColoniasAZona() {
 
         jBtnEliminarZona.setBackground(new java.awt.Color(53, 189, 242));
         jBtnEliminarZona.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        jBtnEliminarZona.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/eli1.png"))); // NOI18N
         jBtnEliminarZona.setText("Eliminar zona");
         jBtnEliminarZona.setToolTipText("");
+        jBtnEliminarZona.setContentAreaFilled(false);
+        jBtnEliminarZona.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+        jBtnEliminarZona.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/eli1.png"))); // NOI18N
+        jBtnEliminarZona.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/eli2.png"))); // NOI18N
         jBtnEliminarZona.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jBtnEliminarZonaActionPerformed(evt);
             }
         });
 
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/el_zona.png"))); // NOI18N
+
         javax.swing.GroupLayout jPnlAgrZonaLayout = new javax.swing.GroupLayout(jPnlAgrZona);
         jPnlAgrZona.setLayout(jPnlAgrZonaLayout);
         jPnlAgrZonaLayout.setHorizontalGroup(
             jPnlAgrZonaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPnlAgrZonaLayout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 377, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(jPnlAgrZonaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPnlAgrZonaLayout.createSequentialGroup()
-                        .addGap(52, 52, 52)
-                        .addComponent(jPnlBusquedaZona2, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(96, Short.MAX_VALUE))
+                .addGap(36, 36, 36)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 343, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPnlAgrZonaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPnlAgrZonaLayout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jBtnEliminarZona)
-                        .addGap(160, 160, 160))))
+                        .addComponent(jPnlBusquedaZona2, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(74, 74, 74))
+                    .addGroup(jPnlAgrZonaLayout.createSequentialGroup()
+                        .addGap(49, 49, 49)
+                        .addComponent(jBtnEliminarZona, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
+                        .addComponent(jLabel1)
+                        .addGap(35, 35, 35))))
         );
         jPnlAgrZonaLayout.setVerticalGroup(
             jPnlAgrZonaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPnlAgrZonaLayout.createSequentialGroup()
-                .addGap(38, 38, 38)
-                .addGroup(jPnlAgrZonaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPnlAgrZonaLayout.createSequentialGroup()
-                        .addComponent(jPnlBusquedaZona2, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(36, 36, 36)
-                        .addComponent(jBtnEliminarZona)))
-                .addContainerGap(44, Short.MAX_VALUE))
+                .addGap(72, 72, 72)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPnlAgrZonaLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPnlBusquedaZona2, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(jPnlAgrZonaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel1)
+                    .addComponent(jBtnEliminarZona, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(117, 117, 117))
         );
 
         jTbPnlMenuZonas.addTab("Eliminar zona", jPnlAgrZona);
@@ -1091,6 +1123,7 @@ public void agregarColoniasAZona() {
     private javax.swing.JButton jBtnEliminarZonaColonia;
     private javax.swing.JButton jBtnIngGuardarZona;
     private javax.swing.JComboBox<String> jCmBoxNumColonias1;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLblActNumZona2;
     private javax.swing.JLabel jLblActZona2;
     private javax.swing.JLabel jLblBNumZona;
