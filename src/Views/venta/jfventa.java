@@ -46,6 +46,7 @@ public class jfventa extends javax.swing.JFrame {
     private static String[] datosVenta;
     private ArrayList<String[]> datosKardex = new ArrayList<>();
     private ArrayList<String[]> datosAgregar = new ArrayList<>();
+    private ArrayList<String[]> datosProducto = new ArrayList<>();
     private ArrayList<String[]> datosPago = new ArrayList<>();
     private DefaultComboBoxModel<String> listasCombos;
     private ArrayList<String> datosCombos = new ArrayList<>();
@@ -169,6 +170,20 @@ public class jfventa extends javax.swing.JFrame {
 
         } catch (SQLException e) {
             CUtilitarios.msg_error("Error al cargar datos de la venta", "Error");
+        }
+    }
+
+    //Cargar tabla con los productos de la venta
+    private void cargarTablaConProducto() {
+        modelCarga = (DefaultTableModel) jTblAgregarVenta.getModel();
+        try {
+            folioVenta = jTxtFFolioVenta.getText().trim();
+            datosProducto = cbus.buscarProductoDeLaVenta(folioVenta);
+            for (String[] datoProd : datosProducto) {
+                modelCarga.addRow(new Object[]{datoProd[0], datoProd[1], datoProd[2]});
+            }
+        } catch (Exception e) {
+            CUtilitarios.msg_error("No se pudo cargar la tabla", "Carga de tabla de productos de la venta");
         }
     }
 
@@ -2002,16 +2017,7 @@ public class jfventa extends javax.swing.JFrame {
 
     private void jTxtFFolioVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTxtFFolioVentaActionPerformed
         EventoBuscarPorID();
-        modelCarga = (DefaultTableModel) jTblAgregarVenta.getModel();
-        try {
-            folioVenta = jTxtFFolioVenta.getText().trim();
-            datosAgregar = cbus.buscarProductoDeLaVenta(folioVenta);
-            for (String[] datoAgregar : datosAgregar) {
-                modelCarga.addRow(new Object[]{datoAgregar[0], datoAgregar[1], datoAgregar[2]});
-            }
-        } catch (Exception e) {
-            CUtilitarios.msg_error("No se pudo cargar la tabla", "Carga de tabla de agregar");
-        }
+        cargarTablaConProducto();
     }//GEN-LAST:event_jTxtFFolioVentaActionPerformed
 
     private void jBtnEliminarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnEliminarVentaActionPerformed
