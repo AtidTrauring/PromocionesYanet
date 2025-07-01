@@ -1,6 +1,5 @@
 package Views.direccion;
 
-import Views.cliente.*;
 import crud.*;
 import java.sql.*;
 import java.util.*;
@@ -23,6 +22,8 @@ public class jfnuevadirec extends javax.swing.JFrame {
     CInserciones ci = new CInserciones();
     String seleccion, colcl, idColcl;
     private String cllcl, ne, ni, nomcla, apcla, amcla, telcla;
+    private static String nombre, apMat, apPat, telefono, sueldo;
+    private static String[] coloniaZona;
     private int idc, idescl, idescla;
 
     public jfnuevadirec(String[] datosZ, String[] datosP, String[] datosEs) {
@@ -46,6 +47,16 @@ public class jfnuevadirec extends javax.swing.JFrame {
         System.out.println("Zona " + Arrays.toString(datosZ));
         System.out.println("Persona " + Arrays.toString(datosP));
         System.out.println("Estatus " + Arrays.toString(datosEs));
+    }
+
+    public static void asignaValoresEmpleado(String eNombre, String eApMat, String eApPat, String eTelefono, String eSueldo, String[] eColoniaZona) {
+        //Asignar los valores que reciba por parametro a las variables dentro del Frame
+        eNombre = nombre;
+        eApMat = apMat;
+        eApPat = apPat;
+        eTelefono = telefono;
+        eSueldo = sueldo;
+        eColoniaZona = coloniaZona;
     }
 
     private DefaultComboBoxModel listas;
@@ -269,7 +280,6 @@ public class jfnuevadirec extends javax.swing.JFrame {
                 idColcl = cb.buscarIdColonia(colcl);
                 System.out.println("ID COLONIA " + idColcl);
             } catch (SQLException ex) {
-                Logger.getLogger(jfcliente.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_jcbcolonianActionPerformed
@@ -366,6 +376,7 @@ public class jfnuevadirec extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(jfnuevadirec.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */

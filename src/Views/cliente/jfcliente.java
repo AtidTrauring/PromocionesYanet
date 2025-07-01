@@ -242,10 +242,7 @@ public final class jfcliente extends javax.swing.JFrame {
         String[] textos = {"Número de Teléfono"};
         String regex = "^\\d{10}$"; // Exactamente 10 dígitos
 
-        return CUtilitarios.validaCamposTextoNumericos(
-                campos, textos, textos, regex,
-                "El número de teléfono debe contener exactamente 10 dígitos.", "Validación de Teléfono"
-        );
+        return CUtilitarios.validarTelefono(jtfnvtel.getText());
     }
 
     private boolean validarZona() {

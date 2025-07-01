@@ -528,6 +528,9 @@
                       <Image iconType="3" name="/imagenes/continuar2.png"/>
                     </Property>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="JbtnAgregarEmpleadoActionPerformed"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>
@@ -809,6 +812,9 @@
                       <Image iconType="3" name="/imagenes/updateEmpleado2.png"/>
                     </Property>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="JbtnActualizarEmpleadoActionPerformed"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>
@@ -1120,6 +1126,9 @@
                       <Image iconType="3" name="/imagenes/deleteEmpleado2.png"/>
                     </Property>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="JbtnEliminarEmpleadoActionPerformed"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>
@@ -1577,6 +1586,9 @@
                       <Image iconType="3" name="/imagenes/asignaSueldo2.png"/>
                     </Property>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="JbtnAsignarSueldoActionPerformed"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>

@@ -1,5 +1,6 @@
 package Views.empleado;
 
+import Views.direccion.jfnuevadirec;
 import crud.CBusquedas;
 import crud.CCargaCombos;
 import java.awt.event.ItemEvent;
@@ -13,7 +14,6 @@ import javax.swing.JComboBox;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.RowFilter;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import utilitarios.CUtilitarios;
@@ -335,6 +335,78 @@ public final class JfEmpleado extends javax.swing.JFrame {
         }
     }
 
+    // Metodos CRUD
+    public void insertaEmpleado() throws SQLException {
+        // Obtener datos de los JTextField y JComboBox
+        String nombre = JtxtAgregarNombre.getText().trim();
+        String apPaterno = JtxtAgregarApPat.getText().trim();
+        String apMaterno = JtxtAgregarApMat.getText().trim();
+        String telefono = JtxtAgregarTel.getText().trim();
+        String sueldoStr = JtxtAgregarSueldo.getText().trim();
+
+        // Validar campos obligatorios con CUtilitarios
+        if (!CUtilitarios.validarNombre(nombre)) {
+            CUtilitarios.msg_advertencia("El nombre es inválido o está vacío.", "Validación");
+            JtxtAgregarNombre.requestFocus();
+            return;
+        }
+        if (!CUtilitarios.validarApellido(apPaterno)) {
+            CUtilitarios.msg_advertencia("El apellido paterno es inválido o está vacío.", "Validación");
+            JtxtAgregarApPat.requestFocus();
+            return;
+        }
+        if (!CUtilitarios.validarApellido(apMaterno)) {
+            CUtilitarios.msg_advertencia("El apellido materno es inválido o está vacío.", "Validación");
+            JtxtAgregarApMat.requestFocus();
+            return;
+        }
+        if (!CUtilitarios.validarTelefono(telefono)) {
+            CUtilitarios.msg_advertencia("El teléfono es inválido o está vacío.", "Validación");
+            JtxtAgregarTel.requestFocus();
+            return;
+        }
+        if (!CUtilitarios.validarSueldo(sueldoStr)) {
+            CUtilitarios.msg_advertencia("El sueldo es inválido o está vacío.", "Validación");
+            JtxtAgregarSueldo.requestFocus();
+            return;
+        }
+
+        // Parsear sueldo a double 
+        double sueldo = Double.parseDouble(sueldoStr);
+
+        // Obtener la colonia seleccionada en el JComboBox
+        Object itemColonia = JcmbxAgregarZonas.getSelectedItem();
+        if (itemColonia == null || itemColonia.toString().trim().isEmpty()) {
+            CUtilitarios.msg_advertencia("Selecciona una colonia válida.", "Validación");
+            JcmbxAgregarZonas.requestFocus();
+            return;
+        }
+        String[] coloniaZona = buscaColoniaZona(itemColonia.toString());
+        // Aquí ya tienes los datos listos para pasar al JFrame de dirección
+        // CreaFrame es el método que abrirá el JFrame Dirección y le pasará estos datos
+        try {
+            // Pasar datos al frame de dirección (asumo que tienes una clase JFrameDireccion o similar)
+            jfnuevadirec direccion = new jfnuevadirec(new String[]{"1"}, null, null);
+            direccion.asignaValoresEmpleado(nombre, apMaterno, apPaterno, telefono, sueldoStr, coloniaZona);
+            CUtilitarios.creaFrame(direccion, "Agreagr direccion");
+            // Opcional: ocultar o bloquear este JFrame mientras se maneja el frame dirección
+            this.setEnabled(false);
+        } catch (Exception e) {
+            CUtilitarios.msg_error("Error al abrir el formulario de dirección: " + e.getMessage(), "Error");
+        }
+    }
+
+    public String[] buscaColoniaZona(String colonia) throws SQLException {
+        ArrayList<String[]> zonas = queryCarga.cargaComboZonaColonia();
+        String[] coloniaZona = null;
+        for (String[] zona : zonas) {
+            if (zona[3].equals(colonia)) {
+                coloniaZona = zona;
+            }
+        }
+        return coloniaZona;
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -610,6 +682,11 @@ public final class JfEmpleado extends javax.swing.JFrame {
         JbtnAgregarEmpleado.setMinimumSize(new java.awt.Dimension(61, 55));
         JbtnAgregarEmpleado.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/continuar1.png"))); // NOI18N
         JbtnAgregarEmpleado.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/continuar2.png"))); // NOI18N
+        JbtnAgregarEmpleado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JbtnAgregarEmpleadoActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout JpnlCamposAgregarLayout = new javax.swing.GroupLayout(JpnlCamposAgregar);
         JpnlCamposAgregar.setLayout(JpnlCamposAgregarLayout);
@@ -738,6 +815,11 @@ public final class JfEmpleado extends javax.swing.JFrame {
         JbtnActualizarEmpleado.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         JbtnActualizarEmpleado.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/updateEmpleado1.png"))); // NOI18N
         JbtnActualizarEmpleado.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/updateEmpleado2.png"))); // NOI18N
+        JbtnActualizarEmpleado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JbtnActualizarEmpleadoActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout JpnlCamposActualizaLayout = new javax.swing.GroupLayout(JpnlCamposActualiza);
         JpnlCamposActualiza.setLayout(JpnlCamposActualizaLayout);
@@ -952,6 +1034,11 @@ public final class JfEmpleado extends javax.swing.JFrame {
         JbtnEliminarEmpleado.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         JbtnEliminarEmpleado.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/deleteEmpleado1.png"))); // NOI18N
         JbtnEliminarEmpleado.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/deleteEmpleado2.png"))); // NOI18N
+        JbtnEliminarEmpleado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JbtnEliminarEmpleadoActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout JpnlCamposDeleteLayout = new javax.swing.GroupLayout(JpnlCamposDelete);
         JpnlCamposDelete.setLayout(JpnlCamposDeleteLayout);
@@ -1208,6 +1295,11 @@ public final class JfEmpleado extends javax.swing.JFrame {
         JbtnAsignarSueldo.setContentAreaFilled(false);
         JbtnAsignarSueldo.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/asignaSueldo1.png"))); // NOI18N
         JbtnAsignarSueldo.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/asignaSueldo2.png"))); // NOI18N
+        JbtnAsignarSueldo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JbtnAsignarSueldoActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout JpnlCamposASueldosLayout = new javax.swing.GroupLayout(JpnlCamposASueldos);
         JpnlCamposASueldos.setLayout(JpnlCamposASueldosLayout);
@@ -1387,6 +1479,30 @@ public final class JfEmpleado extends javax.swing.JFrame {
             aplicarFiltrosSueldos();
         }
     }//GEN-LAST:event_JcmbxSldSueldoItemStateChanged
+
+    private void JbtnAgregarEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JbtnAgregarEmpleadoActionPerformed
+        try {
+            // Inserta
+            insertaEmpleado();
+        } catch (SQLException ex) {
+            Logger.getLogger(JfEmpleado.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_JbtnAgregarEmpleadoActionPerformed
+
+    private void JbtnActualizarEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JbtnActualizarEmpleadoActionPerformed
+        // Actualiza
+
+    }//GEN-LAST:event_JbtnActualizarEmpleadoActionPerformed
+
+    private void JbtnEliminarEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JbtnEliminarEmpleadoActionPerformed
+        // Elimina
+
+    }//GEN-LAST:event_JbtnEliminarEmpleadoActionPerformed
+
+    private void JbtnAsignarSueldoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JbtnAsignarSueldoActionPerformed
+        // Inserta - Sueldos
+
+    }//GEN-LAST:event_JbtnAsignarSueldoActionPerformed
 
     public static void main(String args[]) {
         // <editor-fold defaultstate="collapsed" desc="Generated Code">
