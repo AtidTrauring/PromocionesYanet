@@ -92,6 +92,15 @@ public final class jfcliente extends javax.swing.JFrame {
         }
     }
 
+    private boolean comboContieneItem(JComboBox<String> combo, String item) {
+        for (int i = 0; i < combo.getItemCount(); i++) {
+            if (combo.getItemAt(i).equalsIgnoreCase(item)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void configurarEventosTablaActualizar() {
         jtlistaclienteavalact.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
@@ -112,24 +121,28 @@ public final class jfcliente extends javax.swing.JFrame {
 
                             // Activar combo cliente
                             jcbactestatuscliente.setEnabled(true);
-                            cargaComboBox(jcbactestatuscliente, 1);
-                            jcbactestatuscliente.setSelectedItem(esttabla); // set valor actual del cliente
+                            if (!comboContieneItem(jcbactestatuscliente, esttabla)) {
+                                cargaComboBox(jcbactestatuscliente, 1);
+                            }
+                            jcbactestatuscliente.setSelectedItem(esttabla);
 
                             // Desactivar y resetear combo aval
                             jcbactestatusaval.setEnabled(false);
-                            jcbactestatusaval.setSelectedIndex(0); // "Estatus Aval" (asumiendo que es el primer valor)
+                            jcbactestatusaval.setSelectedIndex(0);
 
                         } else if (tipo.equalsIgnoreCase("Aval")) {
                             jrbactaval.setSelected(true);
 
                             // Activar combo aval
                             jcbactestatusaval.setEnabled(true);
-                            cargaComboBox(jcbactestatusaval, 1);
-                            jcbactestatusaval.setSelectedItem(esttabla); // set valor actual del aval
+                            if (!comboContieneItem(jcbactestatusaval, esttabla)) {
+                                cargaComboBox(jcbactestatusaval, 1);
+                            }
+                            jcbactestatusaval.setSelectedItem(esttabla);
 
                             // Desactivar y resetear combo cliente
                             jcbactestatuscliente.setEnabled(false);
-                            jcbactestatuscliente.setSelectedIndex(0); // "Estatus Cliente"
+                            jcbactestatuscliente.setSelectedIndex(0);
                         }
 
                         if (tipo.equalsIgnoreCase("Cliente")) {
@@ -144,10 +157,14 @@ public final class jfcliente extends javax.swing.JFrame {
                             CUtilitarios.msg_error("Tipo no reconocido (ni cliente ni aval)", "Error");
                         }
 
-                        // Cargar el combo de Zona y seleccionar la actual
-                        cargaComboBox(jcbactzona, 2); // Método que carga todas las zonas disponibles
-                        jcbactzona.setSelectedItem(zona); // Selecciona la zona actual
+                        // Solo cargar zonas si no existe el valor ya cargado
+                        if (!comboContieneItem(jcbactzona, zona)) {
+                            cargaComboBox(jcbactzona, 2);
+                        }
+                        jcbactzona.setSelectedItem(zona);
+
                     } catch (SQLException e) {
+                        CUtilitarios.msg_error("Error de base de datos:\n" + e.getMessage(), "Error SQL");
                     }
                 }
             }
