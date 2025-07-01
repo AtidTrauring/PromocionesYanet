@@ -21,6 +21,7 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.RowFilter;
@@ -58,7 +59,7 @@ public class jfventa extends javax.swing.JFrame {
     private CEliminaciones cEli = new CEliminaciones();
     List<String> idAvalesSeleccionado = new ArrayList<>();
     //Estas variables son para pasar al panel del cobrador, se usa para manejar los paneles dentro del mismo frame.
-    
+    //private JTabbedPane tabbedPanePrincipal; 
 
     public jfventa(String[] datos) {
         initComponents();
@@ -92,6 +93,8 @@ public class jfventa extends javax.swing.JFrame {
         ButtonGroup grupoPagos = new ButtonGroup();
         grupoPagos.add(jRadButActualizarPago);
         grupoPagos.add(jRadButGuardarPago);
+        //Se iguala la variable creada del tabbedPane con el del diseño
+        //tabbedPanePrincipal = jTbdPMenuVentas;
     }
 
     //Limpia la tabla de la busqueda.
@@ -139,7 +142,6 @@ public class jfventa extends javax.swing.JFrame {
             CUtilitarios.msg_error("No se pudo cargar la tabla", "Carga de tabla de agregar");
         }
     }
-
 
     private void cargarTablaPagos(String idVenta) {
         try {
@@ -214,77 +216,76 @@ public class jfventa extends javax.swing.JFrame {
         jCmbBoxAgAcCobradorVentaPago.setSelectedIndex(-1);
     }
 
-private void actualizarPago() {
-    try {
-        String idVenta = jTxtFAgAcFolioVentaPago.getText().trim();
-        if (idVenta.isEmpty()) {
-            return;
-        }
-
-        // Validaa que el monto sea número entero
-        String montoTexto = jTxtFAgAcPagosPago.getText().trim();
-        if (!montoTexto.matches("^[0-9]+$")) {
-            CUtilitarios.msg_advertencia("El monto debe contener solo números enteros", "Validación");
-            return;
-        }
-
-        double nuevoPago = Double.parseDouble(montoTexto);
-
-        java.util.Date nuevaFecha = jDateChoPago.getDate();
-        if (nuevaFecha == null) {
-            CUtilitarios.msg_advertencia("Debe seleccionar una fecha válida", "Validación");
-            return;
-        }
-
-        // Validaa que la fecha del pago no sea anterior a la fecha de la venta
-        String fechaVentaStr = cbus.buscarFechaVentaPorId(idVenta);
-        if (fechaVentaStr != null) {
-            java.util.Date fechaVenta = java.sql.Date.valueOf(fechaVentaStr);
-            if (nuevaFecha.before(fechaVenta)) {
-                CUtilitarios.msg_advertencia("La fecha del pago no puede ser anterior a la fecha de la venta (" +
-                        new SimpleDateFormat("dd/MM/yyyy").format(fechaVenta) + ")", "Validación");
+    private void actualizarPago() {
+        try {
+            String idVenta = jTxtFAgAcFolioVentaPago.getText().trim();
+            if (idVenta.isEmpty()) {
                 return;
             }
+
+            // Validaa que el monto sea número entero
+            String montoTexto = jTxtFAgAcPagosPago.getText().trim();
+            if (!montoTexto.matches("^[0-9]+$")) {
+                CUtilitarios.msg_advertencia("El monto debe contener solo números enteros", "Validación");
+                return;
+            }
+
+            double nuevoPago = Double.parseDouble(montoTexto);
+
+            java.util.Date nuevaFecha = jDateChoPago.getDate();
+            if (nuevaFecha == null) {
+                CUtilitarios.msg_advertencia("Debe seleccionar una fecha válida", "Validación");
+                return;
+            }
+
+            // Validaa que la fecha del pago no sea anterior a la fecha de la venta
+            String fechaVentaStr = cbus.buscarFechaVentaPorId(idVenta);
+            if (fechaVentaStr != null) {
+                java.util.Date fechaVenta = java.sql.Date.valueOf(fechaVentaStr);
+                if (nuevaFecha.before(fechaVenta)) {
+                    CUtilitarios.msg_advertencia("La fecha del pago no puede ser anterior a la fecha de la venta ("
+                            + new SimpleDateFormat("dd/MM/yyyy").format(fechaVenta) + ")", "Validación");
+                    return;
+                }
+            }
+
+            // Obtener datos del último pago
+            String[] datosUltimoPago = cbus.buscarIdUltimoPagoYValores(idVenta);
+            if (datosUltimoPago == null) {
+                return;
+            }
+
+            String idPago = datosUltimoPago[0];
+            double pagoAnterior = Double.parseDouble(datosUltimoPago[1]);
+            double restanteAnterior = Double.parseDouble(datosUltimoPago[2]);
+
+            // Validar que el nuevo pago no ase el total restante
+            double nuevoRestante = restanteAnterior + pagoAnterior - nuevoPago;
+
+            if (nuevoPago > (restanteAnterior + pagoAnterior)) {
+                double restanteCalculado = restanteAnterior + pagoAnterior;
+                CUtilitarios.msg_advertencia("El pago ingresado excede lo que resta por pagar. "
+                        + "El restante actual es: $" + restanteCalculado, "Validación");
+                return;
+            }
+
+            // Convertir la fecha a string
+            String nuevaFechaStr = new SimpleDateFormat("yyyy-MM-dd").format(nuevaFecha);
+
+            cActu.actualizarPago(idPago, nuevoPago, nuevaFechaStr, nuevoRestante);
+            cargarTablaPagos(idVenta);
+
+            CUtilitarios.msg("Pago actualizado correctamente", "Actualizar");
+
+            // si el restante ha llegado a 0
+            if (nuevoRestante == 0) {
+                CUtilitarios.msg("La cuenta ha sido pagada completamente con este pago.", "Cuenta saldada");
+            }
+
+        } catch (Exception e) {
+            CUtilitarios.msg_error("Error al actualizar el pago:\n" + e.getMessage(), "Error");
         }
-
-        // Obtener datos del último pago
-        String[] datosUltimoPago = cbus.buscarIdUltimoPagoYValores(idVenta);
-        if (datosUltimoPago == null) {
-            return;
-        }
-
-        String idPago = datosUltimoPago[0];
-        double pagoAnterior = Double.parseDouble(datosUltimoPago[1]);
-        double restanteAnterior = Double.parseDouble(datosUltimoPago[2]);
-
-        // Validar que el nuevo pago no ase el total restante
-        double nuevoRestante = restanteAnterior + pagoAnterior - nuevoPago;
-
-        if (nuevoPago > (restanteAnterior + pagoAnterior)) {
-            double restanteCalculado = restanteAnterior + pagoAnterior;
-            CUtilitarios.msg_advertencia("El pago ingresado excede lo que resta por pagar. " +
-                    "El restante actual es: $" + restanteCalculado, "Validación");
-            return;
-        }
-
-        // Convertir la fecha a string
-        String nuevaFechaStr = new SimpleDateFormat("yyyy-MM-dd").format(nuevaFecha);
-
-        cActu.actualizarPago(idPago, nuevoPago, nuevaFechaStr, nuevoRestante);
-        cargarTablaPagos(idVenta);
-
-        CUtilitarios.msg("Pago actualizado correctamente", "Actualizar");
-
-        // si el restante ha llegado a 0
-        if (nuevoRestante == 0) {
-            CUtilitarios.msg("La cuenta ha sido pagada completamente con este pago.", "Cuenta saldada");
-        }
-
-    } catch (Exception e) {
-        CUtilitarios.msg_error("Error al actualizar el pago:\n" + e.getMessage(), "Error");
     }
-}
-
 
     //Carga de los combos. 
     public void cargarCombos(JComboBox<String> combo, int metodoCarga) {
@@ -669,6 +670,16 @@ private void actualizarPago() {
         pagoSeleccionado = jTxtFAgAcPagosPago.getText().trim();
         restanteSeleccionado = jTxtFAgAcRestantePago.getText().trim();
     }
+    
+    //Este metodo va a cambiar de la pestaña de la venta a la de cobrador. 
+//    private void cambiarPestaña(String tituloPestaña) {
+//        for (int i = 0; i < tabbedPanePrincipal.getTabCount(); i++) { //Recorrera todas las pestañas, el gesTabCount devuelve el numero total de pestañas
+//            if (tabbedPanePrincipal.getTitleAt(i).equals(tituloPestaña)) { //Comparara si el titulo obtenido es igual al buscado
+//                tabbedPanePrincipal.setSelectedIndex(i); //Hace visible la pestaña buscada por el indice
+//                break;
+//            }
+//        }
+//    }
 
     public void agregarVenta() throws SQLException {
         valoresObtenidos();
@@ -720,6 +731,7 @@ private void actualizarPago() {
                     cuti.msg("Venta insertada correctamente", "Registro de venta");
                     cargarTablaBusqueda();
                     cargarTablaPagos(folioVenta);
+                    //tabbedPanePrincipal.setSelectedIndex(3); //Cambia al panel del cobrador
                 } else {
                 }
             } catch (Exception e) {
@@ -978,96 +990,96 @@ private void actualizarPago() {
         }
     }
 
-private void agregarPago() {
-    try {
-        String idVenta = jTxtFAgAcFolioVentaPago.getText().trim();
-        String montoPagoStr = jTxtFAgAcPagosPago.getText().trim();
-        String nombreCobrador = (jCmbBoxAgAcCobradorVentaPago.getSelectedItem() != null)
-                ? jCmbBoxAgAcCobradorVentaPago.getSelectedItem().toString()
-                : "";
+    private void agregarPago() {
+        try {
+            String idVenta = jTxtFAgAcFolioVentaPago.getText().trim();
+            String montoPagoStr = jTxtFAgAcPagosPago.getText().trim();
+            String nombreCobrador = (jCmbBoxAgAcCobradorVentaPago.getSelectedItem() != null)
+                    ? jCmbBoxAgAcCobradorVentaPago.getSelectedItem().toString()
+                    : "";
 
-        java.util.Date fecha = jDateChoPago.getDate();
-        if (fecha == null) {
-            CUtilitarios.msg_advertencia("Debe seleccionar una fecha válida", "Validación");
-            return;
-        }
-        String fechaPago = new SimpleDateFormat("yyyy-MM-dd").format(fecha);
-
-        // Validar monto
-        if (!montoPagoStr.matches("^[0-9]+$")) {
-            CUtilitarios.msg_advertencia("El monto debe contener solo números enteros", "Validación");
-            return;
-        }
-
-        int pagoActual = Integer.parseInt(montoPagoStr);
-
-        // Validar cobrador
-        if (nombreCobrador.isEmpty()) {
-            CUtilitarios.msg_advertencia("Debe seleccionar un cobrador", "Validación");
-            return;
-        }
-
-        String idCobrador = cbus.buscarIdEmpleadoPorNombre(nombreCobrador);
-        if (idCobrador == null) {
-            CUtilitarios.msg_advertencia("No se encontró el ID del cobrador", "Error");
-            return;
-        }
-
-        // Validar que la fecha del pago no sea anterior a la fecha de la venta
-        String fechaVentaStr = cbus.buscarFechaVentaPorId(idVenta);
-        if (fechaVentaStr != null) {
-            java.util.Date fechaVenta = java.sql.Date.valueOf(fechaVentaStr);
-            if (fecha.before(fechaVenta)) {
-                CUtilitarios.msg_advertencia("La fecha del pago no puede ser anterior a la fecha de la venta (" +
-                        new SimpleDateFormat("dd/MM/yyyy").format(fechaVenta) + ")", "Validación");
+            java.util.Date fecha = jDateChoPago.getDate();
+            if (fecha == null) {
+                CUtilitarios.msg_advertencia("Debe seleccionar una fecha válida", "Validación");
                 return;
             }
-        }
+            String fechaPago = new SimpleDateFormat("yyyy-MM-dd").format(fecha);
 
-        // Obtener total de la venta
-        String totalStr = cbus.buscarTotalVentaPorId(idVenta);
-        if (totalStr == null) {
-            CUtilitarios.msg_advertencia("No se encontró el total de la venta", "Error");
-            return;
-        }
-        int total = Integer.parseInt(totalStr);
-
-        // Obtener suma de pagos anteriores
-        String sumaPagosStr = cbus.buscarSumaPagosPorVenta(idVenta);
-        int sumaPagos = (sumaPagosStr == null) ? 0 : Integer.parseInt(sumaPagosStr);
-
-        // Valida si ya está pagada la cuenta
-        if (sumaPagos >= total) {
-            CUtilitarios.msg_advertencia("La cuenta ya ha sido pagada completamente", "Validación");
-            return;
-        }
-
-        // Calcular restante después del pago actual
-        int nuevoRestante = total - (sumaPagos + pagoActual);
-
-        if (nuevoRestante < 0) {
-            CUtilitarios.msg_advertencia("El pago ingresado excede el restante. Restante actual: $" + (total - sumaPagos), "Validación");
-            return;
-        }
-
-        // Insertar pago
-        if (cInser.insertarPago(idVenta, montoPagoStr, String.valueOf(nuevoRestante), fechaPago, idCobrador)) {
-            CUtilitarios.msg("Pago insertado correctamente", "Registro de pago");
-            cargarTablaPagos(idVenta);
-            limpiarInsCamposPago();
-
-            if (nuevoRestante == 0) {
-                CUtilitarios.msg("La cuenta ha sido pagada completamente con este pago.", "Cuenta saldada");
+            // Validar monto
+            if (!montoPagoStr.matches("^[0-9]+$")) {
+                CUtilitarios.msg_advertencia("El monto debe contener solo números enteros", "Validación");
+                return;
             }
 
-        } else {
-            CUtilitarios.msg_advertencia("No se pudo insertar el pago", "Error");
-        }
+            int pagoActual = Integer.parseInt(montoPagoStr);
 
-    } catch (Exception e) {
-        CUtilitarios.msg_error("Error al insertar el pago:\n" + e.getMessage(), "Error");
+            // Validar cobrador
+            if (nombreCobrador.isEmpty()) {
+                CUtilitarios.msg_advertencia("Debe seleccionar un cobrador", "Validación");
+                return;
+            }
+
+            String idCobrador = cbus.buscarIdEmpleadoPorNombre(nombreCobrador);
+            if (idCobrador == null) {
+                CUtilitarios.msg_advertencia("No se encontró el ID del cobrador", "Error");
+                return;
+            }
+
+            // Validar que la fecha del pago no sea anterior a la fecha de la venta
+            String fechaVentaStr = cbus.buscarFechaVentaPorId(idVenta);
+            if (fechaVentaStr != null) {
+                java.util.Date fechaVenta = java.sql.Date.valueOf(fechaVentaStr);
+                if (fecha.before(fechaVenta)) {
+                    CUtilitarios.msg_advertencia("La fecha del pago no puede ser anterior a la fecha de la venta ("
+                            + new SimpleDateFormat("dd/MM/yyyy").format(fechaVenta) + ")", "Validación");
+                    return;
+                }
+            }
+
+            // Obtener total de la venta
+            String totalStr = cbus.buscarTotalVentaPorId(idVenta);
+            if (totalStr == null) {
+                CUtilitarios.msg_advertencia("No se encontró el total de la venta", "Error");
+                return;
+            }
+            int total = Integer.parseInt(totalStr);
+
+            // Obtener suma de pagos anteriores
+            String sumaPagosStr = cbus.buscarSumaPagosPorVenta(idVenta);
+            int sumaPagos = (sumaPagosStr == null) ? 0 : Integer.parseInt(sumaPagosStr);
+
+            // Valida si ya está pagada la cuenta
+            if (sumaPagos >= total) {
+                CUtilitarios.msg_advertencia("La cuenta ya ha sido pagada completamente", "Validación");
+                return;
+            }
+
+            // Calcular restante después del pago actual
+            int nuevoRestante = total - (sumaPagos + pagoActual);
+
+            if (nuevoRestante < 0) {
+                CUtilitarios.msg_advertencia("El pago ingresado excede el restante. Restante actual: $" + (total - sumaPagos), "Validación");
+                return;
+            }
+
+            // Insertar pago
+            if (cInser.insertarPago(idVenta, montoPagoStr, String.valueOf(nuevoRestante), fechaPago, idCobrador)) {
+                CUtilitarios.msg("Pago insertado correctamente", "Registro de pago");
+                cargarTablaPagos(idVenta);
+                limpiarInsCamposPago();
+
+                if (nuevoRestante == 0) {
+                    CUtilitarios.msg("La cuenta ha sido pagada completamente con este pago.", "Cuenta saldada");
+                }
+
+            } else {
+                CUtilitarios.msg_advertencia("No se pudo insertar el pago", "Error");
+            }
+
+        } catch (Exception e) {
+            CUtilitarios.msg_error("Error al insertar el pago:\n" + e.getMessage(), "Error");
+        }
     }
-}
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
