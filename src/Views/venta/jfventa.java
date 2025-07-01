@@ -39,6 +39,7 @@ public class jfventa extends javax.swing.JFrame {
     private DefaultTableModel modelBusqueda;
     private DefaultTableModel modelAgregar;
     private DefaultTableModel modelPagos;
+    private DefaultTableModel modelCarga;
     private CBusquedas cbus = new CBusquedas();
     private CUtilitarios cuti = new CUtilitarios();
     private TableRowSorter tr;
@@ -705,7 +706,7 @@ public class jfventa extends javax.swing.JFrame {
                     return;
                 }
             }
-            
+
             //Esta parte del codigo va a servir para el total de la venta
             List<String[]> productosVenta = new ArrayList<>();
             DefaultTableModel modelo = (DefaultTableModel) jTblAgregarVenta.getModel();
@@ -748,7 +749,7 @@ public class jfventa extends javax.swing.JFrame {
                     cuti.msg("Venta insertada correctamente", "Registro de venta");
                     cargarTablaBusqueda();
                     cargarTablaPagos(folioVenta);
-                    tabbedPanePrincipal.setSelectedIndex(2); //Cambia al panel del cobrador
+                    tabbedPanePrincipal.setSelectedIndex(2); //Cambia al panel del pago, qque tiene el indice 2
                 } else {
                 }
             } catch (Exception e) {
@@ -2001,6 +2002,16 @@ public class jfventa extends javax.swing.JFrame {
 
     private void jTxtFFolioVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTxtFFolioVentaActionPerformed
         EventoBuscarPorID();
+        modelCarga = (DefaultTableModel) jTblAgregarVenta.getModel();
+        try {
+            folioVenta = jTxtFFolioVenta.getText().trim();
+            datosAgregar = cbus.buscarProductoDeLaVenta(folioVenta);
+            for (String[] datoAgregar : datosAgregar) {
+                modelCarga.addRow(new Object[]{datoAgregar[0], datoAgregar[1], datoAgregar[2]});
+            }
+        } catch (Exception e) {
+            CUtilitarios.msg_error("No se pudo cargar la tabla", "Carga de tabla de agregar");
+        }
     }//GEN-LAST:event_jTxtFFolioVentaActionPerformed
 
     private void jBtnEliminarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnEliminarVentaActionPerformed

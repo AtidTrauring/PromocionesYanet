@@ -589,7 +589,7 @@ public class CBusquedas {
         consulta = "CALL zonaPorPersona (" + ipr + ")";
         return cnslt.buscarValor(consulta);
     }
-    
+
     private Connection conn = null;
     private final CConecta conector = new CConecta();
     private PreparedStatement stmt = null; //Capacidad para traducir las query
@@ -871,5 +871,14 @@ public class CBusquedas {
     public String buscaTotalVentaID(String idVenta) throws SQLException {
         String consulta = "SELECT venta.total FROM venta WHERE venta.Idventa = '" + idVenta + "';";
         return cnslt.buscarValor(consulta);
+    }
+
+    public ArrayList<String[]> buscarProductoDeLaVenta(String idVenta) throws SQLException {
+        consulta = "SELECT producto.idproducto, producto.producto, producto.precio "
+                + "FROM venta_has_producto "
+                + "INNER JOIN producto ON venta_has_producto.producto_idproducto = producto.idproducto "
+                + "INNER JOIN venta ON venta_has_producto.venta_Idventa = venta.Idventa "
+                + "WHERE venta_has_producto.venta_Idventa = '" + idVenta + "';";
+        return cnslt.buscarValores(consulta, 3);
     }
 }
