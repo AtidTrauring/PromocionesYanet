@@ -175,19 +175,31 @@ public class jfventa extends javax.swing.JFrame {
 
     //Cargar tabla con los productos de la venta
     private void cargarTablaConProducto() {
-        modelCarga = (DefaultTableModel) jTblAgregarVenta.getModel();
         try {
+            //Se intenta cargar un mmodelo nuevo, respetando el diseño
+            modelCarga = (DefaultTableModel) jTblAgregarVenta.getModel();
+            modelCarga.addColumn("id");
+            modelCarga.addColumn("producto");
+            modelCarga.addColumn("precio");
+            //Se asigna el modelo a la tabla de agregar
+            jTblAgregarVenta.setModel(modelCarga);
+            
+            //Se obtiene lo ingresado en el testfield.
             folioVenta = jTxtFFolioVenta.getText().trim();
             datosProducto = cbus.buscarProductoDeLaVenta(folioVenta);
+            //Se imprimen los arreglos
             System.out.println(folioVenta);
             limpiarTablaAgregar();
-
+           int i = 0;
             for (String[] datoProd : datosProducto) {
                 System.out.println(Arrays.toString(datoProd));
-               modelCarga.addRow(new Object[]{datoProd[0], datoProd[1], datoProd[2]});
-                modelCarga.addRow(datoProd);
+                
+                modelCarga.addRow(new Object[]{datoProd[0], datoProd[1], datoProd[2]});
+                //Se comenta porque se sobrecargarian dos veces la tabla. 
+                //modelCarga.addRow(datoProd);
+                
             }
-            //jTblAgregarVenta.setModel(modelCarga);
+            
         } catch (Exception e) {
             CUtilitarios.msg_error("No se pudo cargar la tabla", "Carga de tabla de productos de la venta");
         }
@@ -2051,18 +2063,18 @@ public class jfventa extends javax.swing.JFrame {
     }//GEN-LAST:event_jBtnActualizarPagoActionPerformed
 
     private void jTxtFFolioVentaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTxtFFolioVentaKeyReleased
-        String id = jTxtFFolioVenta.getText().trim();
-        if (!id.isEmpty()) {
+        
             try {
-                llenarCamposPorID(id);
-                cargarTablaConProducto();
+                String id = jTxtFFolioVenta.getText().trim();
+                if (!id.isEmpty()) {
+                    llenarCamposPorID(id);
+                    cargarTablaConProducto();
+                    } else {
+                        limpiarCampos();
+                    }
             } catch (SQLException ex) {
                 Logger.getLogger(jfventa.class.getName()).log(Level.SEVERE, null, ex);
             }
-
-        } else {
-            limpiarCampos();
-        }
     }//GEN-LAST:event_jTxtFFolioVentaKeyReleased
 
     /**
