@@ -175,4 +175,11 @@ public boolean insertarZona(String idZona) throws SQLException {
                 "VALUES ('" + idEmpleado + "','" + idVenta + "','" + pago + "','" + restante + "','" + fechaPago + "');";
         return cnslt.inserta(consulta);
     }
+    
+    public boolean insertaProductoConVenta(String idVenta, String idProducto) throws SQLException {
+            consulta = "INSERT INTO venta_has_producto(venta_Idventa, producto_idproducto) " +
+                    "VALUES ('" + idVenta + "','" + idProducto + "');";
+            System.out.println(consulta);
+        return cnslt.inserta(consulta);
+    }
 }

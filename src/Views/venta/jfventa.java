@@ -9,6 +9,7 @@ import crud.CEliminaciones;
 import crud.CInserciones;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -455,10 +456,10 @@ public class jfventa extends javax.swing.JFrame {
                 && !validaCamposVenta(jTxtFTotalVenta, "^[0-9]+$", "El total está vacío", "Solo se aceptan números en el total")) {
             return false;
         }
-        if (jTxtFFolioProductoVenta.isEnabled()
-                && !validaCamposVenta(jTxtFFolioProductoVenta, "^[0-9]+$", "El folio del producto está vacío", "Solo se aceptan números en el folio del producto")) {
-            return false;
-        }
+//        if (jTxtFFolioProductoVenta.isEnabled()
+//                && !validaCamposVenta(jTxtFFolioProductoVenta, "^[0-9]+$", "El folio del producto está vacío", "Solo se aceptan números en el folio del producto")) {
+//            return false;
+//        }
         if (jDteChoVenta.isEnabled()
                 && !validaCamposVenta(jDteChoVenta, null, "No se escogió una fecha", null)) {
             return false;
@@ -515,7 +516,7 @@ public class jfventa extends javax.swing.JFrame {
         return sdf.format(fecha);
     }
 
-    //Obtiene los valores que se insegren del usuario
+    //Obtiene los valores que se ingresen del usuario
     public void valoresObtenidos() {
         folioVenta = jTxtFFolioVenta.getText().trim();
         numPagos = jTxtFNumPagosVenta.getText().trim();
@@ -537,48 +538,91 @@ public class jfventa extends javax.swing.JFrame {
     public void agregarVenta() throws SQLException {
         valoresObtenidos();
 
-        //Lista de Avales
-        List<String> avalesSeleccionados = new ArrayList<>();
-        int cantidadAvales = Integer.parseInt(numAvalesSeleccionado);
+        if (validaTodosCampos()) {
+            //Lista de Avales
+            List<String> avalesSeleccionados = new ArrayList<>();
+            int cantidadAvales = Integer.parseInt(numAvalesSeleccionado);
 
-        for (int i = 1; i <= cantidadAvales; i++) {
-            //Obtener lista de posibles avales y quitar los ya seleccionados
-            List<String> posiblesAvales = queryCargaCombos.cargaComboAvalesVenta();
-            cbus.buscarIdAvalVenta(idAvalSeleccionado);
-            posiblesAvales.removeAll(avalesSeleccionados); // Evita duplicados automáticamente
+            for (int i = 1; i <= cantidadAvales; i++) {
+                //Obtener lista de posibles avales y quitar los ya seleccionados
+                List<String> posiblesAvales = queryCargaCombos.cargaComboAvalesVenta();
+                cbus.buscarIdAvalVenta(idAvalSeleccionado);
+                posiblesAvales.removeAll(avalesSeleccionados); // Evita duplicados automáticamente
 
-            // Crear JComboBox con la lista filtrada
-            JComboBox<String> comboAval = new JComboBox<>(posiblesAvales.toArray(new String[0]));
+                // Crear JComboBox con la lista filtrada
+                JComboBox<String> comboAval = new JComboBox<>(posiblesAvales.toArray(new String[0]));
 
-            int opcion = JOptionPane.showConfirmDialog(
-                    null,
-                    comboAval,
-                    "Seleccione el aval " + i,
-                    JOptionPane.OK_CANCEL_OPTION,
-                    JOptionPane.QUESTION_MESSAGE
-            );
+                int opcion = JOptionPane.showConfirmDialog(
+                        null,
+                        comboAval,
+                        "Seleccione el aval " + i,
+                        JOptionPane.OK_CANCEL_OPTION,
+                        JOptionPane.QUESTION_MESSAGE
+                );
 
-            if (opcion == JOptionPane.OK_OPTION) {
-                String avalSeleccionado = (String) comboAval.getSelectedItem();
-                avalesSeleccionados.add(avalSeleccionado);
-                System.out.println(avalSeleccionado);
-                String idAval = cbus.buscarIdAvalVenta(avalSeleccionado);
-                System.out.println(idAval);
-                idAvalesSeleccionado.add(idAval);
-            } else {
-                cuti.msg_advertencia("Operación cancelada. Debes seleccionar todos los avales.", "Registro de venta");
+                if (opcion == JOptionPane.OK_OPTION) {
+                    String avalSeleccionado = (String) comboAval.getSelectedItem();
+                    avalesSeleccionados.add(avalSeleccionado);
+                    System.out.println(avalSeleccionado);
+                    String idAval = cbus.buscarIdAvalVenta(avalSeleccionado);
+                    System.out.println(idAval);
+                    idAvalesSeleccionado.add(idAval);
+                } else {
+                    cuti.msg_advertencia("Operación cancelada. Debes seleccionar todos los avales.", "Registro de venta");
+                    return;
+                }
+            }
+
+            List<String[]> productosVenta = new ArrayList<>();
+            //Obtiene el modelo de la tabla para poder tener los ID's de los productos mas adelante
+            DefaultTableModel modelo = (DefaultTableModel) jTblAgregarVenta.getModel();
+            int conteoFila = modelo.getRowCount();
+
+            if (conteoFila == 0) {
+                cuti.msg_advertencia("Debe agregar al menos un producto", "Registro de venta");
                 return;
             }
-        }
 
-        if (validaTodosCampos()) {
+            double totalCalculado = 0.0;
+            for (int i = 0; i < conteoFila; i++) {
+                String idProducto = (String) modelo.getValueAt(i, 0); //Ontiene el valor de la columna del ID para insertar el producto
+                String descripcion = (String) modelo.getValueAt(i, 1); // Columna 1: Descripción
+                String cantidadStr = (String) modelo.getValueAt(i, 2); //Obtiene el valor de la cantidad
+                //CAlcula el total de la venta
+                try {
+                    //Declara una variable donde se guardaran las cantidades que se obtienen de la coumna dos
+                    double cantidad = Double.parseDouble(cantidadStr);
+                    //Se suman las cantidades
+                    totalCalculado += cantidad;
+                } catch (NumberFormatException e) {
+                    cuti.msg_error("Cantidad no válida en producto " + idProducto, "Error");
+                    return;
+                }
+                //se agrega cada producto a la lista
+                productosVenta.add(new String[]{idProducto, cantidadStr});
+            }
+            
+            //Se asigna la cantidad sumada al total de la venta
+            totalVenta = String.valueOf(totalCalculado);
+            System.out.println(totalVenta);
+
             try {
                 if (cInser.insertaVenta(totalVenta, fechaSeleccionada, numPagos, idvendedorSeleccionado, idclienteSeleccionado,
                         idzonaSeleccionada, idestatusSeleccionado)) {
+                    //Obtengo el valor de la venta recien ingresado
+                    String idVenta = cbus.buscaMaximoVenta();
                     for (String avalSeleccionado : idAvalesSeleccionado) {
                         System.out.println(avalSeleccionado);
                         if (!cInser.insertaAvalVenta(avalSeleccionado, cbus.buscaMaximoVenta())) {
                             cuti.msg_error("No se insertaron los avales", "Insercion de avales");
+                        }
+                    }
+                    //Se agregan los productos
+                    for (String[] productoIngresado : productosVenta) {
+                        String idProducto = productoIngresado[0];
+                        String cantidad = productoIngresado[1]; //Esto lo voy a coupar para hacer la cuenta del total 
+                        if (!cInser.insertaProductoConVenta(idVenta, idProducto)) {
+                            cuti.msg_error("No se pudo igresar el producto", "Insertar producto");
                         }
                     }
                     cuti.msg("Venta insertada correctamente", "Registro de venta");
