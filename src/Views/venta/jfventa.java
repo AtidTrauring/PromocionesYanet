@@ -179,9 +179,15 @@ public class jfventa extends javax.swing.JFrame {
         try {
             folioVenta = jTxtFFolioVenta.getText().trim();
             datosProducto = cbus.buscarProductoDeLaVenta(folioVenta);
+            System.out.println(folioVenta);
+            limpiarTablaAgregar();
+
             for (String[] datoProd : datosProducto) {
-                modelCarga.addRow(new Object[]{datoProd[0], datoProd[1], datoProd[2]});
+                System.out.println(Arrays.toString(datoProd));
+               modelCarga.addRow(new Object[]{datoProd[0], datoProd[1], datoProd[2]});
+                modelCarga.addRow(datoProd);
             }
+            //jTblAgregarVenta.setModel(modelCarga);
         } catch (Exception e) {
             CUtilitarios.msg_error("No se pudo cargar la tabla", "Carga de tabla de productos de la venta");
         }
@@ -1394,9 +1400,9 @@ public class jfventa extends javax.swing.JFrame {
         jTxtFFolioVenta.setBackground(new java.awt.Color(167, 235, 242));
         jTxtFFolioVenta.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
         jTxtFFolioVenta.setBorder(null);
-        jTxtFFolioVenta.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTxtFFolioVentaActionPerformed(evt);
+        jTxtFFolioVenta.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTxtFFolioVentaKeyReleased(evt);
             }
         });
 
@@ -2015,11 +2021,6 @@ public class jfventa extends javax.swing.JFrame {
         actualizarVenta();
     }//GEN-LAST:event_jBtnActualizarVentaActionPerformed
 
-    private void jTxtFFolioVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTxtFFolioVentaActionPerformed
-        EventoBuscarPorID();
-        cargarTablaConProducto();
-    }//GEN-LAST:event_jTxtFFolioVentaActionPerformed
-
     private void jBtnEliminarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnEliminarVentaActionPerformed
         eliminarVenta();
     }//GEN-LAST:event_jBtnEliminarVentaActionPerformed
@@ -2048,6 +2049,21 @@ public class jfventa extends javax.swing.JFrame {
         // TODO add your handling code here:
         actualizarPago();
     }//GEN-LAST:event_jBtnActualizarPagoActionPerformed
+
+    private void jTxtFFolioVentaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTxtFFolioVentaKeyReleased
+        String id = jTxtFFolioVenta.getText().trim();
+        if (!id.isEmpty()) {
+            try {
+                llenarCamposPorID(id);
+                cargarTablaConProducto();
+            } catch (SQLException ex) {
+                Logger.getLogger(jfventa.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        } else {
+            limpiarCampos();
+        }
+    }//GEN-LAST:event_jTxtFFolioVentaKeyReleased
 
     /**
      * @param args the command line arguments
