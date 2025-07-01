@@ -1,6 +1,6 @@
 package Views.venta;
 
-import Views.cliente.jfmenucliente;
+import Views.cliente.*;
 import com.toedter.calendar.JDateChooser;
 import crud.CActualizaciones;
 import crud.CBusquedas;
@@ -1878,7 +1878,7 @@ public class jfventa extends javax.swing.JFrame {
                 idclienteSeleccionado = cbus.buscarIdClienteVenta(clienteSeleccionado);
                 System.out.println("Cliente: " + idclienteSeleccionado);
             } catch (Exception e) {
-                Logger.getLogger(jfmenucliente.class.getName()).log(Level.SEVERE, null, e);
+                Logger.getLogger(jfcliente.class.getName()).log(Level.SEVERE, null, e);
             }
         }
     }//GEN-LAST:event_jCmbBoxClientesVentaActionPerformed
@@ -1893,7 +1893,7 @@ public class jfventa extends javax.swing.JFrame {
                 idestatusSeleccionado = cbus.buscarIdEstatusVenta(estatusSeleccionado);
                 System.out.println("Estatus: " + idestatusSeleccionado);
             } catch (Exception e) {
-                Logger.getLogger(jfmenucliente.class.getName()).log(Level.SEVERE, null, e);
+                Logger.getLogger(jfcliente.class.getName()).log(Level.SEVERE, null, e);
             }
         }
     }//GEN-LAST:event_jCmbBoxEstatusVentaActionPerformed
@@ -1908,7 +1908,7 @@ public class jfventa extends javax.swing.JFrame {
                 idvendedorSeleccionado = cbus.buscarIdVendedorVenta(vendedorSeleccionado);
                 System.out.println("Vendedor: " + idvendedorSeleccionado);
             } catch (Exception e) {
-                Logger.getLogger(jfmenucliente.class.getName()).log(Level.SEVERE, null, e);
+                Logger.getLogger(jfcliente.class.getName()).log(Level.SEVERE, null, e);
             }
         }
     }//GEN-LAST:event_jCmbBoxVendedorVentaActionPerformed
@@ -1923,7 +1923,7 @@ public class jfventa extends javax.swing.JFrame {
                 idzonaSeleccionada = cbus.buscarIdZona(zonaSeleccionada);
                 System.out.println("zona: " + idzonaSeleccionada);
             } catch (Exception e) {
-                Logger.getLogger(jfmenucliente.class.getName()).log(Level.SEVERE, null, e);
+                Logger.getLogger(jfcliente.class.getName()).log(Level.SEVERE, null, e);
             }
         }
     }//GEN-LAST:event_jCmbBoxZonaVentaActionPerformed

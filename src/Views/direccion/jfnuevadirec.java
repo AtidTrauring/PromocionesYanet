@@ -1,6 +1,6 @@
 package Views.direccion;
 
-import Views.cliente.jfmenucliente;
+import Views.cliente.*;
 import crud.*;
 import java.sql.*;
 import java.util.*;
@@ -269,7 +269,7 @@ public class jfnuevadirec extends javax.swing.JFrame {
                 idColcl = cb.buscarIdColonia(colcl);
                 System.out.println("ID COLONIA " + idColcl);
             } catch (SQLException ex) {
-                Logger.getLogger(jfmenucliente.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(jfcliente.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_jcbcolonianActionPerformed

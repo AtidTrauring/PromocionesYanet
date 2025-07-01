@@ -550,6 +550,16 @@ public class CBusquedas {
         return cnslt.buscarValores(consulta, 4);
     }
 
+    /* Cliente */
+    public String buscarCredenciales(String credencial, String contrasena) throws SQLException {
+        consulta = "SELECT "
+                + "CONCAT(pr.nombres, ' ', pr.ap_paterno, ' ', pr.ap_materno) AS Persona "
+                + "FROM credencial cr "
+                + "INNER JOIN persona pr ON pr.idpersona = cr.persona_idpersona "
+                + "WHERE cr.credencial = '" + credencial + "' && cr.contraseña = '" + contrasena + "';";
+        return cnslt.buscarValor(consulta);
+    }
+
     public ArrayList<String[]> buscarClienteAval() throws SQLException {
         consulta = "Call tablaClienteAval";
         return cnslt.buscarValores(consulta, 6);

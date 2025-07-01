@@ -66,6 +66,7 @@ public final class jfcliente extends javax.swing.JFrame {
     private TableRowSorter<TableModel> trClienteAvalEli;
     private String sqlClientesAvales = "Call tablaClienteAval";
     private String seleccion, est, z, idZona, idEstatus, idEstatusAval, esttabla, tipo, idPersona, zona;
+    private String nomact, apact, amact, telact;
     private int idclav, idpr;
 
     public void cargaComboBox(JComboBox combo, int metodoCarga) {
@@ -102,17 +103,35 @@ public final class jfcliente extends javax.swing.JFrame {
                         jtfactnombres.setText(jtlistaclienteavalact.getValueAt(fila, 1).toString());
                         jtfactap.setText(jtlistaclienteavalact.getValueAt(fila, 2).toString());
                         jtfactam.setText(jtlistaclienteavalact.getValueAt(fila, 3).toString());
-                        esttabla = jtlistaclienteavalact.getValueAt(fila, 4).toString();
-                        tipo = jtlistaclienteavalact.getValueAt(fila, 5).toString();
+                        jtfacttel.setText(jtlistaclienteavalact.getValueAt(fila, 4).toString());
+                        esttabla = jtlistaclienteavalact.getValueAt(fila, 5).toString();
+                        tipo = jtlistaclienteavalact.getValueAt(fila, 6).toString();
 
                         if (tipo.equalsIgnoreCase("Cliente")) {
+                            jrbactcliente.setSelected(true);
+
+                            // Activar combo cliente
+                            jcbactestatuscliente.setEnabled(true);
                             cargaComboBox(jcbactestatuscliente, 1);
-                            jcbactestatuscliente.setSelectedItem(esttabla);
+                            jcbactestatuscliente.setSelectedItem(esttabla); // set valor actual del cliente
+
+                            // Desactivar y resetear combo aval
+                            jcbactestatusaval.setEnabled(false);
+                            jcbactestatusaval.setSelectedIndex(0); // "Estatus Aval" (asumiendo que es el primer valor)
+
                         } else if (tipo.equalsIgnoreCase("Aval")) {
+                            jrbactaval.setSelected(true);
+
+                            // Activar combo aval
+                            jcbactestatusaval.setEnabled(true);
                             cargaComboBox(jcbactestatusaval, 1);
-                            jcbactestatusaval.setSelectedItem(esttabla);
+                            jcbactestatusaval.setSelectedItem(esttabla); // set valor actual del aval
+
+                            // Desactivar y resetear combo cliente
+                            jcbactestatuscliente.setEnabled(false);
+                            jcbactestatuscliente.setSelectedIndex(0); // "Estatus Cliente"
                         }
-                        
+
                         if (tipo.equalsIgnoreCase("Cliente")) {
                             idPersona = cb.buscarPersonaCliente(idclav);
                             idpr = Integer.parseInt(idPersona);
@@ -204,11 +223,11 @@ public final class jfcliente extends javax.swing.JFrame {
     private boolean validarTelefono() {
         JTextField[] campos = {jtfnvtel};
         String[] textos = {"Número de Teléfono"};
-        String regex = "^[0-9]+$";
+        String regex = "^\\d{10}$"; // Exactamente 10 dígitos
 
-        return CUtilitarios.validaCamposTextoConFormato(
+        return CUtilitarios.validaCamposTextoNumericos(
                 campos, textos, textos, regex,
-                "El número de teléfono debe contener solo dígitos.", "Validación de Teléfono"
+                "El número de teléfono debe contener exactamente 10 dígitos.", "Validación de Teléfono"
         );
     }
 
@@ -401,6 +420,8 @@ public final class jfcliente extends javax.swing.JFrame {
         jrbactambos = new javax.swing.JRadioButton();
         jcbactestatuscliente = new javax.swing.JComboBox<>();
         jcbactestatusaval = new javax.swing.JComboBox<>();
+        jtfacttel = new javax.swing.JTextField();
+        jSeparator16 = new javax.swing.JSeparator();
         jbcontinuaract = new javax.swing.JButton();
         jpeliminar = new javax.swing.JPanel();
         jpfondotablaeli = new javax.swing.JPanel();
@@ -455,7 +476,7 @@ public final class jfcliente extends javax.swing.JFrame {
             jpfondotablaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpfondotablaLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jspcliente, javax.swing.GroupLayout.DEFAULT_SIZE, 761, Short.MAX_VALUE)
+                .addComponent(jspcliente, javax.swing.GroupLayout.DEFAULT_SIZE, 770, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jpfondotablaLayout.setVerticalGroup(
@@ -745,71 +766,70 @@ public final class jfcliente extends javax.swing.JFrame {
             .addGroup(jpfondonuevoclienteLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jpfondonuevoclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jpfondonuevoclienteLayout.createSequentialGroup()
-                        .addComponent(jtfnvtel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jcbnvestatusaval, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())
+                    .addComponent(jtfnvtel)
+                    .addComponent(jSeparator12)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpfondonuevoclienteLayout.createSequentialGroup()
-                        .addGroup(jpfondonuevoclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jSeparator12, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jpfondonuevoclienteLayout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addGroup(jpfondonuevoclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(jcbnvzona, 0, 248, Short.MAX_VALUE)
-                                    .addComponent(jtfnvnombres, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jSeparator6, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jtfnvam, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jSeparator8, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jSeparator7, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jtfnvap, javax.swing.GroupLayout.Alignment.LEADING))))
-                        .addGroup(jpfondonuevoclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jpfondonuevoclienteLayout.createSequentialGroup()
-                                .addGap(77, 77, 77)
-                                .addGroup(jpfondonuevoclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jrbnvcliente)
-                                    .addComponent(jrbnvaval)
-                                    .addComponent(jrbnvambos))
-                                .addGap(90, 90, 90))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpfondonuevoclienteLayout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jcbnvestatuscliente, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap())))))
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(jpfondonuevoclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jcbnvzona, 0, 248, Short.MAX_VALUE)
+                            .addComponent(jtfnvnombres, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jSeparator6, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jtfnvam, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jSeparator8, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jSeparator7, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jtfnvap, javax.swing.GroupLayout.Alignment.LEADING))))
+                .addGroup(jpfondonuevoclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpfondonuevoclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jpfondonuevoclienteLayout.createSequentialGroup()
+                            .addGap(77, 77, 77)
+                            .addGroup(jpfondonuevoclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jrbnvcliente)
+                                .addComponent(jrbnvaval)
+                                .addComponent(jrbnvambos))
+                            .addGap(90, 90, 90))
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpfondonuevoclienteLayout.createSequentialGroup()
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jcbnvestatuscliente, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addContainerGap()))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpfondonuevoclienteLayout.createSequentialGroup()
+                        .addGap(77, 77, 77)
+                        .addComponent(jcbnvestatusaval, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())))
         );
         jpfondonuevoclienteLayout.setVerticalGroup(
             jpfondonuevoclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpfondonuevoclienteLayout.createSequentialGroup()
                 .addGap(18, 18, 18)
-                .addGroup(jpfondonuevoclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(jpfondonuevoclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jpfondonuevoclienteLayout.createSequentialGroup()
                         .addComponent(jrbnvcliente)
                         .addGap(18, 18, 18)
-                        .addComponent(jrbnvaval))
+                        .addComponent(jrbnvaval)
+                        .addGap(18, 18, 18)
+                        .addComponent(jrbnvambos)
+                        .addGap(41, 41, 41)
+                        .addComponent(jcbnvestatuscliente, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(62, 62, 62)
+                        .addComponent(jcbnvestatusaval, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jpfondonuevoclienteLayout.createSequentialGroup()
                         .addComponent(jtfnvnombres, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSeparator6, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
-                .addGroup(jpfondonuevoclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jtfnvap, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jrbnvambos))
-                .addGap(10, 10, 10)
-                .addComponent(jSeparator7, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jpfondonuevoclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jtfnvam, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jcbnvestatuscliente, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator8, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(jpfondonuevoclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jpfondonuevoclienteLayout.createSequentialGroup()
+                        .addComponent(jSeparator6, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jtfnvap, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addComponent(jSeparator7, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jtfnvam, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSeparator8, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
                         .addComponent(jtfnvtel, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSeparator12, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jcbnvestatusaval, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
-                .addComponent(jcbnvzona, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jSeparator12, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(20, 20, 20)
+                .addComponent(jcbnvzona, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(29, Short.MAX_VALUE))
         );
 
         jLblIcono1.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
@@ -840,7 +860,7 @@ public final class jfcliente extends javax.swing.JFrame {
             .addGroup(jpnuevoclienteLayout.createSequentialGroup()
                 .addGap(114, 114, 114)
                 .addComponent(jpfondonuevocliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 205, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 214, Short.MAX_VALUE)
                 .addGroup(jpnuevoclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpnuevoclienteLayout.createSequentialGroup()
                         .addComponent(jbcontinuar, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -852,13 +872,15 @@ public final class jfcliente extends javax.swing.JFrame {
         jpnuevoclienteLayout.setVerticalGroup(
             jpnuevoclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpnuevoclienteLayout.createSequentialGroup()
-                .addGap(18, 18, 18)
-                .addGroup(jpnuevoclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jpfondonuevocliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jpnuevoclienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jpnuevoclienteLayout.createSequentialGroup()
+                        .addGap(18, 18, 18)
                         .addComponent(jLblIcono1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jbcontinuar, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jbcontinuar, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jpnuevoclienteLayout.createSequentialGroup()
+                        .addGap(42, 42, 42)
+                        .addComponent(jpfondonuevocliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(45, Short.MAX_VALUE))
         );
 
@@ -1001,59 +1023,83 @@ public final class jfcliente extends javax.swing.JFrame {
             }
         });
 
+        jtfacttel.setBackground(new java.awt.Color(167, 235, 242));
+        jtfacttel.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        jtfacttel.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+        jtfacttel.setText("Número de Teléfono");
+        jtfacttel.setToolTipText("Apellido Materno");
+        jtfacttel.setBorder(null);
+        jtfacttel.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+
+        jSeparator16.setBackground(new java.awt.Color(0, 0, 0));
+        jSeparator16.setForeground(new java.awt.Color(0, 0, 0));
+        jSeparator16.setToolTipText("");
+
         javax.swing.GroupLayout jpfondoacteliclienteavalLayout = new javax.swing.GroupLayout(jpfondoacteliclienteaval);
         jpfondoacteliclienteaval.setLayout(jpfondoacteliclienteavalLayout);
         jpfondoacteliclienteavalLayout.setHorizontalGroup(
             jpfondoacteliclienteavalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpfondoacteliclienteavalLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jpfondoacteliclienteavalLayout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jpfondoacteliclienteavalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jcbactzona, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jpfondoacteliclienteavalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jSeparator11, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jtfactam, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
-                        .addComponent(jSeparator10, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jtfactap, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jSeparator9, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jtfactnombres, javax.swing.GroupLayout.Alignment.LEADING)))
-                .addGap(42, 42, 42)
-                .addGroup(jpfondoacteliclienteavalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jrbactambos)
-                    .addComponent(jrbactaval)
-                    .addComponent(jrbactcliente)
-                    .addComponent(jcbactestatuscliente, 0, 122, Short.MAX_VALUE)
-                    .addComponent(jcbactestatusaval, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpfondoacteliclienteavalLayout.createSequentialGroup()
+                        .addGroup(jpfondoacteliclienteavalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jSeparator16, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jtfacttel)
+                            .addComponent(jSeparator11, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jtfactam, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
+                            .addComponent(jSeparator10, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jtfactap, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jSeparator9, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jtfactnombres, javax.swing.GroupLayout.Alignment.LEADING))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
+                        .addGroup(jpfondoacteliclienteavalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jrbactambos)
+                            .addComponent(jrbactaval)
+                            .addComponent(jrbactcliente)
+                            .addComponent(jcbactestatuscliente, 0, 122, Short.MAX_VALUE)
+                            .addComponent(jcbactestatusaval, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(jpfondoacteliclienteavalLayout.createSequentialGroup()
+                        .addComponent(jcbactzona, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jpfondoacteliclienteavalLayout.setVerticalGroup(
             jpfondoacteliclienteavalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpfondoacteliclienteavalLayout.createSequentialGroup()
-                .addGap(24, 24, 24)
+                .addGap(8, 8, 8)
                 .addGroup(jpfondoacteliclienteavalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jpfondoacteliclienteavalLayout.createSequentialGroup()
-                        .addComponent(jtfactnombres, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSeparator9, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jpfondoacteliclienteavalLayout.createSequentialGroup()
                         .addComponent(jrbactcliente)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jrbactaval)))
-                .addGap(18, 18, 18)
-                .addGroup(jpfondoacteliclienteavalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jtfactap, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jrbactambos))
-                .addGap(10, 10, 10)
-                .addComponent(jSeparator10, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(12, 12, 12)
-                .addGroup(jpfondoacteliclienteavalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jtfactam, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jcbactestatuscliente, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator11, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(jpfondoacteliclienteavalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jcbactzona, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jcbactestatusaval, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jrbactaval)
+                        .addGap(18, 18, 18)
+                        .addComponent(jrbactambos)
+                        .addGap(41, 41, 41)
+                        .addComponent(jcbactestatuscliente, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jpfondoacteliclienteavalLayout.createSequentialGroup()
+                        .addComponent(jtfactnombres, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSeparator9, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jtfactap, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addComponent(jSeparator10, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(12, 12, 12)
+                        .addComponent(jtfactam, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSeparator11, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(jpfondoacteliclienteavalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jpfondoacteliclienteavalLayout.createSequentialGroup()
+                        .addGap(40, 40, 40)
+                        .addComponent(jcbactestatusaval, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jpfondoacteliclienteavalLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jtfacttel, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSeparator16, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jcbactzona, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -1082,7 +1128,7 @@ public final class jfcliente extends javax.swing.JFrame {
             .addGroup(jpactualizaeliminaLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jpfondotablaacteli, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
                 .addGroup(jpactualizaeliminaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpactualizaeliminaLayout.createSequentialGroup()
                         .addComponent(jbcontinuaract, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1093,16 +1139,15 @@ public final class jfcliente extends javax.swing.JFrame {
         );
         jpactualizaeliminaLayout.setVerticalGroup(
             jpactualizaeliminaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jpactualizaeliminaLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpactualizaeliminaLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jpfondotablaacteli, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jpactualizaeliminaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jpactualizaeliminaLayout.createSequentialGroup()
+                        .addComponent(jpfondoacteliclienteaval, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jbcontinuaract, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jpfondotablaacteli, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
-            .addGroup(jpactualizaeliminaLayout.createSequentialGroup()
-                .addGap(18, 18, 18)
-                .addComponent(jpfondoacteliclienteaval, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jbcontinuaract, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jtppaneles.addTab("Actualiza un Cliente", jpactualizaelimina);
@@ -1131,7 +1176,7 @@ public final class jfcliente extends javax.swing.JFrame {
             jpfondotablaeliLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpfondotablaeliLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jspclienteavaleli, javax.swing.GroupLayout.DEFAULT_SIZE, 761, Short.MAX_VALUE)
+                .addComponent(jspclienteavaleli, javax.swing.GroupLayout.DEFAULT_SIZE, 770, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jpfondotablaeliLayout.setVerticalGroup(
@@ -1354,12 +1399,12 @@ public final class jfcliente extends javax.swing.JFrame {
     private void jcbnvestatusclienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbnvestatusclienteActionPerformed
         JComboBox jcb = (JComboBox) evt.getSource(); // Asegura que el evento venga del combo correcto
         seleccion = (String) jcb.getSelectedItem();
-        if (!"Estatus".equals(seleccion)) {
+        if (!"Estatus Cliente".equals(seleccion)) {
             est = seleccion;
             System.out.println(est);
             try {
                 idEstatus = cb.buscarIdEstatus(est);
-                System.out.println("ESTATUS " + idEstatus);
+                System.out.println("ESTATUS Cliente " + idEstatus);
             } catch (SQLException ex) {
                 Logger.getLogger(jfcliente.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -1369,7 +1414,7 @@ public final class jfcliente extends javax.swing.JFrame {
     private void jcbnvestatusavalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbnvestatusavalActionPerformed
         JComboBox jcb = (JComboBox) evt.getSource(); // Asegura que el evento venga del combo correcto
         seleccion = (String) jcb.getSelectedItem();
-        if (!"Estatus".equals(seleccion)) {
+        if (!"Estatus Aval".equals(seleccion)) {
             est = seleccion;
             System.out.println(est);
             try {
@@ -1442,10 +1487,7 @@ public final class jfcliente extends javax.swing.JFrame {
         }
 
         try (Connection cn = conector.conecta(); CallableStatement cs = cn.prepareCall("{CALL " + procedimiento + "()}")) {
-
-            // ✅ Aquí pasamos un Consumer válido para capturar el nuevo sorter
             cu.cargarTablaDesdeConsulta(jtlistaclienteaval, cs, sorter -> trClienteAval = sorter);
-
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Error al cargar datos de " + seleccion + " : " + ex.getMessage(),
                     "Error", JOptionPane.ERROR_MESSAGE);
@@ -1470,12 +1512,12 @@ public final class jfcliente extends javax.swing.JFrame {
     private void jcbactestatusclienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbactestatusclienteActionPerformed
         JComboBox jcb = (JComboBox) evt.getSource(); // Asegura que el evento venga del combo correcto
         seleccion = (String) jcb.getSelectedItem();
-        if (!"Estatus".equals(seleccion)) {
+        if (!"Estatus Cliente".equals(seleccion)) {
             est = seleccion;
             System.out.println(est);
             try {
                 idEstatus = cb.buscarIdEstatus(est);
-                System.out.println("ESTATUS " + idEstatus);
+                System.out.println("ESTATUS Cliente " + idEstatus);
             } catch (SQLException ex) {
                 Logger.getLogger(jfcliente.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -1485,12 +1527,12 @@ public final class jfcliente extends javax.swing.JFrame {
     private void jcbactestatusavalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbactestatusavalActionPerformed
         JComboBox jcb = (JComboBox) evt.getSource(); // Asegura que el evento venga del combo correcto
         seleccion = (String) jcb.getSelectedItem();
-        if (!"Estatus".equals(seleccion)) {
+        if (!"Estatus Aval".equals(seleccion)) {
             est = seleccion;
             System.out.println(est);
             try {
                 idEstatusAval = cb.buscarIdEstatus(est);
-                System.out.println("ESTATUS AVAL " + idEstatusAval);
+                System.out.println("ESTATUS aval " + idEstatusAval);
             } catch (SQLException ex) {
                 Logger.getLogger(jfcliente.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -1577,6 +1619,7 @@ public final class jfcliente extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator13;
     private javax.swing.JSeparator jSeparator14;
     private javax.swing.JSeparator jSeparator15;
+    private javax.swing.JSeparator jSeparator16;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
@@ -1620,6 +1663,7 @@ public final class jfcliente extends javax.swing.JFrame {
     private javax.swing.JTextField jtfactam;
     private javax.swing.JTextField jtfactap;
     private javax.swing.JTextField jtfactnombres;
+    private javax.swing.JTextField jtfacttel;
     private javax.swing.JTextField jtfambusqueda;
     private javax.swing.JTextField jtfambusquedaeli;
     private javax.swing.JTextField jtfapbusqueda;

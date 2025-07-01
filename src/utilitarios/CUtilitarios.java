@@ -263,6 +263,32 @@ public class CUtilitarios {
     }
 
     /*Métodos*/
+    Color fondoMenu = new Color(242, 224, 136);
+    Color colorLetra = new Color(0, 0, 0);
+
+    public void estiloMenu(JMenuBar jmi) {
+        jmi.setLayout(new GridLayout(1, 0)); // 1 fila, columnas dinámicas
+        jmi.setBorder(BorderFactory.createEmptyBorder()); // Sin bordes
+    }
+
+    public void estiloMenu(JMenuItem menuItem, String url) {
+        // Configurar ícono si se proporciona
+        if (url != null && !url.isEmpty()) {
+            Icon icon = new ImageIcon(new ImageIcon(getClass().getResource(url))
+                    .getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH));
+            menuItem.setIcon(icon);
+        }
+        // Configurar estilo
+        menuItem.setOpaque(true);
+        menuItem.setBackground(fondoMenu);
+        menuItem.setForeground(colorLetra);
+        menuItem.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        menuItem.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createEmptyBorder(8, 8, 8, 8), // Margen superior, izquierda, inferior, derecha
+                BorderFactory.createEmptyBorder() // Sin bordes visibles
+        ));
+    }
+
     private final CConecta conector = new CConecta();
 
     public static boolean validaCamposTextoConFormato(
@@ -286,6 +312,39 @@ public class CUtilitarios {
             else if (!texto.matches(regex)) {
                 CUtilitarios.msg_error(
                         "El campo " + nombresCampos[i] + " solo debe contener letras.",
+                        "Error en " + nombresCampos[i]);
+                hayErroresDeFormato = true;
+            }
+        }
+
+        if (hayCamposVacios) {
+            CUtilitarios.msg_advertencia(mensajeGeneralCamposVacios, tituloMensajeGeneral);
+        }
+
+        return !hayCamposVacios && !hayErroresDeFormato;
+    }
+
+    public static boolean validaCamposTextoNumericos(
+            JTextField[] jtf,
+            String[] textosPredeterminados,
+            String[] nombresCampos,
+            String regex,
+            String mensajeGeneralCamposVacios,
+            String tituloMensajeGeneral) {
+
+        boolean hayCamposVacios = false;
+        boolean hayErroresDeFormato = false;
+
+        for (int i = 0; i < jtf.length; i++) {
+            String texto = jtf[i].getText().trim();
+
+            // Validar si está vacío o es predeterminado
+            if (texto.equalsIgnoreCase(textosPredeterminados[i])) {
+                hayCamposVacios = true;
+            } // Si no está vacío, validar el formato con regex
+            else if (!texto.matches(regex)) {
+                CUtilitarios.msg_error(
+                        "El campo " + nombresCampos[i] + " solo debe contener 10 dígitos.",
                         "Error en " + nombresCampos[i]);
                 hayErroresDeFormato = true;
             }
