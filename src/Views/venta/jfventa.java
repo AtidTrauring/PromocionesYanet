@@ -6,6 +6,7 @@ import crud.CBusquedas;
 import crud.CCargaCombos;
 import crud.CEliminaciones;
 import crud.CInserciones;
+import java.awt.CardLayout;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.RowFilter;
@@ -55,6 +57,8 @@ public class jfventa extends javax.swing.JFrame {
     private CActualizaciones cActu = new CActualizaciones();
     private CEliminaciones cEli = new CEliminaciones();
     List<String> idAvalesSeleccionado = new ArrayList<>();
+    //Estas variables son para pasar al panel del cobrador, se usa para manejar los paneles dentro del mismo frame.
+    
 
     public jfventa(String[] datos) {
         initComponents();
