@@ -331,62 +331,105 @@ public final class JfEmpleado extends javax.swing.JFrame {
         }
     }
 
+    /**
+     * Valida campos de empleado con flujo: primero campos vacíos, luego
+     * validación individual secuencial.
+     *
+     * @param jtfNombre JTextField del nombre
+     * @param jtfApPat JTextField del apellido paterno
+     * @param jtfApMat JTextField del apellido materno
+     * @param jtfTelefono JTextField del teléfono
+     * @param jtfSueldo JTextField del sueldo
+     * @param jcbZona JComboBox de la zona
+     * @return true si todos los campos son válidos
+     */
+    private boolean validarCamposEmpleado(JTextField jtfNombre, JTextField jtfApPat, JTextField jtfApMat,
+            JTextField jtfTelefono, JTextField jtfSueldo, JComboBox<String> jcbZona) {
+
+        String nombre = jtfNombre.getText().trim();
+        String apPaterno = jtfApPat.getText().trim();
+        String apMaterno = jtfApMat.getText().trim();
+        String telefono = jtfTelefono.getText().trim();
+        String sueldoStr = jtfSueldo.getText().trim();
+        String zonaSeleccionada = jcbZona.getSelectedItem().toString();
+
+        // 1. Validación de campos vacíos
+        if (nombre.isEmpty() || apPaterno.isEmpty() || apMaterno.isEmpty()
+                || telefono.isEmpty() || sueldoStr.isEmpty()) {
+            CUtilitarios.msg_advertencia("Debes llenar todos los campos obligatorios.", "Validación");
+            return false;
+        }
+
+        // 2. Validación de JComboBox (Zonas)
+        if (jcbZona.getSelectedIndex() == 0 || zonaSeleccionada.equalsIgnoreCase("Zonas")) {
+            CUtilitarios.msg_advertencia("Debes seleccionar una zona válida.", "Validación");
+            return false;
+        }
+
+        // 3. Validación individual en orden: nombre -> apellidos -> teléfono -> sueldo
+        if (!CUtilitarios.validarNombre(nombre)) {
+            CUtilitarios.msg_error("El nombre contiene caracteres inválidos.", "Validación");
+            jtfNombre.requestFocus();
+            return false;
+        }
+
+        if (!CUtilitarios.validarApellido(apPaterno)) {
+            CUtilitarios.msg_error("El apellido paterno contiene caracteres inválidos.", "Validación");
+            jtfApPat.requestFocus();
+            return false;
+        }
+
+        if (!CUtilitarios.validarApellido(apMaterno)) {
+            CUtilitarios.msg_error("El apellido materno contiene caracteres inválidos.", "Validación");
+            jtfApMat.requestFocus();
+            return false;
+        }
+
+        if (!CUtilitarios.validarTelefono(telefono)) {
+            jtfTelefono.requestFocus();
+            return false;
+        }
+
+        if (!CUtilitarios.validarSueldo(sueldoStr)) {
+            CUtilitarios.msg_error("El sueldo debe ser un número válido y mayor a cero.", "Validación");
+            jtfSueldo.requestFocus();
+            return false;
+        }
+
+        return true;
+    }
+
     // Metodos CRUD
     public void insertaEmpleado() throws SQLException {
-        // Obtener datos de los JTextField y JComboBox
+        // Obtener valores de los campos
         String nombre = JtxtAgregarNombre.getText().trim();
         String apPaterno = JtxtAgregarApPat.getText().trim();
         String apMaterno = JtxtAgregarApMat.getText().trim();
         String telefono = JtxtAgregarTel.getText().trim();
         String sueldoStr = JtxtAgregarSueldo.getText().trim();
 
-        // Validar campos obligatorios con CUtilitarios
-        if (!CUtilitarios.validarNombre(nombre)) {
-            CUtilitarios.msg_advertencia("El nombre es inválido o está vacío.", "Validación");
-            JtxtAgregarNombre.requestFocus();
-            return;
-        }
-        if (!CUtilitarios.validarApellido(apPaterno)) {
-            CUtilitarios.msg_advertencia("El apellido paterno es inválido o está vacío.", "Validación");
-            JtxtAgregarApPat.requestFocus();
-            return;
-        }
-        if (!CUtilitarios.validarApellido(apMaterno)) {
-            CUtilitarios.msg_advertencia("El apellido materno es inválido o está vacío.", "Validación");
-            JtxtAgregarApMat.requestFocus();
-            return;
-        }
-        if (!CUtilitarios.validarTelefono(telefono)) {
-            CUtilitarios.msg_advertencia("El teléfono es inválido o está vacío.", "Validación");
-            JtxtAgregarTel.requestFocus();
-            return;
-        }
-        if (!CUtilitarios.validarSueldo(sueldoStr)) {
-            CUtilitarios.msg_advertencia("El sueldo es inválido o está vacío.", "Validación");
-            JtxtAgregarSueldo.requestFocus();
-            return;
+        // Validar todos los campos antes de continuar
+        boolean camposValidos = validarCamposEmpleado(
+                JtxtAgregarNombre, JtxtAgregarApPat, JtxtAgregarApMat,
+                JtxtAgregarTel, JtxtAgregarSueldo, JcmbxAgregarZonas
+        );
+
+        if (!camposValidos) {
+            return; // Detener si algún campo no es válido
         }
 
-        // Parsear sueldo a double 
-        double sueldo = Double.parseDouble(sueldoStr);
-
-        // Obtener la colonia seleccionada en el JComboBox
-        Object itemColonia = JcmbxAgregarZonas.getSelectedItem();
-        if (itemColonia.equals("Zonas") || itemColonia.toString().trim().isEmpty()) {
-            CUtilitarios.msg_advertencia("¡Selecciona una Zona!.", "Validación");
-            JcmbxAgregarZonas.requestFocus();
-            return;
-        }
+        // Obtener el ID de zona (suponiendo que se almacena en el texto del ComboBox)
         String idZona = (String) JcmbxAgregarZonas.getSelectedItem();
-        // Aquí ya tienes los datos listos para pasar al JFrame de dirección
-        // CreaFrame es el método que abrirá el JFrame Dirección y le pasará estos datos
+
         try {
-            // Pasar datos al frame de dirección (asumo que tienes una clase JFrameDireccion o similar)
+            // Crear y configurar el frame de dirección
             jfnuevadirec direccion = new jfnuevadirec(null, null, null);
             direccion.asignaValoresEmpleado(nombre, apMaterno, apPaterno, telefono, sueldoStr, idZona);
-            CUtilitarios.creaFrame(direccion, "Agreagr direccion");
-            // Opcional: ocultar  este JFrame mientras se maneja el frame dirección
+
+            // Mostrar nueva ventana y cerrar actual
+            CUtilitarios.creaFrame(direccion, "Agregar dirección");
             this.dispose();
+
         } catch (Exception e) {
             CUtilitarios.msg_error("Error al abrir el formulario de dirección: " + e.getMessage(), "Error");
         }
