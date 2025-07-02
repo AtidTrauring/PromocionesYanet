@@ -1,6 +1,7 @@
 package Views;
 
 import Views.cliente.jfcliente;
+import Views.direccion.jflistaactdirec;
 import Views.empleado.JfEmpleado;
 import Views.productos.jfproductos;
 import Views.venta.jfventa;
@@ -48,6 +49,7 @@ public class jfmenuinicio extends javax.swing.JFrame {
         cu.estiloMenu(jmempleado, "/imagenes/iconoEmpleado.png");
         cu.estiloMenu(jmventas, "/imagenes/ventas.png");
         cu.estiloMenu(jmzonas, "/imagenes/zona.png");
+        cu.estiloMenu(jmdirec, "/imagenes/direcciones.png");
     }
 
     /**
@@ -67,8 +69,14 @@ public class jfmenuinicio extends javax.swing.JFrame {
         jmempleado = new javax.swing.JMenu();
         jmventas = new javax.swing.JMenu();
         jmzonas = new javax.swing.JMenu();
+        jmdirec = new javax.swing.JMenu();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(242, 220, 153));
 
@@ -81,7 +89,7 @@ public class jfmenuinicio extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(179, 179, 179)
                 .addComponent(JlblImagen)
-                .addContainerGap(202, Short.MAX_VALUE))
+                .addContainerGap(303, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -130,6 +138,14 @@ public class jfmenuinicio extends javax.swing.JFrame {
             }
         });
         jmbmenu.add(jmzonas);
+
+        jmdirec.setText("Direcciones");
+        jmdirec.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jmdirecMouseClicked(evt);
+            }
+        });
+        jmbmenu.add(jmdirec);
 
         setJMenuBar(jmbmenu);
 
@@ -185,6 +201,16 @@ public class jfmenuinicio extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jmzonasMouseClicked
 
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        JfInicionSesion is = new JfInicionSesion();
+        CUtilitarios.creaFrame(is, "Inicio de Sesión");
+    }//GEN-LAST:event_formWindowClosing
+
+    private void jmdirecMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jmdirecMouseClicked
+        jflistaactdirec ldic = new jflistaactdirec();
+        CUtilitarios.creaFrame(ldic, "Lista Dirección");
+    }//GEN-LAST:event_jmdirecMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -226,6 +252,7 @@ public class jfmenuinicio extends javax.swing.JFrame {
     private javax.swing.JMenu jmalmacen;
     private javax.swing.JMenuBar jmbmenu;
     private javax.swing.JMenu jmcliente;
+    private javax.swing.JMenu jmdirec;
     private javax.swing.JMenu jmempleado;
     private javax.swing.JMenu jmventas;
     private javax.swing.JMenu jmzonas;

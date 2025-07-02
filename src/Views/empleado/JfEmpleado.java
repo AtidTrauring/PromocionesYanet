@@ -1,6 +1,7 @@
 package Views.empleado;
 
 import Views.direccion.jfnuevadirec;
+import Views.jfmenuinicio;
 import crud.CBusquedas;
 import crud.CCargaCombos;
 import java.awt.event.ItemEvent;
@@ -498,6 +499,11 @@ public final class JfEmpleado extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Empleados");
         setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         JtbpPaneles.setBackground(new java.awt.Color(242, 220, 153));
 
@@ -754,7 +760,7 @@ public final class JfEmpleado extends javax.swing.JFrame {
             JpnlInsertEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(JpnlInsertEmpleadoLayout.createSequentialGroup()
                 .addGap(109, 109, 109)
-                .addComponent(JpnlCamposAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(JpnlCamposAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(140, 140, 140)
                 .addComponent(JlblimagenI)
                 .addContainerGap(152, Short.MAX_VALUE))
@@ -1503,6 +1509,11 @@ public final class JfEmpleado extends javax.swing.JFrame {
         // Inserta - Sueldos
 
     }//GEN-LAST:event_JbtnAsignarSueldoActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        jfmenuinicio mi = new jfmenuinicio();
+        CUtilitarios.creaFrame(mi, "Menú Inicio");
+    }//GEN-LAST:event_formWindowClosing
 
     public static void main(String args[]) {
         // <editor-fold defaultstate="collapsed" desc="Generated Code">

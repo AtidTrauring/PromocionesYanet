@@ -1,5 +1,6 @@
 package Views.direccion;
 
+import Views.jfmenuinicio;
 import crud.*;
 import java.awt.HeadlessException;
 import java.sql.*;
@@ -149,7 +150,12 @@ public class jflistaactdirec extends javax.swing.JFrame {
         jbdirecact = new javax.swing.JButton();
         jliconodirec = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jpfondodireccion.setBackground(new java.awt.Color(242, 220, 153));
 
@@ -541,6 +547,11 @@ public class jflistaactdirec extends javax.swing.JFrame {
             Logger.getLogger(jflistaactdirec.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jbdirecactActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        jfmenuinicio mi = new jfmenuinicio();
+        CUtilitarios.creaFrame(mi, "Menú Inicio");
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments

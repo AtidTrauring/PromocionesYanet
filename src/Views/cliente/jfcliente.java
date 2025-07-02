@@ -1,6 +1,7 @@
 package Views.cliente;
 
 import Views.direccion.*;
+import Views.jfmenuinicio;
 import crud.*;
 import utilitarios.*;
 import java.sql.*;
@@ -453,7 +454,12 @@ public final class jfcliente extends javax.swing.JFrame {
         jSeparator15 = new javax.swing.JSeparator();
         jbcontinuaract1 = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jpfondo.setBackground(new java.awt.Color(242, 220, 153));
         jpfondo.setFont(new java.awt.Font("Candara", 1, 12)); // NOI18N
@@ -1579,6 +1585,11 @@ public final class jfcliente extends javax.swing.JFrame {
     private void jbcontinuaract1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbcontinuaract1ActionPerformed
         eliminarDesdeBoton();
     }//GEN-LAST:event_jbcontinuaract1ActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        jfmenuinicio mi = new jfmenuinicio();
+        CUtilitarios.creaFrame(mi, "Menú Inicio");
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments
