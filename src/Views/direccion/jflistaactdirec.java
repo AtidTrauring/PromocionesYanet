@@ -2,121 +2,160 @@ package Views.direccion;
 
 import Views.jfmenuinicio;
 import crud.*;
-import java.awt.HeadlessException;
 import java.sql.*;
 import java.util.ArrayList;
 import javax.swing.*;
 import utilitarios.CUtilitarios;
-import java.util.logging.*;
 import javax.swing.table.*;
 
-/**
- *
- * @author micky
- */
 public class jflistaactdirec extends javax.swing.JFrame {
 
     CUtilitarios cu = new CUtilitarios();
     CBusquedas cb = new CBusquedas();
-    String seleccion, colcl, idColcl;
+    CCargaCombos cc = new CCargaCombos();
+    CActualizaciones ca = new CActualizaciones();
+    private String nombres, apMat, apPat, telefono, sueldo, idZona;
+    private String[] datosEstatus;
 
     public jflistaactdirec() {
         initComponents();
-        this.setLocationRelativeTo(null);
-
-        // Combos
-        cargaComboBox(jcbcolonias, 1);
-
-        // Tablas
-        cargarTablas();
-
-        // Actualizar
-        configurarEventosTablaActualizar();
     }
 
-    private String sqlDirec;
-    private int idDireccion, idc;
-    private String cllcl, ne, ni;
-    private TableRowSorter<TableModel> trClienteAval;
-
-    private void cargarTablas() {
-        sqlDirec = "Call tablaDirec";
-
-        try {
-            cu.cargarConsultaEnTabla(sqlDirec, jtlistadirec, sorter -> trClienteAval = sorter);
-            cu.cargarConsultaEnTabla(sqlDirec, jtlistadirecact, sorter -> trClienteAval = sorter);
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Error al cargar tablas: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
+    private void configurarInterfaz() throws SQLException {
+        aplicarPlaceholders();      // Textos guía en campos de texto
+        configurarModeloTablaDirecciones(jtlistadirec);  // Modelos para las tablas
+        configurarModeloTablaDirecciones(jtlistadirecact);  // Modelos para las tablas
+        cargaComboBoxColonias();
     }
 
-    private DefaultComboBoxModel listas;
-    private ArrayList<String> datosListas = new ArrayList<>();
-    private final CCargaCombos queryCarga = new CCargaCombos();
-    private final CActualizaciones ca = new CActualizaciones();
+    // Metodo para asignar valores
+    public void obtenValoresActualiza(String nombre, String apMat, String apPat, String telefono, String sueldo, String idZona, String[] datosEstatus) {
+        this.nombres = nombre;
+        this.apMat = apMat;
+        this.apPat = apPat;
+        this.telefono = telefono;
+        this.sueldo = sueldo;
+        this.idZona = idZona;
+        this.datosEstatus = datosEstatus;
 
-    public void cargaComboBox(JComboBox combo, int metodoCarga) {
-        listas = (DefaultComboBoxModel) combo.getModel();
-        try {
-            switch (metodoCarga) {
-                case 1:
-                    datosListas = queryCarga.cargaComboColonias();
-                    for (int i = 0; i < datosListas.size(); i++) {
-                        listas.addElement(datosListas.get(i));
-                    }
-                    datosListas.clear();
-                    break;
-            }
-        } catch (SQLException e) {
-        }
-    }
-
-    private void configurarEventosTablaActualizar() {
-        jtlistadirecact.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                int fila = jtlistadirecact.getSelectedRow();
-                if (fila != -1) {
-                    try {
-                        idDireccion = Integer.parseInt(jtlistadirecact.getValueAt(fila, 0).toString());
-                        String[] partes = cb.buscarDirecPorID(idDireccion); // ← debe devolver 5 campos
-
-                        if (partes != null && partes.length >= 5) {
-                            // 1. Asignar campos de dirección
-                            jtfcalleact.setText(partes[0]);
-                            jtfnumintact.setText(partes[1]);
-                            jtfnumextact.setText(partes[2]);
-                            String coloniaActual = partes[3];
-
-                            // 2. Obtener las colonias de la misma zona
-                            ArrayList<String> coloniasZona = queryCarga.cargaComboColsZonas(coloniaActual);
-
-                            // 3. Limpiar y llenar el combo
-                            DefaultComboBoxModel modelo = new DefaultComboBoxModel();
-                            for (String c : coloniasZona) {
-                                modelo.addElement(c);
-                            }
-                            jcbcoloniaact.setModel(modelo);
-
-                            // 4. Seleccionar la colonia original
-                            jcbcoloniaact.setSelectedItem(coloniaActual);
-
-                        } else {
-                            JOptionPane.showMessageDialog(null, "Resultado incompleto del procedimiento.");
-                        }
-                    } catch (HeadlessException | NumberFormatException | SQLException e) {
-                        JOptionPane.showMessageDialog(null, "Error al cargar dirección: " + e.getMessage());
-                    }
-                }
-            }
-        });
     }
 
     /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
+     * Aplica textos temporales (placeholders) a los campos de texto del
+     * formulario, para orientar al usuario y validar entradas.
      */
+    private void aplicarPlaceholders() {
+        // Pestaña "Actualizar"
+        cu.aplicarPlaceholder(jtfcalleact, "Calle");
+        cu.aplicarPlaceholder(jtfnumextact, "Número exterior");
+        cu.aplicarPlaceholder(jtfnumintact, "Número interior");
+
+        // Pestaña "Busqueda"
+        cu.aplicarPlaceholder(jtfidbusqueda, "ID de búsqueda");
+        cu.aplicarPlaceholder(jtfpersonabusqueda, "Nombre o referencia");
+    }
+
+    /**
+     * Valida todos los campos antes de permitir la actualización de una
+     * dirección.
+     */
+    private boolean validarCamposDireccion() {
+        // Validación general
+        if (cu.campoVacio(jtfcalleact) || cu.campoVacio(jtfnumextact) || cu.campoVacio(jtfnumintact)
+                || jcbcoloniaact.getSelectedIndex() == 0) {
+            cu.msg_advertencia("Todos los campos deben estar llenos y una colonia válida debe ser seleccionada.", "Validación");
+            return false;
+        }
+
+        // Validación específica por campo
+        if (!cu.validarCalle(jtfcalleact.getText())) {
+            cu.msg_advertencia("La calle ingresada no es válida.", "Validación");
+            return false;
+        }
+
+        if (!cu.validarNumero(jtfnumextact.getText())) {
+            cu.msg_advertencia("El número exterior no es válido.", "Validación");
+            return false;
+        }
+
+        if (!cu.validarNumero(jtfnumintact.getText())) {
+            cu.msg_advertencia("El número interior no es válido.", "Validación");
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Define el modelo estándar para tablas de sueldos. Columnas: Id,
+     * Nombre(s), Sueldo, Fecha Inicial, Fecha Final.
+     */
+    private void configurarModeloTablaDirecciones(JTable tabla) throws SQLException {
+        DefaultTableModel modelo = new DefaultTableModel(
+                new Object[][]{},
+                new String[]{"Id Direccion", "Persona", "Direccion", "Estatus", "Tipo"}
+        ) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        tabla.setModel(modelo);
+        cargarDatosDirecciones(tabla);
+    }
+
+    /**
+     * Carga datos de empleados a la tabla especificada, limpiando antes la
+     * tabla y agregando filas con datos obtenidos.
+     */
+    public void cargarDatosDirecciones(JTable tabla) throws SQLException {
+        DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
+        limpiarTabla(tabla);
+        ArrayList<String[]> direcciones = cb.buscarDirecciones();
+
+        for (String[] direccion : direcciones) {
+            modelo.addRow(direccion);
+        }
+    }
+
+    /**
+     * Elimina todas las filas de la tabla recibida para limpiar su contenido.
+     */
+    private void limpiarTabla(JTable tabla) {
+        DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
+        modelo.setRowCount(0);
+    }
+
+    /**
+     * Carga las colonias en los JComboBox jcbcolonias y jcbcoloniaact
+     * simultáneamente. Limpia primero los modelos y luego agrega la lista
+     * obtenida desde CCargaCombos.
+     */
+    private void cargaComboBoxColonias() {
+        DefaultComboBoxModel<String> modeloBusqueda = (DefaultComboBoxModel<String>) jcbcolonias.getModel();
+        DefaultComboBoxModel<String> modeloActualiza = (DefaultComboBoxModel<String>) jcbcoloniaact.getModel();
+
+        modeloBusqueda.removeAllElements();
+        modeloActualiza.removeAllElements();
+
+        // Agregar texto inicial
+        modeloBusqueda.addElement("Colonia");
+        modeloActualiza.addElement("Colonias");
+
+        try {
+            ArrayList<String> listaColonias = cc.cargaComboColonias(); // Ajusta este método según tu CCargaCombos
+
+            for (String colonia : listaColonias) {
+                modeloBusqueda.addElement(colonia);
+                modeloActualiza.addElement(colonia);
+            }
+
+            listaColonias.clear();
+        } catch (SQLException e) {
+            CUtilitarios.msg_error("Error al cargar colonias: " + e.getMessage(), "Carga de Combo");
+        }
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -151,9 +190,14 @@ public class jflistaactdirec extends javax.swing.JFrame {
         jliconodirec = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Direcciones");
+        setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
+            }
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
             }
         });
 
@@ -171,12 +215,34 @@ public class jflistaactdirec extends javax.swing.JFrame {
 
             },
             new String [] {
-
+                "Id Direccion", "Persona", "Direccion", "Estatus", "Tipo"
             }
-        ));
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jtlistadirec.setToolTipText("Listado de Clientes y Avales");
         jtlistadirec.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jspdirec.setViewportView(jtlistadirec);
+        if (jtlistadirec.getColumnModel().getColumnCount() > 0) {
+            jtlistadirec.getColumnModel().getColumn(0).setResizable(false);
+            jtlistadirec.getColumnModel().getColumn(1).setResizable(false);
+            jtlistadirec.getColumnModel().getColumn(2).setResizable(false);
+            jtlistadirec.getColumnModel().getColumn(3).setResizable(false);
+            jtlistadirec.getColumnModel().getColumn(4).setResizable(false);
+        }
 
         javax.swing.GroupLayout jpfondotabladirecLayout = new javax.swing.GroupLayout(jpfondotabladirec);
         jpfondotabladirec.setLayout(jpfondotabladirecLayout);
@@ -205,10 +271,14 @@ public class jflistaactdirec extends javax.swing.JFrame {
         jtfidbusqueda.setBackground(new java.awt.Color(167, 235, 242));
         jtfidbusqueda.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jtfidbusqueda.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-        jtfidbusqueda.setText("Ingresar ID");
         jtfidbusqueda.setToolTipText("Ingresar ID");
         jtfidbusqueda.setBorder(null);
         jtfidbusqueda.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        jtfidbusqueda.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jtfidbusquedaKeyReleased(evt);
+            }
+        });
 
         jSeparator1.setBackground(new java.awt.Color(0, 0, 0));
         jSeparator1.setForeground(new java.awt.Color(0, 0, 0));
@@ -217,10 +287,14 @@ public class jflistaactdirec extends javax.swing.JFrame {
         jtfpersonabusqueda.setBackground(new java.awt.Color(167, 235, 242));
         jtfpersonabusqueda.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jtfpersonabusqueda.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-        jtfpersonabusqueda.setText("Ingresar Nombre de la Persona");
         jtfpersonabusqueda.setToolTipText("Ingresar Nombre(s)");
         jtfpersonabusqueda.setBorder(null);
         jtfpersonabusqueda.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        jtfpersonabusqueda.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jtfpersonabusquedaKeyReleased(evt);
+            }
+        });
 
         jSeparator2.setBackground(new java.awt.Color(0, 0, 0));
         jSeparator2.setForeground(new java.awt.Color(0, 0, 0));
@@ -232,13 +306,23 @@ public class jflistaactdirec extends javax.swing.JFrame {
         jcbcolonias.setToolTipText("Selecciona un tipo de Usuario");
         jcbcolonias.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jcbcolonias.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jcbcolonias.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jcbcoloniasItemStateChanged(evt);
+            }
+        });
 
         jcbtipo.setBackground(new java.awt.Color(167, 235, 242));
         jcbtipo.setFont(new java.awt.Font("Candara", 1, 12)); // NOI18N
-        jcbtipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tipo" }));
+        jcbtipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tipo", "Cliente", "Aval", "Ambos" }));
         jcbtipo.setToolTipText("Selecciona un tipo de Usuario");
         jcbtipo.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jcbtipo.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jcbtipo.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jcbtipoItemStateChanged(evt);
+            }
+        });
 
         javax.swing.GroupLayout jpfondobusquedaLayout = new javax.swing.GroupLayout(jpfondobusqueda);
         jpfondobusqueda.setLayout(jpfondobusquedaLayout);
@@ -313,7 +397,6 @@ public class jflistaactdirec extends javax.swing.JFrame {
         jtfcalleact.setBackground(new java.awt.Color(167, 235, 242));
         jtfcalleact.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jtfcalleact.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jtfcalleact.setText("Calle");
         jtfcalleact.setToolTipText("");
         jtfcalleact.setBorder(null);
         jtfcalleact.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
@@ -324,7 +407,6 @@ public class jflistaactdirec extends javax.swing.JFrame {
         jtfnumextact.setBackground(new java.awt.Color(167, 235, 242));
         jtfnumextact.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jtfnumextact.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jtfnumextact.setText("Número Exterior");
         jtfnumextact.setToolTipText("");
         jtfnumextact.setBorder(null);
         jtfnumextact.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
@@ -335,7 +417,6 @@ public class jflistaactdirec extends javax.swing.JFrame {
         jtfnumintact.setBackground(new java.awt.Color(167, 235, 242));
         jtfnumintact.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jtfnumintact.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jtfnumintact.setText("Número Interior");
         jtfnumintact.setToolTipText("");
         jtfnumintact.setBorder(null);
         jtfnumintact.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
@@ -508,50 +589,46 @@ public class jflistaactdirec extends javax.swing.JFrame {
             .addComponent(jpfondodireccion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        pack();
+        setSize(new java.awt.Dimension(1255, 658));
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jcbcoloniaactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbcoloniaactActionPerformed
-        JComboBox jcb = (JComboBox) evt.getSource(); // Asegura que el evento venga del combo correcto
-        seleccion = (String) jcb.getSelectedItem();
 
-        if (jcb.getSelectedIndex() == 0 || "Colonias".equals(seleccion)) {
-            CUtilitarios.msg_advertencia("Selecciona una colonia válida", "Validación de Colonia");
-            return;
-        }
-
-        if (!"Colonias".equals(seleccion)) {
-            colcl = seleccion; // Guarda la selección en la variable global
-            System.out.println(colcl);
-            try {
-                idColcl = cb.buscarIdColonia(colcl);
-            } catch (SQLException ex) {
-                Logger.getLogger(jflistaactdirec.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            System.out.println("ID COLONIA " + idColcl);
-        }
     }//GEN-LAST:event_jcbcoloniaactActionPerformed
 
     private void jbdirecactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbdirecactActionPerformed
-        try {
-            cllcl = jtfcalleact.getText();
-            ni = jtfnumintact.getText();
-            ne = jtfnumextact.getText();
-            idc = Integer.parseInt(idColcl);
-            cb.buscarDirecPorID(idDireccion);
-            boolean actDirec = ca.actualizaDirec(cllcl, ni, ne, idc, idDireccion);
-            if (actDirec) {
-                CUtilitarios.msg("Dirección Actualizada Correctamente", "Dirección Actualizada");
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(jflistaactdirec.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
     }//GEN-LAST:event_jbdirecactActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         jfmenuinicio mi = new jfmenuinicio();
         CUtilitarios.creaFrame(mi, "Menú Inicio");
     }//GEN-LAST:event_formWindowClosing
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        try {
+            configurarInterfaz();            // Carga todo
+        } catch (Exception ex) {
+            CUtilitarios.msg_error("Error al cargar datos iniciales: " + ex.getMessage(), "Inicio del Frame");
+        }
+    }//GEN-LAST:event_formWindowOpened
+
+    private void jtfidbusquedaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtfidbusquedaKeyReleased
+
+    }//GEN-LAST:event_jtfidbusquedaKeyReleased
+
+    private void jtfpersonabusquedaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtfpersonabusquedaKeyReleased
+
+    }//GEN-LAST:event_jtfpersonabusquedaKeyReleased
+
+    private void jcbcoloniasItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbcoloniasItemStateChanged
+
+    }//GEN-LAST:event_jcbcoloniasItemStateChanged
+
+    private void jcbtipoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbtipoItemStateChanged
+
+    }//GEN-LAST:event_jcbtipoItemStateChanged
 
     /**
      * @param args the command line arguments
@@ -567,16 +644,24 @@ public class jflistaactdirec extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(jflistaactdirec.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(jflistaactdirec.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(jflistaactdirec.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(jflistaactdirec.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(jflistaactdirec.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(jflistaactdirec.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(jflistaactdirec.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(jflistaactdirec.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
         //</editor-fold>

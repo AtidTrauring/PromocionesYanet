@@ -151,6 +151,21 @@ public class CUtilitarios {
         }
     }
 
+    // Verifica si un campo está vacío
+    public boolean campoVacio(JTextField campo) {
+        return campo.getText().trim().isEmpty();
+    }
+
+// Valida que el texto sea una calle válida (letras, espacios, números opcionales)
+    public boolean validarCalle(String texto) {
+        return texto.matches("^[A-Za-zÁÉÍÓÚáéíóúÑñ0-9 ]{3,}$");
+    }
+
+// Valida que el texto sea un número (1 o más dígitos)
+    public boolean validarNumero(String texto) {
+        return texto.matches("^[0-9]+$");
+    }
+
     /* Incio De Nuevos Métodos */
     Color fondoMenu = new Color(123, 187, 137);
     Color colorLetra = new Color(0, 0, 0);

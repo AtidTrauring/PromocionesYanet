@@ -44,7 +44,13 @@ public class CBusquedas {
                 + "FROM empleado;";
         return cnslt.buscarValores(consulta, 4);
     }
-    public String buscarUltimoEmpleado () throws SQLException{
+
+    public ArrayList<String[]> buscarDirecciones() throws SQLException {
+        consulta = "Call tablaDirec";
+        return cnslt.buscarValores(consulta, 5);
+    }
+
+    public String buscarUltimoEmpleado() throws SQLException {
         consulta = "SELECT MAX(empleado.idempleado) FROM empleado";
         return cnslt.buscarValor(consulta);
     }
@@ -81,9 +87,9 @@ public class CBusquedas {
     }
 
     public boolean buscarProductoPorNombre(String nombreProducto) throws SQLException {
-    consulta = "SELECT 1 FROM producto WHERE LOWER(producto) = LOWER('" + nombreProducto + "') LIMIT 1;";
-    return cnslt.buscarValor(consulta) != null;
-}
+        consulta = "SELECT 1 FROM producto WHERE LOWER(producto) = LOWER('" + nombreProducto + "') LIMIT 1;";
+        return cnslt.buscarValor(consulta) != null;
+    }
 
     public String buscarZonaPorPersona(int ipr) throws SQLException {
         consulta = "CALL zonaPorPersona (" + ipr + ")";
