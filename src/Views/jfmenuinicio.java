@@ -180,13 +180,9 @@ public class jfmenuinicio extends javax.swing.JFrame {
     }//GEN-LAST:event_jmclienteMouseClicked
 
     private void jmempleadoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jmempleadoMouseClicked
-        try {
-            JfEmpleado empleado = new JfEmpleado();
-            empleado.setVisible(true);
-            this.dispose();
-        } catch (SQLException ex) {
-            Logger.getLogger(jfmenuinicio.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        JfEmpleado empleado = new JfEmpleado();
+        empleado.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_jmempleadoMouseClicked
 
     private void jmventasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jmventasMouseClicked
