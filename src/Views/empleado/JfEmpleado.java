@@ -1,7 +1,6 @@
 package Views.empleado;
 
 import Views.direccion.jfnuevadirec;
-import Views.jfmenuinicio;
 import crud.CBusquedas;
 import crud.CCargaCombos;
 import java.awt.event.ItemEvent;
@@ -312,9 +311,9 @@ public final class JfEmpleado extends javax.swing.JFrame {
         DefaultComboBoxModel modelo = (DefaultComboBoxModel) combo.getModel();
 
         if (combo == JcmbxAgregarZonas || combo == JcmbxActlzZonas) {
-            ArrayList<String[]> zonas = queryCarga.cargaComboZonaColonia();
-            for (String[] zona : zonas) {
-                modelo.addElement(zona[3]);
+            ArrayList<String> zonas = queryCarga.cargaComboZona();
+            for (String zona : zonas) {
+                modelo.addElement(zona);
             }
         } else if (combo == JcmbxSldSueldo) {
             ArrayList<String> sueldos = queryCarga.cargaComboMontoSueldos();
@@ -377,35 +376,24 @@ public final class JfEmpleado extends javax.swing.JFrame {
 
         // Obtener la colonia seleccionada en el JComboBox
         Object itemColonia = JcmbxAgregarZonas.getSelectedItem();
-        if (itemColonia == null || itemColonia.toString().trim().isEmpty()) {
-            CUtilitarios.msg_advertencia("Selecciona una colonia válida.", "Validación");
+        if (itemColonia.equals("Zonas") || itemColonia.toString().trim().isEmpty()) {
+            CUtilitarios.msg_advertencia("¡Selecciona una Zona!.", "Validación");
             JcmbxAgregarZonas.requestFocus();
             return;
         }
-        String[] coloniaZona = buscaColoniaZona(itemColonia.toString());
+        String idZona = (String) JcmbxAgregarZonas.getSelectedItem();
         // Aquí ya tienes los datos listos para pasar al JFrame de dirección
         // CreaFrame es el método que abrirá el JFrame Dirección y le pasará estos datos
         try {
             // Pasar datos al frame de dirección (asumo que tienes una clase JFrameDireccion o similar)
-            jfnuevadirec direccion = new jfnuevadirec(new String[]{"1"}, null, null);
-            direccion.asignaValoresEmpleado(nombre, apMaterno, apPaterno, telefono, sueldoStr, coloniaZona);
+            jfnuevadirec direccion = new jfnuevadirec(null, null, null);
+            direccion.asignaValoresEmpleado(nombre, apMaterno, apPaterno, telefono, sueldoStr, idZona);
             CUtilitarios.creaFrame(direccion, "Agreagr direccion");
-            // Opcional: ocultar o bloquear este JFrame mientras se maneja el frame dirección
-            this.setEnabled(false);
+            // Opcional: ocultar  este JFrame mientras se maneja el frame dirección
+            this.dispose();
         } catch (Exception e) {
             CUtilitarios.msg_error("Error al abrir el formulario de dirección: " + e.getMessage(), "Error");
         }
-    }
-
-    public String[] buscaColoniaZona(String colonia) throws SQLException {
-        ArrayList<String[]> zonas = queryCarga.cargaComboZonaColonia();
-        String[] coloniaZona = null;
-        for (String[] zona : zonas) {
-            if (zona[3].equals(colonia)) {
-                coloniaZona = zona;
-            }
-        }
-        return coloniaZona;
     }
 
     @SuppressWarnings("unchecked")
@@ -499,11 +487,6 @@ public final class JfEmpleado extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Empleados");
         setResizable(false);
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosing(java.awt.event.WindowEvent evt) {
-                formWindowClosing(evt);
-            }
-        });
 
         JtbpPaneles.setBackground(new java.awt.Color(242, 220, 153));
 
@@ -760,7 +743,7 @@ public final class JfEmpleado extends javax.swing.JFrame {
             JpnlInsertEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(JpnlInsertEmpleadoLayout.createSequentialGroup()
                 .addGap(109, 109, 109)
-                .addComponent(JpnlCamposAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(JpnlCamposAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(140, 140, 140)
                 .addComponent(JlblimagenI)
                 .addContainerGap(152, Short.MAX_VALUE))
@@ -1509,11 +1492,6 @@ public final class JfEmpleado extends javax.swing.JFrame {
         // Inserta - Sueldos
 
     }//GEN-LAST:event_JbtnAsignarSueldoActionPerformed
-
-    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        jfmenuinicio mi = new jfmenuinicio();
-        CUtilitarios.creaFrame(mi, "Menú Inicio");
-    }//GEN-LAST:event_formWindowClosing
 
     public static void main(String args[]) {
         // <editor-fold defaultstate="collapsed" desc="Generated Code">

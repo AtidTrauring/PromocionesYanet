@@ -14,11 +14,11 @@ public class CCargaCombos {
         return cnslt.buscarValoresCombos(consulta);
     }
 
-    public ArrayList<String> cargaComboColoniasZona(String z) throws SQLException {
+    public ArrayList<String> cargaComboColoniasZona(int idZona) throws SQLException {
         consulta = "SELECT cl.colonia "
                 + "FROM colonia cl "
                 + "INNER JOIN zona z ON z.idzona = cl.zona_idzona "
-                + "WHERE z.idzona = '" + z + "';";
+                + "WHERE z.idzona = '" + idZona + "';";
         return cnslt.buscarValoresCombos(consulta);
     }
 
@@ -40,11 +40,6 @@ public class CCargaCombos {
 
     /* Fin Cliente */
     // Consulta Empleado
-    public ArrayList<String[]> cargaComboZonaColonia() throws SQLException {
-        consulta = "Select zona.idzona, zona.num_zona, colonia.idcolonia, colonia.colonia FROM colonia, zona Where colonia.zona_idzona = zona.idzona;";
-        return cnslt.buscarValores(consulta, 4);
-    }
-
     public ArrayList<String> cargaComboFechaVenta() throws SQLException {
         consulta = "SELECT venta.fecha_venta FROM venta";
         return cnslt.buscarValoresCombos(consulta);
