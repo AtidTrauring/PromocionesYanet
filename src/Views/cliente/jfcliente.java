@@ -195,6 +195,9 @@ public final class jfcliente extends javax.swing.JFrame {
     private void configurarFiltros() {
         trlistaClienteAval = new TableRowSorter<>((DefaultTableModel) jtlistaclienteaval.getModel());
         jtlistaclienteaval.setRowSorter(trlistaClienteAval);
+        
+//        trClienteAval = new TableRowSorter<>((DefaultTableModel) jtlistaclienteaval.getModel());
+//        jtlistaclienteaval.setRowSorter(trClienteAval);
 
         trlistaClienteAvalAct = new TableRowSorter<>((DefaultTableModel) jtlistaclienteavalact.getModel());
         jtlistaclienteavalact.setRowSorter(trlistaClienteAvalAct);
@@ -234,7 +237,7 @@ public final class jfcliente extends javax.swing.JFrame {
         
         String filtroIdlis = jtfidbusqueda.getText().trim();
         if (!filtroIdlis.isEmpty() && (jtfidbusqueda.getToolTipText() == null || !filtroIdlis.equals(jtfidbusqueda.getToolTipText()))) {
-            filtros.add(RowFilter.regexFilter("(?i).*" + Pattern.quote(filtroIdlis) + ".*", 1));
+            filtros.add(RowFilter.regexFilter("(?i).*" + Pattern.quote(filtroIdlis) + ".*", 0));
         }
         
         String filtronomLis = jtfnombresbusqueda.getText().trim();
@@ -244,18 +247,17 @@ public final class jfcliente extends javax.swing.JFrame {
         
         String filtroaplist = jtfapbusqueda.getText().trim();
         if (!filtroaplist.isEmpty() && (jtfapbusqueda.getToolTipText() == null || !filtroaplist.equals(jtfapbusqueda.getToolTipText()))) {
-            filtros.add(RowFilter.regexFilter("(?i).*" + Pattern.quote(filtroaplist) + ".*", 1));
+            filtros.add(RowFilter.regexFilter("(?i).*" + Pattern.quote(filtroaplist) + ".*", 2));
         }
         
         String filtroamlist = jtfambusqueda.getText().trim();
         if (!filtroamlist.isEmpty() && (jtfambusqueda.getToolTipText() == null || !filtroamlist.equals(jtfambusqueda.getToolTipText()))) {
-            filtros.add(RowFilter.regexFilter("(?i).*" + Pattern.quote(filtroamlist) + ".*", 1));
+            filtros.add(RowFilter.regexFilter("(?i).*" + Pattern.quote(filtroamlist) + ".*", 3));
         }
-
-        // Filtro por sueldo (columna 2)
+        
         String seleccionadoSueldo = (String) jcbestatusbusqueda.getSelectedItem();
         if (seleccionadoSueldo != null && !seleccionadoSueldo.equalsIgnoreCase("Estatus")) {
-            filtros.add(RowFilter.regexFilter("(?i).*" + Pattern.quote(seleccionadoSueldo) + ".*", 2));
+            filtros.add(RowFilter.regexFilter("(?i).*" + Pattern.quote(seleccionadoSueldo) + ".*", 5));
         }
 
         // Aplicar filtros combinados o mostrar todo si no hay filtros
@@ -678,6 +680,9 @@ public final class jfcliente extends javax.swing.JFrame {
         jtfidbusqueda.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 jtfidbusquedaKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jtfidbusquedaKeyTyped(evt);
             }
         });
 
@@ -1818,8 +1823,8 @@ public final class jfcliente extends javax.swing.JFrame {
                 jtfactnombres.getText().trim(),
                 jtfactap.getText().trim(),
                 jtfactam.getText().trim(),
-                jtfacttel.getText().trim(),
-                idPersonaEn
+                jtfacttel.getText().trim()
+                //idPersonaEn
             };
 
             // 6. Abrir ventana de dirección
@@ -1831,21 +1836,19 @@ public final class jfcliente extends javax.swing.JFrame {
     }//GEN-LAST:event_jbcontinuaractActionPerformed
 
     private void jtfidbusquedaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtfidbusquedaKeyReleased
-        aplicarFiltrosCombinados(jtlistaclienteaval, trlistaClienteAval, 
-                new JTextField[]{jtfidbusqueda, jtfnombresbusqueda, jtfapbusqueda, jtfambusqueda}, 
-                new int[]{0,1,2,3});
+        aplicarFiltrosListaClienteAval();
     }//GEN-LAST:event_jtfidbusquedaKeyReleased
 
     private void jtfnombresbusquedaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtfnombresbusquedaKeyReleased
-        jtfidbusquedaKeyReleased(evt);
+        aplicarFiltrosListaClienteAval();
     }//GEN-LAST:event_jtfnombresbusquedaKeyReleased
 
     private void jtfapbusquedaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtfapbusquedaKeyReleased
-        jtfidbusquedaKeyReleased(evt);
+        aplicarFiltrosListaClienteAval();
     }//GEN-LAST:event_jtfapbusquedaKeyReleased
 
     private void jtfambusquedaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtfambusquedaKeyReleased
-        jtfidbusquedaKeyReleased(evt);
+        aplicarFiltrosListaClienteAval();
     }//GEN-LAST:event_jtfambusquedaKeyReleased
 
     private void jcbestatusbusquedaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbestatusbusquedaItemStateChanged
@@ -1855,7 +1858,7 @@ public final class jfcliente extends javax.swing.JFrame {
     }//GEN-LAST:event_jcbestatusbusquedaItemStateChanged
 
     private void jtfidbusquedaeliKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtfidbusquedaeliKeyReleased
-        aplicarFiltrosCombinados(jtlistaclienteaval, trlistaClienteAvalEli, 
+        aplicarFiltrosCombinados(jtlistaclienteavaleli, trlistaClienteAvalEli, 
                 new JTextField[]{jtfidbusquedaeli, jtfnombresbusquedaeli, jtfapbusquedaeli, jtfambusquedaeli}, 
                 new int[]{0,1,2,3});
     }//GEN-LAST:event_jtfidbusquedaeliKeyReleased
@@ -1871,6 +1874,10 @@ public final class jfcliente extends javax.swing.JFrame {
     private void jtfambusquedaeliKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtfambusquedaeliKeyReleased
         jtfidbusquedaeliKeyReleased(evt);
     }//GEN-LAST:event_jtfambusquedaeliKeyReleased
+
+    private void jtfidbusquedaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtfidbusquedaKeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jtfidbusquedaKeyTyped
 
     /**
      * @param args the command line arguments
