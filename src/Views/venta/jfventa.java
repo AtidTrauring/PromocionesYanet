@@ -19,7 +19,6 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -176,15 +175,7 @@ public class jfventa extends javax.swing.JFrame {
     //Cargar tabla con los productos de la venta
     private void cargarTablaConProducto() {
         try {
-//            //Se intenta cargar un mmodelo nuevo, respetando el diseño
-//            modelCarga = (DefaultTableModel) jTblAgregarVenta.getModel();
-//            modelCarga.addColumn("id");
-//            modelCarga.addColumn("producto");
-//            modelCarga.addColumn("precio");
-//            //Se asigna el modelo a la tabla de agregar
-//            jTblAgregarVenta.setModel(modelCarga);
-//
-//            //Se obtiene lo ingresado en el testfield.
+            //Se obtiene lo ingresado en el testfield.
             folioVenta = jTxtFFolioVenta.getText().trim();
             datosProducto = cbus.buscarProductoDeLaVenta(folioVenta);
             //Se imprimen los arreglos
@@ -195,9 +186,6 @@ public class jfventa extends javax.swing.JFrame {
                 System.out.println(Arrays.toString(datoProd));
 
                 modelCarga.addRow(new Object[]{datoProd[0], datoProd[1], datoProd[2]});
-                //Se comenta porque se sobrecargarian dos veces la tabla. 
-                //modelCarga.addRow(datoProd);
-
             }
             jTblAgregarVenta.setModel(modelCarga);
         } catch (Exception e) {
@@ -253,7 +241,6 @@ public class jfventa extends javax.swing.JFrame {
             if (idVenta.isEmpty()) {
                 return;
             }
-
             // Validaa que el monto sea número entero
             String montoTexto = jTxtFAgAcPagosPago.getText().trim();
             if (!montoTexto.matches("^[0-9]+$")) {
@@ -389,7 +376,6 @@ public class jfventa extends javax.swing.JFrame {
         TableRowSorter<DefaultTableModel> tr = new TableRowSorter<>(modelFiltro);
         tabla.setRowSorter(tr);
         ArrayList<RowFilter<Object, Object>> filtros = new ArrayList<>();
-
         //es para ver que filtros aplicar a que tabla (ayuda del chat jajajaja)
         boolean esPrimeraTabla = (tabla == jTblListaVentas);
         boolean esSegundaTabla = (tabla == jTblAgregarVenta);
@@ -421,7 +407,6 @@ public class jfventa extends javax.swing.JFrame {
                 filtros.add(RowFilter.regexFilter("(?i)" + jTxtFFolioVenta.getText().trim(), 0));
             }
         }
-
         //aplica los filtros
         if (!filtros.isEmpty()) {
             tr.setRowFilter(RowFilter.andFilter(filtros));
@@ -486,13 +471,6 @@ public class jfventa extends javax.swing.JFrame {
         jBtnAgregarVenta.setEnabled(false);
         jBtnActualizarVenta.setEnabled(false);
         jBtnEliminarVenta.setEnabled(false);
-//        jTxtFAgAcFolioVentaPago.setEnabled(false);
-//        jCmbBoxAgAcCobradorVentaPago.setEnabled(false);
-//        jDateChoPago.setEnabled(false);
-//        jTxtFAgAcPagosPago.setEnabled(false);
-//        jTxtFAgAcRestantePago.setEnabled(false);
-//        jBtnActualizarPago.setEnabled(false);
-//        jBtnGuardarPago.setEnabled(false);
         jBtnEliminarProdVenta.setEnabled(false);
         jBtnAgregarProdVenta.setEnabled(false);
     }
@@ -621,10 +599,6 @@ public class jfventa extends javax.swing.JFrame {
                 && !validaCamposVenta(jTxtFTotalVenta, "^[0-9]+$", "El total está vacío", "Solo se aceptan números en el total")) {
             return false;
         }
-//        if (jTxtFFolioProductoVenta.isEnabled()
-//                && !validaCamposVenta(jTxtFFolioProductoVenta, "^[0-9]+$", "El folio del producto está vacío", "Solo se aceptan números en el folio del producto")) {
-//            return false;
-//        }
         if (jDteChoVenta.isEnabled()
                 && !validaCamposVenta(jDteChoVenta, null, "No se escogió una fecha", null)) {
             return false;
@@ -649,26 +623,6 @@ public class jfventa extends javax.swing.JFrame {
                 && !validaCamposVenta(jCmbBoxNumAvalesVenta, null, "No se eligió el número de avales", null)) {
             return false;
         }
-//        if (jTxtFAgAcFolioVentaPago.isEnabled()
-//                && !validaCamposVenta(jTxtFAgAcFolioVentaPago, "^[0-9]+$", "El folio de la venta no puede estar vacio", "Solo se buscan numeros en el folio")) {
-//            return false;
-//        }
-//        if (jCmbBoxAgAcCobradorVentaPago.isEnabled()
-//                && !validaCamposVenta(jCmbBoxAgAcCobradorVentaPago, null, "No se eligio un cobrador", null)) {
-//            return false;
-//        }
-//        if (jDateChoPago.isEnabled()
-//                && !validaCamposVenta(jDateChoPago, null, "No se eligio una fecha", null)) {
-//            return false;
-//        }
-//        if (jTxtFAgAcPagosPago.isEnabled()
-//                && !validaCamposVenta(jTxtFAgAcPagosPago, "^[0-9]+$", "El pago no puede estar vacio", "Solo ingrese numeros en el pago")) {
-//            return false;
-//        }
-//        if (jTxtFAgAcRestantePago.isEnabled()
-//                && !validaCamposVenta(jTxtFAgAcRestantePago, "^[0-9]+$", "El restante no puede estar vacio", "Solo ingrese numeros en el restante")) {
-//            return false;
-//        }
         return true;
     }
 
@@ -679,6 +633,16 @@ public class jfventa extends javax.swing.JFrame {
         }
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         return sdf.format(fecha);
+    }
+
+    //Va a asignar la fecha que se traiga de la tabla al datechoose
+    private void asignarFechaSimple(int fila, int columna) {
+        try {
+            String fechaStr = jTblListaVentas.getValueAt(fila, columna).toString();
+            jDteChoVenta.setDate(new SimpleDateFormat("yyyy-MM-dd").parse(fechaStr));
+        } catch (Exception e) {
+            jDteChoVenta.setDate(null);
+        }
     }
 
     //Obtiene los valores que se insegren del usuario
@@ -694,10 +658,6 @@ public class jfventa extends javax.swing.JFrame {
         numAvalesSeleccionado = jCmbBoxNumAvalesVenta.getSelectedItem().toString().trim();
         fechaSeleccionada = formatearFecha(jDteChoVenta.getDate());
         folioVentaPago = jTxtFAgAcFolioVentaPago.getText().trim();
-        //cobradorSeleccionadoPago = jCmbBoxAgAcCobradorVentaPago.getSelectedItem().toString().trim();
-//        fechaSeleccionadaPago = formatearFecha(jDateChoPago.getDate());
-//        pagoSeleccionado = jTxtFAgAcPagosPago.getText().trim();
-//        restanteSeleccionado = jTxtFAgAcRestantePago.getText().trim();
     }
 
     public void agregarVenta() throws SQLException {
@@ -767,12 +727,26 @@ public class jfventa extends javax.swing.JFrame {
             try {
                 if (cInser.insertaVenta(totalVenta, fechaSeleccionada, numPagos, idvendedorSeleccionado, idclienteSeleccionado,
                         idzonaSeleccionada, idestatusSeleccionado)) {
+
+                    // Obtener ID de la venta insertada
+                    String idVenta = cbus.buscaMaximoVenta();
+
+                    // Insertar Avales
                     for (String avalSeleccionado : idAvalesSeleccionado) {
                         System.out.println(avalSeleccionado);
-                        if (!cInser.insertaAvalVenta(avalSeleccionado, cbus.buscaMaximoVenta())) {
+                        if (!cInser.insertaAvalVenta(avalSeleccionado, idVenta)) {
                             cuti.msg_error("No se insertaron los avales", "Inserción de avales");
                         }
                     }
+
+                    // Insertar Productos de la venta
+                    for (String[] producto : productosVenta) {
+                        String idProducto = producto[0];  // ID del producto
+                        if (!cInser.insertaProductoConVenta(idVenta, idProducto)) {
+                            cuti.msg_error("No se insertaron todos los productos", "Inserción de productos");
+                        }
+                    }
+
                     cuti.msg("Venta insertada correctamente", "Registro de venta");
                     cargarTablaBusqueda();
                     cargarTablaPagos(folioVenta);
@@ -822,16 +796,6 @@ public class jfventa extends javax.swing.JFrame {
             } catch (Exception e) {
                 cuti.msg_error("Error SQL al actualizar: " + e.getMessage(), "Actualizar venta");
             }
-        }
-    }
-
-    //Va a asignar la fecha que se traiga de la tabla al datechoose
-    private void asignarFechaSimple(int fila, int columna) {
-        try {
-            String fechaStr = jTblListaVentas.getValueAt(fila, columna).toString();
-            jDteChoVenta.setDate(new SimpleDateFormat("yyyy-MM-dd").parse(fechaStr));
-        } catch (Exception e) {
-            jDteChoVenta.setDate(null);
         }
     }
 
