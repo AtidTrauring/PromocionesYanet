@@ -66,7 +66,7 @@ public final class jfcliente extends javax.swing.JFrame {
     private TableRowSorter<TableModel> trClienteAvalAct;
     private TableRowSorter<TableModel> trClienteAvalEli;
     private String sqlClientesAvales = "Call tablaClienteAval";
-    private String seleccion, est, z, idZona, idEstatus, idEstatusAval, esttabla, tipo, idPersona, zona;
+    private String seleccion, est, z, idZona, idEstatus, idEstatusAval, esttabla, tipo, idPersona, idPersonaEn, zona;
     private String nomact, apact, amact, telact;
     private int idclav, idpr;
 
@@ -355,7 +355,7 @@ public final class jfcliente extends javax.swing.JFrame {
     }
 
     private void abrirVentanaDireccionAct(String[] datosZona, String[] datosPersona, String[] datosEstatus) {
-        jfnuevadirec dir = new jfnuevadirec(datosZona, datosPersona, datosEstatus);
+        jfactdirec dir = new jfactdirec(datosZona, datosPersona, datosEstatus);
         dir.setVisible(true);
         this.dispose();
     }
@@ -1656,11 +1656,13 @@ public final class jfcliente extends javax.swing.JFrame {
 
             // 5. Preparar datos para la siguiente ventana
             String[] datosZonaAct = {idZona};
+            idPersonaEn = Integer.toString(idpr);
             String[] datosPersonaAct = {
                 jtfactnombres.getText().trim(),
                 jtfactap.getText().trim(),
                 jtfactam.getText().trim(),
-                jtfacttel.getText().trim()
+                jtfacttel.getText().trim(),
+                idPersonaEn
             };
 
             // 6. Abrir ventana de dirección

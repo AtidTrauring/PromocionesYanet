@@ -21,7 +21,7 @@ public class jfactdirec extends javax.swing.JFrame {
     CBusquedas cb = new CBusquedas();
     CInserciones ci = new CInserciones();
     String seleccion, colcl, idColcl;
-    private String cllcl, ne, ni, nomcla, apcla, amcla, telcla;
+    private String cllcl, ne, ni, nomcla, apcla, amcla, telcla, idPersona;
     private String nombre, apMat, apPat, telefono, sueldo;
     private String[] coloniaZona;
     private int idc, idescl, idescla;
@@ -158,11 +158,6 @@ public class jfactdirec extends javax.swing.JFrame {
         jcbcolonian.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Colonias" }));
         jcbcolonian.setToolTipText("");
         jcbcolonian.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jcbcolonian.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jcbcolonianActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -271,26 +266,6 @@ public class jfactdirec extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jcbcolonianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbcolonianActionPerformed
-        JComboBox jcb = (JComboBox) evt.getSource(); // Asegura que el evento venga del combo correcto
-        seleccion = (String) jcb.getSelectedItem();
-
-        if (jcb.getSelectedIndex() == 0 || "Colonias".equals(seleccion)) {
-            CUtilitarios.msg_advertencia("Selecciona una colonia válida", "Validación de Colonia");
-            return;
-        }
-
-        if (!"Colonias".equals(seleccion)) {
-            colcl = seleccion; // Guarda la selección en la variable global
-            System.out.println(colcl);
-            try {
-                idColcl = cb.buscarIdColonia(colcl);
-                System.out.println("ID COLONIA " + idColcl);
-            } catch (SQLException ex) {
-            }
-        }
-    }//GEN-LAST:event_jcbcolonianActionPerformed
-
     private void jbagregardirecActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbagregardirecActionPerformed
         JTextField[] jtf = {jtfcallen, jtfnumextn, jtfnumintn};
         String[] textosPredeterminados = {"Calle", "Número Interior", "Número Exterior"};
@@ -313,6 +288,7 @@ public class jfactdirec extends javax.swing.JFrame {
         apcla = datosPersona[1];
         amcla = datosPersona[2];
         telcla = datosPersona[3];
+        idPersona = datosPersona[4];
 
         StringBuilder mensaje = new StringBuilder(); // Acumulador de mensaje final
         try {
