@@ -1,9 +1,6 @@
 package crud;
 
-import com.mysql.cj.jdbc.CallableStatement;
-import com.sun.jdi.connect.spi.Connection;
 import java.sql.*;
-import java.util.Arrays;
 
 public class CInserciones {
 
@@ -143,6 +140,17 @@ public class CInserciones {
 
     public boolean insertaAval(int idPersona, int idEstatus) throws SQLException {
         consulta = "CALL insertaAval(" + idPersona + "," + idEstatus + ");";
+        return cnslt.inserta(consulta);
+    }
+
+    /* Inseciones Cliente */
+    public boolean insertaEmpleado(int idPersona) throws SQLException {
+        consulta = "INSERT INTO empleado (persona_idpersona) VALUES ('" + idPersona + "');";
+        return cnslt.inserta(consulta);
+    }
+
+    public boolean insertaSueldo(Date fechaInicio, Date fechaFinal, String sueldo, String idEmpleado) throws SQLException {
+        consulta = "INSERT INTO sueldo (fecha_inicio, fecha_final, sueldo, empleado_idempleado) VALUES ('" + fechaInicio + "','" + fechaFinal + "','" + sueldo + "','" + idEmpleado + "')";
         return cnslt.inserta(consulta);
     }
 
