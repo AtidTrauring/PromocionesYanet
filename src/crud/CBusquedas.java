@@ -44,6 +44,10 @@ public class CBusquedas {
                 + "FROM empleado;";
         return cnslt.buscarValores(consulta, 4);
     }
+    public String buscarUltimoEmpleado () throws SQLException{
+        consulta = "SELECT MAX(empleado.idempleado) FROM empleado";
+        return cnslt.buscarValor(consulta);
+    }
 
     /* Cliente */
     public String buscarCredenciales(String credencial, String contrasena) throws SQLException {

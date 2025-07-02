@@ -149,7 +149,7 @@ public class CInserciones {
         return cnslt.inserta(consulta);
     }
 
-    public boolean insertaSueldo(Date fechaInicio, Date fechaFinal, String sueldo, String idEmpleado) throws SQLException {
+    public boolean insertaSueldo(Date fechaInicio, Date fechaFinal, String sueldo, int idEmpleado) throws SQLException {
         consulta = "INSERT INTO sueldo (fecha_inicio, fecha_final, sueldo, empleado_idempleado) VALUES ('" + fechaInicio + "','" + fechaFinal + "','" + sueldo + "','" + idEmpleado + "')";
         return cnslt.inserta(consulta);
     }

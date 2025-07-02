@@ -1,11 +1,16 @@
 package Views.direccion;
 
-import crud.*;
-import java.sql.*;
-import java.util.*;
-import java.util.logging.*;
-import javax.swing.*;
-import utilitarios.*;
+import Views.empleado.JfEmpleado;
+import Views.cliente.jfcliente;
+import crud.CBusquedas;
+import crud.CCargaCombos;
+import crud.CInserciones;
+import java.time.LocalDate;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JTextField;
+import utilitarios.CUtilitarios;
 
 public class jfnuevadirec extends javax.swing.JFrame {
 
@@ -48,7 +53,7 @@ public class jfnuevadirec extends javax.swing.JFrame {
     }
 
     public boolean validaColonia() {
-        if (jcbcolonian.getSelectedIndex() != 0 || jcbcolonian.getSelectedItem().equals("Colonias")) {
+        if (jcbcolonian.getSelectedIndex() == 0 || jcbcolonian.getSelectedItem().equals("Colonias")) {
             CUtilitarios.msg_advertencia("¡Selecciona una colonia!", "Colonias");
             return false;
         } else {
@@ -81,6 +86,9 @@ public class jfnuevadirec extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
             }
@@ -258,11 +266,12 @@ public class jfnuevadirec extends javax.swing.JFrame {
         calle = jtfcallen.getText();
         numeroInterior = jtfnumintn.getText();
         numeroExterior = jtfnumextn.getText();
-
-        nombre = datosPersona[0];
-        apPat = datosPersona[1];
-        apMat = datosPersona[2];
-        telefono = datosPersona[3];
+        if (datosPersona != null) {
+            nombre = datosPersona[0];
+            apPat = datosPersona[1];
+            apMat = datosPersona[2];
+            telefono = datosPersona[3];
+        }
 
         StringBuilder mensaje = new StringBuilder(); // Acumulador de mensaje final
         try {
@@ -271,27 +280,46 @@ public class jfnuevadirec extends javax.swing.JFrame {
                 // Insertar persona solo si se insertó correctamente la dirección
                 int idPer = ci.insertaPersona(nombre, apPat, apMat, telefono, idDirec);
                 if (idPer > 0) {
-
-                    // Insertar cliente si existe estatus para cliente
-                    if (datosEstatus[0] != null) {
-                        idescl = Integer.parseInt(datosEstatus[0]);
-                        boolean insertaCliente = ci.insertaCliente(idPer, idescl);
-                        if (insertaCliente) {
-                            mensaje.append("Cliente ");
+                    if (datosEstatus != null) {
+                        // Insertar cliente si existe estatus para cliente
+                        if (datosEstatus[0] != null) {
+                            idescl = Integer.parseInt(datosEstatus[0]);
+                            boolean insertaCliente = ci.insertaCliente(idPer, idescl);
+                            if (insertaCliente) {
+                                mensaje.append("Cliente ");
+                            }
                         }
-                    }
 
-                    // Insertar aval si existe estatus para aval
-                    if (datosEstatus[1] != null) {
-                        idescla = Integer.parseInt(datosEstatus[1]);
-                        boolean insertaAval = ci.insertaAval(idPer, idescla);
-                        if (insertaAval) {
-                            mensaje.append("Aval ");
+                        // Insertar aval si existe estatus para aval
+                        if (datosEstatus[1] != null) {
+                            idescla = Integer.parseInt(datosEstatus[1]);
+                            boolean insertaAval = ci.insertaAval(idPer, idescla);
+                            if (insertaAval) {
+                                mensaje.append("Aval ");
+                            }
                         }
-                    }
-                    // Inserta en empleado si existe un sueldo
-                    if (sueldo != null) {
-                        
+                    } else {
+                        // Inserta en empleado si existe un sueldo
+                        if (sueldo != null) {
+                            if (ci.insertaEmpleado(idPer)) {
+                                int idEmpleado = Integer.parseInt(cb.buscarUltimoEmpleado());
+                                // Calcula fechas
+                                LocalDate hoy = LocalDate.now(); // Fecha actual
+                                LocalDate fin = hoy.plusDays(7); // 7 días después
+
+                                java.sql.Date fechaInicio = java.sql.Date.valueOf(hoy);
+                                java.sql.Date fechaFinal = java.sql.Date.valueOf(fin);
+                                if (ci.insertaSueldo(fechaInicio, fechaFinal, sueldo, idEmpleado)) {
+                                    CUtilitarios.msg("El empleado se registro exitosamente", "Inserta Empleado - Sueldo");
+                                    this.dispose();
+                                } else {
+                                    CUtilitarios.msg_error("Ocurrio un problema al insertar el sueldo", "Inserta Empleado - Sueldo");
+                                }
+                            } else {
+                                CUtilitarios.msg_advertencia("Ocurrio un problema al insertar al empleado", "Inserta Empleado - Empleado");
+                            }
+                        }
+
                     }
                 } else {
                     mensaje.append("FALLÓ la inserción de Persona ");
@@ -300,7 +328,6 @@ public class jfnuevadirec extends javax.swing.JFrame {
                 mensaje.append("FALLÓ la inserción de Dirección ");
             }
         } catch (SQLException ex) {
-            Logger.getLogger(jfnuevadirec.class.getName()).log(Level.SEVERE, null, ex);
             mensaje.append("Error al insertar");
         }
 
@@ -321,6 +348,20 @@ public class jfnuevadirec extends javax.swing.JFrame {
         cu.aplicarPlaceholder(jtfnumextn, "Número Exterior");
         cu.aplicarPlaceholder(jtfnumintn, "Numero Interior");
     }//GEN-LAST:event_formWindowOpened
+
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        if (datosPersona != null) {
+            JfEmpleado frmEmpleado = new JfEmpleado();
+            CUtilitarios.creaFrame(frmEmpleado, "Empleados");
+        } else {
+            try {
+                jfcliente frmCliente = new jfcliente();
+                CUtilitarios.creaFrame(frmCliente, "Clientes");
+            } catch (SQLException e) {
+                CUtilitarios.msg_error("Ocurrio un error al regresar al Frame de Cliente", "Evento de cierre en direccion");
+            }
+        }
+    }//GEN-LAST:event_formWindowClosed
 
     public static void main(String args[]) {
         try {

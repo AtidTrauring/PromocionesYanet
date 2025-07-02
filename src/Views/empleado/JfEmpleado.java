@@ -36,13 +36,8 @@ public final class JfEmpleado extends javax.swing.JFrame {
     private TableRowSorter<DefaultTableModel> trDeleteEmpleados;   // Filtro pestaña Eliminar
     private TableRowSorter<DefaultTableModel> trSueldosEmpleados;  // Filtro pestaña Sueldos
 
-    public JfEmpleado() throws SQLException {
+    public JfEmpleado() {
         initComponents();
-        // Configuración inicial de la interfaz
-        configurarInterfaz();
-
-        // Carga inicial de datos desde la base de datos
-        cargarDatosIniciales();
     }
 
 // ========================================================================
@@ -487,6 +482,11 @@ public final class JfEmpleado extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Empleados");
         setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         JtbpPaneles.setBackground(new java.awt.Color(242, 220, 153));
 
@@ -1493,6 +1493,18 @@ public final class JfEmpleado extends javax.swing.JFrame {
 
     }//GEN-LAST:event_JbtnAsignarSueldoActionPerformed
 
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        // Configuración inicial de la interfaz
+        configurarInterfaz();
+
+        // Carga inicial de datos desde la base de datos
+        try {
+            cargarDatosIniciales();
+        } catch (SQLException e) {
+            CUtilitarios.msg_error("Ocurrio un error al cargar los datos principales", "Evento de Apertura");
+        }
+    }//GEN-LAST:event_formWindowOpened
+
     public static void main(String args[]) {
         // <editor-fold defaultstate="collapsed" desc="Generated Code">
         try {
@@ -1514,11 +1526,8 @@ public final class JfEmpleado extends javax.swing.JFrame {
         //</editor-fold>
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                try {
-                    new JfEmpleado().setVisible(true);
-                } catch (SQLException ex) {
-                    Logger.getLogger(JfEmpleado.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                new JfEmpleado().setVisible(true);
+
             }
         });
     }
