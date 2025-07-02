@@ -4,6 +4,7 @@ import Views.jfmenuinicio;
 import crud.*;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import javax.swing.*;
 import utilitarios.CUtilitarios;
 import javax.swing.table.*;
@@ -37,7 +38,6 @@ public class jflistaactdirec extends javax.swing.JFrame {
         this.sueldo = sueldo;
         this.idZona = idZona;
         this.datosEstatus = datosEstatus;
-
     }
 
     /**
@@ -154,6 +154,34 @@ public class jflistaactdirec extends javax.swing.JFrame {
         } catch (SQLException e) {
             CUtilitarios.msg_error("Error al cargar colonias: " + e.getMessage(), "Carga de Combo");
         }
+    }
+
+    /**
+     * Devuelve los valores de la fila seleccionada en la tabla jtlistadirec.
+     * Usa el índice del modelo, incluso si hay filtros aplicados.
+     *
+     * @return Arreglo de Strings con los valores de la fila seleccionada, o
+     * null si no hay selección.
+     */
+    private String[] obtenerDatosFilaActualizar() {
+        int filaVista = jtlistadirecact.getSelectedRow();
+        if (filaVista == -1) {
+            CUtilitarios.msg_advertencia("Debe seleccionar una fila primero.", "Selección Requerida");
+            return null;
+        }
+
+        int columnas = jtlistadirecact.getColumnCount();
+        String[] datos = new String[columnas];
+
+        // Convertir de índice visual (filtrado) a índice del modelo original
+        int filaModelo = jtlistadirecact.convertRowIndexToModel(filaVista);
+
+        for (int i = 0; i < columnas; i++) {
+            Object valor = jtlistadirecact.getModel().getValueAt(filaModelo, i);
+            datos[i] = (valor != null) ? valor.toString() : "";
+        }
+
+        return datos;
     }
 
     @SuppressWarnings("unchecked")
@@ -429,11 +457,6 @@ public class jflistaactdirec extends javax.swing.JFrame {
         jcbcoloniaact.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Colonias" }));
         jcbcoloniaact.setToolTipText("");
         jcbcoloniaact.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jcbcoloniaact.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jcbcoloniaactActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout jpactualizarLayout = new javax.swing.GroupLayout(jpactualizar);
         jpactualizar.setLayout(jpactualizarLayout);
@@ -593,12 +616,24 @@ public class jflistaactdirec extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jcbcoloniaactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbcoloniaactActionPerformed
-
-    }//GEN-LAST:event_jcbcoloniaactActionPerformed
-
     private void jbdirecactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbdirecactActionPerformed
+        String[] filaSeleccionada = obtenerDatosFilaActualizar();
 
+        if (filaSeleccionada != null) {
+            String id = filaSeleccionada[0]; // ID Dirección
+            String persona = filaSeleccionada[1]; // Nombre Persona
+            String direccion = filaSeleccionada[2]; // Dirección
+            String estatus = filaSeleccionada[3];
+            String tipo = filaSeleccionada[4];
+        }
+        for (int i = 0; i < filaSeleccionada.length; i++) {
+            System.out.println("[" + i + "] -> " + filaSeleccionada[i]);
+
+        }
+        // Actualizacion de Persona
+//        if (validarCamposDireccion()) {
+//
+//        }
     }//GEN-LAST:event_jbdirecactActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
@@ -609,7 +644,7 @@ public class jflistaactdirec extends javax.swing.JFrame {
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         try {
             configurarInterfaz();            // Carga todo
-        } catch (Exception ex) {
+        } catch (SQLException ex) {
             CUtilitarios.msg_error("Error al cargar datos iniciales: " + ex.getMessage(), "Inicio del Frame");
         }
     }//GEN-LAST:event_formWindowOpened
