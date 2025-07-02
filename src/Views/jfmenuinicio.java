@@ -208,7 +208,8 @@ public class jfmenuinicio extends javax.swing.JFrame {
 
     private void jmdirecMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jmdirecMouseClicked
         jflistaactdirec ldic = new jflistaactdirec();
-        CUtilitarios.creaFrame(ldic, "Lista Dirección");
+        ldic.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_jmdirecMouseClicked
 
     /**

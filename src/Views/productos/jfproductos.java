@@ -4,6 +4,7 @@
  */
 package Views.productos;
 
+import Views.jfmenuinicio;
 import crud.CActualizaciones;
 import crud.CBusquedas;
 import crud.CEliminaciones;
@@ -501,7 +502,12 @@ public class jfproductos extends javax.swing.JFrame {
         jBtnIngGuardarProd = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jPnlLogAlmacen.setBackground(new java.awt.Color(242, 220, 153));
 
@@ -718,7 +724,7 @@ public class jfproductos extends javax.swing.JFrame {
         jBtnActActualizarProd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/updateEmpleado1.png"))); // NOI18N
         jBtnActActualizarProd.setText("Actualizar producto");
         jBtnActActualizarProd.setContentAreaFilled(false);
-        jBtnActActualizarProd.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jBtnActActualizarProd.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jBtnActActualizarProd.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/updateEmpleado1.png"))); // NOI18N
         jBtnActActualizarProd.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/updateEmpleado2.png"))); // NOI18N
         jBtnActActualizarProd.addActionListener(new java.awt.event.ActionListener() {
@@ -894,7 +900,7 @@ public class jfproductos extends javax.swing.JFrame {
         jBtnElmEliminarProd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/eli1.png"))); // NOI18N
         jBtnElmEliminarProd.setText("Eliminar producto");
         jBtnElmEliminarProd.setContentAreaFilled(false);
-        jBtnElmEliminarProd.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jBtnElmEliminarProd.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jBtnElmEliminarProd.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/eli1.png"))); // NOI18N
         jBtnElmEliminarProd.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/eli2.png"))); // NOI18N
         jBtnElmEliminarProd.addActionListener(new java.awt.event.ActionListener() {
@@ -986,7 +992,7 @@ public class jfproductos extends javax.swing.JFrame {
         jBtnIngGuardarProd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/continuar1.png"))); // NOI18N
         jBtnIngGuardarProd.setText("Guardar producto");
         jBtnIngGuardarProd.setContentAreaFilled(false);
-        jBtnIngGuardarProd.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jBtnIngGuardarProd.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jBtnIngGuardarProd.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/continuar1.png"))); // NOI18N
         jBtnIngGuardarProd.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/continuar2.png"))); // NOI18N
         jBtnIngGuardarProd.addActionListener(new java.awt.event.ActionListener() {
@@ -1144,6 +1150,11 @@ public class jfproductos extends javax.swing.JFrame {
         // TODO add your handling code here:
         actualizarProducto();
     }//GEN-LAST:event_jBtnActActualizarProdActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        jfmenuinicio mi = new jfmenuinicio();
+        CUtilitarios.creaFrame(mi, "Menú Inicio");
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments

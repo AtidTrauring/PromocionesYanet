@@ -4,6 +4,7 @@
  */
 package Views.zonas;
 
+import Views.jfmenuinicio;
 import crud.CBusquedas;
 import crud.CEliminaciones;
 import crud.CInserciones;
@@ -507,7 +508,12 @@ public void agregarColoniasAZona() {
         jBtnEliminarZona = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jPnlLogZonas.setBackground(new java.awt.Color(242, 220, 153));
 
@@ -728,7 +734,7 @@ public void agregarColoniasAZona() {
         jBtnIngGuardarZona.setText("Guardar zona");
         jBtnIngGuardarZona.setToolTipText("");
         jBtnIngGuardarZona.setContentAreaFilled(false);
-        jBtnIngGuardarZona.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jBtnIngGuardarZona.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jBtnIngGuardarZona.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/continuar1.png"))); // NOI18N
         jBtnIngGuardarZona.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/continuar2.png"))); // NOI18N
         jBtnIngGuardarZona.addActionListener(new java.awt.event.ActionListener() {
@@ -789,7 +795,7 @@ public void agregarColoniasAZona() {
         jBtnEliminarZonaColonia.setText("Eliminar Colonia");
         jBtnEliminarZonaColonia.setToolTipText("");
         jBtnEliminarZonaColonia.setContentAreaFilled(false);
-        jBtnEliminarZonaColonia.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jBtnEliminarZonaColonia.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jBtnEliminarZonaColonia.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/eli1.png"))); // NOI18N
         jBtnEliminarZonaColonia.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/eli2.png"))); // NOI18N
         jBtnEliminarZonaColonia.addActionListener(new java.awt.event.ActionListener() {
@@ -851,7 +857,7 @@ public void agregarColoniasAZona() {
         jBtnActAgregarZona.setText("Agregar Colonia");
         jBtnActAgregarZona.setToolTipText("");
         jBtnActAgregarZona.setContentAreaFilled(false);
-        jBtnActAgregarZona.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jBtnActAgregarZona.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jBtnActAgregarZona.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/continuar1.png"))); // NOI18N
         jBtnActAgregarZona.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/continuar2.png"))); // NOI18N
         jBtnActAgregarZona.addActionListener(new java.awt.event.ActionListener() {
@@ -993,7 +999,7 @@ public void agregarColoniasAZona() {
         jBtnEliminarZona.setText("Eliminar zona");
         jBtnEliminarZona.setToolTipText("");
         jBtnEliminarZona.setContentAreaFilled(false);
-        jBtnEliminarZona.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jBtnEliminarZona.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jBtnEliminarZona.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/eli1.png"))); // NOI18N
         jBtnEliminarZona.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/eli2.png"))); // NOI18N
         jBtnEliminarZona.addActionListener(new java.awt.event.ActionListener() {
@@ -1079,6 +1085,11 @@ public void agregarColoniasAZona() {
         // TODO add your handling code here:
         agregarColoniasAZona();
     }//GEN-LAST:event_jBtnIngGuardarZonaActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        jfmenuinicio mi = new jfmenuinicio();
+        CUtilitarios.creaFrame(mi, "Menú Inicio");
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments

@@ -1,5 +1,6 @@
 package Views.venta;
 
+import Views.jfmenuinicio;
 import com.toedter.calendar.JDateChooser;
 import crud.CActualizaciones;
 import crud.CBusquedas;
@@ -1181,7 +1182,12 @@ public class jfventa extends javax.swing.JFrame {
         jScrollPane3 = new javax.swing.JScrollPane();
         jTblPagosVenta = new javax.swing.JTable();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jPnlLogoVentas.setBackground(new java.awt.Color(242, 220, 153));
 
@@ -2033,6 +2039,11 @@ public class jfventa extends javax.swing.JFrame {
             Logger.getLogger(jfventa.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jTxtFFolioVentaKeyReleased
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        jfmenuinicio mi = new jfmenuinicio();
+        CUtilitarios.creaFrame(mi, "Menú Inicio");
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments
