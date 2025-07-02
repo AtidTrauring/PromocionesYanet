@@ -3,10 +3,12 @@ package Views.cliente;
 import Views.direccion.*;
 import Views.jfmenuinicio;
 import crud.*;
+import java.awt.event.ItemEvent;
 import utilitarios.*;
 import java.sql.*;
 import java.util.*;
 import java.util.logging.*;
+import java.util.regex.Pattern;
 import javax.swing.*;
 import javax.swing.table.*;
 
@@ -30,7 +32,7 @@ public final class jfcliente extends javax.swing.JFrame {
         cargarTablas();
 
         /* Filtros */
-        configurarFiltroBusqueda();
+        configurarFiltros();
 
         cargaComboBox(jcbestatusbusqueda, 1);
         cargaComboBox(jcbnvestatuscliente, 1);
@@ -65,6 +67,9 @@ public final class jfcliente extends javax.swing.JFrame {
     private TableRowSorter<TableModel> trClienteAval;
     private TableRowSorter<TableModel> trClienteAvalAct;
     private TableRowSorter<TableModel> trClienteAvalEli;
+    private TableRowSorter<DefaultTableModel> trlistaClienteAval;
+    private TableRowSorter<DefaultTableModel> trlistaClienteAvalAct;
+    private TableRowSorter<DefaultTableModel> trlistaClienteAvalEli;
     private String sqlClientesAvales = "Call tablaClienteAval";
     private String seleccion, est, z, idZona, idEstatus, idEstatusAval, esttabla, tipo, idPersona, idPersonaEn, zona;
     private String nomact, apact, amact, telact;
@@ -187,10 +192,78 @@ public final class jfcliente extends javax.swing.JFrame {
     }
 
     /* Filtros Tabla */
-    private void configurarFiltroBusqueda() {
-        cu.fitroTabla(jtfnombresbusqueda, trClienteAval, "Ingresar Nombres", 1);
-        cu.fitroTabla(jtfapbusqueda, trClienteAval, "Ingresar Apellido Paterno", 2);
-        cu.fitroTabla(jtfambusqueda, trClienteAval, "Ingresar Apellido Materno", 3);
+    private void configurarFiltros() {
+        trlistaClienteAval = new TableRowSorter<>((DefaultTableModel) jtlistaclienteaval.getModel());
+        jtlistaclienteaval.setRowSorter(trlistaClienteAval);
+
+        trlistaClienteAvalAct = new TableRowSorter<>((DefaultTableModel) jtlistaclienteavalact.getModel());
+        jtlistaclienteavalact.setRowSorter(trlistaClienteAvalAct);
+
+        trlistaClienteAvalEli = new TableRowSorter<>((DefaultTableModel) jtlistaclienteavaleli.getModel());
+        jtlistaclienteavaleli.setRowSorter(trlistaClienteAvalEli);
+    }
+
+    private void aplicarFiltrosCombinados(JTable tbl,
+            TableRowSorter<DefaultTableModel> sorter,
+            JTextField[] camposTexto,
+            int[] columnasTexto) {
+
+        ArrayList<RowFilter<Object, Object>> filtros = new ArrayList<>();
+
+        if (camposTexto != null && columnasTexto != null) {
+            for (int i = 0; i < camposTexto.length; i++) {
+                JTextField campo = camposTexto[i];
+                String texto = campo.getText().trim();
+                String placeholder = campo.getToolTipText();
+
+                if (!texto.isEmpty() && (placeholder == null || !texto.equals(placeholder))) {
+                    filtros.add(RowFilter.regexFilter("(?i).*" + Pattern.quote(texto) + ".*", columnasTexto[i]));
+                }
+            }
+        }
+
+        if (filtros.isEmpty()) {
+            sorter.setRowFilter(null);
+        } else {
+            sorter.setRowFilter(RowFilter.andFilter(filtros));
+        }
+    }
+
+    private void aplicarFiltrosListaClienteAval() {
+        ArrayList<RowFilter<Object, Object>> filtros = new ArrayList<>();
+        
+        String filtroIdlis = jtfidbusqueda.getText().trim();
+        if (!filtroIdlis.isEmpty() && (jtfidbusqueda.getToolTipText() == null || !filtroIdlis.equals(jtfidbusqueda.getToolTipText()))) {
+            filtros.add(RowFilter.regexFilter("(?i).*" + Pattern.quote(filtroIdlis) + ".*", 1));
+        }
+        
+        String filtronomLis = jtfnombresbusqueda.getText().trim();
+        if (!filtronomLis.isEmpty() && (jtfnombresbusqueda.getToolTipText() == null || !filtronomLis.equals(jtfnombresbusqueda.getToolTipText()))) {
+            filtros.add(RowFilter.regexFilter("(?i).*" + Pattern.quote(filtronomLis) + ".*", 1));
+        }
+        
+        String filtroaplist = jtfapbusqueda.getText().trim();
+        if (!filtroaplist.isEmpty() && (jtfapbusqueda.getToolTipText() == null || !filtroaplist.equals(jtfapbusqueda.getToolTipText()))) {
+            filtros.add(RowFilter.regexFilter("(?i).*" + Pattern.quote(filtroaplist) + ".*", 1));
+        }
+        
+        String filtroamlist = jtfambusqueda.getText().trim();
+        if (!filtroamlist.isEmpty() && (jtfambusqueda.getToolTipText() == null || !filtroamlist.equals(jtfambusqueda.getToolTipText()))) {
+            filtros.add(RowFilter.regexFilter("(?i).*" + Pattern.quote(filtroamlist) + ".*", 1));
+        }
+
+        // Filtro por sueldo (columna 2)
+        String seleccionadoSueldo = (String) jcbestatusbusqueda.getSelectedItem();
+        if (seleccionadoSueldo != null && !seleccionadoSueldo.equalsIgnoreCase("Estatus")) {
+            filtros.add(RowFilter.regexFilter("(?i).*" + Pattern.quote(seleccionadoSueldo) + ".*", 2));
+        }
+
+        // Aplicar filtros combinados o mostrar todo si no hay filtros
+        if (filtros.isEmpty()) {
+            trlistaClienteAval.setRowFilter(null);
+        } else {
+            trlistaClienteAval.setRowFilter(RowFilter.andFilter(filtros));
+        }
     }
 
     /**/
@@ -362,16 +435,31 @@ public final class jfcliente extends javax.swing.JFrame {
 
     private void mostrarErrorDetallado(Exception e) {
         StringBuilder errorDetails = new StringBuilder();
-        errorDetails.append("Mensaje: ").append(e.getMessage()).append("\n");
-        errorDetails.append("Tipo de excepción: ").append(e.getClass().getName()).append("\n");
-        errorDetails.append("Causa: ").append(e.getCause()).append("\n");
 
-        errorDetails.append("Traza del error:\n");
-        for (StackTraceElement ste : e.getStackTrace()) {
-            errorDetails.append("    en ").append(ste.toString()).append("\n");
+        errorDetails.append("\n==================== DETALLE DEL ERROR ====================\n");
+        errorDetails.append("Mensaje             : ").append(e.getMessage()).append("\n");
+        errorDetails.append("Tipo de excepción   : ").append(e.getClass().getName()).append("\n");
+
+        Throwable causa = e.getCause();
+        if (causa != null) {
+            errorDetails.append("Causa raíz          : ").append(causa.getClass().getName())
+                    .append(" - ").append(causa.getMessage()).append("\n");
+        } else {
+            errorDetails.append("Causa raíz          : No disponible\n");
         }
 
-        CUtilitarios.msg_error("Error inesperado", errorDetails.toString());
+        errorDetails.append("\n------------------ Traza del error ------------------\n");
+        for (StackTraceElement ste : e.getStackTrace()) {
+            errorDetails.append("  en ").append(ste.getClassName())
+                    .append(".").append(ste.getMethodName())
+                    .append(" (").append(ste.getFileName())
+                    .append(":").append(ste.getLineNumber())
+                    .append(")\n");
+        }
+
+        errorDetails.append("============================================================\n");
+
+        System.out.println(errorDetails.toString());
     }
 
     private void eliminarDesdeBoton() {
@@ -587,6 +675,11 @@ public final class jfcliente extends javax.swing.JFrame {
         jtfidbusqueda.setToolTipText("Ingresar ID");
         jtfidbusqueda.setBorder(null);
         jtfidbusqueda.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        jtfidbusqueda.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jtfidbusquedaKeyReleased(evt);
+            }
+        });
 
         jSeparator1.setBackground(new java.awt.Color(0, 0, 0));
         jSeparator1.setForeground(new java.awt.Color(0, 0, 0));
@@ -598,6 +691,11 @@ public final class jfcliente extends javax.swing.JFrame {
         jtfnombresbusqueda.setToolTipText("Ingresar Nombre(s)");
         jtfnombresbusqueda.setBorder(null);
         jtfnombresbusqueda.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        jtfnombresbusqueda.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jtfnombresbusquedaKeyReleased(evt);
+            }
+        });
 
         jSeparator2.setBackground(new java.awt.Color(0, 0, 0));
         jSeparator2.setForeground(new java.awt.Color(0, 0, 0));
@@ -609,6 +707,11 @@ public final class jfcliente extends javax.swing.JFrame {
         jtfapbusqueda.setToolTipText("Ingresar Apellido Paterno");
         jtfapbusqueda.setBorder(null);
         jtfapbusqueda.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        jtfapbusqueda.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jtfapbusquedaKeyReleased(evt);
+            }
+        });
 
         jSeparator3.setBackground(new java.awt.Color(0, 0, 0));
         jSeparator3.setForeground(new java.awt.Color(0, 0, 0));
@@ -620,6 +723,11 @@ public final class jfcliente extends javax.swing.JFrame {
         jtfambusqueda.setToolTipText("Ingresar Apellido Materno");
         jtfambusqueda.setBorder(null);
         jtfambusqueda.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        jtfambusqueda.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jtfambusquedaKeyReleased(evt);
+            }
+        });
 
         jSeparator4.setBackground(new java.awt.Color(0, 0, 0));
         jSeparator4.setForeground(new java.awt.Color(0, 0, 0));
@@ -631,6 +739,11 @@ public final class jfcliente extends javax.swing.JFrame {
         jcbestatusbusqueda.setToolTipText("Selecciona un Estatus");
         jcbestatusbusqueda.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jcbestatusbusqueda.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jcbestatusbusqueda.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jcbestatusbusquedaItemStateChanged(evt);
+            }
+        });
 
         jcbusuariobusqueda.setBackground(new java.awt.Color(167, 235, 242));
         jcbusuariobusqueda.setFont(new java.awt.Font("Candara", 1, 12)); // NOI18N
@@ -1292,6 +1405,11 @@ public final class jfcliente extends javax.swing.JFrame {
         jtfidbusquedaeli.setToolTipText("Ingresar ID");
         jtfidbusquedaeli.setBorder(null);
         jtfidbusquedaeli.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        jtfidbusquedaeli.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jtfidbusquedaeliKeyReleased(evt);
+            }
+        });
 
         jSeparator5.setBackground(new java.awt.Color(0, 0, 0));
         jSeparator5.setForeground(new java.awt.Color(0, 0, 0));
@@ -1303,6 +1421,11 @@ public final class jfcliente extends javax.swing.JFrame {
         jtfnombresbusquedaeli.setToolTipText("Ingresar Nombre(s)");
         jtfnombresbusquedaeli.setBorder(null);
         jtfnombresbusquedaeli.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        jtfnombresbusquedaeli.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jtfnombresbusquedaeliKeyReleased(evt);
+            }
+        });
 
         jSeparator13.setBackground(new java.awt.Color(0, 0, 0));
         jSeparator13.setForeground(new java.awt.Color(0, 0, 0));
@@ -1314,6 +1437,11 @@ public final class jfcliente extends javax.swing.JFrame {
         jtfapbusquedaeli.setToolTipText("Ingresar Apellido Paterno");
         jtfapbusquedaeli.setBorder(null);
         jtfapbusquedaeli.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        jtfapbusquedaeli.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jtfapbusquedaeliKeyReleased(evt);
+            }
+        });
 
         jSeparator14.setBackground(new java.awt.Color(0, 0, 0));
         jSeparator14.setForeground(new java.awt.Color(0, 0, 0));
@@ -1325,6 +1453,11 @@ public final class jfcliente extends javax.swing.JFrame {
         jtfambusquedaeli.setToolTipText("Ingresar Apellido Materno");
         jtfambusquedaeli.setBorder(null);
         jtfambusquedaeli.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        jtfambusquedaeli.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jtfambusquedaeliKeyReleased(evt);
+            }
+        });
 
         jSeparator15.setBackground(new java.awt.Color(0, 0, 0));
         jSeparator15.setForeground(new java.awt.Color(0, 0, 0));
@@ -1631,6 +1764,30 @@ public final class jfcliente extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jcbactestatusavalActionPerformed
 
+    private void jbcontinuaract1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbcontinuaract1ActionPerformed
+        eliminarDesdeBoton();
+    }//GEN-LAST:event_jbcontinuaract1ActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        jfmenuinicio mi = new jfmenuinicio();
+        CUtilitarios.creaFrame(mi, "Menú Inicio");
+    }//GEN-LAST:event_formWindowClosing
+
+    private void jcbactzonaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbactzonaActionPerformed
+        JComboBox jcb = (JComboBox) evt.getSource(); // Asegura que el evento venga del combo correcto
+        seleccion = (String) jcb.getSelectedItem();
+        if (!"Zona".equals(seleccion)) {
+            z = seleccion;
+            System.out.println(z);
+            try {
+                idZona = cb.buscarIdZona(z);
+                System.out.println("ZONA " + idZona);
+            } catch (SQLException ex) {
+                Logger.getLogger(jfcliente.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_jcbactzonaActionPerformed
+
     private void jbcontinuaractActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbcontinuaractActionPerformed
         try {
             // 1. Validar campos de texto básicos
@@ -1673,29 +1830,47 @@ public final class jfcliente extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jbcontinuaractActionPerformed
 
-    private void jbcontinuaract1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbcontinuaract1ActionPerformed
-        eliminarDesdeBoton();
-    }//GEN-LAST:event_jbcontinuaract1ActionPerformed
+    private void jtfidbusquedaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtfidbusquedaKeyReleased
+        aplicarFiltrosCombinados(jtlistaclienteaval, trlistaClienteAval, 
+                new JTextField[]{jtfidbusqueda, jtfnombresbusqueda, jtfapbusqueda, jtfambusqueda}, 
+                new int[]{0,1,2,3});
+    }//GEN-LAST:event_jtfidbusquedaKeyReleased
 
-    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        jfmenuinicio mi = new jfmenuinicio();
-        CUtilitarios.creaFrame(mi, "Menú Inicio");
-    }//GEN-LAST:event_formWindowClosing
+    private void jtfnombresbusquedaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtfnombresbusquedaKeyReleased
+        jtfidbusquedaKeyReleased(evt);
+    }//GEN-LAST:event_jtfnombresbusquedaKeyReleased
 
-    private void jcbactzonaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbactzonaActionPerformed
-        JComboBox jcb = (JComboBox) evt.getSource(); // Asegura que el evento venga del combo correcto
-        seleccion = (String) jcb.getSelectedItem();
-        if (!"Zona".equals(seleccion)) {
-            z = seleccion;
-            System.out.println(z);
-            try {
-                idZona = cb.buscarIdZona(z);
-                System.out.println("ZONA " + idZona);
-            } catch (SQLException ex) {
-                Logger.getLogger(jfcliente.class.getName()).log(Level.SEVERE, null, ex);
-            }
+    private void jtfapbusquedaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtfapbusquedaKeyReleased
+        jtfidbusquedaKeyReleased(evt);
+    }//GEN-LAST:event_jtfapbusquedaKeyReleased
+
+    private void jtfambusquedaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtfambusquedaKeyReleased
+        jtfidbusquedaKeyReleased(evt);
+    }//GEN-LAST:event_jtfambusquedaKeyReleased
+
+    private void jcbestatusbusquedaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbestatusbusquedaItemStateChanged
+        if (evt.getStateChange() == ItemEvent.SELECTED) {
+            aplicarFiltrosListaClienteAval();
         }
-    }//GEN-LAST:event_jcbactzonaActionPerformed
+    }//GEN-LAST:event_jcbestatusbusquedaItemStateChanged
+
+    private void jtfidbusquedaeliKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtfidbusquedaeliKeyReleased
+        aplicarFiltrosCombinados(jtlistaclienteaval, trlistaClienteAvalEli, 
+                new JTextField[]{jtfidbusquedaeli, jtfnombresbusquedaeli, jtfapbusquedaeli, jtfambusquedaeli}, 
+                new int[]{0,1,2,3});
+    }//GEN-LAST:event_jtfidbusquedaeliKeyReleased
+
+    private void jtfnombresbusquedaeliKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtfnombresbusquedaeliKeyReleased
+        jtfidbusquedaeliKeyReleased(evt);
+    }//GEN-LAST:event_jtfnombresbusquedaeliKeyReleased
+
+    private void jtfapbusquedaeliKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtfapbusquedaeliKeyReleased
+        jtfidbusquedaeliKeyReleased(evt);
+    }//GEN-LAST:event_jtfapbusquedaeliKeyReleased
+
+    private void jtfambusquedaeliKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtfambusquedaeliKeyReleased
+        jtfidbusquedaeliKeyReleased(evt);
+    }//GEN-LAST:event_jtfambusquedaeliKeyReleased
 
     /**
      * @param args the command line arguments
