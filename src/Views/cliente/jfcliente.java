@@ -149,6 +149,7 @@ public final class jfcliente extends javax.swing.JFrame {
                         if (tipo.equalsIgnoreCase("Cliente")) {
                             idPersona = cb.buscarPersonaCliente(idclav);
                             idpr = Integer.parseInt(idPersona);
+                            System.out.println("IDPERSONA " + idpr);
                             zona = cb.buscarZonaPorPersona(idpr);
                         } else if (tipo.equalsIgnoreCase("Aval")) {
                             idPersona = cb.buscarPersonaAval(idclav);
@@ -204,6 +205,17 @@ public final class jfcliente extends javax.swing.JFrame {
         );
     }
 
+    private boolean validarCamposTextoAct() {
+        JTextField[] campos = {jtfactnombres, jtfactap, jtfactam};
+        String[] textos = {"Nombres", "Apellido Paterno", "Apellido Materno"};
+        String regex = "^[A-Za-zÁÉÍÓÚáéíóúÑñ\\s]+$";
+
+        return CUtilitarios.validaCamposTextoConFormato(
+                campos, textos, textos, regex,
+                "Debes llenar todos los campos correctamente", "Validación de Datos Persona"
+        );
+    }
+
     private boolean validarCamposTextoEli() {
         JTextField[] campos = {jtfnombresbusquedaeli, jtfapbusquedaeli, jtfambusquedaeli};
         String[] nombresCampos = {"Nombres", "Apellido Paterno", "Apellido Materno"};
@@ -246,8 +258,24 @@ public final class jfcliente extends javax.swing.JFrame {
         return CUtilitarios.validarTelefono(jtfnvtel.getText());
     }
 
+    private boolean validarTelefonoAct() {
+        JTextField[] campos = {jtfacttel};
+        String[] textos = {"Número de Teléfono"};
+        String regex = "^\\d{10}$"; // Exactamente 10 dígitos
+
+        return CUtilitarios.validarTelefono(jtfacttel.getText());
+    }
+
     private boolean validarZona() {
         if (jcbnvzona.getSelectedIndex() == 0) {
+            CUtilitarios.msg_advertencia("Selecciona una zona válida", "Validación de Zona");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validarZonaAct() {
+        if (jcbactzona.getSelectedIndex() == 0) {
             CUtilitarios.msg_advertencia("Selecciona una zona válida", "Validación de Zona");
             return false;
         }
@@ -287,7 +315,46 @@ public final class jfcliente extends javax.swing.JFrame {
         return datosEstatus;
     }
 
+    private String[] validarSeleccionYEstatusAct() {
+        String[] datosEstatus = new String[2];
+
+        if (jrbactcliente.isSelected()) {
+            if (jcbactestatuscliente.getSelectedIndex() == 0) {
+                CUtilitarios.msg_advertencia("Selecciona un estatus válido para cliente", "Validación de Estatus");
+                return null;
+            }
+            datosEstatus[0] = idEstatus;
+
+        } else if (jrbactaval.isSelected()) {
+            if (jcbactestatusaval.getSelectedIndex() == 0) {
+                CUtilitarios.msg_advertencia("Selecciona un estatus válido para aval", "Validación de Estatus Aval");
+                return null;
+            }
+            datosEstatus[1] = idEstatusAval;
+
+        } else if (jrbactambos.isSelected()) {
+            if (jcbactestatuscliente.getSelectedIndex() == 0 || jcbactestatusaval.getSelectedIndex() == 0) {
+                CUtilitarios.msg_advertencia("Selecciona estatus válidos para Cliente y Aval", "Validación de Estatus");
+                return null;
+            }
+            datosEstatus[0] = idEstatus;
+            datosEstatus[1] = idEstatusAval;
+
+        } else {
+            CUtilitarios.msg_advertencia("Debes seleccionar Cliente, Aval o Ambos", "Validación de Opción");
+            return null;
+        }
+
+        return datosEstatus;
+    }
+
     private void abrirVentanaDireccion(String[] datosZona, String[] datosPersona, String[] datosEstatus) {
+        jfnuevadirec dir = new jfnuevadirec(datosZona, datosPersona, datosEstatus);
+        dir.setVisible(true);
+        this.dispose();
+    }
+
+    private void abrirVentanaDireccionAct(String[] datosZona, String[] datosPersona, String[] datosEstatus) {
         jfnuevadirec dir = new jfnuevadirec(datosZona, datosPersona, datosEstatus);
         dir.setVisible(true);
         this.dispose();
@@ -986,6 +1053,11 @@ public final class jfcliente extends javax.swing.JFrame {
         jcbactzona.setToolTipText("Selecciona una zona");
         jcbactzona.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jcbactzona.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jcbactzona.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jcbactzonaActionPerformed(evt);
+            }
+        });
 
         bgnvestatus.add(jrbactcliente);
         jrbactcliente.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
@@ -1560,25 +1632,42 @@ public final class jfcliente extends javax.swing.JFrame {
     }//GEN-LAST:event_jcbactestatusavalActionPerformed
 
     private void jbcontinuaractActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbcontinuaractActionPerformed
-        // Actualizar
-        // 1. Validar campos de texto básicos
-        if (!validarCamposTexto()) {
-            return;
-        }
+        try {
+            // 1. Validar campos de texto básicos
+            if (!validarCamposTextoAct()) {
+                return;
+            }
 
-        // 2. Validar teléfono
-        if (!validarTelefono()) {
-            return;
-        }
+            // 2. Validar teléfono
+            if (!validarTelefonoAct()) {
+                return;
+            }
 
-        // 3. Validar zona seleccionada
-        if (!validarZona()) {
-            return;
-        }
-        // 4. Validar selección y estatus
-        String[] datosEstatus = validarSeleccionYEstatus();
-        if (datosEstatus == null) {
-            return;
+            // 3. Validar zona seleccionada
+            if (!validarZonaAct()) {
+                return;
+            }
+
+            // 4. Validar selección y estatus
+            String[] datosEstatusAct = validarSeleccionYEstatusAct();
+            if (datosEstatusAct == null) {
+                return;
+            }
+
+            // 5. Preparar datos para la siguiente ventana
+            String[] datosZonaAct = {idZona};
+            String[] datosPersonaAct = {
+                jtfactnombres.getText().trim(),
+                jtfactap.getText().trim(),
+                jtfactam.getText().trim(),
+                jtfacttel.getText().trim()
+            };
+
+            // 6. Abrir ventana de dirección
+            abrirVentanaDireccionAct(datosZonaAct, datosPersonaAct, datosEstatusAct);
+
+        } catch (Exception e) {
+            mostrarErrorDetallado(e);
         }
     }//GEN-LAST:event_jbcontinuaractActionPerformed
 
@@ -1590,6 +1679,21 @@ public final class jfcliente extends javax.swing.JFrame {
         jfmenuinicio mi = new jfmenuinicio();
         CUtilitarios.creaFrame(mi, "Menú Inicio");
     }//GEN-LAST:event_formWindowClosing
+
+    private void jcbactzonaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbactzonaActionPerformed
+        JComboBox jcb = (JComboBox) evt.getSource(); // Asegura que el evento venga del combo correcto
+        seleccion = (String) jcb.getSelectedItem();
+        if (!"Zona".equals(seleccion)) {
+            z = seleccion;
+            System.out.println(z);
+            try {
+                idZona = cb.buscarIdZona(z);
+                System.out.println("ZONA " + idZona);
+            } catch (SQLException ex) {
+                Logger.getLogger(jfcliente.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_jcbactzonaActionPerformed
 
     /**
      * @param args the command line arguments
