@@ -176,30 +176,30 @@ public class jfventa extends javax.swing.JFrame {
     //Cargar tabla con los productos de la venta
     private void cargarTablaConProducto() {
         try {
-            //Se intenta cargar un mmodelo nuevo, respetando el diseño
-            modelCarga = (DefaultTableModel) jTblAgregarVenta.getModel();
-            modelCarga.addColumn("id");
-            modelCarga.addColumn("producto");
-            modelCarga.addColumn("precio");
-            //Se asigna el modelo a la tabla de agregar
-            jTblAgregarVenta.setModel(modelCarga);
-            
-            //Se obtiene lo ingresado en el testfield.
+//            //Se intenta cargar un mmodelo nuevo, respetando el diseño
+//            modelCarga = (DefaultTableModel) jTblAgregarVenta.getModel();
+//            modelCarga.addColumn("id");
+//            modelCarga.addColumn("producto");
+//            modelCarga.addColumn("precio");
+//            //Se asigna el modelo a la tabla de agregar
+//            jTblAgregarVenta.setModel(modelCarga);
+//
+//            //Se obtiene lo ingresado en el testfield.
             folioVenta = jTxtFFolioVenta.getText().trim();
             datosProducto = cbus.buscarProductoDeLaVenta(folioVenta);
             //Se imprimen los arreglos
             System.out.println(folioVenta);
             limpiarTablaAgregar();
-           int i = 0;
+            int i = 0;
             for (String[] datoProd : datosProducto) {
                 System.out.println(Arrays.toString(datoProd));
-                
+
                 modelCarga.addRow(new Object[]{datoProd[0], datoProd[1], datoProd[2]});
                 //Se comenta porque se sobrecargarian dos veces la tabla. 
                 //modelCarga.addRow(datoProd);
-                
+
             }
-            
+            jTblAgregarVenta.setModel(modelCarga);
         } catch (Exception e) {
             CUtilitarios.msg_error("No se pudo cargar la tabla", "Carga de tabla de productos de la venta");
         }
@@ -704,19 +704,45 @@ public class jfventa extends javax.swing.JFrame {
         valoresObtenidos();
 
         if (validaTodosCampos()) {
-            //Lista de Avales
+            List<String[]> productosVenta = new ArrayList<>();
+            DefaultTableModel modelo = (DefaultTableModel) jTblAgregarVenta.getModel();
+            int conteoFila = modelo.getRowCount();
+
+            if (conteoFila == 0) {
+                cuti.msg_advertencia("Debe agregar al menos un producto", "Registro de venta");
+                return;
+            }
+
+            //--------------------------------------------------------------------------------------
+            double totalCalculado = 0.0;
+            for (int i = 0; i < conteoFila; i++) {
+                String idProducto = (String) modelo.getValueAt(i, 0);
+                String descripcion = (String) modelo.getValueAt(i, 1);
+                String cantidadStr = (String) modelo.getValueAt(i, 2);
+
+                try {
+                    double cantidad = Double.parseDouble(cantidadStr);
+                    totalCalculado += cantidad;
+                } catch (NumberFormatException e) {
+                    cuti.msg_error("Cantidad no válida en producto " + idProducto, "Error");
+                    return;
+                }
+
+                productosVenta.add(new String[]{idProducto, cantidadStr});
+            }
+
+            totalVenta = String.valueOf(totalCalculado);
+            System.out.println(totalVenta);
+            //--------------------------------------------------------------------------------------
             List<String> avalesSeleccionados = new ArrayList<>();
             int cantidadAvales = Integer.parseInt(numAvalesSeleccionado);
 
             for (int i = 1; i <= cantidadAvales; i++) {
-                //Obtener lista de posibles avales y quitar los ya seleccionados
                 List<String> posiblesAvales = queryCargaCombos.cargaComboAvalesVenta();
                 cbus.buscarIdAvalVenta(idAvalSeleccionado);
-                posiblesAvales.removeAll(avalesSeleccionados); // Evita duplicados automáticamente
+                posiblesAvales.removeAll(avalesSeleccionados);
 
-                // Crear JComboBox con la lista filtrada
                 JComboBox<String> comboAval = new JComboBox<>(posiblesAvales.toArray(new String[0]));
-
                 int opcion = JOptionPane.showConfirmDialog(
                         null,
                         comboAval,
@@ -737,51 +763,20 @@ public class jfventa extends javax.swing.JFrame {
                     return;
                 }
             }
-
-            //Esta parte del codigo va a servir para el total de la venta
-            List<String[]> productosVenta = new ArrayList<>();
-            DefaultTableModel modelo = (DefaultTableModel) jTblAgregarVenta.getModel();
-            int conteoFila = modelo.getRowCount();
-
-            if (conteoFila == 0) { //Si es igual a 0 significa que no hay productos en la tabla
-                cuti.msg_advertencia("Debe agregar al menos un producto", "Registro de venta");
-                return;
-            }
-
-            double totalCalculado = 0.0; //Se declara un total calculado
-            for (int i = 0; i < conteoFila; i++) { //Va a recorrer cada fila de la tabla que se vaya cargando por el empleado
-                String idProducto = (String) modelo.getValueAt(i, 0); //Indice 0 para el ID
-                String descripcion = (String) modelo.getValueAt(i, 1); //Indice 1 para el producto (nombre)
-                String cantidadStr = (String) modelo.getValueAt(i, 2); //Indice 2 para la cantidad
-
-                try {
-                    double cantidad = Double.parseDouble(cantidadStr); //Parsea de STRING a double
-                    totalCalculado += cantidad; //Suma y asigna la cantidad
-                } catch (NumberFormatException e) {
-                    cuti.msg_error("Cantidad no válida en producto " + idProducto, "Error");
-                    return;
-                }
-
-                productosVenta.add(new String[]{idProducto, cantidadStr});
-            }
-
-            //se asigna el total 
-            totalVenta = String.valueOf(totalCalculado);
-            System.out.println(totalVenta);
+            //--------------------------------------------------------------------------------------
             try {
                 if (cInser.insertaVenta(totalVenta, fechaSeleccionada, numPagos, idvendedorSeleccionado, idclienteSeleccionado,
                         idzonaSeleccionada, idestatusSeleccionado)) {
                     for (String avalSeleccionado : idAvalesSeleccionado) {
                         System.out.println(avalSeleccionado);
                         if (!cInser.insertaAvalVenta(avalSeleccionado, cbus.buscaMaximoVenta())) {
-                            cuti.msg_error("No se insertaron los avales", "Insercion de avales");
+                            cuti.msg_error("No se insertaron los avales", "Inserción de avales");
                         }
                     }
                     cuti.msg("Venta insertada correctamente", "Registro de venta");
                     cargarTablaBusqueda();
                     cargarTablaPagos(folioVenta);
-                    tabbedPanePrincipal.setSelectedIndex(2); //Cambia al panel del pago, qque tiene el indice 2
-                } else {
+                    tabbedPanePrincipal.setSelectedIndex(2);
                 }
             } catch (Exception e) {
                 cuti.msg_error("Error SQL: " + e.getMessage(), "Registro de venta");
@@ -2061,18 +2056,18 @@ public class jfventa extends javax.swing.JFrame {
     }//GEN-LAST:event_jBtnActualizarPagoActionPerformed
 
     private void jTxtFFolioVentaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTxtFFolioVentaKeyReleased
-        
-            try {
-                String id = jTxtFFolioVenta.getText().trim();
-                if (!id.isEmpty()) {
-                    llenarCamposPorID(id);
-                    cargarTablaConProducto();
-                    } else {
-                        limpiarCampos();
-                    }
-            } catch (SQLException ex) {
-                Logger.getLogger(jfventa.class.getName()).log(Level.SEVERE, null, ex);
+
+        try {
+            String id = jTxtFFolioVenta.getText().trim();
+            if (!id.isEmpty()) {
+                llenarCamposPorID(id);
+                cargarTablaConProducto();
+            } else {
+                limpiarCampos();
             }
+        } catch (SQLException ex) {
+            Logger.getLogger(jfventa.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jTxtFFolioVentaKeyReleased
 
     /**
