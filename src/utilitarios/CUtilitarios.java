@@ -272,7 +272,7 @@ public class CUtilitarios {
         return true;
     }
 
-    public void cargarTablaDesdeConsulta(JTable tabla, PreparedStatement ps, Consumer<TableRowSorter<TableModel>> sorterConsumer) throws SQLException {
+    public void cargarTablaDesdeConsulta(JTable tabla, PreparedStatement ps, Consumer<TableRowSorter<DefaultTableModel>> sorterConsumer) throws SQLException {
         try (ResultSet rs = ps.executeQuery()) {
             ResultSetMetaData metaData = rs.getMetaData();
             int columnCount = metaData.getColumnCount();
@@ -293,15 +293,15 @@ public class CUtilitarios {
 
             tabla.setModel(nuevoModelo);
 
-            TableRowSorter<TableModel> nuevoSorter = new TableRowSorter<>(nuevoModelo);
+            TableRowSorter<DefaultTableModel> nuevoSorter = new TableRowSorter<>(nuevoModelo);
             tabla.setRowSorter(nuevoSorter);
 
-            // Pasamos el sorter al consumidor para asignarlo a su variable
+// Pasamos el sorter al consumidor con el tipo adecuado
             sorterConsumer.accept(nuevoSorter);
         }
     }
 
-    public void cargarConsultaEnTabla(String sql, JTable tabla, Consumer<TableRowSorter<TableModel>> sorterConsumer) throws SQLException {
+    public void cargarConsultaEnTabla(String sql, JTable tabla, Consumer<TableRowSorter<DefaultTableModel>> sorterConsumer) throws SQLException {
         try (Connection cn = conector.conecta(); PreparedStatement ps = cn.prepareStatement(sql)) {
             cargarTablaDesdeConsulta(tabla, ps, sorterConsumer);
         }

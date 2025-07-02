@@ -182,9 +182,9 @@ public final class jfcliente extends javax.swing.JFrame {
         sqlClientesAvales = "Call tablaClienteAval";
 
         try {
-            cu.cargarConsultaEnTabla(sqlClientesAvales, jtlistaclienteaval, sorter -> trClienteAval = sorter);
-            cu.cargarConsultaEnTabla(sqlClientesAvales, jtlistaclienteavalact, sorter -> trClienteAvalAct = sorter);
-            cu.cargarConsultaEnTabla(sqlClientesAvales, jtlistaclienteavaleli, sorter -> trClienteAvalEli = sorter);
+            cu.cargarConsultaEnTabla(sqlClientesAvales, jtlistaclienteaval, sorter -> trlistaClienteAval = sorter);
+            cu.cargarConsultaEnTabla(sqlClientesAvales, jtlistaclienteavalact, sorter -> trlistaClienteAvalAct = sorter);
+            cu.cargarConsultaEnTabla(sqlClientesAvales, jtlistaclienteavaleli, sorter -> trlistaClienteAvalEli = sorter);
 
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Error al cargar tablas: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -1717,7 +1717,7 @@ public final class jfcliente extends javax.swing.JFrame {
         }
 
         try (Connection cn = conector.conecta(); CallableStatement cs = cn.prepareCall("{CALL " + procedimiento + "()}")) {
-            cu.cargarTablaDesdeConsulta(jtlistaclienteaval, cs, sorter -> trClienteAval = sorter);
+            cu.cargarTablaDesdeConsulta(jtlistaclienteaval, cs, sorter -> trlistaClienteAval = sorter);
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Error al cargar datos de " + seleccion + " : " + ex.getMessage(),
                     "Error", JOptionPane.ERROR_MESSAGE);
