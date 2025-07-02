@@ -1,6 +1,7 @@
 package Views.empleado;
 
 import Views.direccion.jfnuevadirec;
+import Views.jfmenuinicio;
 import crud.CBusquedas;
 import crud.CCargaCombos;
 import java.awt.event.ItemEvent;
@@ -483,6 +484,9 @@ public final class JfEmpleado extends javax.swing.JFrame {
         setTitle("Empleados");
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
             }
@@ -1504,6 +1508,11 @@ public final class JfEmpleado extends javax.swing.JFrame {
             CUtilitarios.msg_error("Ocurrio un error al cargar los datos principales", "Evento de Apertura");
         }
     }//GEN-LAST:event_formWindowOpened
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        jfmenuinicio mi = new jfmenuinicio();
+        CUtilitarios.creaFrame(mi, "Menú Inicio");
+    }//GEN-LAST:event_formWindowClosing
 
     public static void main(String args[]) {
         // <editor-fold defaultstate="collapsed" desc="Generated Code">

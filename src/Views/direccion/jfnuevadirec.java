@@ -334,6 +334,7 @@ public class jfnuevadirec extends javax.swing.JFrame {
         // Mostrar mensaje final si se insertó al menos uno
         if (mensaje.length() > 0) {
             CUtilitarios.msg(mensaje.toString() + " INSERTADO CORRECTAMENTE", "Inserción Exitosa");
+            this.dispose();
         }
     }//GEN-LAST:event_jbagregardirecActionPerformed
 
@@ -350,7 +351,7 @@ public class jfnuevadirec extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowOpened
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-        if (datosPersona != null) {
+        if (datosPersona == null) {
             JfEmpleado frmEmpleado = new JfEmpleado();
             CUtilitarios.creaFrame(frmEmpleado, "Empleados");
         } else {
