@@ -645,7 +645,7 @@ public final class jfcliente extends javax.swing.JFrame {
                 .addGroup(jplistaclientesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jpfondotabla, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jplistaclientesLayout.createSequentialGroup()
-                        .addGap(0, 17, Short.MAX_VALUE)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jpfondobusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18))
         );
@@ -932,7 +932,7 @@ public final class jfcliente extends javax.swing.JFrame {
             jpfondotablaacteliLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpfondotablaacteliLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jspclienteacteli, javax.swing.GroupLayout.DEFAULT_SIZE, 441, Short.MAX_VALUE)
+                .addComponent(jspclienteacteli)
                 .addContainerGap())
         );
 
@@ -1197,7 +1197,7 @@ public final class jfcliente extends javax.swing.JFrame {
             jpfondotablaeliLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpfondotablaeliLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jspclienteavaleli, javax.swing.GroupLayout.DEFAULT_SIZE, 429, Short.MAX_VALUE)
+                .addComponent(jspclienteavaleli)
                 .addContainerGap())
         );
 

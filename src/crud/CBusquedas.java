@@ -360,12 +360,12 @@ public class CBusquedas {
     }
 
     public String buscarFechaVentaPorId(String idVenta) throws SQLException {
-        String consulta = "SELECT fecha_venta FROM venta WHERE Idventa = '" + idVenta + "';";
+        consulta = "SELECT fecha_venta FROM venta WHERE Idventa = '" + idVenta + "';";
         return cnslt.buscarValor(consulta);
     }
 
     public String buscaTotalVentaID(String idVenta) throws SQLException {
-        String consulta = "SELECT venta.total FROM venta WHERE venta.Idventa = '" + idVenta + "';";
+        consulta = "SELECT venta.total FROM venta WHERE venta.Idventa = '" + idVenta + "';";
         return cnslt.buscarValor(consulta);
     }
 

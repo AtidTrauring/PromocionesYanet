@@ -22,8 +22,8 @@ public class jfnuevadirec extends javax.swing.JFrame {
     CInserciones ci = new CInserciones();
     String seleccion, colcl, idColcl;
     private String cllcl, ne, ni, nomcla, apcla, amcla, telcla;
-    private static String nombre, apMat, apPat, telefono, sueldo;
-    private static String[] coloniaZona;
+    private String nombre, apMat, apPat, telefono, sueldo;
+    private String[] coloniaZona;
     private int idc, idescl, idescla;
 
     public jfnuevadirec(String[] datosZ, String[] datosP, String[] datosEs) {
@@ -35,7 +35,12 @@ public class jfnuevadirec extends javax.swing.JFrame {
         datosEstatus = datosEs;
 
         // Combos
-        cargaComboBox(jcbcolonian, 1);
+        if (datosP != null) {
+            cargaComboBox(jcbcolonian, 1);
+        } else {
+            jcbcolonian.removeAllItems();
+            jcbcolonian.addItem(coloniaZona[3]);
+        }
 
         // Placeholder JTextField
         cu.aplicarPlaceholder(jtfcallen, "Calle");
@@ -47,16 +52,22 @@ public class jfnuevadirec extends javax.swing.JFrame {
         System.out.println("Zona " + Arrays.toString(datosZ));
         System.out.println("Persona " + Arrays.toString(datosP));
         System.out.println("Estatus " + Arrays.toString(datosEs));
+        System.out.println(nombre);
+        System.out.println(apPat);
+        System.out.println(apMat);
+        System.out.println(telefono);
+        System.out.println(sueldo);
+        System.out.println(Arrays.toString(coloniaZona));
+
     }
 
-    public static void asignaValoresEmpleado(String eNombre, String eApMat, String eApPat, String eTelefono, String eSueldo, String[] eColoniaZona) {
-        //Asignar los valores que reciba por parametro a las variables dentro del Frame
-        eNombre = nombre;
-        eApMat = apMat;
-        eApPat = apPat;
-        eTelefono = telefono;
-        eSueldo = sueldo;
-        eColoniaZona = coloniaZona;
+    public void asignaValoresEmpleado(String eNombre, String eApMat, String eApPat, String eTelefono, String eSueldo, String[] eColoniaZona) {
+        this.nombre = eNombre;
+        this.apMat = eApMat;
+        this.apPat = eApPat;
+        this.telefono = eTelefono;
+        this.sueldo = eSueldo;
+        this.coloniaZona = eColoniaZona;
     }
 
     private DefaultComboBoxModel listas;
@@ -101,7 +112,7 @@ public class jfnuevadirec extends javax.swing.JFrame {
         jcbcolonian = new javax.swing.JComboBox<>();
         jbagregardirec = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jpfondo.setBackground(new java.awt.Color(242, 220, 153));
 

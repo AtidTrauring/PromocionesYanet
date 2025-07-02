@@ -10,41 +10,29 @@ public class CInserciones {
     private final CConsultas cnslt = new CConsultas();
     private String consulta;
 
-    public boolean insertaCalificacion(String idEstudiante, String idVersion, Double calificacion) throws SQLException {
-        String consulta = "CALL sp_agrega_estudiante_version (" + idEstudiante + ", '" + idVersion + "', " + calificacion + ");";
-        System.out.println(consulta);
-        return cnslt.inserta(consulta);
-    }
-
-    public boolean insertaAsignatura(String clave, String nombre, String HT, String HP, String numUni, String creditos, String clave_tasignatura) throws SQLException {
-        String consulta = "CALL sp_agrega_asignatura ('" + clave + "','" + nombre + "'," + HT + "," + HP + "," + numUni + "," + creditos + ",'" + clave_tasignatura + "');";
-        return cnslt.inserta(consulta);
-
-    }
-
 //------------------------------Insercion producto py ----------------------------------
     public boolean insertaProducto(String producto, String precio, String stock) throws SQLException {
         consulta = "INSERT INTO producto (producto, precio, stock) "
                 + "VALUES ('" + producto + "', '" + precio + "', '" + stock + "');";
         return cnslt.inserta(consulta);
     }
-public boolean insertarColoniaZona(String idColonia, String idZona) throws SQLException {
-    consulta = "INSERT INTO colonia_has_zona (colonia_idcolonia, zona_idzona) "
-             + "VALUES ('" + idColonia + "', '" + idZona + "')";
-    return cnslt.inserta(consulta);
-}
-public boolean insertarZona(String idZona) throws SQLException {
-    consulta = "INSERT INTO zona (idzona, num_zona) VALUES ('" + idZona + "', '" + idZona + "')";
-    return cnslt.inserta(consulta);
-}
+
+    public boolean insertarColoniaZona(String idColonia, String idZona) throws SQLException {
+        consulta = "INSERT INTO colonia_has_zona (colonia_idcolonia, zona_idzona) "
+                + "VALUES ('" + idColonia + "', '" + idZona + "')";
+        return cnslt.inserta(consulta);
+    }
+
+    public boolean insertarZona(String idZona) throws SQLException {
+        consulta = "INSERT INTO zona (idzona, num_zona) VALUES ('" + idZona + "', '" + idZona + "')";
+        return cnslt.inserta(consulta);
+    }
+
     public boolean insertarPago(String idVenta, String pago, String restante, String fechaPago, String cobrador) throws SQLException {
         consulta = "INSERT INTO pagos_tarjetas (empleado_idempleado, venta_Idventa, pago, restante, fecha_pago) "
                 + "VALUES ('" + cobrador + "', '" + idVenta + "','" + pago + "', '" + restante + "', '" + fechaPago + "');";
         return cnslt.inserta(consulta);
     }
-
-
-
 
 // ---------------------------Inserciones Direccion-----------------------------------------
     public boolean insertaMunicipio(String claveMunicipio, String municipio, String claveEstado) throws SQLException {
@@ -157,34 +145,34 @@ public boolean insertarZona(String idZona) throws SQLException {
         consulta = "CALL insertaAval(" + idPersona + "," + idEstatus + ");";
         return cnslt.inserta(consulta);
     }
-    
+
     //-----------INSERCION de venta
     public boolean insertaVenta(String totalVenta, String fechaSeleccionada, String numPagos, String vendedorSeleccionado,
             String clienteSeleccionado, String zonaSeleccionada, String estatusSeleccionado) throws SQLException {
-        consulta = "INSERT INTO venta(total, fecha_venta, num_pagos, empleado_idempleado, cliente_idcliente, zona_idzona, estatus_idestatus) " + 
-                "VALUES ('" + totalVenta + "',' " + fechaSeleccionada + "','" + numPagos + "','" + vendedorSeleccionado + "','" +
-                clienteSeleccionado + "','" + zonaSeleccionada + "','" + estatusSeleccionado + "');";
+        consulta = "INSERT INTO venta(total, fecha_venta, num_pagos, empleado_idempleado, cliente_idcliente, zona_idzona, estatus_idestatus) "
+                + "VALUES ('" + totalVenta + "',' " + fechaSeleccionada + "','" + numPagos + "','" + vendedorSeleccionado + "','"
+                + clienteSeleccionado + "','" + zonaSeleccionada + "','" + estatusSeleccionado + "');";
         return cnslt.inserta(consulta);
     }
 
     public boolean insertaAvalVenta(String idAval, String idVenta) throws SQLException {
-            consulta = "INSERT INTO aval_has_venta (aval_idaval, venta_Idventa) " +
-                    "VALUES ('" + idAval + "','" + idVenta + "');";
-            System.out.println(consulta);
+        consulta = "INSERT INTO aval_has_venta (aval_idaval, venta_Idventa) "
+                + "VALUES ('" + idAval + "','" + idVenta + "');";
+        System.out.println(consulta);
         return cnslt.inserta(consulta);
     }
-    
+
     public boolean insertaPagoVenta(String idEmVe, String idEmpleado, String idVenta, String pago, String restante,
             String fechaPago) throws SQLException {
-        consulta = "INSERT INTO pagos_tarjetas(idemve, empleado_idempleado, venta_Idventa, pago, restante, fecha_pago) " +
-                "VALUES ('" + idEmpleado + "','" + idVenta + "','" + pago + "','" + restante + "','" + fechaPago + "');";
+        consulta = "INSERT INTO pagos_tarjetas(idemve, empleado_idempleado, venta_Idventa, pago, restante, fecha_pago) "
+                + "VALUES ('" + idEmpleado + "','" + idVenta + "','" + pago + "','" + restante + "','" + fechaPago + "');";
         return cnslt.inserta(consulta);
     }
-    
+
     public boolean insertaProductoConVenta(String idVenta, String idProducto) throws SQLException {
-            consulta = "INSERT INTO venta_has_producto(venta_Idventa, producto_idproducto) " +
-                    "VALUES ('" + idVenta + "','" + idProducto + "');";
-            System.out.println(consulta);
+        consulta = "INSERT INTO venta_has_producto(venta_Idventa, producto_idproducto) "
+                + "VALUES ('" + idVenta + "','" + idProducto + "');";
+        System.out.println(consulta);
         return cnslt.inserta(consulta);
     }
 }
