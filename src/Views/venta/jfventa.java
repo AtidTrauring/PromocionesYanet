@@ -535,7 +535,6 @@ public class jfventa extends javax.swing.JFrame {
                 jDteChoVenta.setEnabled(true);
                 jCmbBoxEstatusVenta.setEnabled(true);
                 jCmbBoxVendedorVenta.setEnabled(true);
-                jCmbBoxZonaVenta.setEnabled(true);
                 jTxtFFolioProductoVenta.setEnabled(true);
                 jBtnActualizarVenta.setEnabled(true);
                 jBtnEliminarProdVenta.setEnabled(true);
@@ -553,7 +552,6 @@ public class jfventa extends javax.swing.JFrame {
     private void gestionarComponentesPagos(int modo) {
         desactivarComponentes();
 
-        // No necesitas los switch separados
         if (modo == 0) {
             jRadButActualizarPago.setSelected(true);
             jTxtFAgAcFolioVentaPago.setEnabled(true);
