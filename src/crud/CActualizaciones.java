@@ -7,6 +7,16 @@ public class CActualizaciones {
     private final CConsultas cnslt = new CConsultas();
     private String consulta;
 
+    public boolean actualizaPersona(String nombres, String apPat, String apMat, String telefono, String idDireccion, String idPersona) throws SQLException {
+        consulta = "UPDATE persona SET nombres='" + nombres + "',ap_paterno='" + apPat + "',ap_materno='" + apMat + "',telefono='" + telefono + "',direccion_iddireccion='" + idDireccion + "' WHERE persona.idpersona = '" + idPersona + "'";
+        return cnslt.actualiza(consulta);
+    }
+
+    public boolean actualizaSueldoInicial(String sueldo, String idSueldo) throws SQLException {
+        consulta = "UPDATE sueldo SET sueldo='" + sueldo + "' WHERE empleado.idempleado = '" + idSueldo + "'";
+        return cnslt.actualiza(consulta);
+    }
+
     public boolean actualizarPersona(String clavePersona, String apellidoPaterno, String apellidoMaterno, String nombre, String usuario, String claveContrasenia, String claveDireccion) throws SQLException {
         consulta = "CALL sp_actualizar_persona(" + clavePersona + ",'" + apellidoPaterno + "','" + apellidoMaterno + "','" + nombre + "','" + usuario + "'," + claveContrasenia + "," + claveDireccion + ");";
         return cnslt.actualiza(consulta);
@@ -16,24 +26,25 @@ public class CActualizaciones {
         String consulta = "UPDATE producto SET producto = '" + nombre + "', precio = " + precio + ", stock = " + stock + " WHERE idproducto = '" + idProducto + "';";
         return cnslt.actualiza(consulta);
     }
-    
+
     public boolean actualizaDirec(String calle, String nint, String next, int idcol, int idd) throws SQLException {
-        consulta = "UPDATE direccion SET calle='"+calle+"', num_int='"+nint+"', num_ext='"+next+"', colonia_idcolonia="+idcol+" WHERE iddireccion = "+idd+";";
+        consulta = "UPDATE direccion SET calle='" + calle + "', num_int='" + nint + "', num_ext='" + next + "', colonia_idcolonia=" + idcol + " WHERE iddireccion = " + idd + ";";
         return cnslt.actualiza(consulta);
     }
-    
+
     public boolean actualizaVenta(String idVenta, String totalVenta, String fechaSeleccionada, String numPagos,
             String vendedorSeleccionado, String zonaSeleccionada, String estatusSeleccionado) throws SQLException {
-        String consulta = "UPDATE venta SET total ='" + totalVenta + "', fecha_venta='" + fechaSeleccionada + 
-                "', num_pagos='" + numPagos + "', empleado_idempleado='" + vendedorSeleccionado + "', zona_idzona='" + zonaSeleccionada + "', estatus_idestatus ='" + estatusSeleccionado + "' WHERE " +
-                "Idventa = '" + idVenta + "';";
+        String consulta = "UPDATE venta SET total ='" + totalVenta + "', fecha_venta='" + fechaSeleccionada
+                + "', num_pagos='" + numPagos + "', empleado_idempleado='" + vendedorSeleccionado + "', zona_idzona='" + zonaSeleccionada + "', estatus_idestatus ='" + estatusSeleccionado + "' WHERE "
+                + "Idventa = '" + idVenta + "';";
         return cnslt.actualiza(consulta);
     }
-        public boolean actualizarPago(String idPago, double nuevoPago, String nuevaFecha, double nuevoRestante) throws SQLException {
-    consulta = "UPDATE pagos_tarjetas SET pago = " + nuevoPago +
-                      ", fecha_pago = '" + nuevaFecha + "'" +
-                      ", restante = " + nuevoRestante +
-                      " WHERE idemve = " + idPago + ";";
-    return cnslt.actualiza(consulta);  
-}
+
+    public boolean actualizarPago(String idPago, double nuevoPago, String nuevaFecha, double nuevoRestante) throws SQLException {
+        consulta = "UPDATE pagos_tarjetas SET pago = " + nuevoPago
+                + ", fecha_pago = '" + nuevaFecha + "'"
+                + ", restante = " + nuevoRestante
+                + " WHERE idemve = " + idPago + ";";
+        return cnslt.actualiza(consulta);
+    }
 }
