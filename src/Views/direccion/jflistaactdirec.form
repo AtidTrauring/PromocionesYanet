@@ -166,22 +166,16 @@
                               <Font name="Candara" size="12" style="1"/>
                             </Property>
                             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                              <Table columnCount="5" rowCount="0">
+                              <Table columnCount="4" rowCount="0">
                                 <Column editable="false" title="Id Direccion" type="java.lang.String"/>
                                 <Column editable="false" title="Persona" type="java.lang.String"/>
-                                <Column editable="false" title="Direccion" type="java.lang.String"/>
-                                <Column editable="false" title="Estatus" type="java.lang.String"/>
                                 <Column editable="false" title="Tipo" type="java.lang.String"/>
+                                <Column editable="false" title="Direccion" type="java.lang.String"/>
                               </Table>
                             </Property>
                             <Property name="toolTipText" type="java.lang.String" value="Listado de Clientes y Avales"/>
                             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
                               <TableColumnModel selectionModel="0">
-                                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="false">
-                                  <Title/>
-                                  <Editor/>
-                                  <Renderer/>
-                                </Column>
                                 <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="false">
                                   <Title/>
                                   <Editor/>
@@ -298,9 +292,6 @@
                           <Color id="Text Cursor"/>
                         </Property>
                       </Properties>
-                      <Events>
-                        <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jtfidbusquedaKeyReleased"/>
-                      </Events>
                     </Component>
                     <Component class="javax.swing.JSeparator" name="jSeparator1">
                       <Properties>
@@ -330,9 +321,6 @@
                           <Color id="Text Cursor"/>
                         </Property>
                       </Properties>
-                      <Events>
-                        <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jtfpersonabusquedaKeyReleased"/>
-                      </Events>
                     </Component>
                     <Component class="javax.swing.JSeparator" name="jSeparator2">
                       <Properties>
@@ -368,9 +356,6 @@
                           <Color id="Hand Cursor"/>
                         </Property>
                       </Properties>
-                      <Events>
-                        <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="jcbcoloniasItemStateChanged"/>
-                      </Events>
                       <AuxValues>
                         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
                       </AuxValues>
@@ -388,7 +373,7 @@
                             <StringItem index="0" value="Tipo"/>
                             <StringItem index="1" value="Cliente"/>
                             <StringItem index="2" value="Aval"/>
-                            <StringItem index="3" value="Ambos"/>
+                            <StringItem index="3" value="Empleado"/>
                           </StringArray>
                         </Property>
                         <Property name="toolTipText" type="java.lang.String" value="Selecciona un tipo de Usuario"/>
@@ -401,9 +386,6 @@
                           <Color id="Hand Cursor"/>
                         </Property>
                       </Properties>
-                      <Events>
-                        <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="jcbtipoItemStateChanged"/>
-                      </Events>
                       <AuxValues>
                         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
                       </AuxValues>
@@ -664,11 +646,37 @@
                               <Font name="Candara" size="12" style="1"/>
                             </Property>
                             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                              <Table columnCount="0" rowCount="0"/>
+                              <Table columnCount="4" rowCount="0">
+                                <Column editable="false" title="Id Direccion" type="java.lang.String"/>
+                                <Column editable="false" title="Persona" type="java.lang.String"/>
+                                <Column editable="false" title="Tipo" type="java.lang.String"/>
+                                <Column editable="false" title="Direccion" type="java.lang.String"/>
+                              </Table>
                             </Property>
                             <Property name="toolTipText" type="java.lang.String" value="Listado de Clientes y Avales"/>
                             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
-                              <TableColumnModel selectionModel="0"/>
+                              <TableColumnModel selectionModel="0">
+                                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="false">
+                                  <Title/>
+                                  <Editor/>
+                                  <Renderer/>
+                                </Column>
+                                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="false">
+                                  <Title/>
+                                  <Editor/>
+                                  <Renderer/>
+                                </Column>
+                                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="false">
+                                  <Title/>
+                                  <Editor/>
+                                  <Renderer/>
+                                </Column>
+                                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="false">
+                                  <Title/>
+                                  <Editor/>
+                                  <Renderer/>
+                                </Column>
+                              </TableColumnModel>
                             </Property>
                             <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
                               <Color id="Hand Cursor"/>
@@ -677,6 +685,9 @@
                               <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
                             </Property>
                           </Properties>
+                          <Events>
+                            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jtlistadirecactMouseClicked"/>
+                          </Events>
                         </Component>
                       </SubComponents>
                     </Container>

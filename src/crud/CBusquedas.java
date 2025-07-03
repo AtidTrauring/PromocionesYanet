@@ -46,9 +46,25 @@ public class CBusquedas {
     }
 
     public ArrayList<String[]> buscarDirecciones() throws SQLException {
-        consulta = "Call tablaDirec";
-        return cnslt.buscarValores(consulta, 5);
+        consulta = "SELECT dr.iddireccion AS ID_Direccion, CONCAT(pr.nombres, ' ', pr.ap_paterno, ' ', pr.ap_materno) AS Nombre_Completo,"
+                + " CASE WHEN emp.persona_idpersona IS NOT NULL THEN 'Empleado' WHEN cli.persona_idpersona IS NOT NULL AND av.persona_idpersona IS NOT NULL THEN 'Cliente y Aval'"
+                + " WHEN cli.persona_idpersona IS NOT NULL THEN 'Cliente' WHEN av.persona_idpersona IS NOT NULL THEN 'Aval' ELSE 'Sin Rol' END AS Tipo_Persona,"
+                + " CONCAT('Colonia: ', cl.colonia, ' Calle: ', dr.calle, ' Numero Interior: ', dr.num_int, ' Numero Exterior: ', dr.num_ext) AS Direccion"
+                + " FROM persona pr INNER JOIN direccion dr ON pr.direccion_iddireccion = dr.iddireccion INNER JOIN colonia cl ON dr.colonia_idcolonia = cl.idcolonia "
+                + "LEFT JOIN cliente cli ON pr.idpersona = cli.persona_idpersona LEFT JOIN aval av ON pr.idpersona = av.persona_idpersona "
+                + "LEFT JOIN empleado emp ON pr.idpersona = emp.persona_idpersona ORDER BY dr.iddireccion;";
+        return cnslt.buscarValores(consulta, 4);
     }
+
+    public String buscarID(String consulta) throws SQLException {
+        return new CConsultas().buscarValorSinMensaje(consulta);
+    }
+    
+    public String[] buscarPersonaCompleta(String idPersona) throws SQLException {
+        consulta = "SELECT nombres, ap_paterno, ap_materno, telefono FROM persona WHERE idpersona = " + idPersona;
+    return cnslt.buscarValoresLista(consulta, 4);
+}
+
 
     public String buscarUltimoEmpleado() throws SQLException {
         consulta = "SELECT MAX(empleado.idempleado) FROM empleado";
