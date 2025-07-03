@@ -459,6 +459,40 @@ public final class JfEmpleado extends javax.swing.JFrame {
 
     }
 
+    /**
+     * Limpia filtros, reaplica placeholders y recarga todas las tablas de
+     * empleados y sueldos. Este método es útil después de eliminar, agregar o
+     * actualizar empleados.
+     */
+    private void resetVistaEmpleado() {
+        try {
+            // 1. Limpiar campos de texto en pestañas con filtros
+            limpiarFiltros(JtxtCnsltID, JtxtCnsltNombre, JtxtCnsltApeMat, JtxtCnsltApePat);
+            limpiarFiltros(JtxtActlzid, JtxtActlzNombre, JtxtActlzApMat, JtxtActlzApPat);
+            limpiarFiltros(JtxtElmID, JtxtElmNombre, JtxtElmApeMat, JtxtElmApePat);
+            limpiarFiltros(JtxtSldEmpleado, new JTextField(), new JTextField(), new JTextField()); // Solo usa el primero
+
+            // 2. Reaplicar placeholders
+            aplicarPlaceholders();
+
+            // 3. Limpiar filtros activos en los TableRowSorter
+            trListaEmpleados.setRowFilter(null);
+            trActualizaEmpleados.setRowFilter(null);
+            trDeleteEmpleados.setRowFilter(null);
+            trSueldosEmpleados.setRowFilter(null);
+
+            // 4. Recargar datos
+            cargarDatosEmpleados(JtblListaEmpleados);
+            cargarDatosEmpleados(JtblActualizaEmpleados);
+            cargarDatosEmpleados(JtblDeleteEmpleados);
+            cargarDatosSueldos(JtblSueldosEmpleados);
+            cargarDatosSueldos(JtblAsignaSueldos);
+
+        } catch (SQLException ex) {
+            CUtilitarios.msg_error("Error al recargar los datos: " + ex.getMessage(), "Error");
+        }
+    }
+
     // Metodos CRUD
     public void insertaEmpleado() throws SQLException {
         // Obtener valores de los campos
@@ -562,9 +596,8 @@ public final class JfEmpleado extends javax.swing.JFrame {
 
             if (eliminado) {
                 CUtilitarios.msg("Empleado eliminado correctamente.", "Éxito");
-                limpiarFiltros(JtxtElmID, JtxtElmNombre, JtxtElmApeMat, JtxtElmApePat);
-                aplicarPlaceholders();
-                cargarDatosEmpleados(JtblDeleteEmpleados);
+                resetVistaEmpleado();
+
             } else {
                 CUtilitarios.msg_error("No se pudo eliminar el empleado.", "Error");
             }
