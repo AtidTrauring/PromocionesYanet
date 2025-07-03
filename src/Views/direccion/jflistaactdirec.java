@@ -79,6 +79,14 @@ public class jflistaactdirec extends javax.swing.JFrame {
         return true;
     }
 
+    //Limpiar campos
+    private void limpiarCampos() {
+        jtfcalleact.setText("");
+        jtfnumintact.setText("");
+        jtfnumextact.setText("");
+        jcbcoloniaact.setSelectedIndex(0);
+    }
+
     // Define el modelo estándar para las dos tablas del Frame
     private void configurarModeloTablaDirecciones(JTable tabla) throws SQLException {
         DefaultTableModel modelo = new DefaultTableModel(
@@ -174,7 +182,7 @@ public class jflistaactdirec extends javax.swing.JFrame {
     private void initComponents() {
 
         jpfondodireccion = new javax.swing.JPanel();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        JtbpDirecciones = new javax.swing.JTabbedPane();
         jplistadirec = new javax.swing.JPanel();
         jpfondotabladirec = new javax.swing.JPanel();
         jspdirec = new javax.swing.JScrollPane();
@@ -379,7 +387,7 @@ public class jflistaactdirec extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab("Lista de Direcciones", jplistadirec);
+        JtbpDirecciones.addTab("Lista de Direcciones", jplistadirec);
 
         jpactualizadirec.setBackground(new java.awt.Color(242, 220, 153));
         jpactualizadirec.setFont(new java.awt.Font("Candara", 1, 12)); // NOI18N
@@ -566,7 +574,7 @@ public class jflistaactdirec extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("Actualizar Dirección", jpactualizadirec);
+        JtbpDirecciones.addTab("Actualizar Dirección", jpactualizadirec);
 
         jliconodirec.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jliconodirec.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/direcciones.png"))); // NOI18N
@@ -576,7 +584,7 @@ public class jflistaactdirec extends javax.swing.JFrame {
         jpfondodireccion.setLayout(jpfondodireccionLayout);
         jpfondodireccionLayout.setHorizontalGroup(
             jpfondodireccionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addComponent(JtbpDirecciones, javax.swing.GroupLayout.Alignment.TRAILING)
             .addGroup(jpfondodireccionLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jliconodirec, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -588,7 +596,7 @@ public class jflistaactdirec extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jliconodirec)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTabbedPane1))
+                .addComponent(JtbpDirecciones))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -668,6 +676,9 @@ public class jflistaactdirec extends javax.swing.JFrame {
                 if (transaccionExitosa) {
                     cu.msg("Dirección actualizada correctamente.", "Éxito");
                     configurarModeloTablaDirecciones(jtlistadirecact);
+                    configurarModeloTablaDirecciones(jtlistadirec);
+                    limpiarCampos();
+                    JtbpDirecciones.setSelectedIndex(0);
                 } else {
                     cu.msg_error("No se pudo completar la actualización.", "Fallo");
                 }
@@ -680,6 +691,9 @@ public class jflistaactdirec extends javax.swing.JFrame {
                 if (transaccionExitosa) {
                     cu.msg("Dirección y datos personales actualizados correctamente.", "Éxito");
                     configurarModeloTablaDirecciones(jtlistadirecact);
+                    configurarModeloTablaDirecciones(jtlistadirec);
+                    limpiarCampos();
+                    JtbpDirecciones.setSelectedIndex(0);
                 } else {
                     cu.msg_error("No se pudo completar la actualización.", "Fallo");
                 }
@@ -750,13 +764,13 @@ public class jflistaactdirec extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTabbedPane JtbpDirecciones;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator10;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator8;
     private javax.swing.JSeparator jSeparator9;
-    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JButton jbdirecact;
     private javax.swing.JComboBox<String> jcbcoloniaact;
     private javax.swing.JComboBox<String> jcbcolonias;
