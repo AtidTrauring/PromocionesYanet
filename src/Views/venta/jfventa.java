@@ -39,7 +39,7 @@ public class jfventa extends javax.swing.JFrame {
     private DefaultTableModel modelBusqueda;
     private DefaultTableModel modelAgregar;
     private DefaultTableModel modelPagos;
-    private DefaultTableModel modelCarga;
+    private DefaultTableModel modelCarga = new DefaultTableModel(new String[]{"id", "producto", "precio"}, 0);
     private CBusquedas cbus = new CBusquedas();
     private CUtilitarios cuti = new CUtilitarios();
     private TableRowSorter tr;
@@ -69,6 +69,8 @@ public class jfventa extends javax.swing.JFrame {
         cargarTablaBusqueda();
         cargarTablaPagos(folioVenta);
         eventoCargarDatosPago();
+        jTblAgregarVenta.setModel(modelCarga);
+        cargarTablaConProducto();
         cargarCombos(jCmbBoxFechas, 1);
         cargarCombos(jCmbBoxEstatus, 2);
         cargarCombos(jCmbBoxPagosPendi, 3);
@@ -176,21 +178,34 @@ public class jfventa extends javax.swing.JFrame {
     //Cargar tabla con los productos de la venta
     private void cargarTablaConProducto() {
         try {
-            //Se obtiene lo ingresado en el testfield.
             folioVenta = jTxtFFolioVenta.getText().trim();
             datosProducto = cbus.buscarProductoDeLaVenta(folioVenta);
-            //Se imprimen los arreglos
-            System.out.println(folioVenta);
-            limpiarTablaAgregar();
-            int i = 0;
-            for (String[] datoProd : datosProducto) {
-                System.out.println(Arrays.toString(datoProd));
+            System.out.println("Folio: " + folioVenta);
 
-                modelCarga.addRow(new Object[]{datoProd[0], datoProd[1], datoProd[2]});
+//            modelCarga = new DefaultTableModel();
+////            modelCarga.setColumnIdentifiers(new Object[]{"ID Producto", "Producto", "Precio"});
+//            jTblAgregarVenta.setModel(modelCarga);
+            limpiarTablaAgregar();
+
+            modelCarga.setColumnIdentifiers(new Object[]{"ID Producto", "Producto", "Precio"});
+
+            if (datosProducto == null || datosProducto.isEmpty()) {
+                System.out.println("No se encontraron productos para la venta.");
+                return;
+            } else {
+                for (String[] datoProd : datosProducto) {
+                    System.out.println(Arrays.toString(datoProd));  //incluye el contador
+                    modelCarga.addRow(new Object[]{datoProd[1], datoProd[2], datoProd[3]});
+                }
+
+                jTblAgregarVenta.setModel(modelCarga);
             }
-            jTblAgregarVenta.setModel(modelCarga);
+
+//            // 5. (opcional) Forzar redibujado por si no se ve
+//            jTblAgregarVenta.repaint();
         } catch (Exception e) {
             CUtilitarios.msg_error("No se pudo cargar la tabla", "Carga de tabla de productos de la venta");
+            e.printStackTrace();
         }
     }
 
@@ -2026,7 +2041,6 @@ public class jfventa extends javax.swing.JFrame {
     }//GEN-LAST:event_jBtnActualizarPagoActionPerformed
 
     private void jTxtFFolioVentaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTxtFFolioVentaKeyReleased
-
         try {
             String id = jTxtFFolioVenta.getText().trim();
             if (!id.isEmpty()) {

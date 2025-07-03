@@ -410,6 +410,19 @@ public class CBusquedas {
                 + "INNER JOIN producto ON venta_has_producto.producto_idproducto = producto.idproducto "
                 + "INNER JOIN venta ON venta_has_producto.venta_Idventa = venta.Idventa "
                 + "WHERE venta_has_producto.venta_Idventa = '" + idVenta + "';";
-        return cnslt.buscarValores(consulta, 3);
+
+        ArrayList<String[]> productos = cnslt.buscarValores(consulta, 3);
+        //Se agrega numeración en Java porque no se pueden ejecutar dos sentencias al mismo tiempo, como la de select y set
+        ArrayList<String[]> productosNumerados = new ArrayList<>();
+        int contador = 1;
+        for (String[] producto : productos) {
+            String[] fila = new String[4];
+            fila[0] = String.valueOf(contador++); // Número
+            fila[1] = producto[0]; // idproducto
+            fila[2] = producto[1]; // nombre
+            fila[3] = producto[2]; // precio
+            productosNumerados.add(fila);
+        }
+        return productosNumerados;
     }
 }
