@@ -22,9 +22,15 @@ public class CEliminaciones {
         consulta = "DELETE FROM zona WHERE idzona = '" + idZona + "';";
         return cnslt.elimina(consulta);
     }
-    
+
+    // Empleados
+    public boolean eliminarEmpleado(String idEmpleado) throws SQLException {
+        // Eliminar el empleado directamente (la relación en cascada elimina: sueldo, pagos_tarjetas, venta, etc.)
+        consulta = "DELETE FROM empleado WHERE idempleado = '" + idEmpleado + "';";
+        return cnslt.elimina(consulta);
+    }
+
     /* Personas */
-    
     public boolean eliminarPersona(int idPer) throws SQLException {
         consulta = "DELETE FROM persona WHERE idpersona = '" + idPer + "';";
         return cnslt.elimina(consulta);

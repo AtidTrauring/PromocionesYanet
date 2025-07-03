@@ -13,7 +13,7 @@ public class CActualizaciones {
     }
 
     public boolean actualizaSueldoInicial(String sueldo, String idSueldo) throws SQLException {
-        consulta = "UPDATE sueldo SET sueldo='" + sueldo + "' WHERE empleado.idempleado = '" + idSueldo + "'";
+        consulta = "UPDATE sueldo SET sueldo='" + sueldo + "' WHERE sueldo.idsueldo = " + idSueldo;
         return cnslt.actualiza(consulta);
     }
 

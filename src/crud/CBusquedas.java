@@ -59,16 +59,25 @@ public class CBusquedas {
     public String buscarID(String consulta) throws SQLException {
         return new CConsultas().buscarValorSinMensaje(consulta);
     }
-    
+
     public String[] buscarPersonaCompleta(String idPersona) throws SQLException {
         consulta = "SELECT nombres, ap_paterno, ap_materno, telefono FROM persona WHERE idpersona = " + idPersona;
-    return cnslt.buscarValoresLista(consulta, 4);
-}
-
+        return cnslt.buscarValoresLista(consulta, 4);
+    }
 
     public String buscarUltimoEmpleado() throws SQLException {
         consulta = "SELECT MAX(empleado.idempleado) FROM empleado";
         return cnslt.buscarValor(consulta);
+    }
+
+    public String buscarTelefonoEmpleado(String idEmpleado) throws SQLException {
+        consulta = "SELECT p.telefono FROM persona p INNER JOIN empleado e ON e.persona_idpersona = p.idpersona WHERE e.idempleado = " + idEmpleado + ";";
+        return cnslt.buscarValor(consulta);
+    }
+
+    public String[] buscarUltimoIdSueldoEmpleado(String idEmpleado) throws SQLException {
+        consulta = "SELECT s.idsueldo, s.sueldo FROM sueldo s WHERE s.empleado_idempleado = " + idEmpleado + " ORDER BY s.idsueldo DESC LIMIT 1";
+        return cnslt.buscarValoresLista(consulta, 2);
     }
 
     /* Cliente */

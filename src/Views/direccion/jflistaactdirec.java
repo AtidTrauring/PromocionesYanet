@@ -1,5 +1,6 @@
 package Views.direccion;
 
+import Views.empleado.JfEmpleado;
 import Views.jfmenuinicio;
 import crud.*;
 import java.sql.*;
@@ -14,7 +15,7 @@ public class jflistaactdirec extends javax.swing.JFrame {
     CBusquedas cb = new CBusquedas();
     CCargaCombos cc = new CCargaCombos();
     CActualizaciones ca = new CActualizaciones();
-    private String nombres, apMat, apPat, telefono, sueldo, idZona;
+    private String nombres, apMat, apPat, telefono, sueldo, idEmpleado, idSueldo, idZona;
     private String[] datosEstatus;
 
     public jflistaactdirec() {
@@ -29,12 +30,14 @@ public class jflistaactdirec extends javax.swing.JFrame {
     }
 
     // Metodo para pasar valores desde otro Frame (Clientes o Empleado) hacia este.
-    public void obtenValoresActualiza(String nombre, String apMat, String apPat, String telefono, String sueldo, String idZona, String[] datosEstatus) {
+    public void obtenValoresActualiza(String nombre, String apMat, String apPat, String telefono, String sueldo, String idEmpleado, String idSueldo, String idZona, String[] datosEstatus) {
         this.nombres = nombre;
         this.apMat = apMat;
         this.apPat = apPat;
         this.telefono = telefono;
         this.sueldo = sueldo;
+        this.idSueldo = sueldo;
+        this.idEmpleado = idEmpleado;
         this.idZona = idZona;
         this.datosEstatus = datosEstatus;
     }
@@ -671,6 +674,7 @@ public class jflistaactdirec extends javax.swing.JFrame {
         // Paso 7: Ejecutar actualización
         try {
             boolean transaccionExitosa = false;
+            // Actualizacion unicamente de la direccion
             if (nombres == null || apPat == null || apMat == null || telefono == null) {
                 transaccionExitosa = ca.actualizarDireccion(idDireccion, calle, numExt, numInt, idColonia);
                 if (transaccionExitosa) {
@@ -683,17 +687,30 @@ public class jflistaactdirec extends javax.swing.JFrame {
                     cu.msg_error("No se pudo completar la actualización.", "Fallo");
                 }
             } else {
+                // Actualizacion completa de persona y direccion - Hay informacion desde otro Frame
                 transaccionExitosa = ca.actualizarDireccionYPersona(
                         idDireccion, calle, numExt, numInt,
                         idColonia, idPersona,
                         nombres, apPat, apMat, telefono
                 );
                 if (transaccionExitosa) {
-                    cu.msg("Dirección y datos personales actualizados correctamente.", "Éxito");
-                    configurarModeloTablaDirecciones(jtlistadirecact);
-                    configurarModeloTablaDirecciones(jtlistadirec);
-                    limpiarCampos();
-                    JtbpDirecciones.setSelectedIndex(0);
+                    // Se trata de un empleado porque hay un sueldo
+                    if (idSueldo != null) {
+                        // Actualizacion del sueldo en el ultimo registro de sueldo para el usuario
+                        if (ca.actualizaSueldoInicial(sueldo, idSueldo)) {
+                            cu.msg("Dirección y datos personales actualizados correctamente.", "Éxito");
+//                            configurarModeloTablaDirecciones(jtlistadirecact);
+//                            configurarModeloTablaDirecciones(jtlistadirec);
+//                            limpiarCampos();
+//                            JtbpDirecciones.setSelectedIndex(0);
+                            JfEmpleado frameEmpleado = new JfEmpleado();
+                            cu.creaFrame(frameEmpleado, "Empleados");
+                            this.dispose();
+                        } else {
+                            cu.msg_error("¡Ocurrio un error al actualizar el sueldo!", "Fallo");
+                        }
+                    }
+
                 } else {
                     cu.msg_error("No se pudo completar la actualización.", "Fallo");
                 }
@@ -711,9 +728,44 @@ public class jflistaactdirec extends javax.swing.JFrame {
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         try {
-            configurarInterfaz();
+            configurarInterfaz(); // Cargar combos, modelos de tabla, etc.
         } catch (SQLException ex) {
             CUtilitarios.msg_error("Error al cargar datos iniciales: " + ex.getMessage(), "Inicio del Frame");
+        }
+
+        // Si estos valores están nulos, no proviene desde Cliente o Empleado
+        if (nombres == null || apPat == null || apMat == null || telefono == null) {
+            return;
+        }
+
+        // Si viene desde otro formulario, dirigir a pestaña de actualización
+        JtbpDirecciones.setSelectedIndex(1);
+
+        try {
+            // 1. Concatenar nombre completo
+            String nombreCompleto = nombres + " " + apPat + " " + apMat;
+
+            // 2. Buscar en la tabla la fila cuyo nombre coincida con el completo
+            DefaultTableModel modelo = (DefaultTableModel) jtlistadirecact.getModel();
+            int totalFilas = modelo.getRowCount();
+
+            for (int i = 0; i < totalFilas; i++) {
+                String nombreTabla = String.valueOf(modelo.getValueAt(i, 1)).trim(); // Columna 2: Nombre completo
+
+                if (nombreTabla.equalsIgnoreCase(nombreCompleto)) {
+                    // 3. Si se encuentra coincidencia, seleccionar fila visualmente
+                    int filaVista = jtlistadirecact.convertRowIndexToView(i);
+                    jtlistadirecact.setRowSelectionInterval(filaVista, filaVista);
+
+                    // 4. Obtener datos de esa fila y cargar en los campos
+                    String[] datosFila = obtenerDatosFilaActualizar();
+                    cargarDatosDireccionDesdeFila(datosFila);
+                    break;
+                }
+            }
+
+        } catch (Exception e) {
+            CUtilitarios.msg_error("Error al cargar datos de dirección por nombre: " + e.getMessage(), "Búsqueda");
         }
     }//GEN-LAST:event_formWindowOpened
 
