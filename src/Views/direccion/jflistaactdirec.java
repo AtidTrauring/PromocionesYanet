@@ -3,8 +3,10 @@ package Views.direccion;
 import Views.empleado.JfEmpleado;
 import Views.jfmenuinicio;
 import crud.*;
+import java.awt.event.ItemEvent;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 import javax.swing.*;
 import utilitarios.CUtilitarios;
 import javax.swing.table.*;
@@ -17,6 +19,8 @@ public class jflistaactdirec extends javax.swing.JFrame {
     CActualizaciones ca = new CActualizaciones();
     private String nombres, apMat, apPat, telefono, sueldo, idEmpleado, idSueldo, idZona;
     private String[] datosEstatus;
+    // Filtro para la tabla 
+    private TableRowSorter<DefaultTableModel> trListaDirecciones;
 
     public jflistaactdirec() {
         initComponents();
@@ -180,6 +184,57 @@ public class jflistaactdirec extends javax.swing.JFrame {
         }
     }
 
+    // ========================================================================
+    // MÉTODOS PARA FILTRADO DE DATOS
+    // ========================================================================
+    /**
+     * Inicializa los filtros dinámicos para cada tabla, asignando un
+     * TableRowSorter independiente y configurando su uso.
+     */
+    private void configurarFiltros() {
+        trListaDirecciones = new TableRowSorter<>((DefaultTableModel) jtlistadirec.getModel());
+        jtlistadirec.setRowSorter(trListaDirecciones);
+    }
+
+    /**
+     * Aplica filtros combinados específicos para la tabla usando texto y
+     * selecciones en JComboBox.
+     */
+    private void aplicarFiltros() {
+        ArrayList<RowFilter<Object, Object>> filtros = new ArrayList<>();
+
+        // Filtro por ID de direccion (columna 1)
+        String filtroID = jtfidbusqueda.getText().trim();
+        if (!filtroID.isEmpty() && (jtfidbusqueda.getToolTipText() == null || !filtroID.equals(jtfidbusqueda.getToolTipText()))) {
+            filtros.add(RowFilter.regexFilter("(?i).*" + Pattern.quote(filtroID) + ".*", 1));
+        }
+
+        // Filtro por Nombre (Persona) (columna 2)
+        String filtroPersona = jtfpersonabusqueda.getText().trim();
+        if (!filtroPersona.isEmpty() && (jtfpersonabusqueda.getToolTipText() == null || !filtroPersona.equals(jtfpersonabusqueda.getToolTipText()))) {
+            filtros.add(RowFilter.regexFilter("(?i).*" + Pattern.quote(filtroPersona) + ".*", 1));
+        }
+
+        // Filtro por Direccion (Tipo) (columna 4)
+        String seleccionadoColonia = (String) jcbcolonias.getSelectedItem();
+        if (seleccionadoColonia != null && !seleccionadoColonia.equalsIgnoreCase("Fecha Inicio")) {
+            filtros.add(RowFilter.regexFilter("(?i).*" + Pattern.quote(seleccionadoColonia) + ".*", 3));
+        }
+
+        // Filtro por Direccion (columna 3)
+        String seleccionadoTipo = (String) jcbtipo.getSelectedItem();
+        if (seleccionadoTipo != null && !seleccionadoTipo.equalsIgnoreCase("Fecha Final")) {
+            filtros.add(RowFilter.regexFilter("(?i).*" + Pattern.quote(seleccionadoTipo) + ".*", 4));
+        }
+
+        // Aplicar filtros combinados o mostrar todo si no hay filtros
+        if (filtros.isEmpty()) {
+            trListaDirecciones.setRowFilter(null);
+        } else {
+            trListaDirecciones.setRowFilter(RowFilter.andFilter(filtros));
+        }
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -297,6 +352,11 @@ public class jflistaactdirec extends javax.swing.JFrame {
         jtfidbusqueda.setToolTipText("Ingresar ID");
         jtfidbusqueda.setBorder(null);
         jtfidbusqueda.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        jtfidbusqueda.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jtfidbusquedaKeyReleased(evt);
+            }
+        });
 
         jSeparator1.setBackground(new java.awt.Color(0, 0, 0));
         jSeparator1.setForeground(new java.awt.Color(0, 0, 0));
@@ -308,6 +368,11 @@ public class jflistaactdirec extends javax.swing.JFrame {
         jtfpersonabusqueda.setToolTipText("Ingresar Nombre(s)");
         jtfpersonabusqueda.setBorder(null);
         jtfpersonabusqueda.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        jtfpersonabusqueda.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jtfpersonabusquedaKeyReleased(evt);
+            }
+        });
 
         jSeparator2.setBackground(new java.awt.Color(0, 0, 0));
         jSeparator2.setForeground(new java.awt.Color(0, 0, 0));
@@ -319,6 +384,11 @@ public class jflistaactdirec extends javax.swing.JFrame {
         jcbcolonias.setToolTipText("Selecciona un tipo de Usuario");
         jcbcolonias.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jcbcolonias.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jcbcolonias.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jcbcoloniasItemStateChanged(evt);
+            }
+        });
 
         jcbtipo.setBackground(new java.awt.Color(167, 235, 242));
         jcbtipo.setFont(new java.awt.Font("Candara", 1, 12)); // NOI18N
@@ -326,6 +396,11 @@ public class jflistaactdirec extends javax.swing.JFrame {
         jcbtipo.setToolTipText("Selecciona un tipo de Usuario");
         jcbtipo.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jcbtipo.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jcbtipo.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jcbtipoItemStateChanged(evt);
+            }
+        });
 
         javax.swing.GroupLayout jpfondobusquedaLayout = new javax.swing.GroupLayout(jpfondobusqueda);
         jpfondobusqueda.setLayout(jpfondobusquedaLayout);
@@ -772,6 +847,26 @@ public class jflistaactdirec extends javax.swing.JFrame {
     private void jtlistadirecactMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtlistadirecactMouseClicked
         cargarDatosDireccionDesdeFila(obtenerDatosFilaActualizar());
     }//GEN-LAST:event_jtlistadirecactMouseClicked
+
+    private void jcbtipoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbtipoItemStateChanged
+        if (evt.getStateChange() == ItemEvent.SELECTED) {
+            aplicarFiltros();
+        }
+    }//GEN-LAST:event_jcbtipoItemStateChanged
+
+    private void jcbcoloniasItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbcoloniasItemStateChanged
+        if (evt.getStateChange() == ItemEvent.SELECTED) {
+            aplicarFiltros();
+        }
+    }//GEN-LAST:event_jcbcoloniasItemStateChanged
+
+    private void jtfpersonabusquedaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtfpersonabusquedaKeyReleased
+        aplicarFiltros();
+    }//GEN-LAST:event_jtfpersonabusquedaKeyReleased
+
+    private void jtfidbusquedaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtfidbusquedaKeyReleased
+        aplicarFiltros();
+    }//GEN-LAST:event_jtfidbusquedaKeyReleased
 
     /**
      * @param args the command line arguments

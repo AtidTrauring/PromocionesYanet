@@ -1,5 +1,6 @@
 package Views.venta;
 
+import Views.JfInicionSesion;
 import Views.jfmenuinicio;
 import com.toedter.calendar.JDateChooser;
 import crud.CActualizaciones;
@@ -2055,8 +2056,8 @@ public class jfventa extends javax.swing.JFrame {
     }//GEN-LAST:event_jTxtFFolioVentaKeyReleased
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        jfmenuinicio mi = new jfmenuinicio();
-        CUtilitarios.creaFrame(mi, "Menú Inicio");
+        JfInicionSesion is = new JfInicionSesion();
+        CUtilitarios.creaFrame(is, "Inicio de Sesión");
     }//GEN-LAST:event_formWindowClosing
 
     /**
