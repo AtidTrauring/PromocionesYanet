@@ -337,5 +337,109 @@ public class CUtilitarios {
             }
         });
     }
+
     /* Fin De nuevos Métodos */
+ /*  METODOS DE TABLAS*/
+    /**
+     * Ajusta automáticamente el ancho de las columnas de una JTable según el
+     * contenido de sus celdas y encabezados.
+     *
+     * @param tabla JTable a la que se le ajustarán las columnas
+     */
+    public static void ajustarColumnasTabla(JTable tabla) {
+
+        // Permite que Swing respete el ancho que definimos manualmente
+        tabla.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+
+        TableColumnModel modeloColumnas = tabla.getColumnModel();
+
+        for (int col = 0; col < tabla.getColumnCount(); col++) {
+
+            TableColumn columna = modeloColumnas.getColumn(col);
+            int anchoMaximo = 0;
+
+            /* ====== Medir encabezado ====== */
+            TableCellRenderer headerRenderer = columna.getHeaderRenderer();
+            if (headerRenderer == null) {
+                headerRenderer = tabla.getTableHeader().getDefaultRenderer();
+            }
+
+            Component headerComp = headerRenderer.getTableCellRendererComponent(
+                    tabla,
+                    columna.getHeaderValue(),
+                    false,
+                    false,
+                    0,
+                    col
+            );
+
+            anchoMaximo = headerComp.getPreferredSize().width;
+
+            /* ====== Medir celdas ====== */
+            for (int fila = 0; fila < tabla.getRowCount(); fila++) {
+
+                TableCellRenderer cellRenderer = tabla.getCellRenderer(fila, col);
+                Component cellComp = tabla.prepareRenderer(cellRenderer, fila, col);
+
+                anchoMaximo = Math.max(
+                        anchoMaximo,
+                        cellComp.getPreferredSize().width
+                );
+            }
+
+            /* ====== Margen extra ====== */
+            anchoMaximo += 15;
+
+            /* ====== Límites razonables ====== */
+            int anchoMin = 60;
+            int anchoMax = 500;
+
+            if (anchoMaximo < anchoMin) {
+                anchoMaximo = anchoMin;
+            } else if (anchoMaximo > anchoMax) {
+                anchoMaximo = anchoMax;
+            }
+
+            columna.setPreferredWidth(anchoMaximo);
+        }
+    }
+
+    /**
+     * Ajusta automáticamente el tamaño visible de una JTable según la cantidad
+     * de filas que contiene.
+     *
+     * @param tabla JTable a ajustar
+     * @param scroll JScrollPane que contiene la tabla
+     * @param filasMaxVisibles Número máximo de filas visibles sin scroll
+     */
+    public static void ajustarTamanioTabla(
+            JTable tabla,
+            JScrollPane scroll,
+            int filasMaxVisibles) {
+
+        if (tabla == null || scroll == null) {
+            return;
+        }
+
+        int filas = tabla.getRowCount();
+        int alturaFila = tabla.getRowHeight();
+
+        // Limitar número de filas visibles
+        int filasVisibles = Math.min(filas, filasMaxVisibles);
+
+        // Altura total (filas + encabezado)
+        int alturaTabla = (filasVisibles * alturaFila)
+                + tabla.getTableHeader().getPreferredSize().height;
+
+        // Mantener el ancho actual del JScrollPane
+        int anchoTabla = scroll.getViewport().getWidth();
+
+        tabla.setPreferredScrollableViewportSize(
+                new Dimension(anchoTabla, alturaTabla)
+        );
+
+        tabla.revalidate();
+        tabla.repaint();
+    }
+
 }

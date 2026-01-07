@@ -4,22 +4,33 @@ import Views.empleado.JfEmpleado;
 import Views.jfmenuinicio;
 import crud.*;
 import java.awt.event.ItemEvent;
-import java.sql.*;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 import javax.swing.*;
-import utilitarios.CUtilitarios;
 import javax.swing.table.*;
+import utilitarios.CUtilitarios;
 
 public class jflistaactdirec extends javax.swing.JFrame {
 
-    CUtilitarios cu = new CUtilitarios();
-    CBusquedas cb = new CBusquedas();
-    CCargaCombos cc = new CCargaCombos();
-    CActualizaciones ca = new CActualizaciones();
-    private String nombres, apMat, apPat, telefono, sueldo, idEmpleado, idSueldo, idZona;
+    /* ==========================
+       CLASES AUXILIARES
+       ========================== */
+    private final CUtilitarios cu = new CUtilitarios();
+    private final CBusquedas cb = new CBusquedas();
+    private final CCargaCombos cc = new CCargaCombos();
+    private final CActualizaciones ca = new CActualizaciones();
+
+    /* ==========================
+       VARIABLES DE CONTEXTO
+       ========================== */
+    private String nombres, apPat, apMat, telefono, sueldo;
+    private String idEmpleado, idSueldo, idZona;
     private String[] datosEstatus;
-    // Filtro para la tabla 
+
+    /* ==========================
+       FILTROS
+       ========================== */
     private TableRowSorter<DefaultTableModel> trListaDirecciones;
 
     public jflistaactdirec() {
@@ -27,9 +38,21 @@ public class jflistaactdirec extends javax.swing.JFrame {
     }
 
     private void configurarInterfaz() throws SQLException {
-        aplicarPlaceholders();      // Textos guía en campos de texto
-        configurarModeloTablaDirecciones(jtlistadirec);  // Modelos para las tablas
-        configurarModeloTablaDirecciones(jtlistadirecact);  // Modelos para las tablas
+
+        aplicarPlaceholders();
+
+        // 1️⃣ Cargar datos y modelo
+        configurarModeloTablaDirecciones(jtlistadirec);
+        CUtilitarios.ajustarColumnasTabla(jtlistadirec);
+        CUtilitarios.ajustarTamanioTabla(jtlistadirec, jspdirec, 8);
+        configurarModeloTablaDirecciones(jtlistadirecact);
+        CUtilitarios.ajustarColumnasTabla(jtlistadirecact);
+        CUtilitarios.ajustarTamanioTabla(jtlistadirecact, jspdirecact, 8);
+
+        // 2️⃣ Crear el sorter DESPUÉS
+        configurarFiltroListaDirecciones();
+
+        // 3️⃣ Cargar combos
         cargaComboBoxColonias();
     }
 
@@ -63,23 +86,23 @@ public class jflistaactdirec extends javax.swing.JFrame {
         // Validación general
         if (cu.campoVacio(jtfcalleact) || cu.campoVacio(jtfnumextact) || cu.campoVacio(jtfnumintact)
                 || jcbcoloniaact.getSelectedIndex() == 0) {
-            cu.msg_advertencia("Todos los campos deben estar llenos y una colonia válida debe ser seleccionada.", "Validación");
+            CUtilitarios.msg_advertencia("Todos los campos deben estar llenos y una colonia válida debe ser seleccionada.", "Validación");
             return false;
         }
 
         // Validación específica por campo
         if (!cu.validarCalle(jtfcalleact.getText())) {
-            cu.msg_advertencia("La calle ingresada no es válida.", "Validación");
+            CUtilitarios.msg_advertencia("La calle ingresada no es válida.", "Validación");
             return false;
         }
 
         if (!cu.validarNumero(jtfnumextact.getText())) {
-            cu.msg_advertencia("El número exterior no es válido.", "Validación");
+            CUtilitarios.msg_advertencia("El número exterior no es válido.", "Validación");
             return false;
         }
 
         if (!cu.validarNumero(jtfnumintact.getText())) {
-            cu.msg_advertencia("El número interior no es válido.", "Validación");
+            CUtilitarios.msg_advertencia("El número interior no es válido.", "Validación");
             return false;
         }
 
@@ -139,7 +162,7 @@ public class jflistaactdirec extends javax.swing.JFrame {
         int filaVista = jtlistadirecact.getSelectedRow();
         // Si el valor es -1, retornar null, porque no hay fila seleccionada
         if (filaVista == -1) {
-            cu.msg_advertencia("Debes seleccionar una fila de la tabla para actualizar.", "Advertencia");
+            CUtilitarios.msg_advertencia("Debes seleccionar una fila de la tabla para actualizar.", "Advertencia");
 
             return null;
         }
@@ -180,7 +203,7 @@ public class jflistaactdirec extends javax.swing.JFrame {
             jcbcoloniaact.setSelectedItem(colonia);
 
         } catch (Exception e) {
-            cu.msg_error("Error al interpretar los datos de la dirección seleccionada.\n" + e.getMessage(), "Error de formato");
+            CUtilitarios.msg_error("Error al interpretar los datos de la dirección seleccionada.\n" + e.getMessage(), "Error de formato");
         }
     }
 
@@ -191,48 +214,90 @@ public class jflistaactdirec extends javax.swing.JFrame {
      * Inicializa los filtros dinámicos para cada tabla, asignando un
      * TableRowSorter independiente y configurando su uso.
      */
-    private void configurarFiltros() {
-        trListaDirecciones = new TableRowSorter<>((DefaultTableModel) jtlistadirec.getModel());
+    private void configurarFiltroListaDirecciones() {
+        DefaultTableModel modelo = (DefaultTableModel) jtlistadirec.getModel();
+        trListaDirecciones = new TableRowSorter<>(modelo);
         jtlistadirec.setRowSorter(trListaDirecciones);
     }
 
-    /**
-     * Aplica filtros combinados específicos para la tabla usando texto y
-     * selecciones en JComboBox.
-     */
-    private void aplicarFiltros() {
+    private void aplicarFiltrosCombinados(
+            JTable tabla,
+            TableRowSorter<DefaultTableModel> sorter,
+            JTextField[] camposTexto,
+            int[] columnasTexto,
+            JComboBox<?>[] combos,
+            int[] columnasCombo) {
+
         ArrayList<RowFilter<Object, Object>> filtros = new ArrayList<>();
 
-        // Filtro por ID de direccion (columna 1)
-        String filtroID = jtfidbusqueda.getText().trim();
-        if (!filtroID.isEmpty() && (jtfidbusqueda.getToolTipText() == null || !filtroID.equals(jtfidbusqueda.getToolTipText()))) {
-            filtros.add(RowFilter.regexFilter("(?i).*" + Pattern.quote(filtroID) + ".*", 1));
+        /* ====== Filtros por JTextField ====== */
+        if (camposTexto != null && columnasTexto != null) {
+            for (int i = 0; i < camposTexto.length; i++) {
+                JTextField campo = camposTexto[i];
+                String texto = campo.getText().trim();
+                String placeholder = campo.getToolTipText();
+
+                // Ignorar campos vacíos o con placeholder
+                if (!texto.isEmpty() && !texto.equalsIgnoreCase(placeholder)) {
+                    filtros.add(RowFilter.regexFilter(
+                            "(?i).*" + Pattern.quote(texto) + ".*",
+                            columnasTexto[i]
+                    ));
+                }
+            }
         }
 
-        // Filtro por Nombre (Persona) (columna 2)
-        String filtroPersona = jtfpersonabusqueda.getText().trim();
-        if (!filtroPersona.isEmpty() && (jtfpersonabusqueda.getToolTipText() == null || !filtroPersona.equals(jtfpersonabusqueda.getToolTipText()))) {
-            filtros.add(RowFilter.regexFilter("(?i).*" + Pattern.quote(filtroPersona) + ".*", 1));
+        /* ====== Filtros por JComboBox ====== */
+        if (combos != null && columnasCombo != null) {
+            for (int i = 0; i < combos.length; i++) {
+                if (combos[i].getSelectedIndex() > 0) { // índice 0 = "Todas"
+                    String valor = combos[i].getSelectedItem().toString();
+                    filtros.add(RowFilter.regexFilter(
+                            "(?i).*" + Pattern.quote(valor) + ".*",
+                            columnasCombo[i]
+                    ));
+                }
+            }
         }
 
-        // Filtro por Direccion (Tipo) (columna 4)
-        String seleccionadoColonia = (String) jcbcolonias.getSelectedItem();
-        if (seleccionadoColonia != null && !seleccionadoColonia.equalsIgnoreCase("Fecha Inicio")) {
-            filtros.add(RowFilter.regexFilter("(?i).*" + Pattern.quote(seleccionadoColonia) + ".*", 3));
-        }
-
-        // Filtro por Direccion (columna 3)
-        String seleccionadoTipo = (String) jcbtipo.getSelectedItem();
-        if (seleccionadoTipo != null && !seleccionadoTipo.equalsIgnoreCase("Fecha Final")) {
-            filtros.add(RowFilter.regexFilter("(?i).*" + Pattern.quote(seleccionadoTipo) + ".*", 4));
-        }
-
-        // Aplicar filtros combinados o mostrar todo si no hay filtros
+        /* ====== Aplicar o limpiar filtros ====== */
         if (filtros.isEmpty()) {
-            trListaDirecciones.setRowFilter(null);
+            sorter.setRowFilter(null);
         } else {
-            trListaDirecciones.setRowFilter(RowFilter.andFilter(filtros));
+            sorter.setRowFilter(RowFilter.andFilter(filtros));
         }
+    }
+
+    private void aplicarFiltrosListaDirecciones() {
+
+        JTextField[] camposTexto = {
+            jtfidbusqueda,
+            jtfpersonabusqueda
+        };
+
+        int[] columnasTexto = {
+            0, // Id Dirección
+            1 // Persona
+        };
+
+        JComboBox<?>[] combos = {
+            jcbcolonias,
+            jcbtipo
+        };
+
+        int[] columnasCombo = {
+            3, // Colonia
+            2 // Tipo
+        };
+
+        aplicarFiltrosCombinados(
+                jtlistadirec,
+                trListaDirecciones,
+                camposTexto,
+                columnasTexto,
+                combos,
+                columnasCombo
+        );
     }
 
     @SuppressWarnings("unchecked")
@@ -254,6 +319,9 @@ public class jflistaactdirec extends javax.swing.JFrame {
         jcbcolonias = new javax.swing.JComboBox<>();
         jcbtipo = new javax.swing.JComboBox<>();
         jpactualizadirec = new javax.swing.JPanel();
+        jpfondoacttabladirec = new javax.swing.JPanel();
+        jspdirecact = new javax.swing.JScrollPane();
+        jtlistadirecact = new javax.swing.JTable();
         jpactualizar = new javax.swing.JPanel();
         jtfcalleact = new javax.swing.JTextField();
         jSeparator8 = new javax.swing.JSeparator();
@@ -262,9 +330,6 @@ public class jflistaactdirec extends javax.swing.JFrame {
         jtfnumintact = new javax.swing.JTextField();
         jSeparator10 = new javax.swing.JSeparator();
         jcbcoloniaact = new javax.swing.JComboBox<>();
-        jpfondoacttabladirec = new javax.swing.JPanel();
-        jspdirecact = new javax.swing.JScrollPane();
-        jtlistadirecact = new javax.swing.JTable();
         jbdirecact = new javax.swing.JButton();
         jliconodirec = new javax.swing.JLabel();
 
@@ -326,17 +391,15 @@ public class jflistaactdirec extends javax.swing.JFrame {
         jpfondotabladirec.setLayout(jpfondotabladirecLayout);
         jpfondotabladirecLayout.setHorizontalGroup(
             jpfondotabladirecLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jpfondotabladirecLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jspdirec, javax.swing.GroupLayout.DEFAULT_SIZE, 898, Short.MAX_VALUE)
-                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpfondotabladirecLayout.createSequentialGroup()
+                .addComponent(jspdirec, javax.swing.GroupLayout.PREFERRED_SIZE, 705, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 10, Short.MAX_VALUE))
         );
         jpfondotabladirecLayout.setVerticalGroup(
             jpfondotabladirecLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpfondotabladirecLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jspdirec, javax.swing.GroupLayout.DEFAULT_SIZE, 469, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jspdirec, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 116, Short.MAX_VALUE))
         );
 
         jpfondobusqueda.setBackground(new java.awt.Color(167, 235, 242));
@@ -448,27 +511,68 @@ public class jflistaactdirec extends javax.swing.JFrame {
             .addGroup(jplistadirecLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jpfondotabladirec, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jpfondobusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(318, 318, 318))
         );
         jplistadirecLayout.setVerticalGroup(
             jplistadirecLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jplistadirecLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jplistadirecLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jpfondotabladirec, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jplistadirecLayout.createSequentialGroup()
-                        .addGap(93, 93, 93)
-                        .addComponent(jpfondobusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addComponent(jpfondotabladirec, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
+            .addGroup(jplistadirecLayout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addComponent(jpfondobusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         JtbpDirecciones.addTab("Lista de Direcciones", jplistadirec);
 
         jpactualizadirec.setBackground(new java.awt.Color(242, 220, 153));
         jpactualizadirec.setFont(new java.awt.Font("Candara", 1, 12)); // NOI18N
+
+        jpfondoacttabladirec.setBackground(new java.awt.Color(242, 220, 153));
+
+        jtlistadirecact.setBackground(new java.awt.Color(167, 235, 242));
+        jtlistadirecact.setFont(new java.awt.Font("Candara", 1, 12)); // NOI18N
+        jtlistadirecact.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Id Direccion", "Persona", "Tipo", "Direccion"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jtlistadirecact.setToolTipText("Listado de Clientes y Avales");
+        jtlistadirecact.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jtlistadirecact.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jtlistadirecactMouseClicked(evt);
+            }
+        });
+        jspdirecact.setViewportView(jtlistadirecact);
+        if (jtlistadirecact.getColumnModel().getColumnCount() > 0) {
+            jtlistadirecact.getColumnModel().getColumn(0).setResizable(false);
+            jtlistadirecact.getColumnModel().getColumn(1).setResizable(false);
+            jtlistadirecact.getColumnModel().getColumn(2).setResizable(false);
+            jtlistadirecact.getColumnModel().getColumn(3).setResizable(false);
+        }
 
         jpactualizar.setBackground(new java.awt.Color(167, 235, 242));
 
@@ -544,63 +648,25 @@ public class jflistaactdirec extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jpfondoacttabladirec.setBackground(new java.awt.Color(242, 220, 153));
-
-        jtlistadirecact.setBackground(new java.awt.Color(167, 235, 242));
-        jtlistadirecact.setFont(new java.awt.Font("Candara", 1, 12)); // NOI18N
-        jtlistadirecact.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Id Direccion", "Persona", "Tipo", "Direccion"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jtlistadirecact.setToolTipText("Listado de Clientes y Avales");
-        jtlistadirecact.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jtlistadirecact.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jtlistadirecactMouseClicked(evt);
-            }
-        });
-        jspdirecact.setViewportView(jtlistadirecact);
-        if (jtlistadirecact.getColumnModel().getColumnCount() > 0) {
-            jtlistadirecact.getColumnModel().getColumn(0).setResizable(false);
-            jtlistadirecact.getColumnModel().getColumn(1).setResizable(false);
-            jtlistadirecact.getColumnModel().getColumn(2).setResizable(false);
-            jtlistadirecact.getColumnModel().getColumn(3).setResizable(false);
-        }
-
         javax.swing.GroupLayout jpfondoacttabladirecLayout = new javax.swing.GroupLayout(jpfondoacttabladirec);
         jpfondoacttabladirec.setLayout(jpfondoacttabladirecLayout);
         jpfondoacttabladirecLayout.setHorizontalGroup(
             jpfondoacttabladirecLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpfondoacttabladirecLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jspdirecact, javax.swing.GroupLayout.DEFAULT_SIZE, 868, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jspdirecact, javax.swing.GroupLayout.PREFERRED_SIZE, 705, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jpactualizar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jpfondoacttabladirecLayout.setVerticalGroup(
             jpfondoacttabladirecLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpfondoacttabladirecLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jspdirecact, javax.swing.GroupLayout.DEFAULT_SIZE, 469, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jspdirecact, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(jpfondoacttabladirecLayout.createSequentialGroup()
+                .addGap(34, 34, 34)
+                .addComponent(jpactualizar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jbdirecact.setBackground(new java.awt.Color(204, 204, 204));
@@ -628,15 +694,9 @@ public class jflistaactdirec extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpactualizadirecLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jpfondoacttabladirec, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jpactualizadirecLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jpactualizadirecLayout.createSequentialGroup()
-                        .addGap(36, 36, 36)
-                        .addComponent(jpactualizar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(27, 27, 27))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpactualizadirecLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jbdirecact, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(88, 88, 88))))
+                .addGap(128, 128, 128)
+                .addComponent(jbdirecact, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(88, 88, 88))
         );
         jpactualizadirecLayout.setVerticalGroup(
             jpactualizadirecLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -645,9 +705,7 @@ public class jflistaactdirec extends javax.swing.JFrame {
                 .addComponent(jpfondoacttabladirec, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
             .addGroup(jpactualizadirecLayout.createSequentialGroup()
-                .addGap(55, 55, 55)
-                .addComponent(jpactualizar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(38, 38, 38)
+                .addGap(359, 359, 359)
                 .addComponent(jbdirecact, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -688,7 +746,7 @@ public class jflistaactdirec extends javax.swing.JFrame {
             .addComponent(jpfondodireccion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        setSize(new java.awt.Dimension(1255, 658));
+        setSize(new java.awt.Dimension(1034, 497));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -709,7 +767,7 @@ public class jflistaactdirec extends javax.swing.JFrame {
                 "¿Deseas actualizar esta dirección y los datos personales?",
                 "Confirmación", JOptionPane.YES_NO_OPTION);
         if (confirmar != JOptionPane.YES_OPTION) {
-            cu.msg("¡Sin cambios!", "Actualizacion");
+            CUtilitarios.msg("¡Sin cambios!", "Actualizacion");
             return;
         }
 
@@ -725,11 +783,11 @@ public class jflistaactdirec extends javax.swing.JFrame {
         try {
             idColonia = cb.buscarID("SELECT idcolonia FROM colonia WHERE colonia='" + coloniaNombre + "'");
             if (idColonia == null) {
-                cu.msg_advertencia("No se encontró la colonia seleccionada.", "Error de datos");
+                CUtilitarios.msg_advertencia("No se encontró la colonia seleccionada.", "Error de datos");
                 return;
             }
         } catch (SQLException e) {
-            cu.msg_error("Error al buscar ID de colonia: " + e.getMessage(), "Error SQL");
+            CUtilitarios.msg_error("Error al buscar ID de colonia: " + e.getMessage(), "Error SQL");
             return;
         }
 
@@ -738,11 +796,11 @@ public class jflistaactdirec extends javax.swing.JFrame {
         try {
             idPersona = cb.buscarID("SELECT idpersona FROM persona WHERE direccion_iddireccion = " + idDireccion);
             if (idPersona == null) {
-                cu.msg_error("No se encontró la persona asociada a esta dirección.", "Error de datos");
+                CUtilitarios.msg_error("No se encontró la persona asociada a esta dirección.", "Error de datos");
                 return;
             }
         } catch (SQLException e) {
-            cu.msg_error("Error al buscar ID de persona: " + e.getMessage(), "Error SQL");
+            CUtilitarios.msg_error("Error al buscar ID de persona: " + e.getMessage(), "Error SQL");
             return;
         }
 
@@ -753,13 +811,13 @@ public class jflistaactdirec extends javax.swing.JFrame {
             if (nombres == null || apPat == null || apMat == null || telefono == null) {
                 transaccionExitosa = ca.actualizarDireccion(idDireccion, calle, numExt, numInt, idColonia);
                 if (transaccionExitosa) {
-                    cu.msg("Dirección actualizada correctamente.", "Éxito");
+                    CUtilitarios.msg("Dirección actualizada correctamente.", "Éxito");
                     configurarModeloTablaDirecciones(jtlistadirecact);
                     configurarModeloTablaDirecciones(jtlistadirec);
                     limpiarCampos();
                     JtbpDirecciones.setSelectedIndex(0);
                 } else {
-                    cu.msg_error("No se pudo completar la actualización.", "Fallo");
+                    CUtilitarios.msg_error("No se pudo completar la actualización.", "Fallo");
                 }
             } else {
                 // Actualizacion completa de persona y direccion - Hay informacion desde otro Frame
@@ -773,26 +831,26 @@ public class jflistaactdirec extends javax.swing.JFrame {
                     if (idSueldo != null) {
                         // Actualizacion del sueldo en el ultimo registro de sueldo para el usuario
                         if (ca.actualizaSueldoInicial(sueldo, idSueldo)) {
-                            cu.msg("Dirección y datos personales actualizados correctamente.", "Éxito");
+                            CUtilitarios.msg("Dirección y datos personales actualizados correctamente.", "Éxito");
 //                            configurarModeloTablaDirecciones(jtlistadirecact);
 //                            configurarModeloTablaDirecciones(jtlistadirec);
 //                            limpiarCampos();
 //                            JtbpDirecciones.setSelectedIndex(0);
                             JfEmpleado frameEmpleado = new JfEmpleado();
-                            cu.creaFrame(frameEmpleado, "Empleados");
+                            CUtilitarios.creaFrame(frameEmpleado, "Empleados");
                             this.dispose();
                         } else {
-                            cu.msg_error("¡Ocurrio un error al actualizar el sueldo!", "Fallo");
+                            CUtilitarios.msg_error("¡Ocurrio un error al actualizar el sueldo!", "Fallo");
                         }
                     }
 
                 } else {
-                    cu.msg_error("No se pudo completar la actualización.", "Fallo");
+                    CUtilitarios.msg_error("No se pudo completar la actualización.", "Fallo");
                 }
             }
 
         } catch (SQLException e) {
-            cu.msg_error("Error al actualizar los datos: " + e.getMessage(), "Error SQL");
+            CUtilitarios.msg_error("Error al actualizar los datos: " + e.getMessage(), "Error SQL");
         }
     }//GEN-LAST:event_jbdirecactActionPerformed
 
@@ -850,22 +908,22 @@ public class jflistaactdirec extends javax.swing.JFrame {
 
     private void jcbtipoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbtipoItemStateChanged
         if (evt.getStateChange() == ItemEvent.SELECTED) {
-            aplicarFiltros();
+            aplicarFiltrosListaDirecciones();
         }
     }//GEN-LAST:event_jcbtipoItemStateChanged
 
     private void jcbcoloniasItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbcoloniasItemStateChanged
         if (evt.getStateChange() == ItemEvent.SELECTED) {
-            aplicarFiltros();
+            aplicarFiltrosListaDirecciones();
         }
     }//GEN-LAST:event_jcbcoloniasItemStateChanged
 
     private void jtfpersonabusquedaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtfpersonabusquedaKeyReleased
-        aplicarFiltros();
+        aplicarFiltrosListaDirecciones();
     }//GEN-LAST:event_jtfpersonabusquedaKeyReleased
 
     private void jtfidbusquedaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtfidbusquedaKeyReleased
-        aplicarFiltros();
+        aplicarFiltrosListaDirecciones();
     }//GEN-LAST:event_jtfidbusquedaKeyReleased
 
     /**
