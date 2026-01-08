@@ -66,7 +66,7 @@
                                   <Component id="jbagregardirec" min="-2" pref="110" max="-2" attributes="0"/>
                               </Group>
                           </Group>
-                          <EmptySpace min="129" pref="17" max="32767" attributes="0"/>
+                          <EmptySpace min="129" pref="16" max="32767" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -125,21 +125,19 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" max="-2" attributes="0">
                           <Component id="jLabel1" linkSize="2" pref="239" max="32767" attributes="0"/>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="jSeparator1" alignment="0" max="32767" attributes="0"/>
-                              <Component id="jScrollPane1" alignment="0" max="32767" attributes="0"/>
-                              <Component id="jLabel2" linkSize="2" alignment="0" max="32767" attributes="0"/>
-                              <Component id="jcbcolonian" linkSize="2" alignment="0" max="32767" attributes="0"/>
-                              <Component id="jtfnumextn" linkSize="2" alignment="0" max="32767" attributes="0"/>
-                              <Component id="jSeparator9" linkSize="2" alignment="0" max="32767" attributes="0"/>
-                              <Component id="jtfnumintn" linkSize="2" alignment="0" max="32767" attributes="0"/>
-                              <Component id="jSeparator10" linkSize="2" alignment="0" max="32767" attributes="0"/>
-                              <Component id="jLabel3" linkSize="2" alignment="0" max="32767" attributes="0"/>
-                              <Component id="jLabel4" linkSize="2" alignment="0" max="32767" attributes="0"/>
-                              <Component id="jSeparator8" linkSize="2" alignment="0" max="32767" attributes="0"/>
-                              <Component id="jtfcallen" linkSize="2" alignment="0" max="32767" attributes="0"/>
-                              <Component id="jLabel5" linkSize="2" alignment="0" max="32767" attributes="0"/>
-                          </Group>
+                          <Component id="jSeparator1" alignment="0" max="32767" attributes="0"/>
+                          <Component id="jScrollPane1" alignment="0" max="32767" attributes="0"/>
+                          <Component id="jLabel2" linkSize="2" alignment="0" max="32767" attributes="0"/>
+                          <Component id="jcbcolonian" linkSize="2" alignment="0" max="32767" attributes="0"/>
+                          <Component id="jtfnumextn" linkSize="2" alignment="0" max="32767" attributes="0"/>
+                          <Component id="jSeparator9" linkSize="2" alignment="0" max="32767" attributes="0"/>
+                          <Component id="jtfnumintn" linkSize="2" alignment="0" max="32767" attributes="0"/>
+                          <Component id="jSeparator10" linkSize="2" alignment="0" max="32767" attributes="0"/>
+                          <Component id="jLabel3" linkSize="2" alignment="0" max="32767" attributes="0"/>
+                          <Component id="jLabel4" linkSize="2" alignment="0" max="32767" attributes="0"/>
+                          <Component id="jSeparator8" linkSize="2" alignment="0" max="32767" attributes="0"/>
+                          <Component id="jtfcallen" linkSize="2" alignment="0" max="32767" attributes="0"/>
+                          <Component id="jLabel5" linkSize="2" alignment="0" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>

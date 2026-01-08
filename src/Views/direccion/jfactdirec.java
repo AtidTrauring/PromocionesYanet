@@ -11,7 +11,7 @@ import utilitarios.*;
  *
  * @author micky
  */
-public class jfactdirec extends javax.swing.JFrame {
+public final class jfactdirec extends javax.swing.JFrame {
 
     /**
      * Creates new form jfnuevadirec
@@ -34,14 +34,6 @@ public class jfactdirec extends javax.swing.JFrame {
         datosPersona = datosP;
         datosEstatus = datosEs;
 
-        // Combos
-        if (datosP != null) {
-            cargaComboBox(idColcl);
-        } else {
-            jcbcolonian.removeAllItems();
-            jcbcolonian.addItem(coloniaZona[3]);
-        }
-
         // Placeholder JTextField
         cu.aplicarPlaceholder(jtfcallen, "Calle");
         cu.aplicarPlaceholder(jtfnumextn, "Número Exterior");
@@ -61,17 +53,7 @@ public class jfactdirec extends javax.swing.JFrame {
 
     }
 
-    public void asignaValoresEmpleado(String eNombre, String eApMat, String eApPat, String eTelefono, String eSueldo, String[] eColoniaZona) {
-        this.nombre = eNombre;
-        this.apMat = eApMat;
-        this.apPat = eApPat;
-        this.telefono = eTelefono;
-        this.sueldo = eSueldo;
-        this.coloniaZona = eColoniaZona;
-    }
-
     private DefaultComboBoxModel listas;
-    private ArrayList<String> datosListas = new ArrayList<>();
     private final CCargaCombos queryCarga = new CCargaCombos();
 
     public void cargaComboBox(String idZona) {
@@ -86,21 +68,36 @@ public class jfactdirec extends javax.swing.JFrame {
         }
     }
 
+    public boolean validaColonia() {
+        if (jcbcolonian.getSelectedIndex() == 0 || jcbcolonian.getSelectedItem().equals("Colonias")) {
+            CUtilitarios.msg_advertencia("¡Selecciona una colonia!", "Colonias");
+            return false;
+        } else {
+            try {
+                idc = Integer.parseInt(cb.buscarIdColonia((String) jcbcolonian.getSelectedItem()));
+                return true;
+            } catch (SQLException ex) {
+                return false;
+            }
+        }
+
+    }
+
     private boolean validarReferencia() {
         // Obtenemos el texto y usamos trim() para eliminar espacios al inicio y final
-        String ref = jtxtaReferencia.getText().trim();
+        String ref = jtxtaReferencia1.getText().trim();
 
         // 1. Validar que no esté vacío
         if (ref.isEmpty()) {
             CUtilitarios.msg_advertencia("El campo de referencia no puede estar vacío.", "Validación de Campos");
-            jtxtaReferencia.requestFocus();
+            jtxtaReferencia1.requestFocus();
             return false;
         }
 
         // 2. Validar que no exceda los 100 caracteres
         if (ref.length() > 100) {
             CUtilitarios.msg_advertencia("La referencia es muy larga. Máximo 100 caracteres.\nCaracteres actuales: " + ref.length(), "Validación de Campos");
-            jtxtaReferencia.requestFocus();
+            jtxtaReferencia1.requestFocus();
             return false;
         }
 
@@ -138,6 +135,11 @@ public class jfactdirec extends javax.swing.JFrame {
         jLabel10 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         jpfondo.setBackground(new java.awt.Color(242, 220, 153));
 
@@ -359,7 +361,7 @@ public class jfactdirec extends javax.swing.JFrame {
         ni = jtfnumintn.getText();
         ne = jtfnumextn.getText();
         // MODIFICADO: Obtenemos el texto de la referencia limpia
-        referencia = jtxtaReferencia.getText().trim();
+        referencia = jtxtaReferencia1.getText().trim();
 
         idc = Integer.parseInt(idColcl); // id de colonia
 
@@ -416,6 +418,14 @@ public class jfactdirec extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jbagregardirecActionPerformed
 
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        if (idc != 0) {
+            cargaComboBox(String.valueOf(idc));
+        } else {
+            cargaComboBox(datosZona[0]);
+        }
+    }//GEN-LAST:event_formWindowOpened
+
     /**
      * @param args the command line arguments
      */
@@ -456,43 +466,24 @@ public class jfactdirec extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel JlblImagen1;
-    private javax.swing.JLabel JlblImagen2;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator10;
-    private javax.swing.JSeparator jSeparator11;
-    private javax.swing.JSeparator jSeparator12;
-    private javax.swing.JSeparator jSeparator13;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator8;
     private javax.swing.JSeparator jSeparator9;
     private javax.swing.JButton jbagregardirec;
     private javax.swing.JComboBox<String> jcbcolonian;
-    private javax.swing.JComboBox<String> jcbcolonian1;
     private javax.swing.JLabel jliconodirec;
-    private javax.swing.JLabel jliconodirec1;
     private javax.swing.JPanel jpfondo;
-    private javax.swing.JPanel jpfondo1;
     private javax.swing.JTextField jtfcallen;
-    private javax.swing.JTextField jtfcallen1;
     private javax.swing.JTextField jtfnumextn;
-    private javax.swing.JTextField jtfnumextn1;
     private javax.swing.JTextField jtfnumintn;
-    private javax.swing.JTextField jtfnumintn1;
-    private javax.swing.JTextArea jtxtaReferencia;
     private javax.swing.JTextArea jtxtaReferencia1;
     // End of variables declaration//GEN-END:variables
 }
