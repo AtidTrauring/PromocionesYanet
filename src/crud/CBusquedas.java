@@ -36,24 +36,43 @@ public class CBusquedas {
     }
 
     public ArrayList<String[]> buscarEmpleado() throws SQLException {
-        consulta = "SELECT"
-                + "    idempleado AS 'Id Empleado',"
-                + "    (SELECT persona.nombres FROM persona WHERE persona.idpersona = empleado.persona_idpersona) AS 'Nombre(s)',\n"
-                + "    (SELECT persona.ap_paterno FROM persona WHERE persona.idpersona = empleado.persona_idpersona) AS 'Apellido Paterno',\n"
-                + "    (SELECT persona.ap_materno FROM persona WHERE persona.idpersona = empleado.persona_idpersona) AS 'Apellido Materno'\n"
+        consulta = "SELECT "
+                + "    idempleado AS 'Id Empleado', "
+                + "    (SELECT persona.nombres FROM persona WHERE persona.idpersona = empleado.persona_idpersona) AS 'Nombre(s)', "
+                + "    (SELECT persona.ap_paterno FROM persona WHERE persona.idpersona = empleado.persona_idpersona) AS 'Apellido Paterno', "
+                + "    (SELECT persona.ap_materno FROM persona WHERE persona.idpersona = empleado.persona_idpersona) AS 'Apellido Materno', "
+                + "    (SELECT persona.telefono FROM persona WHERE persona.idpersona = empleado.persona_idpersona) AS 'Teléfono' "
                 + "FROM empleado;";
-        return cnslt.buscarValores(consulta, 4);
+
+        // Se cambia el 4 por el 5 ya que ahora traemos: Id, Nombre, Paterno, Materno y Teléfono
+        return cnslt.buscarValores(consulta, 5);
     }
 
     public ArrayList<String[]> buscarDirecciones() throws SQLException {
-        consulta = "SELECT dr.iddireccion AS ID_Direccion, CONCAT(pr.nombres, ' ', pr.ap_paterno, ' ', pr.ap_materno) AS Nombre_Completo,"
-                + " CASE WHEN emp.persona_idpersona IS NOT NULL THEN 'Empleado' WHEN cli.persona_idpersona IS NOT NULL AND av.persona_idpersona IS NOT NULL THEN 'Cliente y Aval'"
-                + " WHEN cli.persona_idpersona IS NOT NULL THEN 'Cliente' WHEN av.persona_idpersona IS NOT NULL THEN 'Aval' ELSE 'Sin Rol' END AS Tipo_Persona,"
-                + " CONCAT('Colonia: ', cl.colonia, ' Calle: ', dr.calle, ' Numero Interior: ', dr.num_int, ' Numero Exterior: ', dr.num_ext) AS Direccion"
-                + " FROM persona pr INNER JOIN direccion dr ON pr.direccion_iddireccion = dr.iddireccion INNER JOIN colonia cl ON dr.colonia_idcolonia = cl.idcolonia "
-                + "LEFT JOIN cliente cli ON pr.idpersona = cli.persona_idpersona LEFT JOIN aval av ON pr.idpersona = av.persona_idpersona "
-                + "LEFT JOIN empleado emp ON pr.idpersona = emp.persona_idpersona ORDER BY dr.iddireccion;";
-        return cnslt.buscarValores(consulta, 4);
+        consulta = "SELECT "
+                + "dr.iddireccion AS ID_Direccion, "
+                + "CONCAT(pr.nombres, ' ', pr.ap_paterno, ' ', pr.ap_materno) AS Nombre_Completo, "
+                + "CASE "
+                + "   WHEN emp.persona_idpersona IS NOT NULL THEN 'Empleado' "
+                + "   WHEN cli.persona_idpersona IS NOT NULL AND av.persona_idpersona IS NOT NULL THEN 'Cliente y Aval' "
+                + "   WHEN cli.persona_idpersona IS NOT NULL THEN 'Cliente' "
+                + "   WHEN av.persona_idpersona IS NOT NULL THEN 'Aval' "
+                + "   ELSE 'Sin Rol' "
+                + "END AS Tipo_Persona, "
+                // 1. Columna Dirección (regresa al formato original lineal)
+                + "CONCAT('Colonia: ', cl.colonia, ' Calle: ', dr.calle, ' Num Int: ', dr.num_int, ' Num Ext: ', dr.num_ext) AS Direccion, "
+                // 2. Nueva Columna independiente para Referencia
+                + "dr.referencia AS Referencia "
+                + "FROM persona pr "
+                + "INNER JOIN direccion dr ON pr.direccion_iddireccion = dr.iddireccion "
+                + "INNER JOIN colonia cl ON dr.colonia_idcolonia = cl.idcolonia "
+                + "LEFT JOIN cliente cli ON pr.idpersona = cli.persona_idpersona "
+                + "LEFT JOIN aval av ON pr.idpersona = av.persona_idpersona "
+                + "LEFT JOIN empleado emp ON pr.idpersona = emp.persona_idpersona "
+                + "ORDER BY dr.iddireccion;";
+
+        // IMPORTANTE: Cambiamos el 4 por el 5, ya que ahora traemos 5 columnas
+        return cnslt.buscarValores(consulta, 5);
     }
 
     public String buscarID(String consulta) throws SQLException {
@@ -73,6 +92,42 @@ public class CBusquedas {
     public String buscarTelefonoEmpleado(String idEmpleado) throws SQLException {
         consulta = "SELECT p.telefono FROM persona p INNER JOIN empleado e ON e.persona_idpersona = p.idpersona WHERE e.idempleado = " + idEmpleado + ";";
         return cnslt.buscarValor(consulta);
+    }
+
+    /**
+     * Verifica si un número de teléfono ya existe en la base de datos.
+     *
+     * * @param telefono El número a verificar.
+     * @param idEmpleadoExcluir ID del empleado actual (para actualizaciones).
+     * Enviar null si es una inserción nueva.
+     * @return true si el teléfono ya existe, false si está libre.
+     * @throws SQLException
+     */
+    public boolean existeTelefono(String telefono, String idEmpleadoExcluir) throws SQLException {
+        String consulta;
+
+        // Validación básica de entrada
+        if (telefono == null || telefono.trim().isEmpty()) {
+            return false;
+        }
+
+        if (idEmpleadoExcluir == null || idEmpleadoExcluir.trim().isEmpty()) {
+            // CASO INSERTAR: 
+            // Busca si el teléfono existe en cualquier registro de la tabla persona.
+            consulta = "SELECT COUNT(*) FROM persona WHERE telefono = '" + telefono + "'";
+        } else {
+            // CASO ACTUALIZAR: 
+            // Busca si el teléfono existe en la tabla persona, PERO excluyendo al ID de persona 
+            // asociado al empleado que estamos editando actualmente.
+            consulta = "SELECT COUNT(*) FROM persona WHERE telefono = '" + telefono + "' "
+                    + "AND idpersona != (SELECT persona_idpersona FROM empleado WHERE idempleado = " + idEmpleadoExcluir + ")";
+        }
+
+        // Ejecutamos la consulta usando tu clase CConsultas.
+        // obtenerValorEntero devuelve el conteo (0 si no existe, >0 si existe).
+        int cantidad = cnslt.obtenerValorEntero(consulta);
+
+        return cantidad > 0;
     }
 
     public String[] buscarUltimoIdSueldoEmpleado(String idEmpleado) throws SQLException {

@@ -82,8 +82,9 @@ public class jflistaactdirec extends javax.swing.JFrame {
     }
 
     //Valida todos los campos antes de permitir la actualización de una dirección.
+    //Valida todos los campos antes de permitir la actualización de una dirección.
     private boolean validarCamposDireccion() {
-        // Validación general
+        // Validación general de campos de texto normales
         if (cu.campoVacio(jtfcalleact) || cu.campoVacio(jtfnumextact) || cu.campoVacio(jtfnumintact)
                 || jcbcoloniaact.getSelectedIndex() == 0) {
             CUtilitarios.msg_advertencia("Todos los campos deben estar llenos y una colonia válida debe ser seleccionada.", "Validación");
@@ -106,6 +107,23 @@ public class jflistaactdirec extends javax.swing.JFrame {
             return false;
         }
 
+        // --- NUEVA VALIDACIÓN PARA REFERENCIA ---
+        String referencia = jtxtaReferencia.getText().trim();
+
+        // 1. Validar que no esté vacía
+        if (referencia.isEmpty()) {
+            CUtilitarios.msg_advertencia("El campo de referencia no puede estar vacío.", "Validación");
+            jtxtaReferencia.requestFocus(); // Enfocar el campo para corregir
+            return false;
+        }
+
+        // 2. Validar longitud máxima (100 caracteres)
+        if (referencia.length() > 100) {
+            CUtilitarios.msg_advertencia("La referencia es muy larga. Máximo 100 caracteres.\nCaracteres actuales: " + referencia.length(), "Validación");
+            jtxtaReferencia.requestFocus(); // Enfocar el campo para corregir
+            return false;
+        }
+
         return true;
     }
 
@@ -115,13 +133,16 @@ public class jflistaactdirec extends javax.swing.JFrame {
         jtfnumintact.setText("");
         jtfnumextact.setText("");
         jcbcoloniaact.setSelectedIndex(0);
+
+        // NUEVO: Limpiar la referencia
+        jtxtaReferencia.setText("");
     }
 
     // Define el modelo estándar para las dos tablas del Frame
     private void configurarModeloTablaDirecciones(JTable tabla) throws SQLException {
         DefaultTableModel modelo = new DefaultTableModel(
                 new Object[][]{},
-                new String[]{"Id Direccion", "Persona", "Tipo", "Direccion"}
+                new String[]{"Id Direccion", "Persona", "Tipo", "Direccion", "Referencia"}
         ) {
         };
         modelo = (DefaultTableModel) tabla.getModel();
@@ -182,25 +203,33 @@ public class jflistaactdirec extends javax.swing.JFrame {
         return datos;
     }
 
-    //Extrae los datos de dirección desde la cadena de formato personalizado de la tabla y los coloca en los JTextField correspondientes. 
     private void cargarDatosDireccionDesdeFila(String[] filaSeleccionada) {
-        //if (filaSeleccionada == null || filaSeleccionada.length < 3) {
         if (filaSeleccionada == null) {
             return;
         }
-        String direccionCompleta = filaSeleccionada[3]; // Posición donde está el texto de dirección formateado
-        try {
-            // Eliminar los prefijos y separar los valores
-            String colonia = direccionCompleta.split("Calle:")[0].replace("Colonia:", "").trim();
-            String calle = direccionCompleta.split("Calle:")[1].split("Numero Interior:")[0].trim();
-            String numInt = direccionCompleta.split("Numero Interior:")[1].split("Numero Exterior:")[0].trim();
-            String numExt = direccionCompleta.split("Numero Exterior:")[1].trim();
 
-            // Colocar en los JTextField y JComboBox
+        // 1. Obtener la dirección formateada (Columna 3)
+        String direccionCompleta = filaSeleccionada[3];
+
+        // 2. Obtener la referencia (Columna 4) - NUEVO
+        // Validamos que el arreglo tenga el tamaño suficiente para evitar errores
+        String referencia = (filaSeleccionada.length > 4) ? filaSeleccionada[4] : "";
+
+        try {
+            // Lógica existente para separar calle, números y colonia
+            String colonia = direccionCompleta.split("Calle:")[0].replace("Colonia:", "").trim();
+            String calle = direccionCompleta.split("Calle:")[1].split("Num Int:")[0].trim(); // Ojo: ajusté el split según tu formato anterior
+            String numInt = direccionCompleta.split("Num Int:")[1].split("Num Ext:")[0].trim();
+            String numExt = direccionCompleta.split("Num Ext:")[1].trim();
+
+            // Colocar en los JTextField y JComboBox existentes
             jtfcalleact.setText(calle);
             jtfnumintact.setText(numInt);
             jtfnumextact.setText(numExt);
             jcbcoloniaact.setSelectedItem(colonia);
+
+            // 3. Setear la referencia al JTextArea - NUEVO
+            jtxtaReferencia.setText(referencia);
 
         } catch (Exception e) {
             CUtilitarios.msg_error("Error al interpretar los datos de la dirección seleccionada.\n" + e.getMessage(), "Error de formato");
@@ -330,6 +359,9 @@ public class jflistaactdirec extends javax.swing.JFrame {
         jtfnumintact = new javax.swing.JTextField();
         jSeparator10 = new javax.swing.JSeparator();
         jcbcoloniaact = new javax.swing.JComboBox<>();
+        jSeparator11 = new javax.swing.JSeparator();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jtxtaReferencia = new javax.swing.JTextArea();
         jbdirecact = new javax.swing.JButton();
         jliconodirec = new javax.swing.JLabel();
 
@@ -359,14 +391,14 @@ public class jflistaactdirec extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Id Direccion", "Persona", "Tipo", "Direccion"
+                "Id Direccion", "Persona", "Tipo", "Direccion", "Referencia"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -379,12 +411,14 @@ public class jflistaactdirec extends javax.swing.JFrame {
         });
         jtlistadirec.setToolTipText("Listado de Clientes y Avales");
         jtlistadirec.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jtlistadirec.getTableHeader().setReorderingAllowed(false);
         jspdirec.setViewportView(jtlistadirec);
         if (jtlistadirec.getColumnModel().getColumnCount() > 0) {
             jtlistadirec.getColumnModel().getColumn(0).setResizable(false);
             jtlistadirec.getColumnModel().getColumn(1).setResizable(false);
             jtlistadirec.getColumnModel().getColumn(2).setResizable(false);
             jtlistadirec.getColumnModel().getColumn(3).setResizable(false);
+            jtlistadirec.getColumnModel().getColumn(4).setResizable(false);
         }
 
         javax.swing.GroupLayout jpfondotabladirecLayout = new javax.swing.GroupLayout(jpfondotabladirec);
@@ -393,13 +427,13 @@ public class jflistaactdirec extends javax.swing.JFrame {
             jpfondotabladirecLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpfondotabladirecLayout.createSequentialGroup()
                 .addComponent(jspdirec, javax.swing.GroupLayout.PREFERRED_SIZE, 705, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 10, Short.MAX_VALUE))
+                .addGap(0, 4, Short.MAX_VALUE))
         );
         jpfondotabladirecLayout.setVerticalGroup(
             jpfondotabladirecLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpfondotabladirecLayout.createSequentialGroup()
                 .addComponent(jspdirec, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 116, Short.MAX_VALUE))
+                .addGap(0, 36, Short.MAX_VALUE))
         );
 
         jpfondobusqueda.setBackground(new java.awt.Color(167, 235, 242));
@@ -541,14 +575,14 @@ public class jflistaactdirec extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Id Direccion", "Persona", "Tipo", "Direccion"
+                "Id Direccion", "Persona", "Tipo", "Direccion", "Referencia"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -561,6 +595,7 @@ public class jflistaactdirec extends javax.swing.JFrame {
         });
         jtlistadirecact.setToolTipText("Listado de Clientes y Avales");
         jtlistadirecact.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jtlistadirecact.getTableHeader().setReorderingAllowed(false);
         jtlistadirecact.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jtlistadirecactMouseClicked(evt);
@@ -572,6 +607,7 @@ public class jflistaactdirec extends javax.swing.JFrame {
             jtlistadirecact.getColumnModel().getColumn(1).setResizable(false);
             jtlistadirecact.getColumnModel().getColumn(2).setResizable(false);
             jtlistadirecact.getColumnModel().getColumn(3).setResizable(false);
+            jtlistadirecact.getColumnModel().getColumn(4).setResizable(false);
         }
 
         jpactualizar.setBackground(new java.awt.Color(167, 235, 242));
@@ -612,6 +648,15 @@ public class jflistaactdirec extends javax.swing.JFrame {
         jcbcoloniaact.setToolTipText("");
         jcbcoloniaact.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
+        jSeparator11.setForeground(new java.awt.Color(0, 0, 0));
+        jSeparator11.setToolTipText("");
+
+        jtxtaReferencia.setBackground(new java.awt.Color(167, 235, 242));
+        jtxtaReferencia.setColumns(20);
+        jtxtaReferencia.setRows(5);
+        jtxtaReferencia.setToolTipText("Referencia");
+        jScrollPane1.setViewportView(jtxtaReferencia);
+
         javax.swing.GroupLayout jpactualizarLayout = new javax.swing.GroupLayout(jpactualizar);
         jpactualizar.setLayout(jpactualizarLayout);
         jpactualizarLayout.setHorizontalGroup(
@@ -624,8 +669,10 @@ public class jflistaactdirec extends javax.swing.JFrame {
                     .addComponent(jSeparator9)
                     .addComponent(jSeparator10)
                     .addComponent(jtfcalleact)
-                    .addComponent(jtfnumextact, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE)
-                    .addComponent(jcbcoloniaact, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jtfnumextact, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jcbcoloniaact, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jSeparator11)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jpactualizarLayout.setVerticalGroup(
@@ -643,9 +690,13 @@ public class jflistaactdirec extends javax.swing.JFrame {
                 .addComponent(jtfnumintact, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator10, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jcbcoloniaact, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jSeparator11, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout jpfondoacttabladirecLayout = new javax.swing.GroupLayout(jpfondoacttabladirec);
@@ -654,19 +705,15 @@ public class jflistaactdirec extends javax.swing.JFrame {
             jpfondoacttabladirecLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpfondoacttabladirecLayout.createSequentialGroup()
                 .addComponent(jspdirecact, javax.swing.GroupLayout.PREFERRED_SIZE, 705, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jpactualizar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jpactualizar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jpfondoacttabladirecLayout.setVerticalGroup(
             jpfondoacttabladirecLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpfondoacttabladirecLayout.createSequentialGroup()
                 .addComponent(jspdirecact, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(jpfondoacttabladirecLayout.createSequentialGroup()
-                .addGap(34, 34, 34)
-                .addComponent(jpactualizar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jpactualizar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         jbdirecact.setBackground(new java.awt.Color(204, 204, 204));
@@ -694,9 +741,9 @@ public class jflistaactdirec extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpactualizadirecLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jpfondoacttabladirec, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(128, 128, 128)
-                .addComponent(jbdirecact, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(88, 88, 88))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jbdirecact)
+                .addGap(258, 258, 258))
         );
         jpactualizadirecLayout.setVerticalGroup(
             jpactualizadirecLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -704,10 +751,10 @@ public class jflistaactdirec extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jpfondoacttabladirec, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
-            .addGroup(jpactualizadirecLayout.createSequentialGroup()
-                .addGap(359, 359, 359)
-                .addComponent(jbdirecact, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpactualizadirecLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jbdirecact)
+                .addGap(100, 100, 100))
         );
 
         JtbpDirecciones.addTab("Actualizar Dirección", jpactualizadirec);
@@ -746,7 +793,7 @@ public class jflistaactdirec extends javax.swing.JFrame {
             .addComponent(jpfondodireccion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        setSize(new java.awt.Dimension(1034, 497));
+        setSize(new java.awt.Dimension(1082, 537));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -776,6 +823,10 @@ public class jflistaactdirec extends javax.swing.JFrame {
         String numExt = jtfnumextact.getText().trim();
         String numInt = jtfnumintact.getText().trim();
         String coloniaNombre = (String) jcbcoloniaact.getSelectedItem();
+
+        // NUEVO: Obtener el valor del campo Referencia
+        String referencia = jtxtaReferencia.getText().trim();
+
         String idDireccion = filaSeleccionada[0];
 
         // Paso 5: Obtener ID de colonia
@@ -807,9 +858,12 @@ public class jflistaactdirec extends javax.swing.JFrame {
         // Paso 7: Ejecutar actualización
         try {
             boolean transaccionExitosa = false;
-            // Actualizacion unicamente de la direccion
+
+            // Caso A: Actualizacion unicamente de la direccion (sin datos de persona cargados previamente)
             if (nombres == null || apPat == null || apMat == null || telefono == null) {
-                transaccionExitosa = ca.actualizarDireccion(idDireccion, calle, numExt, numInt, idColonia);
+                // MODIFICADO: Se envía la 'referencia' como parámetro
+                transaccionExitosa = ca.actualizarDireccion(idDireccion, calle, numExt, numInt, referencia, idColonia);
+
                 if (transaccionExitosa) {
                     CUtilitarios.msg("Dirección actualizada correctamente.", "Éxito");
                     configurarModeloTablaDirecciones(jtlistadirecact);
@@ -820,28 +874,32 @@ public class jflistaactdirec extends javax.swing.JFrame {
                     CUtilitarios.msg_error("No se pudo completar la actualización.", "Fallo");
                 }
             } else {
-                // Actualizacion completa de persona y direccion - Hay informacion desde otro Frame
+                // Caso B: Actualizacion completa de persona y direccion - Hay informacion desde otro Frame
+
+                // MODIFICADO: Se envía la 'referencia' como parámetro
                 transaccionExitosa = ca.actualizarDireccionYPersona(
-                        idDireccion, calle, numExt, numInt,
+                        idDireccion, calle, numExt, numInt, referencia,
                         idColonia, idPersona,
                         nombres, apPat, apMat, telefono
                 );
+
                 if (transaccionExitosa) {
                     // Se trata de un empleado porque hay un sueldo
                     if (idSueldo != null) {
                         // Actualizacion del sueldo en el ultimo registro de sueldo para el usuario
                         if (ca.actualizaSueldoInicial(sueldo, idSueldo)) {
                             CUtilitarios.msg("Dirección y datos personales actualizados correctamente.", "Éxito");
-//                            configurarModeloTablaDirecciones(jtlistadirecact);
-//                            configurarModeloTablaDirecciones(jtlistadirec);
-//                            limpiarCampos();
-//                            JtbpDirecciones.setSelectedIndex(0);
                             JfEmpleado frameEmpleado = new JfEmpleado();
                             CUtilitarios.creaFrame(frameEmpleado, "Empleados");
                             this.dispose();
                         } else {
                             CUtilitarios.msg_error("¡Ocurrio un error al actualizar el sueldo!", "Fallo");
                         }
+                    } else {
+                        // Si es cliente/aval (no hay sueldo), simplemente cerramos o mostramos éxito
+                        CUtilitarios.msg("Dirección y datos personales actualizados correctamente.", "Éxito");
+                        // Aquí podrías agregar el retorno al frame de clientes si lo deseas, similar al de empleados
+                        this.dispose();
                     }
 
                 } else {
@@ -971,8 +1029,10 @@ public class jflistaactdirec extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTabbedPane JtbpDirecciones;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator10;
+    private javax.swing.JSeparator jSeparator11;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator8;
     private javax.swing.JSeparator jSeparator9;
@@ -997,5 +1057,6 @@ public class jflistaactdirec extends javax.swing.JFrame {
     private javax.swing.JTextField jtfpersonabusqueda;
     private javax.swing.JTable jtlistadirec;
     private javax.swing.JTable jtlistadirecact;
+    private javax.swing.JTextArea jtxtaReferencia;
     // End of variables declaration//GEN-END:variables
 }

@@ -7,7 +7,7 @@
     <Property name="resizable" type="boolean" value="false"/>
   </Properties>
   <SyntheticProperties>
-    <SyntheticProperty name="formSize" type="java.awt.Dimension" value="-84,-19,0,5,115,114,0,18,106,97,118,97,46,97,119,116,46,68,105,109,101,110,115,105,111,110,65,-114,-39,-41,-84,95,68,20,2,0,2,73,0,6,104,101,105,103,104,116,73,0,5,119,105,100,116,104,120,112,0,0,1,-15,0,0,4,10"/>
+    <SyntheticProperty name="formSize" type="java.awt.Dimension" value="-84,-19,0,5,115,114,0,18,106,97,118,97,46,97,119,116,46,68,105,109,101,110,115,105,111,110,65,-114,-39,-41,-84,95,68,20,2,0,2,73,0,6,104,101,105,103,104,116,73,0,5,119,105,100,116,104,120,112,0,0,2,25,0,0,4,58"/>
     <SyntheticProperty name="formSizePolicy" type="int" value="0"/>
     <SyntheticProperty name="generateSize" type="boolean" value="true"/>
     <SyntheticProperty name="generateCenter" type="boolean" value="true"/>
@@ -132,7 +132,7 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="1" attributes="0">
                               <Component id="jspdirec" min="-2" pref="705" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="10" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="4" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -140,7 +140,7 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="jspdirec" min="-2" pref="340" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="116" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="36" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -162,16 +162,22 @@
                               <Font name="Candara" size="12" style="1"/>
                             </Property>
                             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                              <Table columnCount="4" rowCount="0">
+                              <Table columnCount="5" rowCount="0">
                                 <Column editable="false" title="Id Direccion" type="java.lang.String"/>
                                 <Column editable="false" title="Persona" type="java.lang.String"/>
                                 <Column editable="false" title="Tipo" type="java.lang.String"/>
                                 <Column editable="false" title="Direccion" type="java.lang.String"/>
+                                <Column editable="false" title="Referencia" type="java.lang.String"/>
                               </Table>
                             </Property>
                             <Property name="toolTipText" type="java.lang.String" value="Listado de Clientes y Avales"/>
                             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
                               <TableColumnModel selectionModel="0">
+                                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="false">
+                                  <Title/>
+                                  <Editor/>
+                                  <Renderer/>
+                                </Column>
                                 <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="false">
                                   <Title/>
                                   <Editor/>
@@ -198,7 +204,7 @@
                               <Color id="Hand Cursor"/>
                             </Property>
                             <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
-                              <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
+                              <TableHeader reorderingAllowed="false" resizingAllowed="true"/>
                             </Property>
                           </Properties>
                         </Component>
@@ -425,9 +431,9 @@
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="jpfondoacttabladirec" max="32767" attributes="0"/>
-                          <EmptySpace min="-2" pref="128" max="-2" attributes="0"/>
-                          <Component id="jbdirecact" min="-2" pref="110" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="88" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="jbdirecact" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="258" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -438,10 +444,10 @@
                           <Component id="jpfondoacttabladirec" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="-2" pref="359" max="-2" attributes="0"/>
-                          <Component id="jbdirecact" min="-2" pref="110" max="-2" attributes="0"/>
+                      <Group type="102" alignment="1" attributes="0">
                           <EmptySpace max="32767" attributes="0"/>
+                          <Component id="jbdirecact" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="100" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -459,23 +465,18 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="jspdirecact" min="-2" pref="705" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="jpactualizar" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Component id="jpactualizar" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
                     <DimensionLayout dim="1">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
+                          <Group type="102" attributes="0">
                               <Component id="jspdirecact" min="-2" pref="340" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
-                              <Component id="jpactualizar" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="32767" attributes="0"/>
                           </Group>
+                          <Component id="jpactualizar" max="32767" attributes="0"/>
                       </Group>
                     </DimensionLayout>
                   </Layout>
@@ -496,16 +497,22 @@
                               <Font name="Candara" size="12" style="1"/>
                             </Property>
                             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                              <Table columnCount="4" rowCount="0">
+                              <Table columnCount="5" rowCount="0">
                                 <Column editable="false" title="Id Direccion" type="java.lang.String"/>
                                 <Column editable="false" title="Persona" type="java.lang.String"/>
                                 <Column editable="false" title="Tipo" type="java.lang.String"/>
                                 <Column editable="false" title="Direccion" type="java.lang.String"/>
+                                <Column editable="false" title="Referencia" type="java.lang.String"/>
                               </Table>
                             </Property>
                             <Property name="toolTipText" type="java.lang.String" value="Listado de Clientes y Avales"/>
                             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
                               <TableColumnModel selectionModel="0">
+                                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="false">
+                                  <Title/>
+                                  <Editor/>
+                                  <Renderer/>
+                                </Column>
                                 <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="false">
                                   <Title/>
                                   <Editor/>
@@ -532,7 +539,7 @@
                               <Color id="Hand Cursor"/>
                             </Property>
                             <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
-                              <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
+                              <TableHeader reorderingAllowed="false" resizingAllowed="true"/>
                             </Property>
                           </Properties>
                           <Events>
@@ -551,16 +558,18 @@
                       <Layout>
                         <DimensionLayout dim="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                              <Group type="102" attributes="0">
+                                  <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                       <Component id="jtfnumintact" alignment="0" max="32767" attributes="0"/>
                                       <Component id="jSeparator8" alignment="0" max="32767" attributes="0"/>
                                       <Component id="jSeparator9" alignment="0" max="32767" attributes="0"/>
                                       <Component id="jSeparator10" alignment="0" max="32767" attributes="0"/>
                                       <Component id="jtfcalleact" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="jtfnumextact" alignment="1" pref="239" max="32767" attributes="0"/>
+                                      <Component id="jtfnumextact" alignment="1" max="32767" attributes="0"/>
                                       <Component id="jcbcoloniaact" alignment="1" max="32767" attributes="0"/>
+                                      <Component id="jSeparator11" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="jScrollPane1" pref="239" max="32767" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="32767" attributes="0"/>
                               </Group>
@@ -581,9 +590,13 @@
                                   <Component id="jtfnumintact" min="-2" pref="30" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="jSeparator10" min="-2" pref="15" max="-2" attributes="0"/>
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
                                   <Component id="jcbcoloniaact" min="-2" pref="30" max="-2" attributes="0"/>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <Component id="jScrollPane1" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="32767" attributes="0"/>
+                                  <Component id="jSeparator11" min="-2" pref="15" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
                               </Group>
                           </Group>
                         </DimensionLayout>
@@ -691,6 +704,33 @@
                             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
                           </AuxValues>
                         </Component>
+                        <Component class="javax.swing.JSeparator" name="jSeparator11">
+                          <Properties>
+                            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                              <Color blue="0" green="0" red="0" type="rgb"/>
+                            </Property>
+                            <Property name="toolTipText" type="java.lang.String" value=""/>
+                          </Properties>
+                        </Component>
+                        <Container class="javax.swing.JScrollPane" name="jScrollPane1">
+                          <AuxValues>
+                            <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+                          </AuxValues>
+
+                          <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+                          <SubComponents>
+                            <Component class="javax.swing.JTextArea" name="jtxtaReferencia">
+                              <Properties>
+                                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                                  <Color blue="f2" green="eb" red="a7" type="rgb"/>
+                                </Property>
+                                <Property name="columns" type="int" value="20"/>
+                                <Property name="rows" type="int" value="5"/>
+                                <Property name="toolTipText" type="java.lang.String" value="Referencia"/>
+                              </Properties>
+                            </Component>
+                          </SubComponents>
+                        </Container>
                       </SubComponents>
                     </Container>
                   </SubComponents>

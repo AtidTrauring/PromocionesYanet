@@ -48,12 +48,21 @@ public class CActualizaciones {
         return cnslt.actualiza(consulta);
     }
 
-    public boolean actualizarDireccionYPersona(String idDireccion, String calle, String numExt, String numInt, String idColonia, String idPersona, String nombres, String apPat, String apMat, String telefono) throws SQLException {
-        // Actualizar dirección
-        String consultaDireccion = "UPDATE direccion SET calle='" + calle + "', num_ext='" + numExt + "', num_int='" + numInt + "', colonia_idcolonia=" + idColonia + " WHERE iddireccion=" + idDireccion;
+    public boolean actualizarDireccionYPersona(String idDireccion, String calle, String numExt, String numInt, String referencia, String idColonia, String idPersona, String nombres, String apPat, String apMat, String telefono) throws SQLException {
+        // 1. Actualizar dirección (Incluyendo la referencia)
+        String consultaDireccion = "UPDATE direccion SET calle='" + calle
+                + "', num_ext='" + numExt
+                + "', num_int='" + numInt
+                + "', referencia='" + referencia
+                + "', colonia_idcolonia=" + idColonia
+                + " WHERE iddireccion=" + idDireccion;
 
-        // Actualizar persona
-        String consultaPersona = "UPDATE persona SET nombres='" + nombres + "', ap_paterno='" + apPat + "', ap_materno='" + apMat + "', telefono='" + telefono + "' WHERE idpersona=" + idPersona;
+        // 2. Actualizar persona
+        String consultaPersona = "UPDATE persona SET nombres='" + nombres
+                + "', ap_paterno='" + apPat
+                + "', ap_materno='" + apMat
+                + "', telefono='" + telefono
+                + "' WHERE idpersona=" + idPersona;
 
         // Ejecutar ambas actualizaciones
         boolean actualizoDireccion = cnslt.actualiza(consultaDireccion);
@@ -62,8 +71,15 @@ public class CActualizaciones {
         return actualizoDireccion && actualizoPersona;
     }
 
-    public boolean actualizarDireccion(String idDireccion, String calle, String numExt, String numInt, String idColonia) throws SQLException {
-        consulta = "UPDATE direccion SET calle='" + calle + "', num_ext='" + numExt + "', num_int='" + numInt + "', colonia_idcolonia=" + idColonia + " WHERE iddireccion=" + idDireccion;
+    public boolean actualizarDireccion(String idDireccion, String calle, String numExt, String numInt, String referencia, String idColonia) throws SQLException {
+        // Actualizar solo dirección (Incluyendo la referencia)
+        consulta = "UPDATE direccion SET calle='" + calle
+                + "', num_ext='" + numExt
+                + "', num_int='" + numInt
+                + "', referencia='" + referencia
+                + "', colonia_idcolonia=" + idColonia
+                + " WHERE iddireccion=" + idDireccion;
+
         return cnslt.actualiza(consulta);
     }
 

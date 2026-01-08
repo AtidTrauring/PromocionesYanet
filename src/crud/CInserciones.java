@@ -123,9 +123,10 @@ public class CInserciones {
     }
 
     /* Inseciones Cliente */
-    public int insertaDirec(String calle, String numInt, String numExt, int idColonia) throws SQLException {
-        consulta = "CALL insertaDirec('" + calle + "','" + numInt + "','" + numExt + "'," + idColonia + ");";
-        return cnslt.obtenerValorEntero(consulta); // este método debe ejecutar la consulta y leer el valor retornado
+    public int insertaDirec(String calle, String numInt, String numExt, String referencia, int idColonia) throws SQLException {
+        consulta = "CALL insertaDirec('" + calle + "','" + numInt + "','" + numExt + "','" + referencia + "'," + idColonia + ");";
+        // Ejecuta y retorna el ID generado
+        return cnslt.obtenerValorEntero(consulta);
     }
 
     public int insertaPersona(String nombres, String apPaterno, String apMaterno, String telefono, int idDireccion) throws SQLException {

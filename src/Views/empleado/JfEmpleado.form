@@ -7,7 +7,7 @@
     <Property name="resizable" type="boolean" value="false"/>
   </Properties>
   <SyntheticProperties>
-    <SyntheticProperty name="formSize" type="java.awt.Dimension" value="-84,-19,0,5,115,114,0,18,106,97,118,97,46,97,119,116,46,68,105,109,101,110,115,105,111,110,65,-114,-39,-41,-84,95,68,20,2,0,2,73,0,6,104,101,105,103,104,116,73,0,5,119,105,100,116,104,120,112,0,0,2,6,0,0,4,32"/>
+    <SyntheticProperty name="formSize" type="java.awt.Dimension" value="-84,-19,0,5,115,114,0,18,106,97,118,97,46,97,119,116,46,68,105,109,101,110,115,105,111,110,65,-114,-39,-41,-84,95,68,20,2,0,2,73,0,6,104,101,105,103,104,116,73,0,5,119,105,100,116,104,120,112,0,0,1,-94,0,0,3,109"/>
     <SyntheticProperty name="formSizePolicy" type="int" value="0"/>
     <SyntheticProperty name="generateSize" type="boolean" value="true"/>
     <SyntheticProperty name="generateCenter" type="boolean" value="true"/>
@@ -32,7 +32,7 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Component id="JpnlEncabezado" max="32767" attributes="0"/>
-          <Component id="JtbpPaneles" max="32767" attributes="0"/>
+          <Component id="JtbpPaneles" alignment="0" pref="0" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -40,7 +40,7 @@
           <Group type="102" attributes="0">
               <Component id="JpnlEncabezado" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="JtbpPaneles" max="32767" attributes="0"/>
+              <Component id="JtbpPaneles" pref="284" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -73,23 +73,23 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace pref="69" max="32767" attributes="0"/>
                       <Component id="JpnlCamposLista" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="JspTCListaEmpleados" pref="743" max="32767" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="83" max="-2" attributes="0"/>
+                      <Component id="JspTCListaEmpleados" min="-2" pref="400" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="43" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace pref="54" max="32767" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="JspTCListaEmpleados" min="-2" pref="252" max="-2" attributes="0"/>
-                          <Component id="JpnlCamposLista" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="JspTCListaEmpleados" pref="0" max="32767" attributes="0"/>
+                          <Component id="JpnlCamposLista" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" pref="48" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -140,7 +140,7 @@
                       <Color blue="cc" green="ff" red="ff" type="rgb"/>
                     </Property>
                     <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
-                      <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
+                      <TableHeader reorderingAllowed="false" resizingAllowed="false"/>
                     </Property>
                   </Properties>
                 </Component>
@@ -190,8 +190,8 @@
                           <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
                           <Component id="JtxtCnsltApeMat" min="-2" pref="18" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="JspCnsltApeMat" max="32767" attributes="0"/>
-                          <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
+                          <Component id="JspCnsltApeMat" pref="1" max="32767" attributes="0"/>
+                          <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -299,23 +299,26 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="109" max="-2" attributes="0"/>
+                      <EmptySpace pref="90" max="32767" attributes="0"/>
                       <Component id="JpnlCamposAgregar" min="-2" pref="380" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="140" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="47" max="-2" attributes="0"/>
                       <Component id="JlblimagenI" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="152" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" pref="85" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="49" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="JlblimagenI" min="-2" max="-2" attributes="0"/>
-                          <Component id="JpnlCamposAgregar" min="-2" max="-2" attributes="0"/>
+                          <Component id="JlblimagenI" max="32767" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <Component id="JpnlCamposAgregar" min="-2" pref="229" max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          </Group>
                       </Group>
-                      <EmptySpace pref="49" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -559,10 +562,10 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="JspTCActualizaEmpleados" pref="606" max="32767" attributes="0"/>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="JspTCActualizaEmpleados" min="-2" pref="400" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="64" max="-2" attributes="0"/>
                       <Component id="JpnlCamposActualiza" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -570,17 +573,11 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
-                              <EmptySpace min="44" pref="44" max="-2" attributes="0"/>
-                              <Component id="JpnlCamposActualiza" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="32767" attributes="0"/>
-                          </Group>
-                          <Group type="102" attributes="0">
-                              <Component id="JspTCActualizaEmpleados" pref="328" max="32767" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                          </Group>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="JpnlCamposActualiza" max="32767" attributes="0"/>
+                          <Component id="JspTCActualizaEmpleados" pref="0" max="32767" attributes="0"/>
                       </Group>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -867,7 +864,7 @@
                       <Color blue="cc" green="ff" red="ff" type="rgb"/>
                     </Property>
                     <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
-                      <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
+                      <TableHeader reorderingAllowed="false" resizingAllowed="false"/>
                     </Property>
                   </Properties>
                   <Events>
@@ -896,23 +893,23 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="JspTCDeleteEmpleados" pref="738" max="32767" attributes="0"/>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="JpnlCamposDelete" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
+                      <EmptySpace pref="51" max="32767" attributes="0"/>
+                      <Component id="JspTCDeleteEmpleados" min="-2" pref="400" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="92" max="-2" attributes="0"/>
+                      <Component id="JpnlCamposDelete" min="-2" pref="255" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="60" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="1" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="1" attributes="0">
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Component id="JpnlCamposDelete" max="32767" attributes="0"/>
-                          <Component id="JspTCDeleteEmpleados" pref="324" max="32767" attributes="0"/>
+                          <Component id="JspTCDeleteEmpleados" pref="0" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" pref="17" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -963,7 +960,7 @@
                       <Color blue="cc" green="ff" red="ff" type="rgb"/>
                     </Property>
                     <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
-                      <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
+                      <TableHeader reorderingAllowed="false" resizingAllowed="false"/>
                     </Property>
                   </Properties>
                   <Events>
@@ -982,50 +979,74 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <EmptySpace min="0" pref="255" max="32767" attributes="0"/>
+                      <Group type="102" alignment="1" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="JspElmNombre" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="JtxtElmNombre" alignment="0" pref="232" max="32767" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Group type="103" alignment="1" groupAlignment="0" max="-2" attributes="0">
+                                          <Component id="JspElmApePat" alignment="0" max="32767" attributes="0"/>
+                                          <Component id="JtxtElmApePat" alignment="0" pref="232" max="32767" attributes="0"/>
+                                      </Group>
+                                      <Group type="103" alignment="1" groupAlignment="0" max="-2" attributes="0">
+                                          <Component id="JtxtElmApeMat" alignment="0" pref="232" max="32767" attributes="0"/>
+                                          <Component id="JspElmApeMat" alignment="0" max="32767" attributes="0"/>
+                                      </Group>
+                                      <Group type="102" attributes="0">
+                                          <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
+                                          <Component id="JbtnEliminarEmpleado" min="-2" pref="217" max="-2" attributes="0"/>
+                                      </Group>
+                                  </Group>
+                              </Group>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                      </Group>
                       <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="JbtnEliminarEmpleado" pref="232" max="32767" attributes="0"/>
-                                  <Component id="JtxtElmApeMat" alignment="0" pref="232" max="32767" attributes="0"/>
-                                  <Component id="JspElmID" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="JtxtElmID" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="JspElmNombre" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="JtxtElmNombre" alignment="0" pref="232" max="32767" attributes="0"/>
-                                  <Component id="JspElmApePat" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="JtxtElmApePat" alignment="0" pref="232" max="32767" attributes="0"/>
-                                  <Component id="JspElmApeMat" alignment="0" max="32767" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="JtxtElmID" pref="233" max="32767" attributes="0"/>
+                                  <Component id="JspElmID" pref="233" max="32767" attributes="0"/>
                               </Group>
-                              <EmptySpace max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <EmptySpace min="0" pref="324" max="32767" attributes="0"/>
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace min="-2" pref="63" max="-2" attributes="0"/>
+                          <Component id="JtxtElmNombre" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="JspElmNombre" min="-2" pref="10" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="JtxtElmApePat" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="JspElmApePat" min="-2" pref="10" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="JtxtElmApeMat" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="JspElmApeMat" min="-2" pref="10" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="JbtnEliminarEmpleado" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
+                      </Group>
                       <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
                               <Component id="JtxtElmID" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="JspElmID" min="-2" pref="10" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
-                              <Component id="JtxtElmNombre" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="JspElmNombre" min="-2" pref="10" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
-                              <Component id="JtxtElmApePat" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="JspElmApePat" min="-2" pref="10" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
-                              <Component id="JtxtElmApeMat" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="JspElmApeMat" min="-2" pref="10" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="JbtnEliminarEmpleado" pref="58" max="32767" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace pref="172" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -1162,27 +1183,25 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="47" max="-2" attributes="0"/>
                       <Component id="JpnlCamposSueldos" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="JspTCSueldosEmpleados" pref="750" max="32767" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace pref="50" max="32767" attributes="0"/>
+                      <Component id="JspTCSueldosEmpleados" min="-2" pref="470" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="JspTCSueldosEmpleados" pref="318" max="32767" attributes="0"/>
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="-2" pref="74" max="-2" attributes="0"/>
-                              <Component id="JpnlCamposSueldos" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                          </Group>
-                      </Group>
+                  <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
+                      <Component id="JspTCSueldosEmpleados" pref="0" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="1" attributes="0">
+                      <EmptySpace pref="51" max="32767" attributes="0"/>
+                      <Component id="JpnlCamposSueldos" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="46" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -1239,7 +1258,7 @@
                       <Color blue="cc" green="ff" red="ff" type="rgb"/>
                     </Property>
                     <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
-                      <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
+                      <TableHeader reorderingAllowed="false" resizingAllowed="false"/>
                     </Property>
                   </Properties>
                 </Component>
@@ -1373,27 +1392,23 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="47" max="-2" attributes="0"/>
                       <Component id="JpnlCamposASueldos" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="JspTCAsignaSueldos" pref="750" max="32767" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace pref="59" max="32767" attributes="0"/>
+                      <Component id="JspTCAsignaSueldos" min="-2" pref="470" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="JspTCAsignaSueldos" pref="318" max="32767" attributes="0"/>
-                          <Group type="102" alignment="1" attributes="0">
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                              <Component id="JpnlCamposASueldos" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
                       <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Component id="JpnlCamposASueldos" alignment="1" min="-2" pref="237" max="-2" attributes="0"/>
+                          <Component id="JspTCAsignaSueldos" alignment="0" min="-2" pref="237" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -1450,7 +1465,7 @@
                       <Color blue="cc" green="ff" red="ff" type="rgb"/>
                     </Property>
                     <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
-                      <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
+                      <TableHeader reorderingAllowed="false" resizingAllowed="false"/>
                     </Property>
                   </Properties>
                 </Component>
@@ -1500,7 +1515,7 @@
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                           <Component id="JtxtAIDEmpleado" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="JspAIDEmpleado" min="-2" pref="10" max="-2" attributes="0"/>
@@ -1516,9 +1531,8 @@
                           <Component id="JdcFechaInicio" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="JdcFechaFin" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Component id="JbtnAsignarSueldo" pref="64" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
+                          <Component id="JbtnAsignarSueldo" min="-2" pref="47" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -1619,7 +1633,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="JlblImagenEncabezadoEmpleado" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace pref="724" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>

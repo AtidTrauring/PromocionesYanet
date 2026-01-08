@@ -19,7 +19,7 @@ public class jfnuevadirec extends javax.swing.JFrame {
     CBusquedas cb = new CBusquedas();
     CInserciones ci = new CInserciones();
     CCargaCombos queryCarga = new CCargaCombos();
-    private String calle, numeroExterior, numeroInterior, nombre, apPat, apMat, telefono, sueldo;
+    private String calle, numeroExterior, numeroInterior, nombre, apPat, apMat, telefono, sueldo, referencia;
     private int idColonia = 0, idescl, idescla;
 
     public jfnuevadirec(String[] datosZ, String[] datosP, String[] datosEs) {
@@ -67,6 +67,28 @@ public class jfnuevadirec extends javax.swing.JFrame {
 
     }
 
+    private boolean validarReferencia() {
+        // Obtenemos el texto y usamos trim() para eliminar espacios al inicio y final
+        String referencia = jtxtaReferencia.getText().trim();
+
+        // 1. Validar que no esté vacío
+        if (referencia.isEmpty()) {
+            CUtilitarios.msg_advertencia("El campo de referencia no puede estar vacío.", "Validación de Campos");
+            jtxtaReferencia.requestFocus(); // Ponemos el foco en el campo para corregir
+            return false;
+        }
+
+        // 2. Validar que no exceda los 100 caracteres
+        if (referencia.length() > 100) {
+            CUtilitarios.msg_advertencia("La referencia es muy larga. Máximo 100 caracteres.\nCaracteres actuales: " + referencia.length(), "Validación de Campos");
+            jtxtaReferencia.requestFocus(); // Ponemos el foco en el campo para corregir
+            return false;
+        }
+
+        // Si pasa ambas pruebas, retornamos true
+        return true;
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -82,9 +104,17 @@ public class jfnuevadirec extends javax.swing.JFrame {
         jtfnumintn = new javax.swing.JTextField();
         jSeparator10 = new javax.swing.JSeparator();
         jcbcolonian = new javax.swing.JComboBox<>();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jtxtaReferencia = new javax.swing.JTextArea();
+        jSeparator1 = new javax.swing.JSeparator();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
         jbagregardirec = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosed(java.awt.event.WindowEvent evt) {
                 formWindowClosed(evt);
@@ -107,7 +137,6 @@ public class jfnuevadirec extends javax.swing.JFrame {
         jtfcallen.setBackground(new java.awt.Color(167, 235, 242));
         jtfcallen.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jtfcallen.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jtfcallen.setText("Calle");
         jtfcallen.setToolTipText("");
         jtfcallen.setBorder(null);
         jtfcallen.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
@@ -118,7 +147,6 @@ public class jfnuevadirec extends javax.swing.JFrame {
         jtfnumextn.setBackground(new java.awt.Color(167, 235, 242));
         jtfnumextn.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jtfnumextn.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jtfnumextn.setText("Número Exterior");
         jtfnumextn.setToolTipText("");
         jtfnumextn.setBorder(null);
         jtfnumextn.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
@@ -129,7 +157,6 @@ public class jfnuevadirec extends javax.swing.JFrame {
         jtfnumintn.setBackground(new java.awt.Color(167, 235, 242));
         jtfnumintn.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jtfnumintn.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jtfnumintn.setText("Número Interior");
         jtfnumintn.setToolTipText("");
         jtfnumintn.setBorder(null);
         jtfnumintn.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
@@ -143,40 +170,93 @@ public class jfnuevadirec extends javax.swing.JFrame {
         jcbcolonian.setToolTipText("");
         jcbcolonian.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
+        jtxtaReferencia.setBackground(new java.awt.Color(167, 235, 242));
+        jtxtaReferencia.setColumns(20);
+        jtxtaReferencia.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        jtxtaReferencia.setRows(5);
+        jtxtaReferencia.setToolTipText("Referencias");
+        jScrollPane1.setViewportView(jtxtaReferencia);
+
+        jSeparator1.setForeground(new java.awt.Color(0, 0, 0));
+
+        jLabel2.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText("Referencias");
+
+        jLabel3.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel3.setText("Colonias");
+
+        jLabel4.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel4.setText("Numero Interior");
+
+        jLabel5.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel5.setText("Numero Interior");
+
+        jLabel1.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("Calle");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jtfnumintn)
-                    .addComponent(jSeparator8)
-                    .addComponent(jSeparator9)
-                    .addComponent(jSeparator10)
-                    .addComponent(jtfcallen)
-                    .addComponent(jtfnumextn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE)
-                    .addComponent(jcbcolonian, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jSeparator1)
+                        .addComponent(jScrollPane1)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jcbcolonian, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jtfnumextn)
+                        .addComponent(jSeparator9)
+                        .addComponent(jtfnumintn)
+                        .addComponent(jSeparator10)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jSeparator8)
+                        .addComponent(jtfcallen)
+                        .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        jPanel2Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jLabel1, jLabel2, jLabel3, jLabel4, jLabel5, jSeparator10, jSeparator8, jSeparator9, jcbcolonian, jtfcallen, jtfnumextn, jtfnumintn});
+
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jtfcallen, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jtfcallen, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator8, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
                 .addComponent(jtfnumextn, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator9, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jtfnumintn, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator10, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jcbcolonian, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jcbcolonian, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(3, 3, 3)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         jbagregardirec.setBackground(new java.awt.Color(204, 204, 204));
@@ -212,28 +292,26 @@ public class jfnuevadirec extends javax.swing.JFrame {
                         .addGroup(jpfondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jpfondoLayout.createSequentialGroup()
                                 .addGap(18, 18, 18)
-                                .addComponent(JlblImagen1)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpfondoLayout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jbagregardirec, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(101, 101, 101))))))
+                                .addComponent(JlblImagen1))
+                            .addGroup(jpfondoLayout.createSequentialGroup()
+                                .addGap(109, 109, 109)
+                                .addComponent(jbagregardirec, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(17, 17, Short.MAX_VALUE))))
         );
         jpfondoLayout.setVerticalGroup(
             jpfondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpfondoLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jliconodirec)
+                .addGap(18, 18, 18)
                 .addGroup(jpfondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jpfondoLayout.createSequentialGroup()
-                        .addGap(18, 18, 18)
                         .addComponent(JlblImagen1)
-                        .addGap(30, 30, 30)
-                        .addComponent(jbagregardirec, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jpfondoLayout.createSequentialGroup()
-                        .addGap(95, 95, 95)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(45, 45, 45)
+                        .addComponent(jbagregardirec, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -259,13 +337,21 @@ public class jfnuevadirec extends javax.swing.JFrame {
                 jtf, textosPredeterminados, textosPredeterminados, regexTextoExtendido,
                 "Debes llenar todos los campos correctamente", "Validación de Datos Dirección"
         );
-        if (!camposValidos || !validaColonia()) {
+
+        // MODIFICACIÓN: Agregamos "|| !validarReferencia()" a la condición.
+        // Si cualquiera de estas validaciones falla, se detiene el método.
+        if (!camposValidos || !validaColonia() || !validarReferencia()) {
             return;
         }
 
         calle = jtfcallen.getText();
         numeroInterior = jtfnumintn.getText();
         numeroExterior = jtfnumextn.getText();
+
+        // RECOMENDACIÓN: Usar .trim() aquí también para guardar el texto limpio (sin espacios extra)
+        // tal como lo validamos en el método validarReferencia.
+        referencia = jtxtaReferencia.getText().trim();
+
         if (datosPersona != null) {
             nombre = datosPersona[0];
             apPat = datosPersona[1];
@@ -275,7 +361,9 @@ public class jfnuevadirec extends javax.swing.JFrame {
 
         StringBuilder mensaje = new StringBuilder(); // Acumulador de mensaje final
         try {
-            int idDirec = ci.insertaDirec(calle, numeroInterior, numeroExterior, idColonia); // devuelve el ID generado
+            // Llamada al método insertaDirec con los 5 parámetros (incluyendo referencia)
+            int idDirec = ci.insertaDirec(calle, numeroInterior, numeroExterior, referencia, idColonia); // devuelve el ID generado
+
             if (idDirec > 0) {
                 // Insertar persona solo si se insertó correctamente la dirección
                 int idPer = ci.insertaPersona(nombre, apPat, apMat, telefono, idDirec);
@@ -310,13 +398,13 @@ public class jfnuevadirec extends javax.swing.JFrame {
                                 java.sql.Date fechaInicio = java.sql.Date.valueOf(hoy);
                                 java.sql.Date fechaFinal = java.sql.Date.valueOf(fin);
                                 if (ci.insertaSueldo(fechaInicio, fechaFinal, sueldo, idEmpleado)) {
-                                    CUtilitarios.msg("El empleado se registro exitosamente", "Inserta Empleado - Sueldo");
+                                    CUtilitarios.msg("El empleado se registró exitosamente", "Inserta Empleado - Sueldo");
                                     this.dispose();
                                 } else {
-                                    CUtilitarios.msg_error("Ocurrio un problema al insertar el sueldo", "Inserta Empleado - Sueldo");
+                                    CUtilitarios.msg_error("Ocurrió un problema al insertar el sueldo", "Inserta Empleado - Sueldo");
                                 }
                             } else {
-                                CUtilitarios.msg_advertencia("Ocurrio un problema al insertar al empleado", "Inserta Empleado - Empleado");
+                                CUtilitarios.msg_advertencia("Ocurrió un problema al insertar al empleado", "Inserta Empleado - Empleado");
                             }
                         }
 
@@ -328,7 +416,7 @@ public class jfnuevadirec extends javax.swing.JFrame {
                 mensaje.append("FALLÓ la inserción de Dirección ");
             }
         } catch (SQLException ex) {
-            mensaje.append("Error al insertar");
+            mensaje.append("Error al insertar: ").append(ex.getMessage());
         }
 
         // Mostrar mensaje final si se insertó al menos uno
@@ -344,10 +432,10 @@ public class jfnuevadirec extends javax.swing.JFrame {
         } else {
             cargaComboBox(datosZona[0]);
         }
-        // Placeholder JTextField
-        cu.aplicarPlaceholder(jtfcallen, "Calle");
-        cu.aplicarPlaceholder(jtfnumextn, "Número Exterior");
-        cu.aplicarPlaceholder(jtfnumintn, "Numero Interior");
+//        // Placeholder JTextField
+//        cu.aplicarPlaceholder(jtfcallen, "Calle");
+//        cu.aplicarPlaceholder(jtfnumextn, "Número Exterior");
+//        cu.aplicarPlaceholder(jtfnumintn, "Numero Interior");
     }//GEN-LAST:event_formWindowOpened
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
@@ -386,7 +474,14 @@ public class jfnuevadirec extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel JlblImagen1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator10;
     private javax.swing.JSeparator jSeparator8;
     private javax.swing.JSeparator jSeparator9;
@@ -397,5 +492,6 @@ public class jfnuevadirec extends javax.swing.JFrame {
     private javax.swing.JTextField jtfcallen;
     private javax.swing.JTextField jtfnumextn;
     private javax.swing.JTextField jtfnumintn;
+    private javax.swing.JTextArea jtxtaReferencia;
     // End of variables declaration//GEN-END:variables
 }

@@ -9,8 +9,6 @@ import crud.CEliminaciones;
 import java.awt.event.ItemEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
@@ -125,7 +123,7 @@ public final class JfEmpleado extends javax.swing.JFrame {
     private void configurarModeloTablaEmpleados(JTable tabla) {
         DefaultTableModel modelo = new DefaultTableModel(
                 new Object[][]{},
-                new String[]{"Id Empleado", "Nombre(s)", "Apellido Paterno", "Apellido Materno"}
+                new String[]{"Id Empleado", "Nombre(s)", "Apellido Paterno", "Apellido Materno", "Telefono"}
         ) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -279,6 +277,7 @@ public final class JfEmpleado extends javax.swing.JFrame {
         for (String[] empleado : listaEmpleados) {
             modelo.addRow(empleado);
         }
+        CUtilitarios.ajustarColumnasTabla(tabla);
     }
 
     /**
@@ -294,6 +293,7 @@ public final class JfEmpleado extends javax.swing.JFrame {
             sueldo[2] = "$ " + sueldo[2]; // Formato de sueldo con símbolo
             modelo.addRow(sueldo);
         }
+        CUtilitarios.ajustarColumnasTabla(tabla);
     }
 
 // ========================================================================
@@ -488,6 +488,13 @@ public final class JfEmpleado extends javax.swing.JFrame {
             cargarDatosSueldos(JtblSueldosEmpleados);
             cargarDatosSueldos(JtblAsignaSueldos);
 
+            //5. Recargar el tamaño de las tablas
+            CUtilitarios.ajustarTamanioTabla(JtblListaEmpleados, JspTCListaEmpleados, 8);
+            CUtilitarios.ajustarTamanioTabla(JtblActualizaEmpleados, JspTCActualizaEmpleados, 8);
+            CUtilitarios.ajustarTamanioTabla(JtblDeleteEmpleados, JspTCDeleteEmpleados, 8);
+            CUtilitarios.ajustarTamanioTabla(JtblSueldosEmpleados, JspTCSueldosEmpleados, 8);
+            CUtilitarios.ajustarTamanioTabla(JtblAsignaSueldos, JspTCAsignaSueldos, 8);
+
         } catch (SQLException ex) {
             CUtilitarios.msg_error("Error al recargar los datos: " + ex.getMessage(), "Error");
         }
@@ -495,14 +502,14 @@ public final class JfEmpleado extends javax.swing.JFrame {
 
     // Metodos CRUD
     public void insertaEmpleado() throws SQLException {
-        // Obtener valores de los campos
+        // 1. Obtener valores de los campos
         String nombre = JtxtAgregarNombre.getText().trim();
         String apPaterno = JtxtAgregarApPat.getText().trim();
         String apMaterno = JtxtAgregarApMat.getText().trim();
         String telefono = JtxtAgregarTel.getText().trim();
         String sueldoStr = JtxtAgregarSueldo.getText().trim();
 
-        // Validar todos los campos antes de continuar
+        // 2. Validar formato de los campos
         boolean camposValidos = validarCamposEmpleado(
                 JtxtAgregarNombre, JtxtAgregarApPat, JtxtAgregarApMat,
                 JtxtAgregarTel, JtxtAgregarSueldo, JcmbxAgregarZonas
@@ -512,12 +519,24 @@ public final class JfEmpleado extends javax.swing.JFrame {
             return; // Detener si algún campo no es válido
         }
 
-        // Obtener el ID de zona (suponiendo que se almacena en el texto del ComboBox)
+        // 3. Validar duplicidad de teléfono (NUEVO)
+        // Se envía null como segundo parámetro porque es un registro nuevo (no excluimos a nadie)
+        if (queryBusca.existeTelefono(telefono, null)) {
+            CUtilitarios.msg_advertencia("El número de teléfono " + telefono + " ya se encuentra registrado con otro usuario.\nPor favor ingrese uno diferente.", "Teléfono Duplicado");
+            JtxtAgregarTel.requestFocus();
+            return;
+        }
+
+        // 4. Obtener el ID de zona
         String idZona = (String) JcmbxAgregarZonas.getSelectedItem();
 
+        // 5. Continuar al siguiente Frame
         try {
-            // Crear y configurar el frame de dirección
-            jfnuevadirec direccion = new jfnuevadirec(null, null, null);
+            // Se crea el arreglo de datos de zona (suponiendo estructura {id, zona, ...})
+            // Nota: Ajustamos esto para cumplir con el constructor de jfnuevadirec
+            String[] datosZonaArr = {idZona, "", "", ""};
+
+            jfnuevadirec direccion = new jfnuevadirec(datosZonaArr, null, null);
             direccion.asignaValoresEmpleado(nombre, apMaterno, apPaterno, telefono, sueldoStr, idZona);
 
             // Mostrar nueva ventana y cerrar actual
@@ -534,13 +553,13 @@ public final class JfEmpleado extends javax.swing.JFrame {
      * datos para su actualización en la dirección.
      */
     public void actualizaEmpleado(JTable tabla) throws SQLException {
-        // Obtener el arreglo con los datos de la fila seleccionada
+        // 1. Verificar selección en la tabla
         String[] filaSeleccionada = obtenerDatosFila(tabla);
         if (filaSeleccionada == null) {
             return;
         }
 
-        // Obtener campos editados
+        // 2. Obtener campos editados del formulario
         String nombre = JtxtActlzNombre.getText().trim();
         String apPaterno = JtxtActlzApPat.getText().trim();
         String apMaterno = JtxtActlzApMat.getText().trim();
@@ -548,7 +567,7 @@ public final class JfEmpleado extends javax.swing.JFrame {
         String sueldo = JtxtActlzSueldo.getText().trim();
         String idEmpleado = JtxtActlzid.getText().trim();
 
-        // Validar todos los campos antes de continuar
+        // 3. Validar formato de los campos
         boolean camposValidos = validarCamposEmpleado(
                 JtxtActlzNombre, JtxtActlzApPat, JtxtActlzApMat,
                 JtxtActlzTel, JtxtActlzSueldo, JcmbxActlzZonas
@@ -558,10 +577,25 @@ public final class JfEmpleado extends javax.swing.JFrame {
             return; // Detener si algún campo no es válido
         }
 
+        // 4. Validar duplicidad de teléfono (NUEVO)
+        // Se envía idEmpleado para que la consulta EXCLUYA a este mismo empleado 
+        // (así no marca error si deja su propio número sin cambios)
+        if (queryBusca.existeTelefono(telefono, idEmpleado)) {
+            CUtilitarios.msg_advertencia("El número de teléfono " + telefono + " ya pertenece a otro empleado.\nPor favor ingrese uno diferente.", "Teléfono Duplicado");
+            JtxtActlzTel.requestFocus();
+            return;
+        }
+
+        // 5. Continuar al siguiente Frame
         try {
             // Crear y configurar el frame para ACTUALIZACIÓN de dirección
             jflistaactdirec actualizaDireccion = new jflistaactdirec();
-            actualizaDireccion.obtenValoresActualiza(nombre, apMaterno, apPaterno, telefono, sueldo, idEmpleado, sueldos[0], null, null);
+
+            // Validamos que la variable global 'sueldos' no sea null para evitar errores
+            String idSueldoEnvio = (sueldos != null && sueldos.length > 0) ? sueldos[0] : "0";
+
+            actualizaDireccion.obtenValoresActualiza(nombre, apMaterno, apPaterno, telefono, sueldo, idEmpleado, idSueldoEnvio, null, null);
+
             // Mostrar nueva ventana y cerrar la actual
             CUtilitarios.creaFrame(actualizaDireccion, "Direcciones");
             this.dispose();
@@ -732,6 +766,8 @@ public final class JfEmpleado extends javax.swing.JFrame {
             }
         });
         JtblListaEmpleados.setGridColor(new java.awt.Color(255, 255, 204));
+        JtblListaEmpleados.getTableHeader().setResizingAllowed(false);
+        JtblListaEmpleados.getTableHeader().setReorderingAllowed(false);
         JspTCListaEmpleados.setViewportView(JtblListaEmpleados);
         if (JtblListaEmpleados.getColumnModel().getColumnCount() > 0) {
             JtblListaEmpleados.getColumnModel().getColumn(0).setResizable(false);
@@ -817,8 +853,8 @@ public final class JfEmpleado extends javax.swing.JFrame {
                 .addGap(30, 30, 30)
                 .addComponent(JtxtCnsltApeMat, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(JspCnsltApeMat)
-                .addGap(22, 22, 22))
+                .addComponent(JspCnsltApeMat, javax.swing.GroupLayout.DEFAULT_SIZE, 1, Short.MAX_VALUE)
+                .addGap(6, 6, 6))
         );
 
         javax.swing.GroupLayout JpnlListaEmpleadosLayout = new javax.swing.GroupLayout(JpnlListaEmpleados);
@@ -826,20 +862,20 @@ public final class JfEmpleado extends javax.swing.JFrame {
         JpnlListaEmpleadosLayout.setHorizontalGroup(
             JpnlListaEmpleadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(JpnlListaEmpleadosLayout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(69, Short.MAX_VALUE)
                 .addComponent(JpnlCamposLista, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(JspTCListaEmpleados, javax.swing.GroupLayout.DEFAULT_SIZE, 743, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(83, 83, 83)
+                .addComponent(JspTCListaEmpleados, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(43, 43, 43))
         );
         JpnlListaEmpleadosLayout.setVerticalGroup(
             JpnlListaEmpleadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JpnlListaEmpleadosLayout.createSequentialGroup()
-                .addContainerGap(54, Short.MAX_VALUE)
-                .addGroup(JpnlListaEmpleadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(JspTCListaEmpleados, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(JpnlCamposLista, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(48, 48, 48))
+            .addGroup(JpnlListaEmpleadosLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(JpnlListaEmpleadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(JspTCListaEmpleados, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(JpnlCamposLista, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         JtbpPaneles.addTab("Lista de empleados", JpnlListaEmpleados);
@@ -958,20 +994,22 @@ public final class JfEmpleado extends javax.swing.JFrame {
         JpnlInsertEmpleadoLayout.setHorizontalGroup(
             JpnlInsertEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(JpnlInsertEmpleadoLayout.createSequentialGroup()
-                .addGap(109, 109, 109)
+                .addContainerGap(90, Short.MAX_VALUE)
                 .addComponent(JpnlCamposAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(140, 140, 140)
+                .addGap(47, 47, 47)
                 .addComponent(JlblimagenI)
-                .addContainerGap(152, Short.MAX_VALUE))
+                .addGap(85, 85, 85))
         );
         JpnlInsertEmpleadoLayout.setVerticalGroup(
             JpnlInsertEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(JpnlInsertEmpleadoLayout.createSequentialGroup()
-                .addGap(49, 49, 49)
+                .addContainerGap()
                 .addGroup(JpnlInsertEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(JlblimagenI)
-                    .addComponent(JpnlCamposAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(49, Short.MAX_VALUE))
+                    .addComponent(JlblimagenI, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(JpnlInsertEmpleadoLayout.createSequentialGroup()
+                        .addComponent(JpnlCamposAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
 
         JtbpPaneles.addTab("Agregar un empleado", JpnlInsertEmpleado);
@@ -1119,6 +1157,8 @@ public final class JfEmpleado extends javax.swing.JFrame {
             }
         });
         JtblActualizaEmpleados.setGridColor(new java.awt.Color(255, 255, 204));
+        JtblActualizaEmpleados.getTableHeader().setResizingAllowed(false);
+        JtblActualizaEmpleados.getTableHeader().setReorderingAllowed(false);
         JtblActualizaEmpleados.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 JtblActualizaEmpleadosMouseClicked(evt);
@@ -1138,23 +1178,19 @@ public final class JfEmpleado extends javax.swing.JFrame {
             JpnlUpdateEmpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JpnlUpdateEmpLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(JspTCActualizaEmpleados, javax.swing.GroupLayout.DEFAULT_SIZE, 606, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(JspTCActualizaEmpleados, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(64, 64, 64)
                 .addComponent(JpnlCamposActualiza, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         JpnlUpdateEmpLayout.setVerticalGroup(
             JpnlUpdateEmpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(JpnlUpdateEmpLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(JpnlUpdateEmpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(JpnlUpdateEmpLayout.createSequentialGroup()
-                        .addGap(44, 44, 44)
-                        .addComponent(JpnlCamposActualiza, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(JpnlUpdateEmpLayout.createSequentialGroup()
-                        .addComponent(JspTCActualizaEmpleados, javax.swing.GroupLayout.DEFAULT_SIZE, 328, Short.MAX_VALUE)
-                        .addContainerGap())))
+                .addGroup(JpnlUpdateEmpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(JpnlCamposActualiza, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(JspTCActualizaEmpleados, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         JtbpPaneles.addTab("Actualizar un empleado", JpnlUpdateEmp);
@@ -1185,6 +1221,8 @@ public final class JfEmpleado extends javax.swing.JFrame {
             }
         });
         JtblDeleteEmpleados.setGridColor(new java.awt.Color(255, 255, 204));
+        JtblDeleteEmpleados.getTableHeader().setResizingAllowed(false);
+        JtblDeleteEmpleados.getTableHeader().setReorderingAllowed(false);
         JtblDeleteEmpleados.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 JtblDeleteEmpleadosMouseClicked(evt);
@@ -1259,46 +1297,60 @@ public final class JfEmpleado extends javax.swing.JFrame {
         JpnlCamposDelete.setLayout(JpnlCamposDeleteLayout);
         JpnlCamposDeleteLayout.setHorizontalGroup(
             JpnlCamposDeleteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 255, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JpnlCamposDeleteLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(JpnlCamposDeleteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(JpnlCamposDeleteLayout.createSequentialGroup()
+                        .addGroup(JpnlCamposDeleteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(JspElmNombre)
+                            .addComponent(JtxtElmNombre, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JpnlCamposDeleteLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(JpnlCamposDeleteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JpnlCamposDeleteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(JspElmApePat)
+                                .addComponent(JtxtElmApePat, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JpnlCamposDeleteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(JtxtElmApeMat, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
+                                .addComponent(JspElmApeMat))
+                            .addGroup(JpnlCamposDeleteLayout.createSequentialGroup()
+                                .addGap(10, 10, 10)
+                                .addComponent(JbtnEliminarEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap())
             .addGroup(JpnlCamposDeleteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(JpnlCamposDeleteLayout.createSequentialGroup()
                     .addGap(11, 11, 11)
-                    .addGroup(JpnlCamposDeleteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(JbtnEliminarEmpleado, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
-                        .addComponent(JtxtElmApeMat, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
-                        .addComponent(JspElmID)
-                        .addComponent(JtxtElmID)
-                        .addComponent(JspElmNombre)
-                        .addComponent(JtxtElmNombre, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
-                        .addComponent(JspElmApePat)
-                        .addComponent(JtxtElmApePat, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
-                        .addComponent(JspElmApeMat))
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(JpnlCamposDeleteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(JtxtElmID, javax.swing.GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE)
+                        .addComponent(JspElmID, javax.swing.GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE))
+                    .addContainerGap()))
         );
         JpnlCamposDeleteLayout.setVerticalGroup(
             JpnlCamposDeleteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 324, Short.MAX_VALUE)
+            .addGroup(JpnlCamposDeleteLayout.createSequentialGroup()
+                .addGap(63, 63, 63)
+                .addComponent(JtxtElmNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(JspElmNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(JtxtElmApePat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(JspElmApePat, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(JtxtElmApeMat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(JspElmApeMat, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(JbtnEliminarEmpleado)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(JpnlCamposDeleteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(JpnlCamposDeleteLayout.createSequentialGroup()
                     .addGap(24, 24, 24)
                     .addComponent(JtxtElmID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                     .addComponent(JspElmID, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(30, 30, 30)
-                    .addComponent(JtxtElmNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(JspElmNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(30, 30, 30)
-                    .addComponent(JtxtElmApePat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(JspElmApePat, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(30, 30, 30)
-                    .addComponent(JtxtElmApeMat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(JspElmApeMat, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(JbtnEliminarEmpleado, javax.swing.GroupLayout.DEFAULT_SIZE, 58, Short.MAX_VALUE)
-                    .addContainerGap()))
+                    .addContainerGap(172, Short.MAX_VALUE)))
         );
 
         javax.swing.GroupLayout JpnlDeleteEmpLayout = new javax.swing.GroupLayout(JpnlDeleteEmp);
@@ -1306,20 +1358,20 @@ public final class JfEmpleado extends javax.swing.JFrame {
         JpnlDeleteEmpLayout.setHorizontalGroup(
             JpnlDeleteEmpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(JpnlDeleteEmpLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(JspTCDeleteEmpleados, javax.swing.GroupLayout.DEFAULT_SIZE, 738, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(JpnlCamposDelete, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20))
+                .addContainerGap(51, Short.MAX_VALUE)
+                .addComponent(JspTCDeleteEmpleados, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(92, 92, 92)
+                .addComponent(JpnlCamposDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(60, 60, 60))
         );
         JpnlDeleteEmpLayout.setVerticalGroup(
             JpnlDeleteEmpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JpnlDeleteEmpLayout.createSequentialGroup()
+            .addGroup(JpnlDeleteEmpLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(JpnlDeleteEmpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(JpnlDeleteEmpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(JpnlCamposDelete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(JspTCDeleteEmpleados, javax.swing.GroupLayout.DEFAULT_SIZE, 324, Short.MAX_VALUE))
-                .addGap(17, 17, 17))
+                    .addComponent(JspTCDeleteEmpleados, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         JtbpPaneles.addTab("Eliminar a un empleado", JpnlDeleteEmp);
@@ -1350,6 +1402,8 @@ public final class JfEmpleado extends javax.swing.JFrame {
             }
         });
         JtblSueldosEmpleados.setGridColor(new java.awt.Color(255, 255, 204));
+        JtblSueldosEmpleados.getTableHeader().setResizingAllowed(false);
+        JtblSueldosEmpleados.getTableHeader().setReorderingAllowed(false);
         JspTCSueldosEmpleados.setViewportView(JtblSueldosEmpleados);
         if (JtblSueldosEmpleados.getColumnModel().getColumnCount() > 0) {
             JtblSueldosEmpleados.getColumnModel().getColumn(0).setResizable(false);
@@ -1431,23 +1485,22 @@ public final class JfEmpleado extends javax.swing.JFrame {
         JpnlSueldosLayout.setHorizontalGroup(
             JpnlSueldosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(JpnlSueldosLayout.createSequentialGroup()
-                .addGap(7, 7, 7)
+                .addGap(47, 47, 47)
                 .addComponent(JpnlCamposSueldos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(JspTCSueldosEmpleados, javax.swing.GroupLayout.DEFAULT_SIZE, 750, Short.MAX_VALUE)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
+                .addComponent(JspTCSueldosEmpleados, javax.swing.GroupLayout.PREFERRED_SIZE, 470, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(35, 35, 35))
         );
         JpnlSueldosLayout.setVerticalGroup(
             JpnlSueldosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(JpnlSueldosLayout.createSequentialGroup()
-                .addGap(23, 23, 23)
-                .addGroup(JpnlSueldosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(JspTCSueldosEmpleados, javax.swing.GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE)
-                    .addGroup(JpnlSueldosLayout.createSequentialGroup()
-                        .addGap(74, 74, 74)
-                        .addComponent(JpnlCamposSueldos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JpnlSueldosLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(JspTCSueldosEmpleados, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                 .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JpnlSueldosLayout.createSequentialGroup()
+                .addContainerGap(51, Short.MAX_VALUE)
+                .addComponent(JpnlCamposSueldos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(46, 46, 46))
         );
 
         JtbpPaneles.addTab("Sueldos", JpnlSueldos);
@@ -1478,6 +1531,8 @@ public final class JfEmpleado extends javax.swing.JFrame {
             }
         });
         JtblAsignaSueldos.setGridColor(new java.awt.Color(255, 255, 204));
+        JtblAsignaSueldos.getTableHeader().setResizingAllowed(false);
+        JtblAsignaSueldos.getTableHeader().setReorderingAllowed(false);
         JspTCAsignaSueldos.setViewportView(JtblAsignaSueldos);
         if (JtblAsignaSueldos.getColumnModel().getColumnCount() > 0) {
             JtblAsignaSueldos.getColumnModel().getColumn(0).setResizable(false);
@@ -1545,7 +1600,7 @@ public final class JfEmpleado extends javax.swing.JFrame {
         JpnlCamposASueldosLayout.setVerticalGroup(
             JpnlCamposASueldosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(JpnlCamposASueldosLayout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(JtxtAIDEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(JspAIDEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1561,9 +1616,8 @@ public final class JfEmpleado extends javax.swing.JFrame {
                 .addComponent(JdcFechaInicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(JdcFechaFin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(JbtnAsignarSueldo, javax.swing.GroupLayout.DEFAULT_SIZE, 64, Short.MAX_VALUE)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(JbtnAsignarSueldo, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         javax.swing.GroupLayout JpnlAsignaSueldosLayout = new javax.swing.GroupLayout(JpnlAsignaSueldos);
@@ -1571,23 +1625,20 @@ public final class JfEmpleado extends javax.swing.JFrame {
         JpnlAsignaSueldosLayout.setHorizontalGroup(
             JpnlAsignaSueldosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(JpnlAsignaSueldosLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(47, 47, 47)
                 .addComponent(JpnlCamposASueldos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(JspTCAsignaSueldos, javax.swing.GroupLayout.DEFAULT_SIZE, 750, Short.MAX_VALUE)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 59, Short.MAX_VALUE)
+                .addComponent(JspTCAsignaSueldos, javax.swing.GroupLayout.PREFERRED_SIZE, 470, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(26, 26, 26))
         );
         JpnlAsignaSueldosLayout.setVerticalGroup(
             JpnlAsignaSueldosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(JpnlAsignaSueldosLayout.createSequentialGroup()
-                .addGap(23, 23, 23)
-                .addGroup(JpnlAsignaSueldosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(JspTCAsignaSueldos, javax.swing.GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JpnlAsignaSueldosLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(JpnlCamposASueldos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(14, 14, 14)))
-                .addContainerGap())
+                .addContainerGap()
+                .addGroup(JpnlAsignaSueldosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(JpnlCamposASueldos, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(JspTCAsignaSueldos, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         JtbpPaneles.addTab("Asigna Sueldos", JpnlAsignaSueldos);
@@ -1604,7 +1655,7 @@ public final class JfEmpleado extends javax.swing.JFrame {
             .addGroup(JpnlEncabezadoLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(JlblImagenEncabezadoEmpleado)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(724, Short.MAX_VALUE))
         );
         JpnlEncabezadoLayout.setVerticalGroup(
             JpnlEncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1619,17 +1670,17 @@ public final class JfEmpleado extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(JpnlEncabezado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(JtbpPaneles)
+            .addComponent(JtbpPaneles, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(JpnlEncabezado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(JtbpPaneles))
+                .addComponent(JtbpPaneles, javax.swing.GroupLayout.PREFERRED_SIZE, 284, Short.MAX_VALUE))
         );
 
-        setSize(new java.awt.Dimension(1056, 518));
+        setSize(new java.awt.Dimension(877, 418));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
