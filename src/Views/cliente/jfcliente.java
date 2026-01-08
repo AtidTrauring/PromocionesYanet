@@ -477,7 +477,7 @@ public final class jfcliente extends javax.swing.JFrame {
             if (fila != -1) {
                 // Tomar datos desde la tabla seleccionada
                 idclav = Integer.parseInt(jtlistaclienteavaleli.getValueAt(fila, 0).toString());
-                tipo = jtlistaclienteavaleli.getValueAt(fila, 5).toString();
+                tipo = jtlistaclienteavaleli.getValueAt(fila, 6).toString();
             } else {
                 // ID manualmente ingresado, pero sin forma de saber si es Cliente o Aval
                 CUtilitarios.msg_advertencia(
