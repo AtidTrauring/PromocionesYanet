@@ -686,7 +686,7 @@
                             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                               <Font name="Candara" size="14" style="1"/>
                             </Property>
-                            <Property name="horizontalAlignment" type="int" value="0"/>
+                            <Property name="horizontalAlignment" type="int" value="2"/>
                             <Property name="toolTipText" type="java.lang.String" value="Calle"/>
                             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                               <Border info="null"/>
@@ -712,7 +712,7 @@
                             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                               <Font name="Candara" size="14" style="1"/>
                             </Property>
-                            <Property name="horizontalAlignment" type="int" value="0"/>
+                            <Property name="horizontalAlignment" type="int" value="2"/>
                             <Property name="toolTipText" type="java.lang.String" value="N&#xfa;mero Exterior"/>
                             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                               <Border info="null"/>
@@ -738,7 +738,7 @@
                             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                               <Font name="Candara" size="14" style="1"/>
                             </Property>
-                            <Property name="horizontalAlignment" type="int" value="0"/>
+                            <Property name="horizontalAlignment" type="int" value="2"/>
                             <Property name="toolTipText" type="java.lang.String" value="N&#xfa;mero Interior"/>
                             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                               <Border info="null"/>

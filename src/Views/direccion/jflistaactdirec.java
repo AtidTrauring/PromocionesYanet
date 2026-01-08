@@ -616,7 +616,7 @@ public class jflistaactdirec extends javax.swing.JFrame {
 
         jtfcalleact.setBackground(new java.awt.Color(167, 235, 242));
         jtfcalleact.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
-        jtfcalleact.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jtfcalleact.setHorizontalAlignment(javax.swing.JTextField.LEFT);
         jtfcalleact.setToolTipText("Calle");
         jtfcalleact.setBorder(null);
         jtfcalleact.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
@@ -626,7 +626,7 @@ public class jflistaactdirec extends javax.swing.JFrame {
 
         jtfnumextact.setBackground(new java.awt.Color(167, 235, 242));
         jtfnumextact.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
-        jtfnumextact.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jtfnumextact.setHorizontalAlignment(javax.swing.JTextField.LEFT);
         jtfnumextact.setToolTipText("Número Exterior");
         jtfnumextact.setBorder(null);
         jtfnumextact.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
@@ -636,7 +636,7 @@ public class jflistaactdirec extends javax.swing.JFrame {
 
         jtfnumintact.setBackground(new java.awt.Color(167, 235, 242));
         jtfnumintact.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
-        jtfnumintact.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jtfnumintact.setHorizontalAlignment(javax.swing.JTextField.LEFT);
         jtfnumintact.setToolTipText("Número Interior");
         jtfnumintact.setBorder(null);
         jtfnumintact.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
