@@ -38,21 +38,13 @@ public class jflistaactdirec extends javax.swing.JFrame {
     }
 
     private void configurarInterfaz() throws SQLException {
-
-        aplicarPlaceholders();
-
-        // 1️⃣ Cargar datos y modelo
         configurarModeloTablaDirecciones(jtlistadirec);
         CUtilitarios.ajustarColumnasTabla(jtlistadirec);
         CUtilitarios.ajustarTamanioTabla(jtlistadirec, jspdirec, 8);
         configurarModeloTablaDirecciones(jtlistadirecact);
         CUtilitarios.ajustarColumnasTabla(jtlistadirecact);
         CUtilitarios.ajustarTamanioTabla(jtlistadirecact, jspdirecact, 8);
-
-        // 2️⃣ Crear el sorter DESPUÉS
         configurarFiltroListaDirecciones();
-
-        // 3️⃣ Cargar combos
         cargaComboBoxColonias();
     }
 
@@ -69,19 +61,6 @@ public class jflistaactdirec extends javax.swing.JFrame {
         this.datosEstatus = datosEstatus;
     }
 
-    // Aplica los Placeholder
-    private void aplicarPlaceholders() {
-        // Pestaña "Actualizar"
-        cu.aplicarPlaceholder(jtfcalleact, "Calle");
-        cu.aplicarPlaceholder(jtfnumextact, "Número exterior");
-        cu.aplicarPlaceholder(jtfnumintact, "Número interior");
-
-        // Pestaña "Busqueda"
-        cu.aplicarPlaceholder(jtfidbusqueda, "ID de búsqueda");
-        cu.aplicarPlaceholder(jtfpersonabusqueda, "Nombre");
-    }
-
-    //Valida todos los campos antes de permitir la actualización de una dirección.
     //Valida todos los campos antes de permitir la actualización de una dirección.
     private boolean validarCamposDireccion() {
         // Validación general de campos de texto normales
@@ -347,6 +326,8 @@ public class jflistaactdirec extends javax.swing.JFrame {
         jSeparator2 = new javax.swing.JSeparator();
         jcbcolonias = new javax.swing.JComboBox<>();
         jcbtipo = new javax.swing.JComboBox<>();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
         jpactualizadirec = new javax.swing.JPanel();
         jpfondoacttabladirec = new javax.swing.JPanel();
         jspdirecact = new javax.swing.JScrollPane();
@@ -362,7 +343,12 @@ public class jflistaactdirec extends javax.swing.JFrame {
         jSeparator11 = new javax.swing.JSeparator();
         jScrollPane1 = new javax.swing.JScrollPane();
         jtxtaReferencia = new javax.swing.JTextArea();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
         jbdirecact = new javax.swing.JButton();
+        jLabel8 = new javax.swing.JLabel();
         jliconodirec = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -425,15 +411,15 @@ public class jflistaactdirec extends javax.swing.JFrame {
         jpfondotabladirec.setLayout(jpfondotabladirecLayout);
         jpfondotabladirecLayout.setHorizontalGroup(
             jpfondotabladirecLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpfondotabladirecLayout.createSequentialGroup()
-                .addComponent(jspdirec, javax.swing.GroupLayout.PREFERRED_SIZE, 705, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 4, Short.MAX_VALUE))
+            .addGroup(jpfondotabladirecLayout.createSequentialGroup()
+                .addComponent(jspdirec, javax.swing.GroupLayout.PREFERRED_SIZE, 812, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 7, Short.MAX_VALUE))
         );
         jpfondotabladirecLayout.setVerticalGroup(
             jpfondotabladirecLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpfondotabladirecLayout.createSequentialGroup()
                 .addComponent(jspdirec, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 36, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         jpfondobusqueda.setBackground(new java.awt.Color(167, 235, 242));
@@ -441,12 +427,12 @@ public class jflistaactdirec extends javax.swing.JFrame {
         jLabel1.setBackground(new java.awt.Color(167, 235, 242));
         jLabel1.setFont(new java.awt.Font("Candara", 1, 18)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Realiza Búsqueda");
+        jLabel1.setText("Ingrese los datos de busqueda");
 
         jtfidbusqueda.setBackground(new java.awt.Color(167, 235, 242));
         jtfidbusqueda.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jtfidbusqueda.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-        jtfidbusqueda.setToolTipText("Ingresar ID");
+        jtfidbusqueda.setToolTipText("ID de busqueda");
         jtfidbusqueda.setBorder(null);
         jtfidbusqueda.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
         jtfidbusqueda.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -462,7 +448,7 @@ public class jflistaactdirec extends javax.swing.JFrame {
         jtfpersonabusqueda.setBackground(new java.awt.Color(167, 235, 242));
         jtfpersonabusqueda.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jtfpersonabusqueda.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-        jtfpersonabusqueda.setToolTipText("Ingresar Nombre(s)");
+        jtfpersonabusqueda.setToolTipText("Nombre");
         jtfpersonabusqueda.setBorder(null);
         jtfpersonabusqueda.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
         jtfpersonabusqueda.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -478,7 +464,7 @@ public class jflistaactdirec extends javax.swing.JFrame {
         jcbcolonias.setBackground(new java.awt.Color(167, 235, 242));
         jcbcolonias.setFont(new java.awt.Font("Candara", 1, 12)); // NOI18N
         jcbcolonias.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Colonia" }));
-        jcbcolonias.setToolTipText("Selecciona un tipo de Usuario");
+        jcbcolonias.setToolTipText("Colonia");
         jcbcolonias.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jcbcolonias.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jcbcolonias.addItemListener(new java.awt.event.ItemListener() {
@@ -499,6 +485,14 @@ public class jflistaactdirec extends javax.swing.JFrame {
             }
         });
 
+        jLabel5.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel5.setText("ID de busqueda");
+
+        jLabel7.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel7.setText("Nombre");
+
         javax.swing.GroupLayout jpfondobusquedaLayout = new javax.swing.GroupLayout(jpfondobusqueda);
         jpfondobusqueda.setLayout(jpfondobusquedaLayout);
         jpfondobusquedaLayout.setHorizontalGroup(
@@ -506,36 +500,43 @@ public class jflistaactdirec extends javax.swing.JFrame {
             .addGroup(jpfondobusquedaLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jpfondobusquedaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jcbcolonias, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jpfondobusquedaLayout.createSequentialGroup()
-                        .addGroup(jpfondobusquedaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jtfpersonabusqueda)
-                            .addComponent(jSeparator2)
-                            .addComponent(jSeparator1)
-                            .addComponent(jtfidbusqueda, javax.swing.GroupLayout.DEFAULT_SIZE, 248, Short.MAX_VALUE))
+                        .addGroup(jpfondobusquedaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jpfondobusquedaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(jtfpersonabusqueda, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jtfidbusqueda, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 248, Short.MAX_VALUE)
+                                .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jcbcolonias, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jcbtipo, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jcbtipo, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jpfondobusquedaLayout.setVerticalGroup(
             jpfondobusquedaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpfondobusquedaLayout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jtfidbusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jtfpersonabusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jcbcolonias, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jcbtipo, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(17, 17, 17))
+                .addGap(20, 20, 20))
         );
 
         javax.swing.GroupLayout jplistadirecLayout = new javax.swing.GroupLayout(jplistadirec);
@@ -545,20 +546,21 @@ public class jflistaactdirec extends javax.swing.JFrame {
             .addGroup(jplistadirecLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jpfondotabladirec, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(84, 84, 84)
                 .addComponent(jpfondobusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(318, 318, 318))
+                .addGap(168, 168, 168))
         );
         jplistadirecLayout.setVerticalGroup(
             jplistadirecLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jplistadirecLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jpfondotabladirec, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jplistadirecLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jpfondotabladirec, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jplistadirecLayout.createSequentialGroup()
+                        .addGap(9, 9, 9)
+                        .addComponent(jpfondobusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(jplistadirecLayout.createSequentialGroup()
-                .addGap(30, 30, 30)
-                .addComponent(jpfondobusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         JtbpDirecciones.addTab("Lista de Direcciones", jplistadirec);
@@ -615,7 +617,7 @@ public class jflistaactdirec extends javax.swing.JFrame {
         jtfcalleact.setBackground(new java.awt.Color(167, 235, 242));
         jtfcalleact.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jtfcalleact.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jtfcalleact.setToolTipText("");
+        jtfcalleact.setToolTipText("Calle");
         jtfcalleact.setBorder(null);
         jtfcalleact.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
 
@@ -625,7 +627,7 @@ public class jflistaactdirec extends javax.swing.JFrame {
         jtfnumextact.setBackground(new java.awt.Color(167, 235, 242));
         jtfnumextact.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jtfnumextact.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jtfnumextact.setToolTipText("");
+        jtfnumextact.setToolTipText("Número Exterior");
         jtfnumextact.setBorder(null);
         jtfnumextact.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
 
@@ -635,7 +637,7 @@ public class jflistaactdirec extends javax.swing.JFrame {
         jtfnumintact.setBackground(new java.awt.Color(167, 235, 242));
         jtfnumintact.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jtfnumintact.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jtfnumintact.setToolTipText("");
+        jtfnumintact.setToolTipText("Número Interior");
         jtfnumintact.setBorder(null);
         jtfnumintact.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
 
@@ -645,7 +647,7 @@ public class jflistaactdirec extends javax.swing.JFrame {
         jcbcoloniaact.setBackground(new java.awt.Color(167, 235, 242));
         jcbcoloniaact.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jcbcoloniaact.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Colonias" }));
-        jcbcoloniaact.setToolTipText("");
+        jcbcoloniaact.setToolTipText("Colonias");
         jcbcoloniaact.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         jSeparator11.setForeground(new java.awt.Color(0, 0, 0));
@@ -653,68 +655,27 @@ public class jflistaactdirec extends javax.swing.JFrame {
 
         jtxtaReferencia.setBackground(new java.awt.Color(167, 235, 242));
         jtxtaReferencia.setColumns(20);
+        jtxtaReferencia.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jtxtaReferencia.setRows(5);
         jtxtaReferencia.setToolTipText("Referencia");
+        jtxtaReferencia.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         jScrollPane1.setViewportView(jtxtaReferencia);
 
-        javax.swing.GroupLayout jpactualizarLayout = new javax.swing.GroupLayout(jpactualizar);
-        jpactualizar.setLayout(jpactualizarLayout);
-        jpactualizarLayout.setHorizontalGroup(
-            jpactualizarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jpactualizarLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jpactualizarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jtfnumintact)
-                    .addComponent(jSeparator8)
-                    .addComponent(jSeparator9)
-                    .addComponent(jSeparator10)
-                    .addComponent(jtfcalleact)
-                    .addComponent(jtfnumextact, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jcbcoloniaact, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jSeparator11)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jpactualizarLayout.setVerticalGroup(
-            jpactualizarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jpactualizarLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jtfcalleact, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator8, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jtfnumextact, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator9, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jtfnumintact, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator10, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jcbcoloniaact, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jSeparator11, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
+        jLabel2.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText("Calle");
 
-        javax.swing.GroupLayout jpfondoacttabladirecLayout = new javax.swing.GroupLayout(jpfondoacttabladirec);
-        jpfondoacttabladirec.setLayout(jpfondoacttabladirecLayout);
-        jpfondoacttabladirecLayout.setHorizontalGroup(
-            jpfondoacttabladirecLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jpfondoacttabladirecLayout.createSequentialGroup()
-                .addComponent(jspdirecact, javax.swing.GroupLayout.PREFERRED_SIZE, 705, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jpactualizar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jpfondoacttabladirecLayout.setVerticalGroup(
-            jpfondoacttabladirecLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jpfondoacttabladirecLayout.createSequentialGroup()
-                .addComponent(jspdirecact, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addComponent(jpactualizar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
+        jLabel3.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel3.setText("Número Exterior");
+
+        jLabel4.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel4.setText("Número Interior");
+
+        jLabel6.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel6.setText("Referencia del Domicilio");
 
         jbdirecact.setBackground(new java.awt.Color(204, 204, 204));
         jbdirecact.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
@@ -734,6 +695,107 @@ public class jflistaactdirec extends javax.swing.JFrame {
             }
         });
 
+        jLabel8.setFont(new java.awt.Font("Candara", 1, 18)); // NOI18N
+        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel8.setText("Ingrese los datos a actualizar");
+
+        javax.swing.GroupLayout jpactualizarLayout = new javax.swing.GroupLayout(jpactualizar);
+        jpactualizar.setLayout(jpactualizarLayout);
+        jpactualizarLayout.setHorizontalGroup(
+            jpactualizarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jpactualizarLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jpactualizarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jpactualizarLayout.createSequentialGroup()
+                        .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addGroup(jpactualizarLayout.createSequentialGroup()
+                        .addGroup(jpactualizarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jtfnumintact)
+                            .addComponent(jSeparator8)
+                            .addComponent(jSeparator9)
+                            .addComponent(jSeparator10)
+                            .addComponent(jtfcalleact)
+                            .addComponent(jtfnumextact, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jcbcoloniaact, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(jpactualizarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpactualizarLayout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jbdirecact, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(57, 57, 57))
+                            .addGroup(jpactualizarLayout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jpactualizarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jSeparator11)
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE))
+                                .addContainerGap())))))
+        );
+        jpactualizarLayout.setVerticalGroup(
+            jpactualizarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jpactualizarLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel8)
+                .addGap(18, 18, 18)
+                .addGroup(jpactualizarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpactualizarLayout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jtfcalleact, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSeparator8, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jtfnumextact, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpactualizarLayout.createSequentialGroup()
+                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jpactualizarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jSeparator11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jSeparator9, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jpactualizarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jpactualizarLayout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jtfnumintact, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSeparator10, javax.swing.GroupLayout.PREFERRED_SIZE, 7, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jcbcoloniaact, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jpactualizarLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jbdirecact, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(19, 19, 19))
+        );
+
+        javax.swing.GroupLayout jpfondoacttabladirecLayout = new javax.swing.GroupLayout(jpfondoacttabladirec);
+        jpfondoacttabladirec.setLayout(jpfondoacttabladirecLayout);
+        jpfondoacttabladirecLayout.setHorizontalGroup(
+            jpfondoacttabladirecLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jpfondoacttabladirecLayout.createSequentialGroup()
+                .addComponent(jspdirecact, javax.swing.GroupLayout.PREFERRED_SIZE, 705, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jpactualizar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jpfondoacttabladirecLayout.setVerticalGroup(
+            jpfondoacttabladirecLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jpfondoacttabladirecLayout.createSequentialGroup()
+                .addGroup(jpfondoacttabladirecLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jspdirecact, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jpfondoacttabladirecLayout.createSequentialGroup()
+                        .addGap(22, 22, 22)
+                        .addComponent(jpactualizar, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout jpactualizadirecLayout = new javax.swing.GroupLayout(jpactualizadirec);
         jpactualizadirec.setLayout(jpactualizadirecLayout);
         jpactualizadirecLayout.setHorizontalGroup(
@@ -741,9 +803,7 @@ public class jflistaactdirec extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpactualizadirecLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jpfondoacttabladirec, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jbdirecact)
-                .addGap(258, 258, 258))
+                .addGap(111, 111, 111))
         );
         jpactualizadirecLayout.setVerticalGroup(
             jpactualizadirecLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -751,10 +811,6 @@ public class jflistaactdirec extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jpfondoacttabladirec, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpactualizadirecLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jbdirecact)
-                .addGap(100, 100, 100))
         );
 
         JtbpDirecciones.addTab("Actualizar Dirección", jpactualizadirec);
@@ -779,7 +835,8 @@ public class jflistaactdirec extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jliconodirec)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(JtbpDirecciones))
+                .addComponent(JtbpDirecciones, javax.swing.GroupLayout.PREFERRED_SIZE, 396, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -793,7 +850,7 @@ public class jflistaactdirec extends javax.swing.JFrame {
             .addComponent(jpfondodireccion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        setSize(new java.awt.Dimension(1082, 537));
+        setSize(new java.awt.Dimension(1258, 497));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -1029,6 +1086,13 @@ public class jflistaactdirec extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTabbedPane JtbpDirecciones;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator10;
