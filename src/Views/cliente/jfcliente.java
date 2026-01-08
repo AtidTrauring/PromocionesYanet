@@ -339,12 +339,37 @@ public final class jfcliente extends javax.swing.JFrame {
         return true;
     }
 
-    private boolean validarTelefono() {
-        JTextField[] campos = {jtfnvtel};
-        String[] textos = {"Número de Teléfono"};
+    private boolean validarTelefono(String idEmpleadoExcluir) {
+        String telefono = jtfnvtel.getText().trim();
         String regex = "^\\d{10}$"; // Exactamente 10 dígitos
 
-        return CUtilitarios.validarTelefono(jtfnvtel.getText());
+        // 1. Validar formato
+        if (!telefono.matches(regex)) {
+            JOptionPane.showMessageDialog(null,
+                    "El número de teléfono debe contener exactamente 10 dígitos.",
+                    "Teléfono inválido",
+                    JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+        try {
+            // 2. Validar que no se repita en la BD
+            if (cb.existeTelefono(telefono, idEmpleadoExcluir)) {
+                JOptionPane.showMessageDialog(null,
+                        "El número de teléfono ya está registrado en el sistema.",
+                        "Teléfono duplicado",
+                        JOptionPane.WARNING_MESSAGE);
+                return false;
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null,
+                    "Error al validar el teléfono en la base de datos.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        return true; // Todo correcto
     }
 
     private boolean validarTelefonoAct() {
@@ -1848,7 +1873,7 @@ public final class jfcliente extends javax.swing.JFrame {
             }
 
             // 2. Validar teléfono
-            if (!validarTelefono()) {
+            if (!validarTelefono(idPersonaEn)) {
                 return;
             }
 
