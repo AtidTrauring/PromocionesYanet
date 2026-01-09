@@ -12,6 +12,68 @@ public class CBusquedas {
     private final CConsultas cnslt = new CConsultas();
     private String consulta;
 
+    public boolean existeTelefono(String telefono, String idEmpleadoExcluir) throws SQLException {
+        String consulta;
+
+        // Validación básica de entrada
+        if (telefono == null || telefono.trim().isEmpty()) {
+            return false;
+        }
+
+        if (idEmpleadoExcluir == null || idEmpleadoExcluir.trim().isEmpty()) {
+            // CASO INSERTAR: 
+            // Busca si el teléfono existe en cualquier registro de la tabla persona.
+            consulta = "SELECT COUNT(*) FROM persona WHERE telefono = '" + telefono + "'";
+        } else {
+            // CASO ACTUALIZAR: 
+            // Busca si el teléfono existe en la tabla persona, PERO excluyendo al ID de persona 
+            // asociado al empleado que estamos editando actualmente.
+            consulta = "SELECT COUNT(*) FROM persona WHERE telefono = '" + telefono + "' "
+                    + "AND idpersona != (SELECT persona_idpersona FROM empleado WHERE idempleado = " + idEmpleadoExcluir + ")";
+        }
+
+        // Ejecutamos la consulta usando tu clase CConsultas.
+        // obtenerValorEntero devuelve el conteo (0 si no existe, >0 si existe).
+        int cantidad = cnslt.obtenerValorEntero(consulta);
+
+        return cantidad > 0;
+    }
+
+    public boolean existeTelefonoCiente(String telefono, String idClienteExcluir) throws SQLException {
+        // Validación básica de entrada
+        if (telefono == null || telefono.trim().isEmpty()) {
+            return false;
+        }
+
+        if (idClienteExcluir == null || idClienteExcluir.trim().isEmpty()) {
+            // CASO INSERTAR: 
+            // Busca si el teléfono existe en cualquier registro de la tabla persona.
+            consulta = "SELECT COUNT(*) FROM persona WHERE telefono = '" + telefono + "'";
+        } else {
+            // CASO ACTUALIZAR: 
+            // Busca si el teléfono existe en la tabla persona, PERO excluyendo al ID de persona 
+            // asociado al empleado que estamos editando actualmente.
+            consulta = "SELECT COUNT(*) FROM persona pr WHERE pr.telefono = '" + telefono + "' "
+                    + "AND pr.idpersona != (SELECT persona_idpersona FROM cliente cl WHERE cl.idcliente = " + idClienteExcluir + ")";
+        }
+
+        // Ejecutamos la consulta usando tu clase CConsultas.
+        // obtenerValorEntero devuelve el conteo (0 si no existe, >0 si existe).
+        int cantidad = cnslt.obtenerValorEntero(consulta);
+
+        return cantidad > 0;
+    }
+
+    public int buscarIdDireccionPorTelefono(String telefono) throws SQLException {
+        consulta
+                = "SELECT dr.iddireccion "
+                + "FROM persona pr "
+                + "INNER JOIN direccion dr ON pr.direccion_iddireccion = dr.iddireccion "
+                + "WHERE pr.telefono = '" + telefono + "'";
+
+        return cnslt.obtenerValorEntero(consulta);
+    }
+
     //--------------- promociones yp -----------------
     public ArrayList<String[]> buscarProducto() throws SQLException {
         consulta = "SELECT idproducto, producto, precio, stock"
@@ -103,33 +165,6 @@ public class CBusquedas {
      * @return true si el teléfono ya existe, false si está libre.
      * @throws SQLException
      */
-    public boolean existeTelefono(String telefono, String idEmpleadoExcluir) throws SQLException {
-        String consulta;
-
-        // Validación básica de entrada
-        if (telefono == null || telefono.trim().isEmpty()) {
-            return false;
-        }
-
-        if (idEmpleadoExcluir == null || idEmpleadoExcluir.trim().isEmpty()) {
-            // CASO INSERTAR: 
-            // Busca si el teléfono existe en cualquier registro de la tabla persona.
-            consulta = "SELECT COUNT(*) FROM persona WHERE telefono = '" + telefono + "'";
-        } else {
-            // CASO ACTUALIZAR: 
-            // Busca si el teléfono existe en la tabla persona, PERO excluyendo al ID de persona 
-            // asociado al empleado que estamos editando actualmente.
-            consulta = "SELECT COUNT(*) FROM persona WHERE telefono = '" + telefono + "' "
-                    + "AND idpersona != (SELECT persona_idpersona FROM empleado WHERE idempleado = " + idEmpleadoExcluir + ")";
-        }
-
-        // Ejecutamos la consulta usando tu clase CConsultas.
-        // obtenerValorEntero devuelve el conteo (0 si no existe, >0 si existe).
-        int cantidad = cnslt.obtenerValorEntero(consulta);
-
-        return cantidad > 0;
-    }
-
     public String[] buscarUltimoIdSueldoEmpleado(String idEmpleado) throws SQLException {
         consulta = "SELECT s.idsueldo, s.sueldo FROM sueldo s WHERE s.empleado_idempleado = " + idEmpleado + " ORDER BY s.idsueldo DESC LIMIT 1";
         return cnslt.buscarValoresLista(consulta, 2);

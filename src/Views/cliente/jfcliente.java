@@ -339,7 +339,7 @@ public final class jfcliente extends javax.swing.JFrame {
         return true;
     }
 
-    private boolean validarTelefono(String idEmpleadoExcluir) {
+    private boolean validarTelefono(String cc) {
         String telefono = jtfnvtel.getText().trim();
         String regex = "^\\d{10}$"; // Exactamente 10 dígitos
 
@@ -354,7 +354,7 @@ public final class jfcliente extends javax.swing.JFrame {
 
         try {
             // 2. Validar que no se repita en la BD
-            if (cb.existeTelefono(telefono, idEmpleadoExcluir)) {
+            if (cb.existeTelefonoCiente(telefono, cc)) {
                 JOptionPane.showMessageDialog(null,
                         "El número de teléfono ya está registrado en el sistema.",
                         "Teléfono duplicado",
@@ -372,37 +372,29 @@ public final class jfcliente extends javax.swing.JFrame {
         return true; // Todo correcto
     }
 
-    private boolean validarTelefonoAct(String idEmpleadoExcluir) {
+    private boolean validarTelefonoAct(String idPersona) {
         String telefono = jtfacttel.getText().trim();
-        String regex = "^\\d{10}$"; // Exactamente 10 dígitos
 
-        // 1. Validar formato
-        if (!telefono.matches(regex)) {
-            JOptionPane.showMessageDialog(null,
-                    "El número de teléfono debe contener exactamente 10 dígitos.",
-                    "Teléfono inválido",
-                    JOptionPane.WARNING_MESSAGE);
+        if (!telefono.matches("^\\d{10}$")) {
+            CUtilitarios.msg_advertencia("El teléfono debe tener 10 dígitos", "Teléfono");
             return false;
         }
 
         try {
-            // 2. Validar que no se repita en la BD
-            if (cb.existeTelefono(telefono, idEmpleadoExcluir)) {
-                JOptionPane.showMessageDialog(null,
-                        "El número de teléfono ya está registrado en el sistema.",
-                        "Teléfono duplicado",
-                        JOptionPane.WARNING_MESSAGE);
+            String idclavc = Integer.toString(idclav);
+            if (cb.existeTelefonoCiente(telefono, idclavc)) {
+                CUtilitarios.msg_advertencia(
+                        "Este número ya está registrado en otro cliente",
+                        "Teléfono duplicado"
+                );
                 return false;
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null,
-                    "Error al validar el teléfono en la base de datos.",
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
+            CUtilitarios.msg_error("Error al validar teléfono", "Error");
             return false;
         }
 
-        return true; // Todo correcto
+        return true;
     }
 
     private boolean validarZona() {
@@ -493,7 +485,7 @@ public final class jfcliente extends javax.swing.JFrame {
         this.dispose();
     }
 
-    private void abrirVentanaDireccionAct(String[] datosZona, String[] datosPersona, String[] datosEstatus) {
+    private void abrirVentanaDireccionAct(String[] datosZona, String[] datosPersona, String[] datosEstatus) throws SQLException {
         jfactdirec dir = new jfactdirec(datosZona, datosPersona, datosEstatus);
         dir.setVisible(true);
         this.dispose();

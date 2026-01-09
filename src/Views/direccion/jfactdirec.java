@@ -20,13 +20,13 @@ public final class jfactdirec extends javax.swing.JFrame {
     CUtilitarios cu = new CUtilitarios();
     CBusquedas cb = new CBusquedas();
     CInserciones ci = new CInserciones();
+    CActualizaciones cact = new CActualizaciones();
     String seleccion, colcl, idColcl;
-    private String cllcl, ne, ni, nomcla, apcla, amcla, telcla, idPersona, referencia;
-    private String nombre, apMat, apPat, telefono, sueldo;
-    private String[] coloniaZona;
-    private int idc, idescl, idescla;
+    private String cllcl, ne, ni, nomcla, apcla, amcla, telcla, idPersona, referencia, telefonoPersona, iddr;
+    private String[] datosDireccion;
+    private int idc, idescl, idescla, z, idDireccion;
 
-    public jfactdirec(String[] datosZ, String[] datosP, String[] datosEs) {
+    public jfactdirec(String[] datosZ, String[] datosP, String[] datosEs) throws SQLException {
         initComponents();
         this.setLocationRelativeTo(null);
         // Datos extraidos
@@ -34,23 +34,39 @@ public final class jfactdirec extends javax.swing.JFrame {
         datosPersona = datosP;
         datosEstatus = datosEs;
 
-        // Placeholder JTextField
-        cu.aplicarPlaceholder(jtfcallen, "Calle");
-        cu.aplicarPlaceholder(jtfnumextn, "Número Exterior");
-        cu.aplicarPlaceholder(jtfnumintn, "Numero Interior");
-
         // Muestra de datos transaccionados
         System.out.println("\n\nEn dirección");
         System.out.println("Zona " + Arrays.toString(datosZ));
         System.out.println("Persona " + Arrays.toString(datosP));
         System.out.println("Estatus " + Arrays.toString(datosEs));
-        System.out.println(nombre);
-        System.out.println(apPat);
-        System.out.println(apMat);
-        System.out.println(telefono);
-        System.out.println(sueldo);
-        System.out.println(Arrays.toString(coloniaZona));
+        telefonoPersona = datosP[3]; // teléfono
+        idDireccion = cb.buscarIdDireccionPorTelefono(telefonoPersona);
+        System.out.println("ID DIRECCION: " + idDireccion);
+        datosDireccion = cb.buscarDirecPorID(idDireccion);
+        System.out.println("Dirección :" + Arrays.toString(datosDireccion));
+        cargarDirec(datosDireccion);
+    }
 
+    public void cargarDirec(String[] datosDireccion) {
+
+        if (datosDireccion == null || datosDireccion.length < 5) {
+            return;
+        }
+
+        // Asignar a variables internas
+        cllcl = datosDireccion[0];
+        ni = datosDireccion[1];
+        ne = datosDireccion[2];
+        colcl = datosDireccion[4];
+        System.out.println(colcl);
+        referencia = datosDireccion.length > 5 ? datosDireccion[3] : "";
+
+        // Mostrar en la interfaz
+        jtfcallen.setText(cllcl);
+        jtfnumintn.setText(ni);
+        jtfnumextn.setText(ne);
+        jcbcolonian.setSelectedItem(colcl);
+        jtxtaReferencia1.setText(referencia);
     }
 
     private DefaultComboBoxModel listas;
@@ -69,18 +85,20 @@ public final class jfactdirec extends javax.swing.JFrame {
     }
 
     public boolean validaColonia() {
-        if (jcbcolonian.getSelectedIndex() == 0 || jcbcolonian.getSelectedItem().equals("Colonias")) {
+        if (jcbcolonian.getSelectedIndex() == 0
+                || jcbcolonian.getSelectedItem().equals("Colonias")) {
             CUtilitarios.msg_advertencia("¡Selecciona una colonia!", "Colonias");
             return false;
         } else {
             try {
-                idc = Integer.parseInt(cb.buscarIdColonia((String) jcbcolonian.getSelectedItem()));
+                idc = Integer.parseInt(
+                        cb.buscarIdColonia((String) jcbcolonian.getSelectedItem())
+                );
                 return true;
             } catch (SQLException ex) {
                 return false;
             }
         }
-
     }
 
     private boolean validarReferencia() {
@@ -343,78 +361,84 @@ public final class jfactdirec extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jbagregardirecActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbagregardirecActionPerformed
-        JTextField[] jtf = {jtfcallen, jtfnumextn, jtfnumintn};
+        System.out.println("Botón AGREGAR DIRECCIÓN presionado");
+
+        JTextField[] campos = {jtfcallen, jtfnumextn, jtfnumintn};
         String[] textosPredeterminados = {"Calle", "Número Interior", "Número Exterior"};
-        String regexTextoExtendido = "^[0-9A-Za-zÁÉÍÓÚáéíóúÑñ\\s.,\\-]+$";
+        String regexTexto = "^[0-9A-Za-zÁÉÍÓÚáéíóúÑñ\\s.,\\-]+$";
 
         boolean camposValidos = CUtilitarios.validaCamposTextoConFormato(
-                jtf, textosPredeterminados, textosPredeterminados, regexTextoExtendido,
-                "Debes llenar todos los campos correctamente", "Validación de Datos Dirección"
+                campos,
+                textosPredeterminados,
+                textosPredeterminados,
+                regexTexto,
+                "Debes llenar todos los campos correctamente",
+                "Validación Dirección"
         );
 
-        // MODIFICADO: Ahora validamos también la referencia
-        if (!camposValidos || !validarReferencia()) {
+        if (!camposValidos) {
+            System.out.println("Falla validación de campos");
             return;
         }
 
-        cllcl = jtfcallen.getText();
-        ni = jtfnumintn.getText();
-        ne = jtfnumextn.getText();
-        // MODIFICADO: Obtenemos el texto de la referencia limpia
-        referencia = jtxtaReferencia1.getText().trim();
-
-        idc = Integer.parseInt(idColcl); // id de colonia
-
-        nomcla = datosPersona[0];
-        apcla = datosPersona[1];
-        amcla = datosPersona[2];
-        telcla = datosPersona[3];
-        idPersona = datosPersona[4];
-
-        StringBuilder mensaje = new StringBuilder(); // Acumulador de mensaje final
-        try {
-            // MODIFICADO: Se envían 5 parámetros: calle, num_int, num_ext, REFERENCIA, id_colonia
-            int idDirec = ci.insertaDirec(cllcl, ni, ne, referencia, idc);
-
-            if (idDirec > 0) {
-                // Insertar persona solo si se insertó correctamente la dirección
-                int idPer = ci.insertaPersona(nomcla, apcla, amcla, telcla, idDirec);
-                if (idPer > 0) {
-
-                    // Insertar cliente si existe estatus para cliente
-                    if (datosEstatus[0] != null) {
-                        System.out.println("Puedes insertar estatus cliente");
-                        idescl = Integer.parseInt(datosEstatus[0]);
-                        boolean insertaCliente = ci.insertaCliente(idPer, idescl);
-                        if (insertaCliente) {
-                            mensaje.append("Cliente ");
-                        }
-                    }
-
-                    // Insertar aval si existe estatus para aval
-                    if (datosEstatus[1] != null) {
-                        System.out.println("Puedes insertar estatus aval");
-                        idescla = Integer.parseInt(datosEstatus[1]);
-                        boolean insertaAval = ci.insertaAval(idPer, idescla);
-                        if (insertaAval) {
-                            mensaje.append("Aval ");
-                        }
-                    }
-                } else {
-                    mensaje.append("FALLÓ la inserción de Persona ");
-                }
-            } else {
-                mensaje.append("FALLÓ la inserción de Dirección ");
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(jfactdirec.class.getName()).log(Level.SEVERE, null, ex);
-            mensaje.append("Error al insertar: ").append(ex.getMessage());
+        if (!validarReferencia()) {
+            System.out.println("Falla validación de referencia");
+            return;
         }
 
-        // Mostrar mensaje final si se insertó al menos uno
-        if (mensaje.length() > 0) {
-            CUtilitarios.msg(mensaje.toString() + " INSERTADO CORRECTAMENTE", "Inserción Exitosa");
-            this.dispose(); // Opcional: Cerrar ventana al terminar
+        if (!validaColonia()) {
+            System.out.println("Falla validación de colonia");
+            return;
+        }
+
+        try {
+            // Datos de dirección
+            String calle = jtfcallen.getText().trim();
+            String numInt = jtfnumintn.getText().trim();
+            String numExt = jtfnumextn.getText().trim();
+            String referencia = jtxtaReferencia1.getText().trim();
+
+            // Colonia
+            String coloniaSeleccionada = jcbcolonian.getSelectedItem().toString();
+            int idColonia = Integer.parseInt(cb.buscarIdColonia(coloniaSeleccionada));
+
+            // IDs necesarios
+            String idDireccionStr = String.valueOf(idDireccion);
+            String idPersonaStr = String.valueOf(idPersona);
+
+            System.out.println("Actualizando dirección ID: " + idDireccionStr);
+            System.out.println("Colonia ID: " + idColonia);
+
+            // Actualización
+            cact.actualizarDireccionYPersona(
+                    idDireccionStr,
+                    calle,
+                    numExt,
+                    numInt,
+                    referencia,
+                    String.valueOf(idColonia),
+                    idPersonaStr,
+                    nomcla,
+                    apcla,
+                    apcla,
+                    telefonoPersona
+            );
+
+            CUtilitarios.msg(
+                    "Dirección actualizada correctamente",
+                    "Actualización Exitosa"
+            );
+
+            this.dispose();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(jfactdirec.class.getName())
+                    .log(Level.SEVERE, null, ex);
+
+            CUtilitarios.msg(
+                    "Error al actualizar la dirección:\n" + ex.getMessage(),
+                    "Error"
+            );
         }
     }//GEN-LAST:event_jbagregardirecActionPerformed
 
@@ -459,7 +483,11 @@ public final class jfactdirec extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new jfactdirec(datosZona, datosPersona, datosEstatus).setVisible(true);
+                try {
+                    new jfactdirec(datosZona, datosPersona, datosEstatus).setVisible(true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(jfactdirec.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
