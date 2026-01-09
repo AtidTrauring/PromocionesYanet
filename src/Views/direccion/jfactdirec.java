@@ -418,7 +418,7 @@ public final class jfactdirec extends javax.swing.JFrame {
                     numInt,
                     ref,
                     String.valueOf(idColonia),
-                    idPersonaStr,
+                    datosPersona[4],
                     datosPersona[0],
                     datosPersona[1],
                     datosPersona[2],

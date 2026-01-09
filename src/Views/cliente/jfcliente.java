@@ -39,19 +39,6 @@ public final class jfcliente extends javax.swing.JFrame {
         cargaComboBox(jcbnvestatusaval, 1);
         cargaComboBox(jcbnvzona, 2);
 
-        // Placeholder JTextField
-//        cu.aplicarPlaceholder(jtfidbusqueda, "Ingresar ID");
-//        cu.aplicarPlaceholder(jtfnombresbusqueda, "Ingresar Nombres");
-//        cu.aplicarPlaceholder(jtfapbusqueda, "Ingresar Apellido Paterno");
-//        cu.aplicarPlaceholder(jtfambusqueda, "Ingresar Apellido Materno");
-//        cu.aplicarPlaceholder(jtfidbusquedaeli, "Ingresar ID");
-//        cu.aplicarPlaceholder(jtfnombresbusquedaeli, "Ingresar Nombres");
-//        cu.aplicarPlaceholder(jtfapbusquedaeli, "Ingresar Apellido Paterno");
-//        cu.aplicarPlaceholder(jtfambusquedaeli, "Ingresar Apellido Materno");
-//        cu.aplicarPlaceholder(jtfnvnombres, "Nombres");
-//        cu.aplicarPlaceholder(jtfnvap, "Apellido Paterno");
-//        cu.aplicarPlaceholder(jtfnvam, "Apellido Materno");
-//        cu.aplicarPlaceholder(jtfnvtel, "Número de Teléfono");
         // Selección
         configurarEventosTablaActualizar();
         configurarEventosTabla();
@@ -74,8 +61,8 @@ public final class jfcliente extends javax.swing.JFrame {
     private String seleccion, est, z, idZona, idEstatus, idEstatusAval, esttabla, tipo, idPersona, idPersonaEn, zona;
     private String nomact, apact, amact, telact;
     private int idclav, idpr;
-    
-    public void limpiarCampos(){
+
+    public void limpiarCampos() {
         jtfidbusquedaeli.setText("");
         jtfnombresbusquedaeli.setText("");
         jtfapbusquedaeli.setText("");
@@ -2057,8 +2044,8 @@ public final class jfcliente extends javax.swing.JFrame {
                 jtfactnombres.getText().trim(),
                 jtfactap.getText().trim(),
                 jtfactam.getText().trim(),
-                jtfacttel.getText().trim()
-            //idPersonaEn
+                jtfacttel.getText().trim(),
+                idPersonaEn
             };
 
             // 6. Abrir ventana de dirección
