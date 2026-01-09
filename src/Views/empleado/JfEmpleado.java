@@ -6,6 +6,7 @@ import Views.jfmenuinicio;
 import crud.CBusquedas;
 import crud.CCargaCombos;
 import crud.CEliminaciones;
+import crud.CInserciones;
 import java.awt.event.ItemEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ public final class JfEmpleado extends javax.swing.JFrame {
 // Controladores para operaciones con la base de datos
     private final CBusquedas queryBusca = new CBusquedas();      // Consultas de búsqueda
     private final CCargaCombos queryCarga = new CCargaCombos();  // Carga de datos en combobox
+    private final CInserciones queryInserta = new CInserciones();  // Inserciones
     private final CEliminaciones queryElimina = new CEliminaciones();  // Carga de datos en combobox
 
 // Modelo para combobox de zonas/colonias
@@ -636,6 +638,90 @@ public final class JfEmpleado extends javax.swing.JFrame {
         }
     }
 
+    private void limpiarCamposSueldo() {
+        JtxtAIDEmpleado.setText("");
+        JtxtAEmpleado.setText("");
+        JtxtASueldo.setText("");
+        JdcFechaInicio.setDate(null);
+        JdcFechaFin.setDate(null);
+    }
+
+    private boolean validarCamposSueldo() {
+
+        if (JtxtAIDEmpleado.getText().isEmpty()
+                || JtxtAEmpleado.getText().isEmpty()
+                || JtxtASueldo.getText().isEmpty()
+                || JdcFechaInicio.getDate() == null
+                || JdcFechaFin.getDate() == null) {
+
+            CUtilitarios.msg_advertencia(
+                    "Validación",
+                    "Complete todos los campos");
+            return false;
+        }
+
+        if (!JtxtASueldo.getText().matches("\\d+(\\.\\d+)?")) {
+            CUtilitarios.msg_advertencia(
+                    "Validación",
+                    "Ingrese un sueldo válido");
+            return false;
+        }
+
+        return true;
+    }
+
+    private void buscarEmpleadoPorId() {
+
+        JtxtAEmpleado.setText("");
+
+        if (JtxtAIDEmpleado.getText().isEmpty()) {
+            return;
+        }
+
+        if (!JtxtAIDEmpleado.getText().matches("\\d+")) {
+            return;
+        }
+
+        try {
+            String nombre = queryBusca.buscarNombreEmpleado(JtxtAIDEmpleado.getText());
+
+            if (nombre != null) {
+                JtxtAEmpleado.setText(nombre);
+            }
+
+        } catch (SQLException e) {
+            CUtilitarios.msg_error(
+                    "Error al acreditar el sueldo",
+                    "Asignar sueldo");
+        }
+    }
+
+    private void insertarSueldo() {
+
+        try {
+            boolean ok = queryInserta.insertarSueldo(
+                    CUtilitarios.formatearFecha(JdcFechaInicio.getDate()),
+                    CUtilitarios.formatearFecha(JdcFechaFin.getDate()),
+                    JtxtASueldo.getText(),
+                    JtxtAIDEmpleado.getText()
+            );
+
+            if (ok) {
+                CUtilitarios.msg(
+                        "Éxito",
+                        "Sueldo asignado correctamente");
+
+                limpiarCamposSueldo();
+                cargarDatosSueldos(JtblAsignaSueldos);
+            }
+
+        } catch (SQLException e) {
+            CUtilitarios.msg_error(
+                    "Error al acreditar un sueldo.",
+                    "Asigna sueldo");
+        }
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -1052,16 +1138,15 @@ public final class JfEmpleado extends javax.swing.JFrame {
             .addGroup(JpnlCamposAgregarLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(JpnlCamposAgregarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(JpnlCamposAgregarLayout.createSequentialGroup()
-                        .addComponent(JspAgregarTel, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JpnlCamposAgregarLayout.createSequentialGroup()
-                        .addGroup(JpnlCamposAgregarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, JpnlCamposAgregarLayout.createSequentialGroup()
+                        .addGroup(JpnlCamposAgregarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(JspAgregarTel, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(JpnlCamposAgregarLayout.createSequentialGroup()
                                 .addComponent(JtxtAgregarTel, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
                                 .addGap(30, 30, 30)
                                 .addComponent(JbtnAgregarEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, JpnlCamposAgregarLayout.createSequentialGroup()
+                            .addGroup(JpnlCamposAgregarLayout.createSequentialGroup()
                                 .addGroup(JpnlCamposAgregarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
                                     .addComponent(JspAgregarNombre)
@@ -1079,8 +1164,7 @@ public final class JfEmpleado extends javax.swing.JFrame {
                                     .addComponent(JtxtAgregarSueldo, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
                                     .addComponent(JspAgregarSueldo, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
                                     .addComponent(JcmbxAgregarZonas, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                        .addGap(0, 19, Short.MAX_VALUE))
-                    .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(0, 19, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -1863,6 +1947,11 @@ public final class JfEmpleado extends javax.swing.JFrame {
         JtxtAIDEmpleado.setHorizontalAlignment(javax.swing.JTextField.LEFT);
         JtxtAIDEmpleado.setToolTipText("ID del empleado");
         JtxtAIDEmpleado.setBorder(null);
+        JtxtAIDEmpleado.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                JtxtAIDEmpleadoKeyReleased(evt);
+            }
+        });
 
         JspAIDEmpleado.setForeground(new java.awt.Color(0, 0, 0));
 
@@ -1931,14 +2020,14 @@ public final class JfEmpleado extends javax.swing.JFrame {
                                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JpnlCamposASueldosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(JpnlCamposASueldosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                         .addComponent(JtxtASueldo, javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(JtxtAEmpleado, javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(JspAIDEmpleado, javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(JtxtAIDEmpleado, javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(jLabel25, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE))
                                     .addComponent(jLabel27, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addComponent(jLabel29, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(JspASueldo, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(JspAEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(JspAEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(JtxtAEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(JpnlCamposASueldosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(JbtnAsignarSueldo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1973,9 +2062,9 @@ public final class JfEmpleado extends javax.swing.JFrame {
                         .addGap(28, 28, 28)
                         .addComponent(JdcFechaInicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(JpnlCamposASueldosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(JtxtAEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(JdcFechaFin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(JpnlCamposASueldosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(JdcFechaFin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(JtxtAEmpleado))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(JpnlCamposASueldosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(JpnlCamposASueldosLayout.createSequentialGroup()
@@ -2139,7 +2228,9 @@ public final class JfEmpleado extends javax.swing.JFrame {
 
     private void JbtnAsignarSueldoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JbtnAsignarSueldoActionPerformed
         // Inserta - Sueldos
-
+        if (validarCamposSueldo()) {
+            insertarSueldo();
+        }
     }//GEN-LAST:event_JbtnAsignarSueldoActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
@@ -2195,6 +2286,10 @@ public final class JfEmpleado extends javax.swing.JFrame {
         } catch (SQLException ex) {
         }
     }//GEN-LAST:event_JbtnActualizarEmpleadoActionPerformed
+
+    private void JtxtAIDEmpleadoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_JtxtAIDEmpleadoKeyReleased
+        buscarEmpleadoPorId();
+    }//GEN-LAST:event_JtxtAIDEmpleadoKeyReleased
 
     public static void main(String args[]) {
         // <editor-fold defaultstate="collapsed" desc="Generated Code">

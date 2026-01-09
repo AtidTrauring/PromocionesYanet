@@ -3,7 +3,8 @@ package utilitarios;
 import crud.*;
 import java.awt.*;
 import java.sql.*;
-import java.util.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.function.Consumer;
 import javax.swing.*;
 import javax.swing.JTable;
@@ -149,6 +150,16 @@ public class CUtilitarios {
         } catch (NumberFormatException e) {
             return false;
         }
+    }
+
+    public static String formatearFecha(Date fecha) {
+
+        if (fecha == null) {
+            return null;
+        }
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        return sdf.format(fecha);
     }
 
     // Verifica si un campo está vacío

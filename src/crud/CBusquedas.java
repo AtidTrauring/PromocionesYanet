@@ -444,6 +444,16 @@ public class CBusquedas {
         return cnslt.buscarValor(consulta);
     }
 
+    public String buscarNombreEmpleado(String idEmpleado) throws SQLException {
+
+        consulta = "SELECT CONCAT(p.nombres, ' ', p.ap_paterno, ' ', p.ap_materno) AS nombre_completo "
+                + "FROM persona p "
+                + "INNER JOIN empleado e ON e.persona_idpersona = p.idpersona "
+                + "WHERE e.idempleado = " + idEmpleado + ";";
+
+        return cnslt.buscarValor(consulta);
+    }
+
     public String buscarSumaPagosPorVenta(String idVenta) throws SQLException {
         consulta = "SELECT SUM(pago) FROM pagos_tarjetas WHERE venta_Idventa = '" + idVenta + "';";
         return cnslt.buscarValor(consulta);

@@ -155,6 +155,18 @@ public class CInserciones {
         return cnslt.inserta(consulta);
     }
 
+    public boolean insertarSueldo(
+            String fechaInicio,
+            String fechaFinal,
+            String sueldo,
+            String idEmpleado) throws SQLException {
+
+        consulta = "INSERT INTO sueldo (fecha_inicio, fecha_final, sueldo, empleado_idempleado) "
+                + "VALUES ('" + fechaInicio + "', '" + fechaFinal + "', '" + sueldo + "', '" + idEmpleado + "');";
+
+        return cnslt.inserta(consulta);
+    }
+
     //-----------INSERCION de venta
     public boolean insertaVenta(String totalVenta, String fechaSeleccionada, String numPagos, String vendedorSeleccionado,
             String clienteSeleccionado, String zonaSeleccionada, String estatusSeleccionado) throws SQLException {
