@@ -71,6 +71,53 @@ public class CActualizaciones {
         return actualizoDireccion && actualizoPersona;
     }
 
+    public boolean actualizarDireccionYPersonaCL(
+            String idDireccion,
+            String calle,
+            String numExt,
+            String numInt,
+            String referencia,
+            String idColonia,
+            String idPersona,
+            String nombres,
+            String apPat,
+            String apMat,
+            String telefono
+    ) throws SQLException {
+
+        // ================== ACTUALIZAR DIRECCIÓN ==================
+        String consultaDireccion
+                = "UPDATE direccion SET "
+                + "calle = '" + calle + "', "
+                + "num_ext = '" + numExt + "', "
+                + "num_int = '" + numInt + "', "
+                + "referencia = '" + referencia + "', "
+                + "colonia_idcolonia = " + idColonia + " "
+                + "WHERE iddireccion = " + idDireccion;
+
+        boolean actualizoDireccion = cnslt.actualiza(consultaDireccion);
+
+        // 🔴 SI NO ACTUALIZA DIRECCIÓN, NO SIGAS
+        if (!actualizoDireccion) {
+            return false;
+        }
+
+        // ================== ACTUALIZAR PERSONA ==================
+        String consultaPersona
+                = "UPDATE persona SET "
+                + "nombres = '" + nombres + "', "
+                + "ap_paterno = '" + apPat + "', "
+                + "ap_materno = '" + apMat + "', "
+                + "telefono = '" + telefono + "' "
+                + "WHERE idpersona = " + idPersona;
+
+        boolean actualizoPersona = cnslt.actualiza(consultaPersona);
+
+        System.out.println("Consulta Persona: " + consultaPersona);
+
+        return actualizoPersona;
+    }
+
     public boolean actualizarDireccion(String idDireccion, String calle, String numExt, String numInt, String referencia, String idColonia) throws SQLException {
         // Actualizar solo dirección (Incluyendo la referencia)
         consulta = "UPDATE direccion SET calle='" + calle

@@ -1,5 +1,6 @@
 package Views.direccion;
 
+import Views.cliente.jfcliente;
 import crud.*;
 import java.sql.*;
 import java.util.*;
@@ -49,7 +50,7 @@ public final class jfactdirec extends javax.swing.JFrame {
 
     public void cargarDirec(String[] datosDireccion) {
 
-        if (datosDireccion == null || datosDireccion.length < 5) {
+        if (datosDireccion == null || datosDireccion.length < 4) {
             return;
         }
 
@@ -59,7 +60,7 @@ public final class jfactdirec extends javax.swing.JFrame {
         ne = datosDireccion[2];
         colcl = datosDireccion[4];
         System.out.println(colcl);
-        referencia = datosDireccion.length > 5 ? datosDireccion[3] : "";
+        referencia = datosDireccion.length > 4 ? datosDireccion[3] : "";
 
         // Mostrar en la interfaz
         jtfcallen.setText(cllcl);
@@ -396,7 +397,7 @@ public final class jfactdirec extends javax.swing.JFrame {
             String calle = jtfcallen.getText().trim();
             String numInt = jtfnumintn.getText().trim();
             String numExt = jtfnumextn.getText().trim();
-            String referencia = jtxtaReferencia1.getText().trim();
+            String ref = jtxtaReferencia1.getText().trim();
 
             // Colonia
             String coloniaSeleccionada = jcbcolonian.getSelectedItem().toString();
@@ -410,18 +411,18 @@ public final class jfactdirec extends javax.swing.JFrame {
             System.out.println("Colonia ID: " + idColonia);
 
             // Actualización
-            cact.actualizarDireccionYPersona(
+            cact.actualizarDireccionYPersonaCL(
                     idDireccionStr,
                     calle,
                     numExt,
                     numInt,
-                    referencia,
+                    ref,
                     String.valueOf(idColonia),
                     idPersonaStr,
-                    nomcla,
-                    apcla,
-                    apcla,
-                    telefonoPersona
+                    datosPersona[0],
+                    datosPersona[1],
+                    datosPersona[2],
+                    datosPersona[3]
             );
 
             CUtilitarios.msg(
@@ -429,7 +430,9 @@ public final class jfactdirec extends javax.swing.JFrame {
                     "Actualización Exitosa"
             );
 
+            jfcliente jfcl = new jfcliente();
             this.dispose();
+            CUtilitarios.creaFrame(jfcl, "Actualización");
 
         } catch (SQLException ex) {
             Logger.getLogger(jfactdirec.class.getName())
