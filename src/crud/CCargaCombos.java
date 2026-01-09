@@ -3,17 +3,28 @@ package crud;
 import java.sql.*;
 import java.util.*;
 
+/**
+ * Clase para cargar listas desplegables (ComboBoxes) en la interfaz gráfica.
+ * Realiza consultas SELECT para obtener catálogos.
+ */
 public class CCargaCombos {
 
     private final CConsultas cnslt = new CConsultas();
     private String consulta;
 
-    /* Inicio Cliente */
+    /* ============================ SECCIÓN CLIENTES ============================ */
+    /**
+     * Carga estatus activos (menores a 4 según lógica de negocio: bola negra,
+     * blanca, gris).
+     */
     public ArrayList<String> cargaComboEstatus() throws SQLException {
         consulta = "SELECT est.estatus FROM estatus est WHERE est.idestatus < 4;";
         return cnslt.buscarValoresCombos(consulta);
     }
 
+    /**
+     * Carga las colonias pertenecientes a una zona específica.
+     */
     public ArrayList<String> cargaComboColoniasZona(int idZona) throws SQLException {
         consulta = "SELECT cl.colonia "
                 + "FROM colonia cl "
@@ -32,19 +43,23 @@ public class CCargaCombos {
         return cnslt.buscarValoresCombos(consulta);
     }
 
+    /**
+     * Utiliza el procedimiento almacenado 'colsZonas' para filtrar colonias.
+     */
     public ArrayList<String> cargaComboColsZonas(String colonia) throws SQLException {
         consulta = "CALL colsZonas('" + colonia + "')";
         return cnslt.buscarValoresCombos(consulta);
     }
 
-
-    /* Fin Cliente */
-    // Consulta Empleado
+    /* ============================ SECCIÓN EMPLEADOS Y VENTAS ============================ */
     public ArrayList<String> cargaComboFechaVenta() throws SQLException {
         consulta = "SELECT venta.fecha_venta FROM venta";
         return cnslt.buscarValoresCombos(consulta);
     }
 
+    /**
+     * Carga los estatus que actualmente están siendo usados en ventas.
+     */
     public ArrayList<String> cargaComboEstatusVenta() throws SQLException {
         consulta = "SELECT DISTINCT estatus.estatus "
                 + "FROM estatus "
@@ -53,11 +68,13 @@ public class CCargaCombos {
     }
 
     public ArrayList<String> cargaComboPagosPendientesVenta() throws SQLException {
-        consulta = "SELECT DISTINCT venta.num_pagos "
-                + "FROM venta ";
+        consulta = "SELECT DISTINCT venta.num_pagos FROM venta ";
         return cnslt.buscarValoresCombos(consulta);
     }
 
+    /**
+     * Carga nombres completos de empleados.
+     */
     public ArrayList<String> cargaComboVendedoresVenta() throws SQLException {
         consulta = "SELECT CONCAT(p.nombres, ' ', p.ap_paterno, ' ', p.ap_materno) AS nombre_completo "
                 + "FROM empleado e "
@@ -65,6 +82,9 @@ public class CCargaCombos {
         return cnslt.buscarValoresCombos(consulta);
     }
 
+    /**
+     * Carga zonas asociadas a ventas existentes.
+     */
     public ArrayList<String> cargaComboZonasVenta() throws SQLException {
         consulta = "SELECT DISTINCT zona.num_zona "
                 + "FROM venta "
@@ -72,6 +92,9 @@ public class CCargaCombos {
         return cnslt.buscarValoresCombos(consulta);
     }
 
+    /**
+     * Carga nombres completos de clientes.
+     */
     public ArrayList<String> cargaComboClientesVenta() throws SQLException {
         consulta = "SELECT CONCAT(p.nombres, ' ', p.ap_paterno, ' ', p.ap_materno) AS nombre_completo "
                 + "FROM cliente c "
@@ -79,6 +102,9 @@ public class CCargaCombos {
         return cnslt.buscarValoresCombos(consulta);
     }
 
+    /**
+     * Carga nombres completos de avales.
+     */
     public ArrayList<String> cargaComboAvalesVenta() throws SQLException {
         consulta = "SELECT CONCAT(p.nombres, ' ', p.ap_paterno, ' ', p.ap_materno) AS nombre_completo "
                 + "FROM aval a "
@@ -86,6 +112,7 @@ public class CCargaCombos {
         return cnslt.buscarValoresCombos(consulta);
     }
 
+    /* ============================ SECCIÓN SUELDOS ============================ */
     public ArrayList<String> cargaComboFechaInicioSueldos() throws SQLException {
         consulta = "SELECT DISTINCT DATE_FORMAT(fecha_inicio, '%Y-%m-%d') FROM sueldo ORDER BY fecha_inicio DESC";
         return cnslt.buscarValoresCombos(consulta);
@@ -100,5 +127,4 @@ public class CCargaCombos {
         consulta = "SELECT DISTINCT sueldo FROM sueldo ORDER BY sueldo DESC";
         return cnslt.buscarValoresCombos(consulta);
     }
-
 }

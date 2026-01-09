@@ -861,8 +861,7 @@ public class jflistaactdirec extends javax.swing.JFrame {
 
                 if (transaccionExitosa) {
                     CUtilitarios.msg("Dirección actualizada correctamente.", "Éxito");
-                    configurarModeloTablaDirecciones(jtlistadirecact);
-                    configurarModeloTablaDirecciones(jtlistadirec);
+                    configurarInterfaz();
                     limpiarCampos();
                     JtbpDirecciones.setSelectedIndex(0);
                 } else {

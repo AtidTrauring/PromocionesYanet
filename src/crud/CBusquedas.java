@@ -7,77 +7,100 @@ import java.util.ArrayList;
 import java.sql.SQLException;
 import utilitarios.CUtilitarios;
 
+/**
+ * Clase encargada de realizar búsquedas y consultas de lectura (SELECT) a la
+ * base de datos para los distintos módulos del sistema.
+ */
 public class CBusquedas {
 
     private final CConsultas cnslt = new CConsultas();
     private String consulta;
 
-    public boolean existeTelefono(String telefono, String idEmpleadoExcluir) throws SQLException {
-        String consulta;
+    // Variables para conexión manual en métodos específicos
+    private Connection conn = null;
+    private final CConecta conector = new CConecta();
+    private PreparedStatement stmt = null;
+    private ResultSet rs = null;
 
-        // Validación básica de entrada
+    // ========================================================================
+    //                       VALIDACIONES
+    // ========================================================================
+    /**
+     * Verifica si un teléfono ya existe, excluyendo opcionalmente a un empleado
+     * (para ediciones).
+     */
+    public boolean existeTelefono(String telefono, String idEmpleadoExcluir) throws SQLException {
         if (telefono == null || telefono.trim().isEmpty()) {
             return false;
         }
 
         if (idEmpleadoExcluir == null || idEmpleadoExcluir.trim().isEmpty()) {
-            // CASO INSERTAR: 
-            // Busca si el teléfono existe en cualquier registro de la tabla persona.
+            // Caso Insertar
             consulta = "SELECT COUNT(*) FROM persona WHERE telefono = '" + telefono + "'";
         } else {
-            // CASO ACTUALIZAR: 
-            // Busca si el teléfono existe en la tabla persona, PERO excluyendo al ID de persona 
-            // asociado al empleado que estamos editando actualmente.
+            // Caso Actualizar (excluir al propio empleado)
             consulta = "SELECT COUNT(*) FROM persona WHERE telefono = '" + telefono + "' "
                     + "AND idpersona != (SELECT persona_idpersona FROM empleado WHERE idempleado = " + idEmpleadoExcluir + ")";
         }
 
-        // Ejecutamos la consulta usando tu clase CConsultas.
-        // obtenerValorEntero devuelve el conteo (0 si no existe, >0 si existe).
         int cantidad = cnslt.obtenerValorEntero(consulta);
-
         return cantidad > 0;
     }
 
+    /**
+     * Verifica si un teléfono ya existe, excluyendo opcionalmente a un cliente.
+     */
     public boolean existeTelefonoCiente(String telefono, String idClienteExcluir) throws SQLException {
-        // Validación básica de entrada
         if (telefono == null || telefono.trim().isEmpty()) {
             return false;
         }
 
         if (idClienteExcluir == null || idClienteExcluir.trim().isEmpty()) {
-            // CASO INSERTAR: 
-            // Busca si el teléfono existe en cualquier registro de la tabla persona.
             consulta = "SELECT COUNT(*) FROM persona WHERE telefono = '" + telefono + "'";
         } else {
-            // CASO ACTUALIZAR: 
-            // Busca si el teléfono existe en la tabla persona, PERO excluyendo al ID de persona 
-            // asociado al empleado que estamos editando actualmente.
             consulta = "SELECT COUNT(*) FROM persona pr WHERE pr.telefono = '" + telefono + "' "
                     + "AND pr.idpersona != (SELECT persona_idpersona FROM cliente cl WHERE cl.idcliente = " + idClienteExcluir + ")";
         }
 
-        // Ejecutamos la consulta usando tu clase CConsultas.
-        // obtenerValorEntero devuelve el conteo (0 si no existe, >0 si existe).
         int cantidad = cnslt.obtenerValorEntero(consulta);
-
         return cantidad > 0;
     }
 
+    public boolean existeZona(String idZona) throws SQLException {
+        consulta = "SELECT COUNT(*) FROM zona WHERE idzona = '" + idZona + "';";
+        String resultado = cnslt.buscarValor(consulta);
+        return resultado != null && !resultado.equals("0");
+    }
+
+    /**
+     * Verifica traslape de fechas en sueldos para evitar conflictos.
+     */
+    public boolean verificarTraslapeFechas(String idEmpleado, String fechaInicio, String fechaFin) throws SQLException {
+        consulta = "SELECT COUNT(*) FROM sueldo "
+                + "WHERE empleado_idempleado = " + idEmpleado + " "
+                + "AND (fecha_inicio <= '" + fechaFin + "' AND fecha_final >= '" + fechaInicio + "')";
+
+        int cantidad = cnslt.obtenerValorEntero(consulta);
+        return cantidad > 0;
+    }
+
+    // ========================================================================
+    //                       BÚSQUEDAS GENÉRICAS Y CATÁLOGOS
+    // ========================================================================
+    public String buscarID(String consulta) throws SQLException {
+        return new CConsultas().buscarValorSinMensaje(consulta);
+    }
+
     public int buscarIdDireccionPorTelefono(String telefono) throws SQLException {
-        consulta
-                = "SELECT dr.iddireccion "
+        consulta = "SELECT dr.iddireccion "
                 + "FROM persona pr "
                 + "INNER JOIN direccion dr ON pr.direccion_iddireccion = dr.iddireccion "
                 + "WHERE pr.telefono = '" + telefono + "'";
-
         return cnslt.obtenerValorEntero(consulta);
     }
 
-    //--------------- promociones yp -----------------
     public ArrayList<String[]> buscarProducto() throws SQLException {
-        consulta = "SELECT idproducto, producto, precio, stock"
-                + " FROM producto ";
+        consulta = "SELECT idproducto, producto, precio, stock FROM producto ";
         return cnslt.buscarValores(consulta, 4);
     }
 
@@ -97,6 +120,17 @@ public class CBusquedas {
         return cnslt.buscarValores(consulta, 2);
     }
 
+    public ArrayList<String[]> buscarColoniasPorZona(String idZona) throws SQLException {
+        consulta = "SELECT c.idcolonia, c.colonia "
+                + "FROM colonia c "
+                + "JOIN colonia_has_zona cz ON c.idcolonia = cz.colonia_idcolonia "
+                + "WHERE cz.zona_idzona = '" + idZona + "';";
+        return cnslt.buscarValores(consulta, 2);
+    }
+
+    // ========================================================================
+    //                       BÚSQUEDAS DE EMPLEADO
+    // ========================================================================
     public ArrayList<String[]> buscarEmpleado() throws SQLException {
         consulta = "SELECT "
                 + "    idempleado AS 'Id Empleado', "
@@ -105,11 +139,61 @@ public class CBusquedas {
                 + "    (SELECT persona.ap_materno FROM persona WHERE persona.idpersona = empleado.persona_idpersona) AS 'Apellido Materno', "
                 + "    (SELECT persona.telefono FROM persona WHERE persona.idpersona = empleado.persona_idpersona) AS 'Teléfono' "
                 + "FROM empleado;";
-
-        // Se cambia el 4 por el 5 ya que ahora traemos: Id, Nombre, Paterno, Materno y Teléfono
         return cnslt.buscarValores(consulta, 5);
     }
 
+    public String buscarUltimoEmpleado() throws SQLException {
+        consulta = "SELECT MAX(empleado.idempleado) FROM empleado";
+        return cnslt.buscarValor(consulta);
+    }
+
+    public String buscarTelefonoEmpleado(String idEmpleado) throws SQLException {
+        consulta = "SELECT p.telefono FROM persona p "
+                + "INNER JOIN empleado e ON e.persona_idpersona = p.idpersona "
+                + "WHERE e.idempleado = " + idEmpleado + ";";
+        return cnslt.buscarValor(consulta);
+    }
+
+    public String buscarIdEmpleadoPorNombre(String nombreCompleto) throws SQLException {
+        consulta = "SELECT e.idempleado "
+                + "FROM empleado e "
+                + "JOIN persona p ON e.persona_idpersona = p.idpersona "
+                + "WHERE CONCAT(p.nombres, ' ', p.ap_paterno, ' ', p.ap_materno) = '" + nombreCompleto + "';";
+        return cnslt.buscarValor(consulta);
+    }
+
+    public String buscarNombreEmpleado(String idEmpleado) throws SQLException {
+        consulta = "SELECT CONCAT(p.nombres, ' ', p.ap_paterno, ' ', p.ap_materno) AS nombre_completo "
+                + "FROM persona p "
+                + "INNER JOIN empleado e ON e.persona_idpersona = p.idpersona "
+                + "WHERE e.idempleado = " + idEmpleado + ";";
+        return cnslt.buscarValor(consulta);
+    }
+
+    public String[] buscarUltimoIdSueldoEmpleado(String idEmpleado) throws SQLException {
+        consulta = "SELECT s.idsueldo, s.sueldo FROM sueldo s "
+                + "WHERE s.empleado_idempleado = " + idEmpleado + " "
+                + "ORDER BY s.idsueldo DESC LIMIT 1";
+        return cnslt.buscarValoresLista(consulta, 2);
+    }
+
+    public ArrayList<String[]> buscarSueldos() throws SQLException {
+        consulta = "SELECT "
+                + "    empleado.idempleado AS 'Id Empleado', "
+                + "    CONCAT(persona.nombres, ' ', persona.ap_paterno, ' ', persona.ap_materno) AS 'Nombre(s)', "
+                + "    sueldo.sueldo AS 'Sueldo', "
+                + "    sueldo.fecha_inicio AS 'Fecha Inicial', "
+                + "    sueldo.fecha_final AS 'Fecha Final' "
+                + "FROM sueldo "
+                + "JOIN empleado ON sueldo.empleado_idempleado = empleado.idempleado "
+                + "JOIN persona ON empleado.persona_idpersona = persona.idpersona "
+                + "ORDER BY sueldo.fecha_inicio DESC;";
+        return cnslt.buscarValores(consulta, 5);
+    }
+
+    // ========================================================================
+    //                       BÚSQUEDAS DE DIRECCIONES Y PERSONAS
+    // ========================================================================
     public ArrayList<String[]> buscarDirecciones() throws SQLException {
         consulta = "SELECT "
                 + "dr.iddireccion AS ID_Direccion, "
@@ -121,9 +205,7 @@ public class CBusquedas {
                 + "   WHEN av.persona_idpersona IS NOT NULL THEN 'Aval' "
                 + "   ELSE 'Sin Rol' "
                 + "END AS Tipo_Persona, "
-                // 1. Columna Dirección (regresa al formato original lineal)
                 + "CONCAT('Colonia: ', cl.colonia, ' Calle: ', dr.calle, ' Num Int: ', dr.num_int, ' Num Ext: ', dr.num_ext) AS Direccion, "
-                // 2. Nueva Columna independiente para Referencia
                 + "dr.referencia AS Referencia "
                 + "FROM persona pr "
                 + "INNER JOIN direccion dr ON pr.direccion_iddireccion = dr.iddireccion "
@@ -132,13 +214,7 @@ public class CBusquedas {
                 + "LEFT JOIN aval av ON pr.idpersona = av.persona_idpersona "
                 + "LEFT JOIN empleado emp ON pr.idpersona = emp.persona_idpersona "
                 + "ORDER BY dr.iddireccion;";
-
-        // IMPORTANTE: Cambiamos el 4 por el 5, ya que ahora traemos 5 columnas
         return cnslt.buscarValores(consulta, 5);
-    }
-
-    public String buscarID(String consulta) throws SQLException {
-        return new CConsultas().buscarValorSinMensaje(consulta);
     }
 
     public String[] buscarPersonaCompleta(String idPersona) throws SQLException {
@@ -146,70 +222,46 @@ public class CBusquedas {
         return cnslt.buscarValoresLista(consulta, 4);
     }
 
-    public String buscarUltimoEmpleado() throws SQLException {
-        consulta = "SELECT MAX(empleado.idempleado) FROM empleado";
-        return cnslt.buscarValor(consulta);
-    }
-
-    public String buscarTelefonoEmpleado(String idEmpleado) throws SQLException {
-        consulta = "SELECT p.telefono FROM persona p INNER JOIN empleado e ON e.persona_idpersona = p.idpersona WHERE e.idempleado = " + idEmpleado + ";";
-        return cnslt.buscarValor(consulta);
-    }
-
-    /**
-     * Verifica si un número de teléfono ya existe en la base de datos.
-     *
-     * * @param telefono El número a verificar.
-     * @param idEmpleadoExcluir ID del empleado actual (para actualizaciones).
-     * Enviar null si es una inserción nueva.
-     * @return true si el teléfono ya existe, false si está libre.
-     * @throws SQLException
-     */
-    public String[] buscarUltimoIdSueldoEmpleado(String idEmpleado) throws SQLException {
-        consulta = "SELECT s.idsueldo, s.sueldo FROM sueldo s WHERE s.empleado_idempleado = " + idEmpleado + " ORDER BY s.idsueldo DESC LIMIT 1";
-        return cnslt.buscarValoresLista(consulta, 2);
-    }
-
-    // ========================================================================
-    // MÉTODOS DE BÚSQUEDA PARA ACTUALIZACIÓN (Adaptados a promocionesyanet.sql)
-    // ========================================================================
     public String buscarIdPersonaPorEmpleado(String idEmpleado) throws SQLException {
-        // CORRECCIÓN: En tu base de datos la columna es 'persona_idpersona'
         return buscarID("SELECT persona_idpersona FROM empleado WHERE idempleado = " + idEmpleado);
     }
 
     public String buscarIdDireccionPorPersona(String idPersona) throws SQLException {
-        // CORRECCIÓN: En tu base de datos la columna es 'direccion_iddireccion'
         return buscarID("SELECT direccion_iddireccion FROM persona WHERE idpersona = " + idPersona);
     }
 
     public String buscarIdColoniaPorNombre(String colonia) throws SQLException {
-        // Esta coincide con tu tabla 'colonia'
         return buscarID("SELECT idcolonia FROM colonia WHERE colonia='" + colonia + "'");
     }
 
     public String buscarIdPersonaPorDireccion(String idDireccion) throws SQLException {
-        // Buscamos quién vive en esa dirección usando 'direccion_iddireccion'
         return buscarID("SELECT idpersona FROM persona WHERE direccion_iddireccion = " + idDireccion);
     }
 
-    /**
-     * Verifica si existe un traslape de fechas para un empleado específico.
-     * Lógica: Existe traslape si (FechaInicioNueva <= FechaFinalExistente) Y (FechaFinalNueva
-     * >= FechaInicioExistente)
-     */
-    public boolean verificarTraslapeFechas(String idEmpleado, String fechaInicio, String fechaFin) throws SQLException {
-        // Consulta para contar cuántos registros chocan con el rango de fechas
-        consulta = "SELECT COUNT(*) FROM sueldo "
-                + "WHERE empleado_idempleado = " + idEmpleado + " "
-                + "AND (fecha_inicio <= '" + fechaFin + "' AND fecha_final >= '" + fechaInicio + "')";
-
-        // Si el resultado es mayor a 0, significa que hay un conflicto (traslape)
-        int cantidad = cnslt.obtenerValorEntero(consulta);
-        return cantidad > 0;
+    public String buscarIdColonia(String col) throws SQLException {
+        consulta = "SELECT cl.idcolonia FROM colonia cl WHERE cl.colonia = '" + col + "';";
+        return cnslt.buscarValor(consulta);
     }
 
-    /* Cliente */
+    public String[] buscarDirecPorID(int idd) throws SQLException {
+        consulta = "CALL direc(" + idd + ")";
+        return cnslt.buscarValoresLista(consulta, 5);
+    }
+
+    public String buscarColsZona(String cols) throws SQLException {
+        // Corrección: Usar el nombre correcto del procedimiento almacenado
+        consulta = "CALL colsZonas('" + cols + "')";
+        return cnslt.buscarValor(consulta);
+    }
+
+    public String buscarZonaPorPersona(int ipr) throws SQLException {
+        consulta = "CALL zonaPorPersona (" + ipr + ")";
+        return cnslt.buscarValor(consulta);
+    }
+
+    // ========================================================================
+    //                       CLIENTES Y AVALES
+    // ========================================================================
     public String buscarCredenciales(String credencial, String contrasena) throws SQLException {
         consulta = "SELECT "
                 + "CONCAT(pr.nombres, ' ', pr.ap_paterno, ' ', pr.ap_materno) AS Persona "
@@ -219,49 +271,13 @@ public class CBusquedas {
         return cnslt.buscarValor(consulta);
     }
 
-    public ArrayList<String[]> buscarClienteAval() throws SQLException {
-        consulta = "Call tablaClienteAval";
-        return cnslt.buscarValores(consulta, 6);
-    }
-
-    public String buscarPersonaCliente(int idcl) throws SQLException {
-        consulta = "SELECT pr.idpersona "
-                + "FROM persona pr "
-                + "INNER JOIN cliente cl ON cl.persona_idpersona = pr.idpersona "
-                + "WHERE cl.idcliente = " + idcl + ";";
-        return cnslt.buscarValor(consulta);
-    }
-
-    public String buscarPersonaAval(int idav) throws SQLException {
-        consulta = "SELECT pr.idpersona "
-                + "FROM persona pr "
-                + "INNER JOIN aval av ON av.persona_idpersona = pr.idpersona "
-                + "WHERE av.idaval = " + idav + ";";
-        return cnslt.buscarValor(consulta);
-    }
-
-    public boolean buscarProductoPorNombre(String nombreProducto) throws SQLException {
-        consulta = "SELECT 1 FROM producto WHERE LOWER(producto) = LOWER('" + nombreProducto + "') LIMIT 1;";
-        return cnslt.buscarValor(consulta) != null;
-    }
-
-    public String buscarZonaPorPersona(int ipr) throws SQLException {
-        consulta = "CALL zonaPorPersona (" + ipr + ")";
-        return cnslt.buscarValor(consulta);
-    }
-
-    private Connection conn = null;
-    private final CConecta conector = new CConecta();
-    private PreparedStatement stmt = null; //Capacidad para traducir las query
-    private ResultSet rs = null;
-
+    /**
+     * Búsqueda segura de credenciales usando PreparedStatement.
+     */
     public String[] buscarCredencialesI(String usuario, String contrasena) throws SQLException {
         String[] persona = new String[2];
-
-        // 1. Abrir conexión
         conn = conector.conecta();
 
-        // 2. Preparar y ejecutar consulta
         try {
             consulta = "SELECT pr.idpersona, CONCAT(pr.nombres, ' ', pr.ap_paterno, ' ', pr.ap_materno) AS Persona "
                     + "FROM credencial cr "
@@ -286,7 +302,6 @@ public class CBusquedas {
                     + "VendorError: " + ex.getErrorCode();
             CUtilitarios.msg_error(cadena, "Conexion");
         } finally {
-            // Cierre seguro
             try {
                 if (rs != null) {
                     rs.close();
@@ -299,15 +314,32 @@ public class CBusquedas {
                 }
             } catch (SQLException e) {
             }
-            conector.desconecta(conn); // o conector.desconecta(conn) si usas ese
+            conector.desconecta(conn);
         }
-
         return persona;
     }
 
+    public ArrayList<String[]> buscarClienteAval() throws SQLException {
+        consulta = "Call tablaClienteAval";
+        return cnslt.buscarValores(consulta, 6);
+    }
+
+    public String buscarPersonaCliente(int idcl) throws SQLException {
+        consulta = "SELECT pr.idpersona FROM persona pr "
+                + "INNER JOIN cliente cl ON cl.persona_idpersona = pr.idpersona "
+                + "WHERE cl.idcliente = " + idcl + ";";
+        return cnslt.buscarValor(consulta);
+    }
+
+    public String buscarPersonaAval(int idav) throws SQLException {
+        consulta = "SELECT pr.idpersona FROM persona pr "
+                + "INNER JOIN aval av ON av.persona_idpersona = pr.idpersona "
+                + "WHERE av.idaval = " + idav + ";";
+        return cnslt.buscarValor(consulta);
+    }
+
     public int buscarIdEm(int idPersona) throws SQLException {
-        consulta = "SELECT em.idempleado "
-                + "FROM persona pr "
+        consulta = "SELECT em.idempleado FROM persona pr "
                 + "INNER JOIN empleado em ON em.persona_idpersona = pr.idpersona "
                 + "WHERE pr.idpersona = " + idPersona;
         String resultado = cnslt.buscarValor(consulta);
@@ -315,20 +347,17 @@ public class CBusquedas {
     }
 
     public int buscarIdCr(int idPersona) throws SQLException {
-        consulta = "SELECT cr.idcredencial "
-                + "FROM credencial cr "
+        consulta = "SELECT cr.idcredencial FROM credencial cr "
                 + "INNER JOIN persona pr ON pr.idpersona = cr.persona_idpersona "
                 + "WHERE pr.idpersona = " + idPersona;
         String resultado = cnslt.buscarValor(consulta);
         return (resultado != null && !resultado.isEmpty()) ? Integer.parseInt(resultado) : -1;
     }
 
-    /* Fin Clientes */
     public ArrayList<String[]> buscarCliente() throws SQLException {
         consulta = "SELECT "
                 + "cl.idcliente, pr.nombres AS 'Nombre (s)', pr.ap_paterno AS 'Apellido Parno', pr.ap_materno AS 'Apellido Materno', es.estatus "
-                + "FROM "
-                + "persona pr "
+                + "FROM persona pr "
                 + "INNER JOIN cliente cl ON cl.persona_idpersona = pr.idpersona "
                 + "INNER JOIN estatus es ON es.idestatus = cl.estatus_idestatus "
                 + "ORDER BY cl.idcliente;";
@@ -338,64 +367,24 @@ public class CBusquedas {
     public ArrayList<String[]> buscarAval() throws SQLException {
         consulta = "SELECT "
                 + "av.idaval, pr.nombres AS 'Nombre (s)', pr.ap_paterno AS 'Apellido Parno', pr.ap_materno AS 'Apellido Materno', es.estatus "
-                + "FROM "
-                + "persona pr "
+                + "FROM persona pr "
                 + "INNER JOIN aval av ON av.persona_idpersona = pr.idpersona "
                 + "INNER JOIN estatus es ON es.idestatus = av.estatus_idestatus "
                 + "ORDER BY av.idaval;";
         return cnslt.buscarValores(consulta, 5);
     }
 
-    public String buscarIdColonia(String col) throws SQLException {
-        consulta = "SELECT cl.idcolonia "
-                + "FROM colonia cl "
-                + "WHERE cl.colonia = '" + col + "';";
-        return cnslt.buscarValor(consulta);
-    }
-
-    public String buscarIdEstatus(String est) throws SQLException {
-        consulta = "SELECT es.idestatus "
-                + "FROM estatus es "
-                + "WHERE es.estatus = '" + est + "';";
-        return cnslt.buscarValor(consulta);
-    }
-
-    public String buscarIdZona(String z) throws SQLException {
-        consulta = "SELECT z.idzona "
-                + "FROM zona z "
-                + "WHERE z.num_zona = '" + z + "';";
-        return cnslt.buscarValor(consulta);
-    }
-
-    public boolean existeZona(String idZona) throws SQLException {
-        consulta = "SELECT COUNT(*) FROM zona WHERE idzona = '" + idZona + "';";
-        String resultado = cnslt.buscarValor(consulta);
-        return resultado != null && !resultado.equals("0");
-    }
-
-    public String[] buscarDirecPorID(int idd) throws SQLException {
-        consulta = "CALL direc(" + idd + ")";
-        return cnslt.buscarValoresLista(consulta, 5);
-    }
-
-    public String buscarColsZona(String cols) throws SQLException {
-        consulta = "CALL ('" + cols + "')";
-        return cnslt.buscarValor(consulta);
-    }
-
-    public ArrayList<String[]> buscarColoniasPorZona(String idZona) throws SQLException {
-        consulta = "SELECT c.idcolonia, c.colonia "
-                + "FROM colonia c "
-                + "JOIN colonia_has_zona cz ON c.idcolonia = cz.colonia_idcolonia "
-                + "WHERE cz.zona_idzona = '" + idZona + "';";
-        return cnslt.buscarValores(consulta, 2);
-    }
-
+    // ========================================================================
+    //                       VENTAS Y PAGOS
+    // ========================================================================
     public ArrayList<String[]> buscarVenta() throws SQLException {
-        consulta = "SELECT v.Idventa AS Folio, v.fecha_venta AS Fecha,CONCAT(pc.nombres, ' ', pc.ap_paterno, ' ', pc.ap_materno) AS Cliente, "
-                + "CONCAT(pa.nombres, ' ', pa.ap_paterno, ' ', pa.ap_materno) AS Aval, CONCAT(pe.nombres, ' ', pe.ap_paterno, ' ', pe.ap_materno) "
-                + "AS Cobrador, e.estatus AS Estatus, v.num_pagos AS  'Pagos pendientes' "
-                + "FROM venta v JOIN cliente c ON v .cliente_idcliente = c.idcliente "
+        consulta = "SELECT v.Idventa AS Folio, v.fecha_venta AS Fecha, "
+                + "CONCAT(pc.nombres, ' ', pc.ap_paterno, ' ', pc.ap_materno) AS Cliente, "
+                + "CONCAT(pa.nombres, ' ', pa.ap_paterno, ' ', pa.ap_materno) AS Aval, "
+                + "CONCAT(pe.nombres, ' ', pe.ap_paterno, ' ', pe.ap_materno) AS Cobrador, "
+                + "e.estatus AS Estatus, v.num_pagos AS 'Pagos pendientes' "
+                + "FROM venta v "
+                + "JOIN cliente c ON v.cliente_idcliente = c.idcliente "
                 + "JOIN persona pc ON c.persona_idpersona = pc.idpersona "
                 + "JOIN empleado em ON v.empleado_idempleado = em.idempleado "
                 + "JOIN persona pe ON em.persona_idpersona = pe.idpersona "
@@ -403,7 +392,7 @@ public class CBusquedas {
                 + "LEFT JOIN aval_has_venta avh ON v.Idventa = avh.venta_Idventa "
                 + "LEFT JOIN aval a ON avh.aval_idaval = a.idaval "
                 + "LEFT JOIN persona pa ON a.persona_idpersona = pa.idpersona "
-                + "ORDER BY v.Idventa ";
+                + "ORDER BY v.Idventa";
         return cnslt.buscarValores(consulta, 7);
     }
 
@@ -423,9 +412,7 @@ public class CBusquedas {
     }
 
     public String buscarIdEstatusVenta(String estatusSeleccionado) throws SQLException {
-        consulta = "SELECT es.idestatus "
-                + "FROM estatus es "
-                + "WHERE es.estatus = '" + estatusSeleccionado + "';";
+        consulta = "SELECT es.idestatus FROM estatus es WHERE es.estatus = '" + estatusSeleccionado + "';";
         return cnslt.buscarValor(consulta);
     }
 
@@ -445,21 +432,6 @@ public class CBusquedas {
         return cnslt.buscarValores(consulta, 3);
     }
 
-    public ArrayList<String[]> buscarSueldos() throws SQLException {
-        consulta = "SELECT "
-                + "    empleado.idempleado AS 'Id Empleado', "
-                + "    CONCAT(persona.nombres, ' ', persona.ap_paterno, ' ', persona.ap_materno) AS 'Nombre(s)', "
-                + "    sueldo.sueldo AS 'Sueldo', "
-                + "    sueldo.fecha_inicio AS 'Fecha Inicial', "
-                + "    sueldo.fecha_final AS 'Fecha Final' "
-                + "FROM sueldo "
-                + "JOIN empleado ON sueldo.empleado_idempleado = empleado.idempleado "
-                + "JOIN persona ON empleado.persona_idpersona = persona.idpersona "
-                + "ORDER BY sueldo.fecha_inicio DESC;";
-
-        return cnslt.buscarValores(consulta, 5);
-    }
-
     public String buscaMaximoVenta() throws SQLException {
         consulta = "SELECT MAX(venta.Idventa) FROM venta;";
         return cnslt.buscarValor(consulta);
@@ -474,9 +446,7 @@ public class CBusquedas {
     }
 
     public ArrayList<String[]> buscarPagosPorIdVenta(String idVenta) throws SQLException {
-        consulta = "SELECT p.pago, p.restante, p.fecha_pago "
-                + "FROM pagos_tarjetas p "
-                + "WHERE p.venta_Idventa = '" + idVenta + "';";
+        consulta = "SELECT p.pago, p.restante, p.fecha_pago FROM pagos_tarjetas p WHERE p.venta_Idventa = '" + idVenta + "';";
         return cnslt.buscarValores(consulta, 3);
     }
 
@@ -490,16 +460,14 @@ public class CBusquedas {
     }
 
     public String[] buscarUltimoPagoPorIdVenta(String idVenta) throws SQLException {
-        consulta = "SELECT p.pago, p.restante, p.fecha_pago "
-                + "FROM pagos_tarjetas p "
+        consulta = "SELECT p.pago, p.restante, p.fecha_pago FROM pagos_tarjetas p "
                 + "WHERE p.venta_Idventa = '" + idVenta + "' "
                 + "ORDER BY p.fecha_pago DESC LIMIT 1;";
         return cnslt.buscarValoresLista(consulta, 3);
     }
 
     public String[] buscarIdUltimoPagoYValores(String idVenta) throws SQLException {
-        consulta = "SELECT idemve, pago, restante "
-                + "FROM pagos_tarjetas "
+        consulta = "SELECT idemve, pago, restante FROM pagos_tarjetas "
                 + "WHERE venta_Idventa = '" + idVenta + "' "
                 + "ORDER BY fecha_pago DESC LIMIT 1;";
         return cnslt.buscarValoresLista(consulta, 3);
@@ -507,24 +475,6 @@ public class CBusquedas {
 
     public String buscarTotalVentaPorId(String idVenta) throws SQLException {
         consulta = "SELECT total FROM venta WHERE idventa = '" + idVenta + "';";
-        return cnslt.buscarValor(consulta);
-    }
-
-    public String buscarIdEmpleadoPorNombre(String nombreCompleto) throws SQLException {
-        consulta = "SELECT e.idempleado "
-                + "FROM empleado e "
-                + "JOIN persona p ON e.persona_idpersona = p.idpersona "
-                + "WHERE CONCAT(p.nombres, ' ', p.ap_paterno, ' ', p.ap_materno) = '" + nombreCompleto + "';";
-        return cnslt.buscarValor(consulta);
-    }
-
-    public String buscarNombreEmpleado(String idEmpleado) throws SQLException {
-
-        consulta = "SELECT CONCAT(p.nombres, ' ', p.ap_paterno, ' ', p.ap_materno) AS nombre_completo "
-                + "FROM persona p "
-                + "INNER JOIN empleado e ON e.persona_idpersona = p.idpersona "
-                + "WHERE e.idempleado = " + idEmpleado + ";";
-
         return cnslt.buscarValor(consulta);
     }
 
@@ -551,7 +501,8 @@ public class CBusquedas {
                 + "WHERE venta_has_producto.venta_Idventa = '" + idVenta + "';";
 
         ArrayList<String[]> productos = cnslt.buscarValores(consulta, 3);
-        //Se agrega numeración en Java porque no se pueden ejecutar dos sentencias al mismo tiempo, como la de select y set
+
+        // Se añade numeración manual en Java
         ArrayList<String[]> productosNumerados = new ArrayList<>();
         int contador = 1;
         for (String[] producto : productos) {
@@ -563,5 +514,20 @@ public class CBusquedas {
             productosNumerados.add(fila);
         }
         return productosNumerados;
+    }
+
+    public String buscarIdEstatus(String est) throws SQLException {
+        consulta = "SELECT es.idestatus FROM estatus es WHERE es.estatus = '" + est + "';";
+        return cnslt.buscarValor(consulta);
+    }
+
+    public String buscarIdZona(String z) throws SQLException {
+        consulta = "SELECT z.idzona FROM zona z WHERE z.num_zona = '" + z + "';";
+        return cnslt.buscarValor(consulta);
+    }
+
+    public boolean buscarProductoPorNombre(String nombreProducto) throws SQLException {
+        consulta = "SELECT 1 FROM producto WHERE LOWER(producto) = LOWER('" + nombreProducto + "') LIMIT 1;";
+        return cnslt.buscarValor(consulta) != null;
     }
 }
