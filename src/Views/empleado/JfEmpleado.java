@@ -647,23 +647,69 @@ public final class JfEmpleado extends javax.swing.JFrame {
     }
 
     private boolean validarCamposSueldo() {
-
+        // 1. Validar Campos Vacíos
         if (JtxtAIDEmpleado.getText().isEmpty()
-                || JtxtAEmpleado.getText().isEmpty()
                 || JtxtASueldo.getText().isEmpty()
                 || JdcFechaInicio.getDate() == null
                 || JdcFechaFin.getDate() == null) {
 
-            CUtilitarios.msg_advertencia(
-                    "Validación",
-                    "Complete todos los campos");
+            CUtilitarios.msg_advertencia("Por favor, complete todos los campos.", "Validación");
             return false;
         }
 
-        if (!JtxtASueldo.getText().matches("\\d+(\\.\\d+)?")) {
-            CUtilitarios.msg_advertencia(
-                    "Validación",
-                    "Ingrese un sueldo válido");
+        String idEmpleado = JtxtAIDEmpleado.getText().trim();
+        String sueldoTexto = JtxtASueldo.getText().trim();
+
+        // 2. Validar que el ID del Empleado exista en la Base de Datos
+        // Usamos el campo de nombre (JtxtAEmpleado) como referencia rápida. 
+        // Si está vacío, intentamos buscarlo de nuevo para estar seguros.
+        if (JtxtAEmpleado.getText().isEmpty()) {
+            try {
+                String nombre = queryBusca.buscarNombreEmpleado(idEmpleado);
+                if (nombre == null) {
+                    CUtilitarios.msg_error("No existe un Empleado con ese ID (" + idEmpleado + ").\nVerifique el dato.", "ID No Encontrado");
+                    JtxtAIDEmpleado.requestFocus();
+                    return false;
+                } else {
+                    JtxtAEmpleado.setText(nombre); // Si apareció, lo ponemos
+                }
+            } catch (SQLException ex) {
+                CUtilitarios.msg_error("Error de conexión al validar ID.", "Error BD");
+                return false;
+            }
+        }
+
+        // 3. Validar Sueldo (Números y Positivo)
+        // Utilizamos el validador que ya tienes en CUtilitarios
+        if (!CUtilitarios.validarSueldo(sueldoTexto)) {
+            CUtilitarios.msg_error("El sueldo debe ser un valor numérico y mayor a 0.", "Sueldo Inválido");
+            JtxtASueldo.requestFocus();
+            return false;
+        }
+
+        // 4. Validar Coherencia de Fechas (Inicio no puede ser después del Fin)
+        java.util.Date fechaInicio = JdcFechaInicio.getDate();
+        java.util.Date fechaFin = JdcFechaFin.getDate();
+
+        if (fechaInicio.after(fechaFin)) {
+            CUtilitarios.msg_advertencia("La fecha de inicio no puede ser posterior a la fecha final.", "Fechas Incoherentes");
+            return false;
+        }
+
+        // 5. Validar Fechas Traslapadas (BD)
+        try {
+            String fInicioStr = CUtilitarios.formatearFecha(fechaInicio);
+            String fFinStr = CUtilitarios.formatearFecha(fechaFin);
+
+            boolean hayTraslape = queryBusca.verificarTraslapeFechas(idEmpleado, fInicioStr, fFinStr);
+
+            if (hayTraslape) {
+                CUtilitarios.msg_error("Las fechas seleccionadas se cruzan con un periodo de sueldo ya existente para este empleado.\nVerifique el historial.", "Fechas Traslapadas");
+                return false;
+            }
+
+        } catch (SQLException ex) {
+            CUtilitarios.msg_error("Error al validar fechas en base de datos: " + ex.getMessage(), "Error BD");
             return false;
         }
 
@@ -671,28 +717,31 @@ public final class JfEmpleado extends javax.swing.JFrame {
     }
 
     private void buscarEmpleadoPorId() {
+        JtxtAEmpleado.setText(""); // Limpiamos nombre siempre al inicio
 
-        JtxtAEmpleado.setText("");
+        String idTxt = JtxtAIDEmpleado.getText().trim();
 
-        if (JtxtAIDEmpleado.getText().isEmpty()) {
+        if (idTxt.isEmpty()) {
             return;
         }
 
-        if (!JtxtAIDEmpleado.getText().matches("\\d+")) {
+        // Solo buscamos si son números para evitar errores SQL
+        if (!idTxt.matches("\\d+")) {
             return;
         }
 
         try {
-            String nombre = queryBusca.buscarNombreEmpleado(JtxtAIDEmpleado.getText());
-
+            String nombre = queryBusca.buscarNombreEmpleado(idTxt);
             if (nombre != null) {
                 JtxtAEmpleado.setText(nombre);
+            } else {
+                // No hacemos nada visual aquí, el usuario verá que no aparece nombre
+                // y el botón de guardar le avisará del error.
+                JtxtAEmpleado.setText("");
             }
 
         } catch (SQLException e) {
-            CUtilitarios.msg_error(
-                    "Error al acreditar el sueldo",
-                    "Asignar sueldo");
+            CUtilitarios.msg_error("Error al buscar empleado: " + e.getMessage(), "Búsqueda");
         }
     }
 

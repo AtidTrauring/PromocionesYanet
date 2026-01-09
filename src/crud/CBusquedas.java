@@ -170,6 +170,22 @@ public class CBusquedas {
         return cnslt.buscarValoresLista(consulta, 2);
     }
 
+    /**
+     * Verifica si existe un traslape de fechas para un empleado específico.
+     * Lógica: Existe traslape si (FechaInicioNueva <= FechaFinalExistente) Y (FechaFinalNueva
+     * >= FechaInicioExistente)
+     */
+    public boolean verificarTraslapeFechas(String idEmpleado, String fechaInicio, String fechaFin) throws SQLException {
+        // Consulta para contar cuántos registros chocan con el rango de fechas
+        consulta = "SELECT COUNT(*) FROM sueldo "
+                + "WHERE empleado_idempleado = " + idEmpleado + " "
+                + "AND (fecha_inicio <= '" + fechaFin + "' AND fecha_final >= '" + fechaInicio + "')";
+
+        // Si el resultado es mayor a 0, significa que hay un conflicto (traslape)
+        int cantidad = cnslt.obtenerValorEntero(consulta);
+        return cantidad > 0;
+    }
+
     /* Cliente */
     public String buscarCredenciales(String credencial, String contrasena) throws SQLException {
         consulta = "SELECT "
