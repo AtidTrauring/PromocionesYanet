@@ -59,10 +59,10 @@ public class CUtilitarios {
     }
 
     public static String devuelveCadenaNum(JTextField campo, String regex) {
-        String cadena = campo.getText();
+        String cadena = campo.getText().trim();
         if (cadena.isEmpty()) {
             return null;
-        } else if (cadena.matches("^[0-9]+$")) {
+        } else if (cadena.matches(regex)) { // CORRECCIÓN: Usar la variable regex, no el texto fijo
             return cadena;
         } else {
             return "NoValido";
@@ -70,10 +70,10 @@ public class CUtilitarios {
     }
 
     public static String devuelveCadenatexto(JTextField campo, String regex) {
-        String cadena = campo.getText();
+        String cadena = campo.getText().trim();
         if (cadena.isEmpty()) {
             return null;
-        } else if (cadena.matches("^[a-zA-Z ]+$")) {
+        } else if (cadena.matches(regex)) { // CORRECCIÓN: Usar la variable regex, no el texto fijo "^[a-zA-Z ]+$"
             return cadena;
         } else {
             return "NoValido";
@@ -91,23 +91,6 @@ public class CUtilitarios {
             valida = false;
         }
         return valida;
-    }
-
-    // Método para validar números de teléfono
-    public static boolean validarTelefono(String texto) {
-        if (texto == null || texto.trim().isEmpty()) {
-            CUtilitarios.msg_error("El número de teléfono no puede estar vacío.", "Error");
-            return false;
-        }
-
-        // Expresión regular para números de teléfono de exactamente 10 dígitos
-        String regex = "^\\d{10}$";
-        if (!texto.trim().matches(regex)) {
-            CUtilitarios.msg_error("El número de teléfono debe contener exactamente 10 dígitos.", "Error");
-            return false;
-        }
-
-        return true;
     }
 
     // Método para validar nombres completos
@@ -128,25 +111,66 @@ public class CUtilitarios {
         return partes;
     }
 
-    // Métodos a agregar en CUtilitarios
+    // Métodos a agregar/modificar en CUtilitarios
     public static boolean validarNombre(String nombre) {
-        return devuelveCadenatexto(new JTextField(nombre != null ? nombre : ""),
-                "^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$") != null;
+        // Validación directa sin depender de devuelveCadenatexto para evitar errores de lógica booleana
+        if (nombre == null || nombre.trim().isEmpty()) {
+            return false;
+        }
+
+        // Regex que permite letras (mayúsculas/minúsculas), acentos, ñ y espacios
+        String regex = "^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$";
+
+        if (!nombre.matches(regex)) {
+            CUtilitarios.msg_error("El nombre o apellido contiene caracteres inválidos (números o símbolos).\nEjemplo válido: Juan Pérez", "Error de Formato");
+            return false;
+        }
+        return true;
     }
 
     public static boolean validarApellido(String apellido) {
+        // Reutilizamos la lógica corregida de validarNombre
         return validarNombre(apellido);
     }
 
+    public static boolean validarTelefono(String texto) {
+        if (texto == null || texto.trim().isEmpty()) {
+            // El formulario principal ya checa vacíos, pero esto es por seguridad
+            return false;
+        }
+
+        // Expresión regular estricta para 10 dígitos numéricos
+        String regex = "^\\d{10}$";
+
+        if (!texto.trim().matches(regex)) {
+            CUtilitarios.msg_error("El número de teléfono debe contener exactamente 10 dígitos numéricos.", "Error en Teléfono");
+            return false;
+        }
+
+        return true;
+    }
+
     public static boolean validarSueldo(String sueldoStr) {
-        String numero = devuelveCadenaNum(new JTextField(sueldoStr != null ? sueldoStr : ""),
-                "^[0-9]+(\\.[0-9]+)?$");
-        if (numero == null || numero.equals("NoValido")) {
+        if (sueldoStr == null || sueldoStr.trim().isEmpty()) {
+            return false;
+        }
+
+        // Regex que permite enteros o decimales (ej: 1000 o 1000.50)
+        // Se corrige para aceptar punto decimal
+        String regex = "^[0-9]+(\\.[0-9]{1,2})?$";
+
+        if (!sueldoStr.trim().matches(regex)) {
+            CUtilitarios.msg_error("El sueldo no es válido. Ingrese solo números (ej. 1500.00).", "Error en Sueldo");
             return false;
         }
 
         try {
-            return Double.parseDouble(numero) > 0;
+            double valor = Double.parseDouble(sueldoStr);
+            if (valor <= 0) {
+                CUtilitarios.msg_error("El sueldo debe ser mayor a 0.", "Error en Sueldo");
+                return false;
+            }
+            return true;
         } catch (NumberFormatException e) {
             return false;
         }

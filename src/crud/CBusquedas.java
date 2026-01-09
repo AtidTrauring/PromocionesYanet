@@ -170,6 +170,29 @@ public class CBusquedas {
         return cnslt.buscarValoresLista(consulta, 2);
     }
 
+    // ========================================================================
+    // MÉTODOS DE BÚSQUEDA PARA ACTUALIZACIÓN (Adaptados a promocionesyanet.sql)
+    // ========================================================================
+    public String buscarIdPersonaPorEmpleado(String idEmpleado) throws SQLException {
+        // CORRECCIÓN: En tu base de datos la columna es 'persona_idpersona'
+        return buscarID("SELECT persona_idpersona FROM empleado WHERE idempleado = " + idEmpleado);
+    }
+
+    public String buscarIdDireccionPorPersona(String idPersona) throws SQLException {
+        // CORRECCIÓN: En tu base de datos la columna es 'direccion_iddireccion'
+        return buscarID("SELECT direccion_iddireccion FROM persona WHERE idpersona = " + idPersona);
+    }
+
+    public String buscarIdColoniaPorNombre(String colonia) throws SQLException {
+        // Esta coincide con tu tabla 'colonia'
+        return buscarID("SELECT idcolonia FROM colonia WHERE colonia='" + colonia + "'");
+    }
+
+    public String buscarIdPersonaPorDireccion(String idDireccion) throws SQLException {
+        // Buscamos quién vive en esa dirección usando 'direccion_iddireccion'
+        return buscarID("SELECT idpersona FROM persona WHERE direccion_iddireccion = " + idDireccion);
+    }
+
     /**
      * Verifica si existe un traslape de fechas para un empleado específico.
      * Lógica: Existe traslape si (FechaInicioNueva <= FechaFinalExistente) Y (FechaFinalNueva
