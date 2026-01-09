@@ -757,8 +757,8 @@ public final class JfEmpleado extends javax.swing.JFrame {
 
             if (ok) {
                 CUtilitarios.msg(
-                        "Éxito",
-                        "Sueldo asignado correctamente");
+                        "Sueldo asignado correctamente",
+                        "Asigna sueldo");
 
                 limpiarCamposSueldo();
                 cargarDatosSueldos(JtblAsignaSueldos);
@@ -2004,6 +2004,7 @@ public final class JfEmpleado extends javax.swing.JFrame {
 
         JspAIDEmpleado.setForeground(new java.awt.Color(0, 0, 0));
 
+        JtxtAEmpleado.setEditable(false);
         JtxtAEmpleado.setBackground(new java.awt.Color(167, 235, 242));
         JtxtAEmpleado.setHorizontalAlignment(javax.swing.JTextField.LEFT);
         JtxtAEmpleado.setToolTipText("Nombre completo del empleado");
