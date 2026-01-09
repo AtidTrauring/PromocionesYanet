@@ -43,7 +43,7 @@ public final class JfEmpleado extends javax.swing.JFrame {
 
     private String telefono = null;
     private String[] sueldos = null;
-
+    
     public JfEmpleado() {
         initComponents();
     }
@@ -161,13 +161,13 @@ public final class JfEmpleado extends javax.swing.JFrame {
     private void configurarFiltros() {
         trListaEmpleados = new TableRowSorter<>((DefaultTableModel) JtblListaEmpleados.getModel());
         JtblListaEmpleados.setRowSorter(trListaEmpleados);
-
+        
         trActualizaEmpleados = new TableRowSorter<>((DefaultTableModel) JtblActualizaEmpleados.getModel());
         JtblActualizaEmpleados.setRowSorter(trActualizaEmpleados);
-
+        
         trDeleteEmpleados = new TableRowSorter<>((DefaultTableModel) JtblDeleteEmpleados.getModel());
         JtblDeleteEmpleados.setRowSorter(trDeleteEmpleados);
-
+        
         trSueldosEmpleados = new TableRowSorter<>((DefaultTableModel) JtblSueldosEmpleados.getModel());
         JtblSueldosEmpleados.setRowSorter(trSueldosEmpleados);
     }
@@ -180,21 +180,21 @@ public final class JfEmpleado extends javax.swing.JFrame {
             TableRowSorter<DefaultTableModel> sorter,
             JTextField[] camposTexto,
             int[] columnasTexto) {
-
+        
         ArrayList<RowFilter<Object, Object>> filtros = new ArrayList<>();
-
+        
         if (camposTexto != null && columnasTexto != null) {
             for (int i = 0; i < camposTexto.length; i++) {
                 JTextField campo = camposTexto[i];
                 String texto = campo.getText().trim();
                 String placeholder = campo.getToolTipText();
-
+                
                 if (!texto.isEmpty() && (placeholder == null || !texto.equals(placeholder))) {
                     filtros.add(RowFilter.regexFilter("(?i).*" + Pattern.quote(texto) + ".*", columnasTexto[i]));
                 }
             }
         }
-
+        
         if (filtros.isEmpty()) {
             sorter.setRowFilter(null);
         } else {
@@ -274,7 +274,7 @@ public final class JfEmpleado extends javax.swing.JFrame {
         DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
         limpiarTabla(tabla);
         ArrayList<String[]> listaEmpleados = queryBusca.buscarEmpleado();
-
+        
         for (String[] empleado : listaEmpleados) {
             modelo.addRow(empleado);
         }
@@ -289,7 +289,7 @@ public final class JfEmpleado extends javax.swing.JFrame {
         DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
         limpiarTabla(tabla);
         ArrayList<String[]> listaSueldos = queryBusca.buscarSueldos();
-
+        
         for (String[] sueldo : listaSueldos) {
             sueldo[2] = "$ " + sueldo[2]; // Formato de sueldo con símbolo
             modelo.addRow(sueldo);
@@ -314,7 +314,7 @@ public final class JfEmpleado extends javax.swing.JFrame {
      */
     public void cargarComboDinamico(JComboBox combo) throws SQLException {
         DefaultComboBoxModel modelo = (DefaultComboBoxModel) combo.getModel();
-
+        
         if (combo == JcmbxAgregarZonas || combo == JcmbxActlzZonas) {
             ArrayList<String> zonas = queryCarga.cargaComboZona();
             for (String zona : zonas) {
@@ -354,7 +354,7 @@ public final class JfEmpleado extends javax.swing.JFrame {
      */
     private boolean validarCamposEmpleado(JTextField jtfNombre, JTextField jtfApPat, JTextField jtfApMat,
             JTextField jtfTelefono, JTextField jtfSueldo, JComboBox<String> jcbZona) {
-
+        
         String nombre = jtfNombre.getText().trim();
         String apPaterno = jtfApPat.getText().trim();
         String apMaterno = jtfApMat.getText().trim();
@@ -383,30 +383,30 @@ public final class JfEmpleado extends javax.swing.JFrame {
             jtfNombre.requestFocus();
             return false;
         }
-
+        
         if (!CUtilitarios.validarApellido(apPaterno)) {
             CUtilitarios.msg_error("El apellido paterno contiene caracteres inválidos.", "Validación");
             jtfApPat.requestFocus();
             return false;
         }
-
+        
         if (!CUtilitarios.validarApellido(apMaterno)) {
             CUtilitarios.msg_error("El apellido materno contiene caracteres inválidos.", "Validación");
             jtfApMat.requestFocus();
             return false;
         }
-
+        
         if (!CUtilitarios.validarTelefono(telefono)) {
             jtfTelefono.requestFocus();
             return false;
         }
-
+        
         if (!CUtilitarios.validarSueldo(sueldoStr)) {
             CUtilitarios.msg_error("El sueldo debe ser un número válido y mayor a cero.", "Validación");
             jtfSueldo.requestFocus();
             return false;
         }
-
+        
         return true;
     }
 
@@ -417,24 +417,24 @@ public final class JfEmpleado extends javax.swing.JFrame {
      */
     private String[] obtenerDatosFila(JTable tabla) {
         int filaVista = tabla.getSelectedRow();
-
+        
         if (filaVista == -1) {
             CUtilitarios.msg_advertencia("Debes seleccionar una fila de la tabla.", "Advertencia");
             return null;
         }
-
+        
         int columnas = tabla.getColumnCount();
         String[] datos = new String[columnas];
-
+        
         int filaModelo = tabla.convertRowIndexToModel(filaVista);
-
+        
         for (int i = 0; i < columnas; i++) {
             Object valor = tabla.getModel().getValueAt(filaModelo, i);
             datos[i] = String.valueOf(valor);
         }
         return datos;
     }
-
+    
     private void limpiarFiltros(JTextField id, JTextField nombre, JTextField apMat, JTextField apPat) {
         id.setText("");
         nombre.setText("");
@@ -457,7 +457,7 @@ public final class JfEmpleado extends javax.swing.JFrame {
         apPat.setText(filaSeleccionada[2]);// Apellido Paterno
         apMat.setText(filaSeleccionada[3]);// Apellido Materno
         id.setEditable(false);
-
+        
     }
 
     /**
@@ -494,7 +494,7 @@ public final class JfEmpleado extends javax.swing.JFrame {
             CUtilitarios.ajustarTamanioTabla(JtblDeleteEmpleados, JspTCDeleteEmpleados, 8);
             CUtilitarios.ajustarTamanioTabla(JtblSueldosEmpleados, JspTCSueldosEmpleados, 8);
             CUtilitarios.ajustarTamanioTabla(JtblAsignaSueldos, JspTCAsignaSueldos, 8);
-
+            
         } catch (SQLException ex) {
             CUtilitarios.msg_error("Error al recargar los datos: " + ex.getMessage(), "Error");
         }
@@ -514,7 +514,7 @@ public final class JfEmpleado extends javax.swing.JFrame {
                 JtxtAgregarNombre, JtxtAgregarApPat, JtxtAgregarApMat,
                 JtxtAgregarTel, JtxtAgregarSueldo, JcmbxAgregarZonas
         );
-
+        
         if (!camposValidos) {
             return; // Detener si algún campo no es válido
         }
@@ -535,14 +535,14 @@ public final class JfEmpleado extends javax.swing.JFrame {
             // Se crea el arreglo de datos de zona (suponiendo estructura {id, zona, ...})
             // Nota: Ajustamos esto para cumplir con el constructor de jfnuevadirec
             String[] datosZonaArr = {idZona, "", "", ""};
-
+            
             jfnuevadirec direccion = new jfnuevadirec(datosZonaArr, null, null);
             direccion.asignaValoresEmpleado(nombre, apMaterno, apPaterno, telefono, sueldoStr, idZona);
 
             // Mostrar nueva ventana y cerrar actual
             CUtilitarios.creaFrame(direccion, "Agregar dirección");
             this.dispose();
-
+            
         } catch (Exception e) {
             CUtilitarios.msg_error("Error al abrir el formulario de dirección: " + e.getMessage(), "Error");
         }
@@ -572,7 +572,7 @@ public final class JfEmpleado extends javax.swing.JFrame {
                 JtxtActlzNombre, JtxtActlzApPat, JtxtActlzApMat,
                 JtxtActlzTel, JtxtActlzSueldo, JcmbxActlzZonas
         );
-
+        
         if (!camposValidos) {
             return; // Detener si algún campo no es válido
         }
@@ -593,13 +593,13 @@ public final class JfEmpleado extends javax.swing.JFrame {
 
             // Validamos que la variable global 'sueldos' no sea null para evitar errores
             String idSueldoEnvio = (sueldos != null && sueldos.length > 0) ? sueldos[0] : "0";
-
+            
             actualizaDireccion.obtenValoresActualiza(nombre, apMaterno, apPaterno, telefono, sueldo, idEmpleado, idSueldoEnvio, null, null);
 
             // Mostrar nueva ventana y cerrar la actual
             CUtilitarios.creaFrame(actualizaDireccion, "Direcciones");
             this.dispose();
-
+            
         } catch (Exception e) {
             CUtilitarios.msg_error("Error al abrir el formulario de dirección para actualizar: " + e.getMessage(), "Error");
         }
@@ -610,34 +610,34 @@ public final class JfEmpleado extends javax.swing.JFrame {
      */
     private void eliminaEmpleado() throws SQLException {
         String[] filaSeleccionada = obtenerDatosFila(JtblDeleteEmpleados);
-
+        
         if (filaSeleccionada == null) {
             return; // No se seleccionó ninguna fila
         }
-
+        
         String idEmpleado = filaSeleccionada[0];
-
+        
         int confirmacion = JOptionPane.showConfirmDialog(
                 this,
                 "¿Estás seguro de eliminar al empleado con ID: " + idEmpleado + "?\nEsta acción eliminará todos sus datos relacionados.",
                 "Confirmar eliminación",
                 JOptionPane.YES_NO_OPTION
         );
-
+        
         if (confirmacion == JOptionPane.YES_OPTION) {
             CEliminaciones celim = new CEliminaciones();
             boolean eliminado = celim.eliminarEmpleado(idEmpleado);
-
+            
             if (eliminado) {
                 CUtilitarios.msg("Empleado eliminado correctamente.", "Éxito");
                 resetVistaEmpleado();
-
+                
             } else {
                 CUtilitarios.msg_error("No se pudo eliminar el empleado.", "Error");
             }
         }
     }
-
+    
     private void limpiarCamposSueldo() {
         JtxtAIDEmpleado.setText("");
         JtxtAEmpleado.setText("");
@@ -645,18 +645,18 @@ public final class JfEmpleado extends javax.swing.JFrame {
         JdcFechaInicio.setDate(null);
         JdcFechaFin.setDate(null);
     }
-
+    
     private boolean validarCamposSueldo() {
         // 1. Validar Campos Vacíos
         if (JtxtAIDEmpleado.getText().isEmpty()
                 || JtxtASueldo.getText().isEmpty()
                 || JdcFechaInicio.getDate() == null
                 || JdcFechaFin.getDate() == null) {
-
+            
             CUtilitarios.msg_advertencia("Por favor, complete todos los campos.", "Validación");
             return false;
         }
-
+        
         String idEmpleado = JtxtAIDEmpleado.getText().trim();
         String sueldoTexto = JtxtASueldo.getText().trim();
 
@@ -690,7 +690,7 @@ public final class JfEmpleado extends javax.swing.JFrame {
         // 4. Validar Coherencia de Fechas (Inicio no puede ser después del Fin)
         java.util.Date fechaInicio = JdcFechaInicio.getDate();
         java.util.Date fechaFin = JdcFechaFin.getDate();
-
+        
         if (fechaInicio.after(fechaFin)) {
             CUtilitarios.msg_advertencia("La fecha de inicio no puede ser posterior a la fecha final.", "Fechas Incoherentes");
             return false;
@@ -700,27 +700,27 @@ public final class JfEmpleado extends javax.swing.JFrame {
         try {
             String fInicioStr = CUtilitarios.formatearFecha(fechaInicio);
             String fFinStr = CUtilitarios.formatearFecha(fechaFin);
-
+            
             boolean hayTraslape = queryBusca.verificarTraslapeFechas(idEmpleado, fInicioStr, fFinStr);
-
+            
             if (hayTraslape) {
                 CUtilitarios.msg_error("Las fechas seleccionadas se cruzan con un periodo de sueldo ya existente para este empleado.\nVerifique el historial.", "Fechas Traslapadas");
                 return false;
             }
-
+            
         } catch (SQLException ex) {
             CUtilitarios.msg_error("Error al validar fechas en base de datos: " + ex.getMessage(), "Error BD");
             return false;
         }
-
+        
         return true;
     }
-
+    
     private void buscarEmpleadoPorId() {
         JtxtAEmpleado.setText(""); // Limpiamos nombre siempre al inicio
 
         String idTxt = JtxtAIDEmpleado.getText().trim();
-
+        
         if (idTxt.isEmpty()) {
             return;
         }
@@ -729,7 +729,7 @@ public final class JfEmpleado extends javax.swing.JFrame {
         if (!idTxt.matches("\\d+")) {
             return;
         }
-
+        
         try {
             String nombre = queryBusca.buscarNombreEmpleado(idTxt);
             if (nombre != null) {
@@ -739,14 +739,14 @@ public final class JfEmpleado extends javax.swing.JFrame {
                 // y el botón de guardar le avisará del error.
                 JtxtAEmpleado.setText("");
             }
-
+            
         } catch (SQLException e) {
             CUtilitarios.msg_error("Error al buscar empleado: " + e.getMessage(), "Búsqueda");
         }
     }
-
+    
     private void insertarSueldo() {
-
+        
         try {
             boolean ok = queryInserta.insertarSueldo(
                     CUtilitarios.formatearFecha(JdcFechaInicio.getDate()),
@@ -754,23 +754,24 @@ public final class JfEmpleado extends javax.swing.JFrame {
                     JtxtASueldo.getText(),
                     JtxtAIDEmpleado.getText()
             );
-
+            
             if (ok) {
                 CUtilitarios.msg(
                         "Sueldo asignado correctamente",
                         "Asigna sueldo");
-
+                
                 limpiarCamposSueldo();
                 cargarDatosSueldos(JtblAsignaSueldos);
+                cargarDatosSueldos(JtblSueldosEmpleados);
             }
-
+            
         } catch (SQLException e) {
             CUtilitarios.msg_error(
                     "Error al acreditar un sueldo.",
                     "Asigna sueldo");
         }
     }
-
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -2303,14 +2304,14 @@ public final class JfEmpleado extends javax.swing.JFrame {
     private void JtblActualizaEmpleadosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JtblActualizaEmpleadosMouseClicked
         String[] filaSeleccionada = obtenerDatosFila(JtblActualizaEmpleados);
         cargarDatosEmpleadoDesdeFila(filaSeleccionada, JtxtActlzid, JtxtActlzNombre, JtxtActlzApMat, JtxtActlzApPat);
-
+        
         if (filaSeleccionada == null) {
             return;
         }
-
+        
         String idEmpleado = filaSeleccionada[0];
         CBusquedas busquedas = new CBusquedas();
-
+        
         try {
             // Buscar teléfono asociado al idEmpleado
             telefono = busquedas.buscarTelefonoEmpleado(idEmpleado);
@@ -2319,7 +2320,7 @@ public final class JfEmpleado extends javax.swing.JFrame {
             // Buscar último idsueldo del empleado
             sueldos = busquedas.buscarUltimoIdSueldoEmpleado(idEmpleado);
             JtxtActlzSueldo.setText(sueldos[1] != null ? sueldos[1] : "");
-
+            
         } catch (SQLException e) {
             cu.msg_error("Error al obtener información del empleado:\n" + e.getMessage(), "Error de búsqueda");
         }
@@ -2340,7 +2341,7 @@ public final class JfEmpleado extends javax.swing.JFrame {
     private void JtxtAIDEmpleadoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_JtxtAIDEmpleadoKeyReleased
         buscarEmpleadoPorId();
     }//GEN-LAST:event_JtxtAIDEmpleadoKeyReleased
-
+    
     public static void main(String args[]) {
         // <editor-fold defaultstate="collapsed" desc="Generated Code">
         try {
@@ -2348,21 +2349,21 @@ public final class JfEmpleado extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
-
+                    
                 }
             }
         } catch (ClassNotFoundException ex) {
             java.util.logging.Logger.getLogger(JfEmpleado.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-
+            
         } catch (InstantiationException ex) {
             java.util.logging.Logger.getLogger(JfEmpleado.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-
+            
         } catch (IllegalAccessException ex) {
             java.util.logging.Logger.getLogger(JfEmpleado.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-
+            
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(JfEmpleado.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
@@ -2371,7 +2372,7 @@ public final class JfEmpleado extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new JfEmpleado().setVisible(true);
-
+                
             }
         });
     }
