@@ -74,6 +74,13 @@ public final class jfcliente extends javax.swing.JFrame {
     private String seleccion, est, z, idZona, idEstatus, idEstatusAval, esttabla, tipo, idPersona, idPersonaEn, zona;
     private String nomact, apact, amact, telact;
     private int idclav, idpr;
+    
+    public void limpiarCampos(){
+        jtfidbusquedaeli.setText("");
+        jtfnombresbusquedaeli.setText("");
+        jtfapbusquedaeli.setText("");
+        jtfambusquedaeli.setText("");
+    }
 
     public void cargaComboBox(JComboBox combo, int metodoCarga) {
         listas = (DefaultComboBoxModel) combo.getModel();
@@ -589,6 +596,7 @@ public final class jfcliente extends javax.swing.JFrame {
                     if (eliminado) {
                         CUtilitarios.msg("Persona eliminada correctamente", "Eliminar");
                         cargarTablas();
+                        limpiarCampos();
                     } else {
                         CUtilitarios.msg_error("No se pudo eliminar a la persona", "Error");
                     }
