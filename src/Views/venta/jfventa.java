@@ -87,7 +87,8 @@ public class jfventa extends javax.swing.JFrame {
         addFiltroListener(jCmbBoxFechas, jTblListaVentas);
         addFiltroListener(jCmbBoxEstatus, jTblListaVentas);
         addFiltroListener(jCmbBoxPagosPendi, jTblListaVentas);
-        addFiltroListener(jTxtFFolioVenta, jTblAgregarVenta);
+        //addFiltroListener(jTxtFFolioVenta, jTblAgregarVenta);
+        addFiltroListener(jTxtFFolioProductoVenta, jTblAgregarVenta);
         ButtonGroup grupoRadios = new ButtonGroup();
         grupoRadios.add(jRadBtnAgregarVenta);
         grupoRadios.add(jRadBtnActualizarVenta);
@@ -112,8 +113,8 @@ public class jfventa extends javax.swing.JFrame {
     }
 
     private void limpiarTablaPagos() {
-        modelAgregar = (DefaultTableModel) jTblAgregarVenta.getModel();
-        modelAgregar.setRowCount(0);
+        DefaultTableModel model = (DefaultTableModel) jTblPagosVenta.getModel();
+        model.setRowCount(0);
     }
 
     //Carga la tabla de busqueda. 
@@ -420,8 +421,8 @@ public class jfventa extends javax.swing.JFrame {
                 filtros.add(RowFilter.regexFilter("(?i)^" + pagosSeleccionados + "$", 6));
             }
         } else if (esSegundaTabla) {
-            if (!jTxtFFolioVenta.getText().trim().isEmpty()) {
-                filtros.add(RowFilter.regexFilter("(?i)" + jTxtFFolioVenta.getText().trim(), 0));
+            if (!jTxtFFolioProductoVenta.getText().trim().isEmpty()) {
+                filtros.add(RowFilter.regexFilter("(?i)" + jTxtFFolioProductoVenta.getText().trim(), 0)); // col 0 = ID Producto
             }
         }
         //aplica los filtros
@@ -845,7 +846,7 @@ public class jfventa extends javax.swing.JFrame {
 
                     // Asignar estatus
                     Object estatus = jTblListaVentas.getValueAt(i, 5);
-                    if (vendedor != null) {
+                    if (estatus != null) {
                         jCmbBoxEstatusVenta.setSelectedItem(estatus.toString().trim());
                     }
                 } catch (Exception e) {
